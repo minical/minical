@@ -1,0 +1,40 @@
+h1 {
+	font-size: 14px;
+	font-family: arial;
+}
+
+.booking_tr:hover
+{
+	background-color: #d6e0e6; 
+	cursor: pointer;
+}
+
+.booking_tr td 
+{
+	font-size: 12px; 
+	font-family: arial;
+}
+
+.selected {
+	background-color: yellow; 
+}
+
+#th_balance {
+	width: 100px;
+}
+
+
+#guest_table th {
+	background: #EEEEFF;	
+}
+
+#guest_table {
+	width: 100%;
+}
+
+#guest_table td {
+	padding: .25em;
+	background: #F7F7FF;
+	font-size: 14px; 
+	font-family: arial;
+}

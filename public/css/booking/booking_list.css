@@ -1,0 +1,90 @@
+h4 {
+	margin:0;
+	font-size: 18px;
+	font-weight: bold;
+}
+
+.header {
+	font-size: 13px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	
+	font-weight: bold;
+	text-align:center;
+}
+
+#todays-events-title{
+    cursor: move;
+}
+
+#hide-button{
+	right: 10px;
+	top: 10px;
+	position: absolute;
+}
+
+#hide-button:hover {
+	cursor: pointer;
+}
+
+#booking_list_container {
+	background:#FFFFFF;
+	border: black 1px solid;
+	padding: 0 20px 20px 20px;	
+}
+
+#reservation, #inhouse, #checkedout {
+	font-size: 18px;
+	margin: 0px 0px 10px 0px;
+	font-weight:bold;
+}
+
+.row-container
+{
+	padding: 3px;
+}
+
+.row-container div
+{
+	float:none;
+    display:inline-block;
+    vertical-align:middle;
+    margin-right:-4px;
+}
+
+.clear {
+	clear:both;	
+}
+
+.out-of-order-booking-notes-div {
+	float: left;
+	min-width: 215px;
+	word-wrap: break-word;
+}
+
+.booking_table {	
+	padding:3px;
+	margin-top: 8px;
+}
+
+
+div#CSV {
+	font-weight: bold;
+	float: left;	
+}
+
+
+div#showMore {
+	font-weight: bold;
+	float: right;	
+}
+
+#tableID {
+	color: #025190;
+	font-size: 1.125em;
+	font-weight:bold;
+	display: inline;
+	text-align: center;
+	padding: 2px;
+}
+

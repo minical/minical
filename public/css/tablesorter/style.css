@@ -1,0 +1,16 @@
+table.booking_table thead tr .header {
+	background-image: url(bg.gif);
+	background-repeat: no-repeat;
+	background-position: center right;
+	cursor: pointer;
+}
+
+table.booking_table tbody tr.odd td {
+	background-color:#F0F0F6;
+}
+table.booking_table thead tr .headerSortUp {
+	background-image: url(asc.gif);
+}
+table.booking_table thead tr .headerSortDown {
+	background-image: url(desc.gif);
+}

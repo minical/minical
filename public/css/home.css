@@ -1,0 +1,445 @@
+body {
+	font-size: 14px;
+	font-family: Arial, sans-serif;	
+	color: #024B82;
+}
+
+p {
+	color: #394146;
+}
+
+h1 {
+	font-size: 38px;
+	font-weight: bold;
+	
+	margin-bottom: 20px;	
+}
+
+h2 {
+	font-size: 16px;
+	font-weight: bold;
+	margin-bottom: 15px;
+}
+
+h3 {
+	font-size: 14px;
+	font-weight: bold;	
+	margin-bottom: 0px;
+}
+
+h1 span {
+	text-decoration: underline;
+}
+
+img {
+	margin-right: 10px;
+	float:left;
+}
+		
+/* used to contain floats in div */
+/* taken from http://www.ejeliot.com/blog/59 */
+.container:after { content: "."; display: block; height: 0; clear: both; visibility: hidden; }
+.container { display: inline-block; _height: 1%; }
+/* Hides from IE-mac \*/
+.container { display: block; }
+
+.button {
+	display: block;
+	width: 120px;
+	height: 25px;	
+	
+	-moz-border-radius: 8px;
+	border-radius: 8px;
+	
+	padding-top: 3px;
+	padding-bottom: 3px;
+	
+	color: white;
+	font-size: 18px;
+	text-align: center;
+	text-decoration: none;
+	font-weight: bold;
+	
+	border: 3px #E8E8E8 solid;
+	
+	float: left;
+}
+
+.primary_color {
+	background: #E23F0E;
+}
+
+.secondary_color {
+	background: #000000;
+}
+
+.max-width {
+	width:940px;
+	padding: 0 10px 0 10px;
+	margin-left:auto; 
+	margin-right: auto;
+}
+
+#content {
+}
+
+/************************************************************************
+	MENU
+*/
+#menu {
+	background: #024B82;
+	height: 70px;	
+}
+
+	#menu > div {
+		height: inherit;
+	}
+
+		#logo {	
+			width: 200px;
+			
+			background-image:url('../images/logo-small.jpg');
+			background-repeat: no-repeat;
+			
+			color: white;
+			text-decoration:none;
+			text-align: right;
+			
+			font-size: 35px;
+			font-weight: bold;
+			
+			padding: 15px 10px 0px 0px;	
+			float: left;
+		}
+
+		#primary_nav {
+			margin-right: 30px;
+			float: right;
+		}
+
+			#primary_nav li {
+				float: left;
+				padding: 17px 0px 10px 0px;
+			}
+
+				#primary_nav ul li a {
+					padding: 10px;
+					font-size:14px;
+					color:white;
+					text-decoration: none;
+					float:left;
+				}
+
+		#signup_links {
+			margin-right: 20px;
+			float: right;
+		}
+
+			#signup_links li {
+				float: left;
+				padding: 17px 0px 10px 0px;	
+			}
+
+				#signup_links ul li a {
+					font-size:14px;
+					color: #BBFC3C;
+					text-decoration: none;
+					
+					padding: 10px;				
+					
+					float:left;
+				}
+
+/***********************************************************************
+	INTRO
+*/
+
+#intro {
+	background-color: #E6F3FB;
+	padding-top: 40px;
+	padding-bottom: 40px;
+}
+
+	#video {
+		width: 510px;
+		height: 380px;
+		border: 1px black solid;
+		
+		border-radius: 3px;
+		-moz-border-radius: 3px;
+		
+		float: left;
+	}
+
+	#description {		
+		width: 400px;		
+		float: right;
+	}
+	
+		#description p {			
+			font-size: 18px;
+		}
+
+		#sign_up {
+			margin-top: 25px;
+		}
+
+		#sign_up a{
+			width: 330px;
+			height: 40px;			
+			
+			padding-top: 18px;
+			
+			font-size: 18px;
+			font-weight: bold;
+		}
+
+		#tour_link {
+			margin-left: 50px;
+			margin-top: 5px;
+			
+			color: #104500;
+			
+			font-weight: bold;
+			float:left;
+		}
+
+		#tour_link a{
+			color: #104500;
+		}
+
+/***********************************************************************
+	MAIN CONTENT
+*/
+
+#main-content {
+	background-color: #F8F9F8;
+	padding-top: 40px;
+	padding-bottom: 40px;
+	
+}	
+	#product_description{
+		float: left;
+	}
+
+		#product_description div{
+			width: 270px;			
+			margin-right: 50px;
+			float: left;
+		}
+
+	#quotes {
+		width: 270px;
+		margin-top: 30px;
+		
+		font-style: italic;
+		font-weight: bold;
+		font-size: 16px;
+		
+		float: right;
+	}
+
+	.line_decoration{
+		height: 0px;
+		width: 305px;	
+		border: #A3A3A3 1px solid;
+		margin-top:40px;
+		float: left;
+	}
+
+	#plans_pricing {
+		width: 940px;		
+		margin-top: 40px;
+		
+		text-align: center;
+		float: left;
+	}
+
+		#plans_pricing a{
+				width: 310px;
+				height: 40px;		
+				background: #009933;
+				padding-top: 18px;
+				margin-left: 0px;
+				margin-right: 0px;		
+				
+				font-size: 18px;
+				float:  left;
+		}
+
+/***********************************************************************
+	Secondary CONTENT
+*/
+
+#secondary-content{	
+	 padding-bottom: 40px;
+	background-color: #F8F9F8;	
+}
+
+#feature-list {
+	float:left;
+}
+
+#feature-list ul li{
+	width: 270px;
+	height: 212px;		
+	padding-right: 50px;
+	
+	float: left;
+}
+
+#feature-list #invoice, #feature-list #organized{
+	padding-right: 0px;
+}
+
+#last-call-to-action-bar{
+	background: #E6F3FB;
+	
+	width: 880px;
+	height: 90px;	
+	margin-bottom: 10px;
+	
+	border: #024B82 1px solid;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	
+	float:left;
+}
+
+	#last-call-to-action-bar p {
+		color: #124F00;
+		margin-top: 35px;
+		
+		font-size: 18px;
+	}
+
+	#last-call-to-action-bar p  a, #last-call-to-action-bar p  span{
+		color: #145900;
+		margin-left: 50px;
+		font-weight:bold;
+	}
+
+	/* button */
+	#last-call-to-action-bar p > a:first-child{ 
+		width: 250px;
+		height: 40px;
+		padding-top: 20px;
+		margin-top: -23px;
+		margin-left: 30px;	
+		
+		color: #FFFFFF;
+		font-size: 18px;
+	}
+	
+/***********************************************************************
+	Footer
+*/
+#footer {
+	background: #E8EBEE;	
+	padding-top: 40px;
+	padding-bottom: 40px;
+}
+	#footer-links {	
+	}
+	
+	#footer-links ul li{
+		width: 230px;
+		float: left;
+		margin-bottom: 0.2em;		
+	}
+
+	#footer-links ul li ul{
+		width: 235px;
+	}
+
+	#policy-links {		
+		margin-top: 17px;		
+	}
+
+
+/***********************************************************************
+	Features Page
+*/
+
+	#features-page {
+		background-color: #F8F9F8;
+		padding-top: 20px;
+		padding-bottom: 40px;
+	}
+	
+		#features-page table {
+		width: 70%;
+		}
+
+			#features-page td {
+				padding: 8px;
+				border: 1px solid grey;
+			}
+	
+	/*overides default */
+	#features-page #description {
+		float:left;
+	}
+	
+/***********************************************************************
+	Tour Page
+*/
+
+#tour-page {
+	background-color: #F8F9F8;
+	padding-top: 20px;
+	padding-bottom: 40px;
+}
+
+/*overides default */
+#tour-page #description {
+	float:left;
+}
+
+#tour-page #tour_link {
+	margin-left:100px;
+}
+
+
+/***********************************************************************
+	Pricing Page
+*/
+
+	#pricing-page {
+		background-color: #F8F9F8;
+		padding-top: 20px;
+		padding-bottom: 40px;
+	}
+	
+		#pricing-page table {
+		width: 70%;
+		}
+
+			#pricing-page th {
+				padding: 5px;				
+			}
+			
+			#pricing-page td {
+				padding: 5px;
+				border: 1px solid grey;
+			}
+	
+	/*overides default */
+	#pricing-page #description {
+		float:left;
+	}
+
+/***********************************************************************
+	Help Page
+*/
+
+#help-page {
+	background-color: #F8F9F8;
+	padding-top: 20px;
+	padding-bottom: 40px;
+}
+
+#help-page p{
+	color:black;
+}
+

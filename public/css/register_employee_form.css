@@ -1,0 +1,22 @@
+#employee-registration-form {	
+	padding: 1em;
+	background: white;	
+	width: 550px;
+	
+	border: 20px solid #0877CB;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	
+	margin-left: auto;
+	margin-right: auto;
+}
+
+h1{
+	font-weight: bold;
+	margin-bottom: .5em;
+}
+
+td {
+	padding: .125em;
+	margin: .125em;
+}

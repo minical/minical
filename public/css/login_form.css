@@ -1,0 +1,148 @@
+html 
+{
+	background-color: #777;
+}
+
+
+h1 {
+	font-size: 50px;
+	font-weight: bold;
+	padding: 0px 10px 10px 0px;	
+	color: #306a95;
+}
+
+
+h2 {
+	font-size: 16px;
+	font-weight: bold;
+	margin-bottom: 15px;	
+}
+
+h3 {
+	font-size: 14px;	
+	font-weight: bold;
+	margin-bottom: 15px;
+	padding-left: 40px;
+}
+
+body {
+	font-size: 14px;
+	font-family: Arial, sans-serif;	
+	color: #777;
+}
+
+
+#wrapper {
+	position: absolute;
+	left: 50%;
+	margin-left: -225px;
+	margin-top: 70px;
+	margin-bottom: 70px;
+}
+
+#explanation {
+	margin-top: 20px;
+	margin-left: 10px;
+	color: #f3f3f3;
+	width:430px;
+	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+	font-size: 20px;
+	font-weight: bold;
+}
+
+#login-form {
+	text-align:center;
+	width: 450px;
+	position: relative;
+	z-index: 5;
+	background: #f3f3f3;
+	border: 1px solid #fff;
+	border-radius: 5px;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+	-moz-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+	-webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+	padding-top:20px;
+	padding-bottom: 40px;
+	
+}
+
+input.email, input.password {
+	width: 230px;
+	padding: 15px 25px;
+	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+	font-weight: 400;
+	font-size: 14px;
+	color: #9d9e9e;
+	text-shadow: 1px 1px 0 rgba(256,256,256,1.0);
+	background: #fff;
+	border: 1px solid #fff;
+	border-radius: 5px;
+	box-shadow: inset 0 1px 3px rgba(0,0,0,0.50);
+	-moz-box-shadow: inset 0 1px 3px rgba(0,0,0,0.50);
+	-webkit-box-shadow: inset 0 1px 3px rgba(0,0,0,0.50);
+
+	font-size: 20px;
+	font-weight: bold;
+	margin-bottom: 10px;
+	height: 25px;
+}
+
+.button{
+	padding: 10px 20px 10px 20px;
+	font-weight: 300;
+	font-size: 18px;
+	color: #fff;
+	text-shadow: 0px 1px 0 rgba(0,0,0,0.25);
+	background: #777;
+	border: 1px solid #777;
+	border-radius: 5px;
+	cursor: pointer;
+	box-shadow: inset 0 0 2px rgba(256,256,256,0.75);
+	-moz-box-shadow: inset 0 0 2px rgba(256,256,256,0.75);
+	-webkit-box-shadow: inset 0 0 2px rgba(256,256,256,0.75);
+	text-decoration:none;
+	margin-top: 20px;
+}
+
+#line {
+	width: inherit;
+	border: 1px #025190 solid;
+	margin-bottom: 20px;
+	margin-left: 0px;
+	margin-right: 0px;
+}
+
+#ssl-icon {
+	width: 116px;
+	height: 100px;
+	background-image:url('../images/ssl-icon.gif');
+	background-repeat: no-repeat;
+	float:right;
+	margin-top: -100px;
+	margin-right: 20px;
+}
+
+
+#chrome-logo {
+	width: 123px;
+	height: 40px;
+	background-image:url('../images/chrome-logo.gif');
+	background-repeat: no-repeat;
+}
+
+label[for="login"], label[for="password"]{
+	font-size: 18px;
+	font-weight: bold;
+	color: #777;
+}
+
+input.text, textarea { 
+
+	margin-bottom:12px; width:95%; padding: .4em; 
+}
+fieldset { padding:0; border:0; margin-top:25px; }
+div#users-contain { width: 350px; margin: 20px 0; }
+div#users-contain table { margin: 1em 0; border-collapse: collapse; width: 100%; }
+div#users-contain table td, div#users-contain table th { border: 1px solid #eee; padding: .6em 10px; text-align: left; }
+.ui-dialog .ui-state-error { padding: .3em; }
+.validateTips { border: 1px solid transparent; padding: 0.3em; }

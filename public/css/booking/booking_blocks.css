@@ -1,0 +1,63 @@
+
+.hidden { visibility:hidden; }
+
+.booking_tr {
+	margin: 3px;
+    border-radius: 5px;
+}
+
+.border-red {
+	border-width: 2px;
+	border-color: red;
+	border-style: solid;
+}
+
+/* Reservation */
+.state0 {
+	background-color:#e6f3ff; 
+}
+
+#booking_table0 {
+	background-color:#CEE7FF;
+}
+
+/* In house */
+.state1 {
+	background-color:#DFFEA7; 
+}
+
+#booking_table1 {
+	background-color:#BBFC3C;
+}
+
+/* Checked out */
+.state2 {
+	background-color:#FFE6AA; 
+}
+#booking_table2 {
+	background-color:#FFD166;
+}
+
+/* Out of Order */
+.state3 {
+	background-color:#eeeeee; 
+}
+#booking_table3 {
+	background-color:#dddddd;
+}
+
+/* Unconfirmed Booking */
+.state7 {
+	background-color:#FFFFFF; 
+}
+
+
+.fc-event a:hover,
+.fc-event1 a:hover,
+.fc-event2 a:hover,
+.booking_tr:hover
+{
+	background-color: yellow; 
+	cursor: pointer;
+	
+}

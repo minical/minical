@@ -1,0 +1,43 @@
+#submenu {
+	padding-top: 6px;
+	background-color: #DDD;
+}
+
+#submenu li
+{	
+	float:left;
+}
+
+#submenu a{
+	margin: 0 2px 0 2px;
+	padding: 3px 13px 6px 13px;
+	border-top-right-radius:2px;
+	border-top-left-radius:2px;
+	
+	font-size: 1em;
+	font-weight: bold;	
+	
+	display:block;
+}
+
+#submenu #selected_submenu {
+	color: #000000;
+	background-color: #FFFFFF
+}
+
+#submenu a:link {
+	color:#345;
+	text-decoration:none;
+}
+#submenu a:visited {
+	color:#345;
+	text-decoration:none;
+}
+#submenu a:hover {
+	background-color:#FFFFFF;
+	text-decoration:none;
+}
+#submenu a:active {
+	color:#345;
+	text-decoration:none;
+}

@@ -1,0 +1,338 @@
+
+/* Custom Bootstrapped navbar */
+
+.navbar-custom {
+  background-color: #fff;
+  border-color: #fff;
+  border-radius: 0px;
+}
+.navbar-custom .navbar-brand {
+  color: #ffffff;
+}
+.navbar-custom .navbar-brand:hover,
+.navbar-custom .navbar-brand:focus {
+  color: #e6e6e6;
+  background-color: transparent;
+}
+.navbar-custom .navbar-text {
+  color: #ffffff;
+}
+.navbar-custom .navbar-nav > li > a {
+  color: #ffffff;
+}
+.navbar-custom .navbar-nav > li > a:hover,
+.navbar-custom .navbar-nav > li > a:focus {
+  color: #b7cedf;
+  background-color: transparent;
+}
+.navbar-custom .navbar-nav > .active > a,
+.navbar-custom .navbar-nav > .active > a:hover,
+.navbar-custom .navbar-nav > .active > a:focus {
+  color: #b7cedf;
+  background-color: #273340;
+}
+.navbar-custom .navbar-nav > .disabled > a,
+.navbar-custom .navbar-nav > .disabled > a:hover,
+.navbar-custom .navbar-nav > .disabled > a:focus {
+  color: #cccccc;
+  background-color: transparent;
+}
+.navbar-custom .navbar-toggle {
+  border-color: #dddddd;
+}
+.navbar-custom .navbar-toggle:hover,
+.navbar-custom .navbar-toggle:focus {
+  background-color: #dddddd;
+}
+.navbar-custom .navbar-toggle .icon-bar {
+  background-color: #cccccc;
+}
+.navbar-custom .navbar-collapse,
+.navbar-custom .navbar-form {
+  border-color: #26323f;
+}
+.navbar-custom .navbar-nav > .dropdown > a:hover .caret,
+.navbar-custom .navbar-nav > .dropdown > a:focus .caret {
+  border-top-color: #b7cedf;
+  border-bottom-color: #b7cedf;
+}
+.navbar-custom .navbar-nav > .open > a,
+.navbar-custom .navbar-nav > .open > a:hover,
+.navbar-custom .navbar-nav > .open > a:focus {
+  background-color: #273340;
+  color: #b7cedf;
+}
+.navbar-custom .navbar-nav > .open > a .caret,
+.navbar-custom .navbar-nav > .open > a:hover .caret,
+.navbar-custom .navbar-nav > .open > a:focus .caret {
+  border-top-color: #b7cedf;
+  border-bottom-color: #b7cedf;
+}
+.navbar-custom .navbar-nav > .dropdown > a .caret {
+  border-top-color: #ffffff;
+  border-bottom-color: #ffffff;
+}
+@media (max-width: 767) {
+  .navbar-custom .navbar-nav .open .dropdown-menu > li > a {
+    color: #ffffff;
+  }
+  .navbar-custom .navbar-nav .open .dropdown-menu > li > a:hover,
+  .navbar-custom .navbar-nav .open .dropdown-menu > li > a:focus {
+    color: #b7cedf;
+    background-color: transparent;
+  }
+  .navbar-custom .navbar-nav .open .dropdown-menu > .active > a,
+  .navbar-custom .navbar-nav .open .dropdown-menu > .active > a:hover,
+  .navbar-custom .navbar-nav .open .dropdown-menu > .active > a:focus {
+    color: #b7cedf;
+    background-color: #273340;
+  }
+  .navbar-custom .navbar-nav .open .dropdown-menu > .disabled > a,
+  .navbar-custom .navbar-nav .open .dropdown-menu > .disabled > a:hover,
+  .navbar-custom .navbar-nav .open .dropdown-menu > .disabled > a:focus {
+    color: #cccccc;
+    background-color: transparent;
+  }
+}
+.navbar-custom .navbar-link {
+  color: #ffffff;
+}
+.navbar-custom .navbar-link:hover {
+  color: #b7cedf;
+}
+
+/* Bootstrapped end here*/
+
+
+#menu{
+	padding-top: 10px;
+	background: #345;
+	height: 28px;
+	/*#025190 */
+}
+
+/* selling date value used for data fetching */
+#sellingDate {
+	display: none;
+}
+
+
+a:link#main-logo, a:visited#main-logo, a:hover#main-logo, a:active#main-logo{
+	font-size: 1.2em;
+	color:#b7cedf;
+	text-decoration:none;
+	position: absolute;
+	font-weight: bold;
+}
+
+/*******************************/
+/* --- session_nav section --- */
+/*******************************/
+#session-nav {
+	position:absolute;
+	right:10px;
+	color: #FFFFFF;	
+	float: right;
+}
+
+#session-nav ul {	
+	float: right;
+}
+
+#session-nav li
+{	
+	float:left;
+}
+
+#session-nav a {
+	color: #b7cedf;
+	font-weight: bold;
+}
+
+.bold {	
+	font-weight: bold;
+}
+
+/***************************************/
+/* --- company information section --- */
+
+/***************************************/
+#company-info {	
+	width: 450px; /*arbitrary size to fit all info */
+	
+	margin-top: 15px;
+	
+	color: #FFF;
+	
+	float:right;
+}
+
+#company-info ul{
+	float:right;
+}
+
+#company-info li{
+	float:right;
+}
+
+#company-info a {	
+	font-weight: bold;
+	color: #FFF;
+}
+
+/* triangle-border is for the alert for "Selling Date is behind today" */
+#selling-date-span, .triangle-border{
+	font-weight: bold;
+}
+
+#run-night-audit-button , #undo-night-audit-button{
+	font-weight: normal;
+}
+
+/***************************************/
+/* --- night audit section --- */
+
+/***************************************/
+
+#dialogNightAudit, #dialogUndoNightAudit, #dialogProcessingRequest{
+	text-align: center;
+	display: none;
+}
+
+/***************************************/
+/* --- menu nav section --- */
+
+/***************************************/
+#menu-nav {	
+	float:left;
+	margin-left:150px;
+	margin-right: 10px;
+}
+
+#menu-nav li
+{	
+	float:left;
+}
+
+#menu-nav a{
+	margin: 0 1px 0 2px;
+	padding: 6px 13px 6px 13px;
+	
+	border-top-right-radius: 2px;
+	border-top-left-radius: 2px;
+	
+	font-size: 1em;
+	font-weight: bold;
+	
+	background: #b7cedf;
+	
+	display:block;
+}
+
+#menu-nav .selected-menu#bookings-tab {
+	color: #345;
+	background: #FFF;
+}
+
+#menu-nav .selected-menu#customers-tab {
+	color: #345;
+	background: #FFF;
+}
+
+#menu-nav .selected-menu#rooms-tab {
+	color: #345;
+	background: #FFF;
+}
+
+#menu-nav .selected-menu#reports-tab {
+	color: #345;
+	background: #FFF;
+}
+
+/***************************************/
+
+#menu-nav a:link {
+	color:#345;
+	text-decoration:none;
+}
+#menu-nav a:visited {
+	color:#345;
+	text-decoration:none;
+}
+#menu-nav a:hover {
+	color:#345;
+	background: #FFF;
+	text-decoration:none;
+}
+#menu-nav a:active {
+	color:#345;
+	text-decoration:none;
+}
+
+
+#tutorial-video a {
+	color: #345;
+	background-color: white;
+	border-bottom-left-radius: 2px;
+	border-bottom-right-radius: 2px;
+	padding: 3px;
+	text-decoration:none;
+	position: absolute;
+	top: 0px;
+}
+
+
+/* ============================================================================================================================
+== BUBBLE WITH A BORDER AND TRIANGLE
+** ============================================================================================================================ */
+
+/* THE SPEECH BUBBLE
+------------------------------------------------------------------------------------------------------------------------------- */
+
+.triangle-border {
+	position:absolute;
+	margin-top: 5px;
+	padding:4px;
+	color:red;
+	background:#fff;
+	text-align: center;
+	/* css3 */
+	-webkit-border-radius:10px;
+	-moz-border-radius:10px;
+	border-radius:10px;
+	z-index: 10;
+}
+
+/* THE TRIANGLE
+------------------------------------------------------------------------------------------------------------------------------- */
+
+/* creates the smaller  triangle */
+
+
+.triangle-border:after {
+	content:"";
+	position:absolute;
+	bottom:-13px; /* value = - border-top-width - border-bottom-width */
+	left:47px; /* value = (:before left) + (:before border-left) - (:after border-left) */
+	border-width:13px 13px 0;
+	border-style:solid;
+	border-color:#fff transparent;
+    /* reduce the damage in FF3.0 */
+    display:block; 
+    width:0;
+}
+
+
+/* creates the smaller  triangle */
+.triangle-border.top:after {
+	top:-10px; /* value = - border-top-width - border-bottom-width */
+	bottom:auto;
+	left:auto;
+	right:190px; /* value = (:before right) + (:before border-right) - (:after border-right) */
+    border-width:0 13px 13px;
+}
+.image-modal-footer{
+    max-height: 65px;
+    overflow: hidden;
+}
+.display_tr{display:none;}

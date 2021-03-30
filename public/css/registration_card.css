@@ -1,0 +1,79 @@
+.center {
+	text-align: center;
+}
+
+.text-align-right {
+	text-align: right;
+}
+
+.text-align-center {
+	text-align: center;
+}
+
+.text-align-left {
+	text-align: left;
+}
+
+.signature {
+	width: 200px;
+	height: 70px;
+	display: inline;
+	float: left;
+}
+
+
+
+body {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 15px;
+}
+
+#expiry-date {
+	float:right;
+	margin-right: 150px;
+}
+
+#agreement {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	margin: 20px;
+	
+}
+
+#registration-card-container  {
+	width: 750px;
+	border: 1px solid;
+	background-color: white;
+	padding: 10px;	
+	margin: 20x;
+}
+
+fieldset {
+	margin: 20px;
+}
+
+legend {
+	background-color:white;
+}
+
+ul {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 15px;
+	margin: 5px;
+}
+
+#h2 {
+
+}
+
+#right_div {
+	margin-top: 50px;
+	margin-right: 10px;
+	float: right;
+}
+
+@media print {
+	.print-hidden {
+		display:none;
+	}
+}

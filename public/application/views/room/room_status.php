@@ -1,0 +1,166 @@
+<!-- Modal -->
+<div class="modal fade" id="room_notes_modal" tabindex="-1" role="dialog" aria-labelledby="label" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel"><?php echo l('edit_room_notes'); ?></h4>
+			</div>
+			<div class="modal-body">
+				<textarea id="room-notes" class="form-control" rows=5>
+				</textarea>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" id="save-room-notes-button"><?php echo l('save_changes'); ?></button>
+				<button type="button" class="btn btn-light" data-dismiss="modal"><?php echo l('close'); ?></button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="room_instructions_modal" tabindex="-1" role="dialog" aria-labelledby="label" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel"><?php echo l('Edit Room Instructions'); ?></h4>
+			</div>
+			<div class="modal-body">
+				<textarea id="room-instructions" class="form-control" rows=5>
+				</textarea>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" id="save-room-instructions-button"><?php echo l('save_changes'); ?></button>
+				<button type="button" class="btn btn-light" data-dismiss="modal"><?php echo l('close'); ?></button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- SHow Rating Modal -->
+<div class="modal fade" id="room_rating_modal" tabindex="-1" role="dialog" aria-labelledby="label" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel"><?php echo l('Reviews'); ?></h4>
+			</div>
+			<div class="modal-body view-rating">
+			</div>
+			<div class="modal-footer">
+				<!-- <button type="button" class="btn btn-primary" id="save-room-notes-button"><?php echo l('save_changes'); ?></button> -->
+				<button type="button" class="btn btn-light" data-dismiss="modal"><?php echo l('close'); ?></button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+<div class="app-page-title">
+	<div class="page-title-wrapper">
+		<div class="page-title-heading">
+			<div class="page-title-icon">
+				<i class="pe-7s-home text-success"></i>
+			</div>
+			<div><?php echo l('room_status'); ?>
+			<span class="<?=$this->session->userdata('user_role') == "is_housekeeping" ? "hidden" : "";?>">
+		<!-- <a href="<?php echo base_url() . 'reports/room/show_housekeeping_report';?>">
+			<?php echo l('housekeeping_report'); ?>
+		</a>
+		| -->
+	</span>
+</div>
+</div>
+<div class="page-title-actions">
+	<a href="<?php echo base_url() . 'settings/room_inventory/rooms';?>" class="btn-shadow  btn btn-dark">
+		<?php echo l('edit_rooms'); ?>
+	</a>
+
+</div>    </div>
+</div>
+
+
+<div class="main-card mb-3 card">
+	<div class="card-body">
+
+		<table class="table table-hover table-rating">
+			<tr>
+				<th class="td-room-name text-center"><?php echo l('rooms'); ?></th>
+				<th class="td-room-type text-center"><?php echo l('room_types'); ?></th>
+				<th class="td-customer-name text-left"><?php echo l('customer'); ?></th>
+				<th class="td-room-status text-center" style="width: 100px">
+					<button class="btn btn-primary" id="set_rooms_clean">
+						<?php echo l('clean_all_rooms'); ?>
+					</button>
+				</th>
+				<th class="text-left"><?php echo l('room_notes'); ?></th>
+				<th class="text-left"><?php echo l('Check-In Instructions'); ?></th>
+
+				<?php if ($this->company_subscription_level == ELITE) { ?>
+					<th class="text-left" data-content="Score must be betweeen 0 to 10, a float number. 10 as the highest" rel="popover" data-placement="top" data-container="body" data-trigger="hover"><?php echo l('Score'); ?>
+					&nbsp;<i class="fa fa-question-circle" aria-hidden="true"></i>
+				</th>
+				<!-- <th class="text-center"><?php echo l('Rating'); ?></th> -->
+			<?php } ?>
+			<th style="width: 100px"></th>
+		</tr>			
+		<?php 
+		if(isset($rows)) : 
+			foreach ($rows as $r) :
+				?>
+				<tr class='room_tr' name='<?php echo $r->room_id; ?>' onclick="">
+					<td class="text-center"><?php echo $r->room_name; ?></td>
+					<td class="text-center"><?php echo $r->acronym; ?></td>
+					<td class="td-customer-name text-left" ><div class="booking_tr" name="<?php echo $r->booking_id; ?>"><?php echo $r->customer_name; ?></div></td>
+					<td class="text-center">
+						<select autocomplete="off" class="room_status form-control">
+							<option <?php if ($r->status == 'Clean') {echo 'selected="selected"';}?>><?php echo l('Clean', true); ?></option>
+							<option <?php if ($r->status == 'Dirty') {echo 'selected="selected"';}?>><?php echo l('Dirty', true); ?></option>					
+							<option <?php if ($r->status == 'Inspected') {echo 'selected="selected"';}?>><?php echo l('Inspected', true); ?></option>					
+						</select>
+						<p style="color:red;margin-top: 5px;" class="text-center"><?php
+						if(!empty($r->booking_status)) {
+							if($r->booking_status == 3) {
+								echo l("OUT OF ORDER", true);
+							} 
+						} ?>
+					</p>
+				</td>
+				<td class="text-left"><?php echo str_replace("\n", "<br/>", $r->notes); ?></td>
+				<td style="width: 16%;">
+					<?php echo str_replace("\n", "<br/>", $r->instructions); ?>
+				</td>
+				<?php if ($this->company_subscription_level == ELITE) { ?>
+					<td class="text-left">
+						<input class="form-control room_score" type="number" min="0" max="10" name="room_score" value="<?php echo $r->score; ?>" style="width: 80px;">
+					</td>
+						<!-- <td class="text-center">
+							<input class="star-rating" name="star-rating" type="hidden" value="<?php echo isset($r->rating) && $r->rating ? $r->rating : 0; ?>" />
+							<a href="javascript:" class="show_rating" data-room_id="<?php echo $r->room_id; ?>" data-room_rating="<?php echo isset($r->rating) && $r->rating ? $r->rating : 0; ?>" >
+								<div class="rateit stars" data-rateit-starwidth="16" data-rateit-starheight="16" style="pointer-events: none;"></div>
+							</a>
+							<br/>
+							<?php echo isset($r->total_ratings) && $r->total_ratings ? $r->total_ratings > 1 ? '('.$r->total_ratings.' '.l("ratings", true).')' : '('.$r->total_ratings.' '.l("rating", true).')' : ''; ?>
+						</td> -->
+					<?php } ?>
+					<td class="td-room-notes text-right">
+						<button class='room-notes-button btn btn-light' style="margin-bottom: 5px">
+							<?php echo l('Edit Room Note', true); ?>
+						</button>
+						<button class='room-instructions-button btn btn-light'>
+							<?php echo l('Edit Instructions', true); ?>
+						</button>
+					</td>
+
+				</tr>
+				<?php
+			endforeach;
+		else : 
+			?>
+			<h1><?php echo l('No room types have been recorded.', true); ?></h1>
+		<?php endif; ?>
+	</table>
+</div></div>
+

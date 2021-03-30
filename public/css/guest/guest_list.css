@@ -1,0 +1,36 @@
+
+#guest_search_div {
+	font-size: 11px; 
+	font-family: Lucida Grande, Lucida Sans, Arial, sans-serif;
+	
+}
+
+.guest_tr td 
+{
+	font-size: 14px; 
+	font-family: Lucida Grande, Lucida Sans, Arial, sans-serif;
+	
+}
+
+.guest_table {
+	border: 1px solid #ccc; 
+	padding:5px;
+	
+	margin-top: 10px;
+	background-color: white;
+	
+}
+
+.guest_table th {
+	text-align: center;
+	border: 1px solid grey;
+}
+
+.guest_table td {
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+#th_balance {
+	width: 80px;
+}

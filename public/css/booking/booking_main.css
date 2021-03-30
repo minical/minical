@@ -1,0 +1,177 @@
+
+.floatingHeader {
+  position: fixed;
+  top: 40px;
+  visibility: hidden;
+  background-color: #fff;
+  border-bottom: 2px solid #E4205C;
+}
+
+#booking_list_wrap {
+	position: absolute;
+	z-index: 10;
+	background-color: #FFF;
+	color: #345;
+
+	padding: 10px;
+	
+	border:1px #ececec solid;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	
+	top: 5px;
+	right:20px;
+	box-shadow: 5px 5px 5px #888888;
+	min-height: 40px;
+}
+
+
+.alert-booking-created {
+  position: fixed;
+  z-index: 3999;
+  width: 520px;
+  padding: 10px;
+  height: 60px;
+  overflow: show;
+  margin: auto;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+/*booking hover background*/
+.hover-bg{
+    background-color: #FFFF00 !important;
+}
+
+/*New Booking Modal*/
+#booking-modal .tabs-left, .tabs-right {
+  border-bottom: none;
+  padding-top: 2px;
+}
+#booking-modal .tabs-left {
+  border-right: 1px solid #ddd;
+}
+#booking-modal .tabs-right {
+  border-left: 1px solid #ddd;
+}
+#booking-modal .tabs-left>li, .tabs-right>li {
+  float: none;
+  margin-bottom: 2px;
+}
+#booking-modal .tabs-left>li {
+  margin-right: -1px;
+}
+#booking-modal .tabs-right>li {
+  margin-left: -1px;
+}
+#booking-modal .tabs-left>li.active>a,
+#booking-modal .tabs-left>li.active>a:hover,
+#booking-modal .tabs-left>li.active>a:focus {
+  border-bottom-color: #ddd;
+  border-right-color: transparent;
+}
+
+#booking-modal .tabs-right>li.active>a,
+#booking-modal .tabs-right>li.active>a:hover,
+#booking-modal .tabs-right>li.active>a:focus {
+  border-bottom: 1px solid #ddd;
+  border-left-color: transparent;
+}
+#booking-modal .tabs-left>li>a {
+  border-radius: 4px 0 0 4px;
+  margin-right: 0;
+  display:block;
+}
+#booking-modal .tabs-right>li>a {
+  border-radius: 0 4px 4px 0;
+  margin-right: 0;
+}
+#booking-modal .vertical-text {
+  margin-top:50px;
+  border: none;
+  position: relative;
+}
+#booking-modal .vertical-text>li {
+  height: 20px;
+  width: 120px;
+  margin-bottom: 100px;
+}
+#booking-modal .vertical-text>li>a {
+  border-bottom: 1px solid #ddd;
+  border-right-color: transparent;
+  text-align: center;
+  border-radius: 4px 4px 0px 0px;
+}
+#booking-modal .vertical-text>li.active>a,
+#booking-modal .vertical-text>li.active>a:hover,
+#booking-modal .vertical-text>li.active>a:focus {
+  border-bottom-color: transparent;
+  border-right-color: #ddd;
+  border-left-color: #ddd;
+}
+#booking-modal .vertical-text.tabs-left {
+  left: -50px;
+}
+#booking-modal .vertical-text.tabs-right {
+  right: -50px;
+}
+#booking-modal .vertical-text.tabs-right>li {
+  -webkit-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  -o-transform: rotate(90deg);
+  transform: rotate(90deg);
+}
+#booking-modal .vertical-text.tabs-left>li {
+  -webkit-transform: rotate(-90deg);
+  -moz-transform: rotate(-90deg);
+  -ms-transform: rotate(-90deg);
+  -o-transform: rotate(-90deg);
+  transform: rotate(-90deg);
+}
+
+#booking-modal .modal-header{
+    border-bottom: 0px;
+}
+
+/*New Booking Modal*/
+.check-in-time-wrapper,
+.check-out-time-wrapper {
+  display: none;
+}
+.hourly-booking-enabled .check-in-date-wrapper,
+.hourly-booking-enabled .check-out-date-wrapper {
+  width: 60%;
+  display: inline;
+  border-radius: 4px 0px 0px 4px;
+}
+.hourly-booking-enabled .check-in-time-wrapper,
+.hourly-booking-enabled .check-out-time-wrapper {
+  display: block;
+  width: 40%;
+  float: right;
+  border-left: none;
+  border-radius: 0px 4px 4px 0px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-position: right 50%;
+  background-repeat: no-repeat;
+  background-image: url('data:image/svg+xml;utf8,<?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="12" version="1"><path d="M4 8L0 4h8z"/></svg>');
+  padding: .5em;
+  padding-right: 1.5em
+}
+.form-group.input-group > .check-out-date-wrapper{
+  width: 77%;
+}
+.form-group.input-group > .check-out-time-wrapper{
+  display: none;
+}
+.hourly-booking-enabled.form-group.input-group > .check-out-date-wrapper{
+  width: 50%;
+}
+.hourly-booking-enabled.form-group.input-group > .check-out-time-wrapper{
+  width: 27%;
+  display: block;
+}

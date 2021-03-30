@@ -1,0 +1,106 @@
+html {
+	font-family: Arial;
+	font-size: 14px;
+}
+
+h1 { font-size:2.25em;  /* basesize x2.25 */ }
+h2 { font-size:1.5em;   /* basesize x1.5 */ }
+h3 { font-size:1.125em; /* basesize x1.125 */ }
+h4 { font-size:0.875em; /* basesize x0.875 */ }
+
+th {	
+	font-weight: bold;
+}
+
+table {	
+	border-collapse: separate;
+	border-spacing: 2px;
+	border-radius: 2px;
+}
+
+/*rounded table corners */
+table tr:first-child th:first-child {
+	border-top-left-radius:2px;
+}
+
+table tr:first-child th:last-child {
+	border-top-right-radius:2px;
+}
+
+table tr:last-child td:first-child {
+	border-bottom-left-radius:2px;
+}
+
+table tr:last-child td:last-child {
+	border-bottom-right-radius:2px;
+}
+
+button { 
+	padding: 2px 4px 2px 4px;
+}
+input[type="submit"] {
+	padding: 2px 4px 2px 4px;
+}
+
+body{
+	background:#FFFFFF;
+}
+
+#main-content {
+	margin-top: 20px;
+	
+}
+
+#copyright {
+	margin-top: 10px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	text-align: center;
+}
+
+.hidden {
+	display:none;
+	visibility: hidden;
+}
+
+/* used to contain floats in div */
+/* taken from http://www.ejeliot.com/blog/59 */
+.container:after { content: "."; display: block; height: 0; clear: both; visibility: hidden; }
+.container { display: inline-block; _height: 1%; }
+/* Hides from IE-mac \*/
+.container { display: block; }
+
+.max-width {
+	padding: 0 10px 0 10px;
+	margin-left:auto; 
+	margin-right: auto;
+}
+
+.text-align-right {
+	text-align: right;
+}
+
+.text-align-center {
+	text-align: center;
+}
+
+.validation-errors{
+	color:red;
+}
+
+.button {
+	display: block;		
+	padding: 4px 6px 4px 6px;
+	
+	-moz-border-radius: 2px;
+	border-radius: 2px;
+	
+	color: black;	
+	
+	text-decoration: none;	
+	
+	background: #EEE;
+	border: 1px grey solid;
+	
+	float: left;
+}

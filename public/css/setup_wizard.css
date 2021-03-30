@@ -1,0 +1,44 @@
+/* This css makes modification on top of the hotel settings file. It should eventually be separated */
+
+.assistance-div {
+	float: right;	
+	background: #FFFFFF;
+	border: 2px solid #BBBBBB;
+	border-radius: 2px;
+	padding: 10px;	
+	width: 250px;
+}
+
+.assistance-div p {
+	font-size: 1em;
+}
+
+.settings {
+	border: none;
+	border-radius: 5px;
+	background: #E5E5E5;
+	color: #024B82;
+}
+
+.settings h1 {
+	margin-bottom: 22px;
+}
+
+#welcome-next-link {
+	margin-top: 15px;
+	color: black;
+}
+
+#setup-room-types-next-link, #setup-room-next-link, 
+#setup-tax-next-link, #setup-charges-next-link,
+#get-started-now-link {
+	float: right;
+}
+
+.setup-wizard-content {
+	border: 2px solid #BBBBBB;
+	border-radius: 2px;
+	padding: 20px;
+	width: 510px;
+	background: #FFFFFF;
+}

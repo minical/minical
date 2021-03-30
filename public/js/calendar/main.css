@@ -1,0 +1,181 @@
+/*
+ * FullCalendar v@VERSION Stylesheet
+ *
+ * Feel free to edit this file to customize the look of FullCalendar.
+ * When upgrading to newer versions, please upgrade this file as well,
+ * porting over any customizations afterwards.
+ *
+ * Date: @DATE
+ *
+ */
+
+
+/* show icon for editing room name */
+#RoomTable tbody tr :hover .edit-icon{
+	width: 16px;
+	height: 16px;
+	margin-right: 1px;
+	float: right;
+	background-image: url(../../images/edit.png);	
+
+}
+
+#RoomTable tbody tr :hover.text-align-right .edit-icon{
+	float: left;	
+
+}
+
+#RoomTable tbody tr {
+	position:relative;	
+	cursor: pointer;
+}
+
+.edit-icon {	
+	display:inline;
+}
+/******************************/
+
+.fc,
+.fc .fc-header,
+.fc .fc-content {
+	font-size: 1em;
+    z-index: 1;
+}
+
+.fc table {
+	border-collapse: collapse;
+	border-spacing: 0;
+	table-layout: fixed;
+}
+
+.fc td, .fc th {
+	padding: 0;
+	vertical-align: top;
+	overflow: visible; /* innGrid - By making this visible, the warning messages float over the canvas*/
+}
+
+
+
+/* Header
+------------------------------------------------------------------------*/
+
+.fc-header-title {
+	font-size: large;
+	white-space: nowrap;
+}
+
+.fc-header-title .fc-header-title-custom input.hasDatepicker {
+    font-size: inherit;
+    /* margin-right: 0.5em; */
+    max-width: 157px;
+}
+
+.fc-header-space {
+	padding-left: 10px;
+}
+
+/* right-to-left */
+
+.fc-rtl .fc-header-title {
+	direction: rtl;
+}
+
+
+.fc-header .fc-state-default a {
+	display: block;
+	border-width: 0 1px;
+	margin: 0 -1px;
+	width: 100%;
+	text-decoration: none;
+}
+
+/* Content Area & Global Cell Styles
+------------------------------------------------------------------------*/
+
+.fc-widget-content {
+	border: 1px solid #ccc; /* outer border color */
+}
+
+.fc-content {
+	clear: both;
+}
+
+.fc-content .fc-state-default {
+	border-style: solid;
+	border-color: #ccc; /* inner border color */
+}
+
+
+/* Highlight weekends */
+.fc-content [data-day="sat"], .fc-content [data-day="sun"]
+{
+	background-color: #F3F3F3;
+}
+
+/* Highlight today */
+#calendar .fc-content [data-today="true"],
+#overview_calendar .fc-content [data-today="true"] { 
+    overflow: hidden;
+	background: #FFFF00;
+}
+/******************/
+
+
+.fc-cell-overlay { /* semi-transparent rectangle while dragging */
+	background: #9cf;
+	opacity: .2;
+	filter: alpha(opacity=20); /* for IE */
+}
+
+.fc-view { /* prevents dragging outside of widget */
+	width: 100%;
+	overflow: visible;
+}
+
+
+
+#overview_calendar {
+	display:none;
+}
+.btn-calendar-view input {
+    display: none;
+}
+.btn-calendar-view label.active {
+    background-color: #265a88;
+    border-color: #245580;
+}
+#overview_calendar .fc-event.fc-event-overview a {
+	border: none;
+    border-radius: 0;
+    background: none;
+    color: black;
+	text-align: center;
+}
+#overview_calendar #CalendarTable tbody .fc-state-default,
+#overview_calendar .room-column tbody .fc-state-default {
+    padding: 8px;
+	/*vertical-align: middle;*/
+}
+
+#overview_calendar #CalendarTable tbody tr td .fc-day-content {
+	text-align: center; 
+}
+
+.hotel-calendar-wrapper {
+    height: auto;
+    min-height: 292px;
+}
+.calendar_process {
+    text-align: center;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 25%;
+}
+.mr-t-20 {
+    margin-top: 20px;
+}
+.btn_calendar_view.active, .btn_calendar_view:active {
+    background-color: #051f35 !important;
+    border-color: #051f35 !important;
+}

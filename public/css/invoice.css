@@ -1,0 +1,195 @@
+#booking_id{
+    width: 100px;
+    outline: none;
+    border: none !important;
+    -webkit-box-shadow: none !important;
+    -moz-box-shadow: none !important;
+    box-shadow: none !important;
+}
+.payment_div{
+    padding-left: 15px;
+    padding-right: 15px;
+}
+#folios {
+	padding-bottom: 0px;
+	border-bottom:0px;
+	padding-top: 7px;
+}
+#folios ul{
+	border-bottom: none;
+}
+#folios .remove-folio {
+	display: none;
+    position: absolute;
+    top: 11px;
+    right: 12px;
+}
+#folios li.active .remove-folio {
+	display: block;
+}
+#folios ul li {
+	margin-bottom: -1px;
+}
+#folios ul li > div {
+	position: relative;
+    margin-right: 2px;
+    line-height: 1.42857143;
+    border-radius: 4px 4px 0 0;	
+	color: #555;
+    border: 1px solid #ddd;
+    border-bottom-color: transparent;
+	border-bottom: 0px;
+	padding: 5px 28px 5px 15px;
+	background-color: #eee;
+	border-color: #eee #eee #ddd;
+    height: 50px;
+}
+#folios .nav-tabs>li.non-empty-folio>div {
+    background-color: #fff1e7;
+}
+#folios .nav-tabs>li.active>div {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-bottom-color: transparent;
+}
+#folios .remove-folio i {
+	cursor:pointer;
+	color: #a94442;
+}
+.folio-name {
+    font-size: 11px;
+    text-decoration: underline;
+    padding:5px 0;
+}
+.folio-name:hover {
+   color: red;
+}
+.updated-folio-name {
+	min-width: 150px;
+}
+.add-new-folio{
+    margin-top: 5px;
+}
+/* Preventing printing ahref when printing */
+@media print {
+ 
+  body {
+    /*font-size: 1.8em;*/
+  }
+  .h2, h2 {
+    font-size: 14px;
+    font-weight: bold;
+  }
+/*  body tr{
+    font-size: 13px;
+  }*/
+    .page-header {
+        margin-top: 20px;
+    }
+    .smaller_fonts, address, #charge-table, #payment-table{
+        font-size: 13px;
+    }
+    .charges_text_spacing, 
+    .charges_div_spacing,
+    .charges_div_spacing > div
+    {
+        margin-left: 0px;
+        margin-right: 0px;
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+    .charge_div, .payment_div{
+        margin-top: 3px;
+        margin-bottom: 0px;
+    }
+    .delete-td {
+        display: none;
+    }
+    .booking_id_div{
+        margin: 0px;
+        padding: 0px;
+    }
+    .payment_div,
+    .charge_div{
+        position: absolute;
+        display: inline-block;
+        background: white !important;
+        border: 1px solid #dddddd;
+        padding: 4px;
+        margin-top: -17px;
+        left: 15px;
+    }
+    .charges-and-payments .panel{
+        padding-top: 5px;
+    }
+    .payment_total, .payments_text_spacing, #payment_total{
+        padding: 0;
+    }
+    /* #button-pos {
+        display: none;
+    } */
+    .app-page-title,.app-header{
+        display:none;
+    }
+}
+    
+.editable_tr .editable_td:hover:after {
+  font-family: "Glyphicons Halflings";
+  content: "\270f";
+  padding-left:15px;
+  float:right;
+  position: absolute;
+  color: green;
+}
+
+.editable_tr .editable_td:hover {
+	outline: 0;
+    box-shadow: 0 0 8px rgba(82,168,236,.6) !important;
+}
+
+.x-button:hover, .expand-all, .collapse-all{
+	cursor: pointer; 
+}
+
+.expandable:hover {
+	background-color: #dff0d8;
+}
+
+.payment_row {
+    height: 44px;
+}
+#invoice-container .invoice-number {
+    padding-right: 30px;
+}
+@media (max-width: 892px) {
+  #invoice-container .invoice-number {
+    padding-right: 15px;
+  }
+}
+#folios ul.nav.nav-tabs > li:first-child span.remove-folio {
+    display: none;
+}
+#folios {
+	transition: 1s margin-left;
+}
+.invoice-arrow-icon {
+	color: black;
+    font-size: 30px;
+    position: absolute;
+    top: 12px;
+	cursor: pointer;
+}
+.invoice-arrow-icon.fa-angle-left {
+    left: 18px;
+}
+.invoice-arrow-icon.fa-angle-right {
+    right: 18px;
+}
+
+.payment_status_buttons{
+    display: inline-block;
+	float: right;
+}
+.not-allowed {
+    cursor: not-allowed;
+}

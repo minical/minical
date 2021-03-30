@@ -1,0 +1,67 @@
+/* Preventing printing ahref when printing */
+@media print {
+
+  table{
+    font: 9pt Arial, Helvetica,"Lucida Grande", serif; 
+  }
+
+}
+
+.PERSON {
+	width:24px;
+	height:24px;
+	background:url('../../images/individual.png') no-repeat;
+	margin: 4px;
+	margin-right: 10px;
+	display:inline;
+	float:left;
+}
+
+.COMPANY {
+	width:24px;
+	height:24px;
+	background:url('../../images/corporate.png') no-repeat;
+	display:inline;
+	margin: 4px;
+	margin-right: 10px;
+	float:left;
+}
+
+
+.legend-color {
+	border: 1px solid rgb(204, 204, 204);
+	padding: 5px;
+}
+
+/* Reservation */
+.state0 {
+	background-color:#e6f3ff; 
+}
+
+
+/* In house */
+.state1 {
+	background-color:#DFFEA7; 
+}
+
+/* Checked out */
+.state2 {
+	background-color:#FFE6AA; 
+}
+
+/* Out of Order */
+.state3 {
+	background-color:#eeeeee; 
+}
+
+.fc-event a:hover,
+.fc-event1 a:hover,
+.fc-event2 a:hover,
+.booking_tr:hover
+{
+	background-color: yellow; 
+	cursor: pointer;
+}
+
+
+

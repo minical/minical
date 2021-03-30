@@ -1,0 +1,63 @@
+iframe {
+	border: 0;
+}
+#guest_search_div {	
+	margin: 5px;
+	float: left;
+}
+
+#query {
+	width: 150px;
+}
+
+.center {
+	text-align: center;
+}
+
+#guest-table th {
+	padding: .5em;
+	background: #EEEEFF;	
+}
+
+#guest-table {
+	width: 100%;
+}
+
+#guest-table td {
+	padding: .25em;
+
+	font-size: 14px; 
+	font-family: Lucida Grande, Lucida Sans, Arial, sans-serif;
+}
+
+#create-guest-div {
+	text-align: center;
+}
+
+#create-guest-form-iframe { 
+	width: 450px;
+	height: 300px;
+}
+
+.edit-guest {
+	width: 450px;
+	height: 300px;
+	float: left;
+}
+
+.booking-list {
+	width: 450px;
+	height: 330px;
+	float: right;
+}
+
+.guest-info-tr {
+	display: none;
+}
+
+.guest-tr {
+	background-color: #F7F7FF;
+}
+.guest-tr:hover, .selected-guest {
+	background-color: #d6e0e6; 
+}

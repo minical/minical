@@ -1,0 +1,20 @@
+
+label {
+	font: 15px Arial,Helvetica,sans-serif;
+	display: block;
+    font-weight: bold;
+    height: 35px;
+    line-height: 31px;
+    text-align: left;
+    
+}
+
+#notes {
+	color: #000000;
+    font: 15px Arial,Helvetica,sans-serif;
+    padding: 4px;
+    margin-bottom: 15px;
+	width: 450px;
+	height: 200px;
+}
+

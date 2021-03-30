@@ -1,0 +1,53 @@
+.calendar tbody tr {
+    transition: background-color 0.1s;
+}
+
+.calendar tbody tr[data-selected="false"]:hover {
+    background-color: #eee;
+    cursor: pointer;
+}
+
+.calendar tbody tr[data-selected="true"] {
+    background-color: #c0d4e7;
+    cursor: pointer;
+}
+
+.net-availability {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    padding: 6px 12px 6px 38px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: linear-gradient(to bottom, #FFF 0px, #E0E0E0 100%);
+}
+
+.net-availability .check {
+    position: absolute;
+    top: 4px;
+    left: 6px;
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 16px;
+    color: #fff;
+    background-color: #fff;
+    cursor: pointer;
+    transition: background-color 0.1s, border-color 0.1s;
+}
+
+.net-availability .check[data-checked="false"]:hover {
+    background-color: #eee;
+}
+
+.net-availability .check[data-checked="true"] {
+    background-color: #40bf68;
+    border-color: #37a45a;
+}
+.calendar[data-channel="2"] .inven_status_div {
+	display: none;
+}

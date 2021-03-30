@@ -1,0 +1,5 @@
+@media print {
+	table{
+    	font: 11pt Arial, Helvetica,"Lucida Grande", serif; 
+  	}
+ }

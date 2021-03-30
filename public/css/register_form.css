@@ -1,0 +1,264 @@
+body {
+	font-size: 14px;
+	font-family: Arial, sans-serif;	
+	color: #024B82;	
+}
+
+h1 {
+	font-size: 38px;
+	font-weight: bold;
+	margin-bottom: 20px;	
+}
+
+h2 {
+	font-size: 16px;
+	font-weight: bold;
+	margin-bottom: 15px;
+}
+
+h3 {
+	font-size: 14px;
+	font-weight: bold;	
+	margin-bottom: 0px;
+}
+
+h1 span {
+	text-decoration: underline;
+}
+
+img {
+	margin-right: 10px;
+	float:left;
+}
+		
+/* used to contain floats in div */
+/* taken from http://www.ejeliot.com/blog/59 */
+.container:after { content: "."; display: block; height: 0; clear: both; visibility: hidden; }
+.container { display: inline-block; _height: 1%; }
+/* Hides from IE-mac \*/
+.container { display: block; }
+
+label {
+	clear: both;
+    display: block;
+    float: left;
+    font-weight: bold;
+    height: 35px;
+    line-height: 31px;
+    margin-right: 10px;
+    text-align: right;
+    width: 220px;
+}
+
+input[type="text"], input[type="password"], select{
+	color: #000000;
+    font: 15px Arial,Helvetica,sans-serif;
+    padding: 4px;
+	float: left;
+    margin-bottom: 15px;
+}
+
+input[type="submit"] {
+	color: #000000;
+    font: 18px Arial,Helvetica,sans-serif;
+    padding: 8px;
+    margin-bottom: 15px;
+	margin: 20px;
+}
+
+.button {
+	display: block;
+	width: 120px;
+	height: 25px;	
+	
+	-moz-border-radius: 8px;
+	border-radius: 8px;
+	
+	padding-top: 3px;
+	padding-bottom: 3px;
+	
+	color: white;
+	font-size: 18px;
+	text-align: center;
+	text-decoration: none;
+	font-weight: bold; 	
+	
+	border: 3px #E8E8E8 solid;
+	
+	float: left;
+}
+
+.validation-errors {
+	color:  #FF0000;
+	font-size: 18px;
+	margin: 10px;
+}
+
+.primary_color {
+	background: #E23F0E;
+}
+
+.secondary_color {
+	background: #000000;
+}
+
+.max-width {
+	width:940px;
+	padding: 0 10px 0 10px;
+	margin-left:auto; 
+	margin-right: auto;
+}
+
+#content {
+}
+
+/************************************************************************
+	MENU
+*/
+#menu {
+	background: #024B82;
+	height: 70px;	
+}
+
+	#menu > div {
+		height: inherit;
+	}
+
+		#logo {	
+			width: 200px;
+			
+			background-image:url('../images/logo-small.jpg');
+			background-repeat: no-repeat;
+			
+			color: white;
+			text-decoration:none;
+			text-align: right;
+			
+			font-size: 35px;
+			font-weight: bold;
+			
+			padding: 15px 10px 0px 0px;	
+			float: left;
+		}
+
+
+		#primary_nav {
+			margin-right: 30px;
+			float: right;
+		}
+
+			#primary_nav li {
+				float: left;
+				padding: 17px 0px 10px 0px;
+			}
+
+				#primary_nav ul li a {
+					padding: 10px;
+					font-size:14px;
+					color:white;
+					text-decoration: none;
+					float:left;
+				}
+
+		#signup_links {
+			margin-right: 20px;
+			float: right;
+		}
+
+			#signup_links li {
+				float: left;
+				padding: 17px 0px 10px 0px;	
+			}
+
+				#signup_links ul li a {
+					font-size:14px;
+					color: #BBFC3C;
+					text-decoration: none;
+					
+					padding: 10px;				
+					
+					float:left;
+				}
+
+	
+/***********************************************************************
+	Footer
+*/
+#footer {
+	background: #E8EBEE;	
+	padding-top: 40px;
+	padding-bottom: 40px;
+}
+	#footer-links {	
+	}
+	
+	#footer-links ul li{
+		width: 230px;
+		float: left;
+		margin-bottom: 0.2em;		
+	}
+
+	#footer-links ul li ul{
+		width: 235px;
+	}
+
+	#policy-links {		
+		margin-top: 17px;		
+	}
+
+
+/***********************************************************************
+	Features Page
+*/
+
+	#register-form {
+		background-color: #F8F9F8;
+		padding-top: 30px;
+		padding-bottom: 40px;
+	}
+	
+	#ssl-icon {
+		width: 116px;
+		height: 100px;
+		background-image:url('../images/ssl-icon.gif');
+		background-repeat: no-repeat;
+		float:right;
+		margin-top: -305px;
+		margin-right: 20px;
+	}
+
+	#beanstream-icon {
+		width: 100px;
+		height: 50px;
+		background-image:url('../images/beanstream-icon.gif');
+		background-repeat: no-repeat;
+		float:right;
+		margin-top: -405px;
+		margin-right: 30px;
+	}
+
+	#chrome-logo {
+		width: 123px;
+		height: 40px;
+		background-image:url('../images/chrome-logo.gif');
+		background-repeat: no-repeat;
+	}
+
+/***********************************************************************
+	Register form
+*/
+
+legend {
+	padding: 5px;	
+	font-weight: bold;
+	font-size: 16px;
+	color: #024B82;
+	
+}
+
+fieldset {
+	border: 1px solid #CCCCCC;
+	padding: 20px;
+	margin: 20px;
+}
+

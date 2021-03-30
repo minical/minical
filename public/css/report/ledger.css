@@ -1,0 +1,11 @@
+/* Preventing printing ahref when printing */
+#room_type{
+  width:232px;
+}
+@media print {
+
+  table{
+    font: 13pt Arial, Helvetica,"Lucida Grande", serif; 
+  }
+
+}

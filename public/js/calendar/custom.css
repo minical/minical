@@ -1,0 +1,32 @@
+.fc-header td{
+	overflow: visible;
+}
+
+.fc-widget-content{
+	border: none;
+}
+.fc-grid .room-column {
+	width: 200px;
+	}
+	
+.fc-grid .room-column * td{
+	border-width: 1px;
+	padding-left: 1px;
+	}
+	
+.fc-grid .room-column * th{
+	border-top-width: 1px, 1px, 1px, 0;
+	text-align: left;
+	vertical-align: middle;
+	padding-left: 1px;
+	}
+
+#notification-drag-box{
+    display: none;
+    background-color: white;
+    border: 1px solid black;
+    z-index: 4;
+    padding: 5px;
+    position:absolute;
+ 
+}

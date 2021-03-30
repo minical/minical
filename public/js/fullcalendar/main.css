@@ -1,0 +1,123 @@
+#calendar {
+    margin-top: 10px;
+}
+.column-title-date {
+    font-size: 10px;
+    font-weight: normal;
+    line-height: 10px;
+}
+#notification-drag-box {
+    display: none;
+}
+
+.fc-head .fc-time-area tr:not(:first-child) th.fc-widget-header .fc-cell-content{
+    text-align: center!important;
+    padding: 2px;
+}
+.fc-customMonthView-view .fc-head .fc-time-area tr:last-child th.fc-widget-header .fc-cell-content{
+    padding: 0px;
+}
+.fc-customMonthView-view .fc-head .fc-time-area tr:not(:first-child) th.fc-widget-header .fc-cell-content .fc-cell-text{
+    left: 0!important;
+    padding: 0;
+}
+.fc-customMonthView-view .fc-head .fc-time-area tr:last-child th.fc-widget-header .fc-cell-content .fc-cell-text{
+    font-size: 11px;
+    font-weight: normal;
+    padding-bottom: 3px;
+}
+
+.fc-time-area tr:not(:first-child) .fc-widget-header.fc-sat,
+.fc-time-area tr:not(:first-child) .fc-widget-header.fc-sun,
+.fc-time-area tr .fc-widget-content.fc-sat,
+.fc-time-area tr .fc-widget-content.fc-sun {
+    background-color: #fff2f0;
+}
+
+.fc-customMonthView-view .fc-head .fc-time-area tr:not(:first-child) th.fc-widget-header.fc-today,
+.fc-customMonthView-view .fc-time-area tr .fc-widget-content.fc-today {
+    background-color: #FFFF00;
+}
+
+.fc-license-message {
+    display: none !important;
+}
+
+.fc-event-container .fc-event {
+    height: 25px;
+    margin-top: 3px;
+    border-radius: 3px;
+}
+.fc-event-container .fc-event.border-red {
+    border: 0.2rem solid red !important;
+}
+.fc-event-container .fc-event .fc-title {
+    font-size: 15px;
+}
+
+.fc-button-primary {
+    color: #333;
+    background-color: #fff;
+    text-shadow: 0 1px 0 #fff;
+    background-image: -webkit-linear-gradient(top,#fff 0,#e0e0e0 100%);
+    background-image: -o-linear-gradient(top,#fff 0,#e0e0e0 100%);
+    background-image: -webkit-gradient(linear,left top,left bottom,from(#fff),to(#e0e0e0));
+    background-image: linear-gradient(to bottom,#fff 0,#e0e0e0 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff', endColorstr='#ffe0e0e0', GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+    background-repeat: repeat-x;
+    border-color: #dbdbdb;
+    border-color: #ccc;
+}
+.fc-button-primary:not(:disabled):focus, .fc-button-primary:not(:disabled):hover {
+    background-color: #e0e0e0;
+    background-position: 0 -15px;
+}
+.fc-button-primary:not(:disabled):hover {
+    color: #333;
+    background-color: #e6e6e6;
+    border-color: #adadad;
+}
+.fc-button-primary:not(:disabled):active {
+    color: #333;
+    background-color: #e6e6e6;
+    border-color: #adadad;
+}
+.fc-button-primary.fc-customMonthView-button.fc-button-active,
+.fc-button-primary.fc-customDayView-button.fc-button-active,
+.fc-customCreateBooking-button,
+.fc-customCreateBooking-button:not(:disabled):hover,
+.fc-customCreateBooking-button:not(:disabled):active,
+.fc-customCreateBooking-button:not(:disabled):focus {
+    color: #fff;
+    background: #1d5ea2;
+    border-color: #1d5ea2;
+    text-shadow: none;
+}
+
+.fc-resource-area.fc-widget-content td:hover .edit-icon {
+    width: 16px;
+    height: 16px;
+    margin-right: 1px;
+    background-image: url(../../images/edit.png);
+    position: absolute;
+    right: 0;
+    top: 12px;
+    z-index: 9;
+    display:inline;
+}
+
+.fc-resource-area.fc-widget-content td:first-child {
+    position:relative;
+    cursor: pointer;
+}
+
+.group-booking .fc-title {
+    font-style: italic;
+}
+.blacklist :hover {
+    background-color: #FF0000;
+}
+.vip :hover {
+    background-color: #DAA520;
+}

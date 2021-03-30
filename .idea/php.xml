@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PhpIncludePathManager">
+    <include_path>
+      <path value="$PROJECT_DIR$/vendor/symfony/yaml" />
+      <path value="$PROJECT_DIR$/vendor/omnipay/payfast" />
+      <path value="$PROJECT_DIR$/vendor/omnipay/cardsave" />
+      <path value="$PROJECT_DIR$/vendor/omnipay/pin" />
+      <path value="$PROJECT_DIR$/vendor/omnipay/paymentexpress" />
+      <path value="$PROJECT_DIR$/vendor/omnipay/2checkout" />
+      <path value="$PROJECT_DIR$/vendor/omnipay/worldpay" />
+      <path value="$PROJECT_DIR$/vendor/omnipay/eway" />
+      <path value="$PROJECT_DIR$/vendor/omnipay/multisafepay" />
+      <path value="$PROJECT_DIR$/vendor/omnipay/paypal" />
+      <path value="$PROJECT_DIR$/vendor/omnipay/targetpay" />
+      <path value="$PROJECT_DIR$/vendor/omnipay/securepay" />
+      <path value="$PROJECT_DIR$/vendor/omnipay/coinbase" />
+      <path value="$PROJECT_DIR$/vendor/omnipay/stripe" />
+      <path value="$PROJECT_DIR$/vendor/omnipay/payflow" />
+      <path value="$PROJECT_DIR$/vendor/omnipay/gocardless" />
+      <path value="$PROJECT_DIR$/vendor/omnipay/dummy" />
+      <path value="$PROJECT_DIR$/vendor/omnipay/sagepay" />
+      <path value="$PROJECT_DIR$/vendor/omnipay/buckaroo" />
+      <path value="$PROJECT_DIR$/vendor/omnipay/migs" />
+      <path value="$PROJECT_DIR$/vendor/omnipay/manual" />
+      <path value="$PROJECT_DIR$/vendor/omnipay/netaxept" />
+      <path value="$PROJECT_DIR$/vendor/omnipay/netbanx" />
+      <path value="$PROJECT_DIR$/vendor/omnipay/mollie" />
+      <path value="$PROJECT_DIR$/vendor/omnipay/common" />
+      <path value="$PROJECT_DIR$/vendor/omnipay/firstdata" />
+      <path value="$PROJECT_DIR$/vendor/omnipay/authorizenet" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/inflector" />
+      <path value="$PROJECT_DIR$/vendor/stripe/stripe-php" />
+      <path value="$PROJECT_DIR$/vendor/loopline-systems/closeio-api-wrapper" />
+      <path value="$PROJECT_DIR$/vendor/zendframework/zend-filter" />
+      <path value="$PROJECT_DIR$/vendor/zendframework/zend-stdlib" />
+      <path value="$PROJECT_DIR$/vendor/composer" />
+      <path value="$PROJECT_DIR$/vendor/guzzle/guzzle" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-foundation" />
+      <path value="$PROJECT_DIR$/vendor/symfony/event-dispatcher" />
+      <path value="$PROJECT_DIR$/vendor/quickbooks/v3-php-sdk" />
+    </include_path>
+  </component>
+</project>
