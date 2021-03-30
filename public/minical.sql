@@ -21478,13 +21478,6 @@ CREATE TABLE `user_autologin` (
   `last_login` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Dumping data for table `user_autologin`
---
-
-INSERT INTO `user_autologin` (`key_id`, `user_id`, `user_agent`, `last_ip`, `last_login`) VALUES
-('114f8daf8c2d93c0a582065dc5f232ae', 2, 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36', '127.0.0.1', '2020-12-09 04:35:21');
-
 -- --------------------------------------------------------
 
 --
