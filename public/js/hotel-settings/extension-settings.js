@@ -7,7 +7,7 @@ $(document).on('click', '.extension-status-button', function () {
 	
 	var r = confirm(l('Are you sure you want to '+extension_action+' this extension?'));
 	if (r == true) {
-	    $.post(getBaseURL() + 'settings/extensions/change_extension_status', {
+	    $.post(getBaseURL() + 'extensions/change_extension_status', {
 		extension_name: extensionName,
         extension_status: extensionStatus
 		}, function (results) {

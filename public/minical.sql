@@ -21106,16 +21106,17 @@ INSERT INTO `menu` (`id`, `name`, `link`, `icon`, `parent_id`, `partner_type_id`
 (2, 'accounting', 'customer', 'metismenu-icon pe-7s-users', 0, 1),
 (3, 'rooms', 'room', 'metismenu-icon pe-7s-home', 0, 1),
 (4, 'reports', 'reports', 'metismenu-icon pe-7s-graph1', 0, 1),
-(5, 'settings', 'settings', 'metismenu-icon pe-7s-settings', 0, 1),
-(6, 'room status', 'room', '', 3, 1),
+(5, 'Extensions', 'extensions', 'metismenu-icon pe-7s-keypad', 0, 1),
+(6, 'settings', 'settings', 'metismenu-icon pe-7s-settings', 0, 1),
+(7, 'room status', 'room', '', 3, 1),
 (9, 'ledger', 'reports/ledger', '', 4, 1),
 (14, 'summary', 'reports/ledger/show_ledger_summary_report', '', 9, 1),
 (15, 'charges', 'reports/ledger/show_monthly_charge_report', '', 9, 1),
 (16, 'payments', 'reports/ledger/show_monthly_payment_report', '', 9, 1),
 (17, 'taxes', 'reports/ledger/show_monthly_tax_report', '', 9, 1),
-(29, 'company', 'settings/company', '', 5, 1),
-(30, 'accounting', 'settings/accounting', '', 5, 1),
-(32, 'room inventory', 'settings/room_inventory', '', 5, 1),
+(29, 'company', 'settings/company', '', 6, 1),
+(30, 'accounting', 'settings/accounting', '', 6, 1),
+(32, 'room inventory', 'settings/room_inventory', '', 6, 1),
 (38, 'general information', 'settings/company/general', '', 29, 1),
 (39, 'Team', 'settings/company/employees', '', 29, 1),
 (43, 'charge types', 'settings/accounting/charge_types', '', 30, 1),
@@ -21124,8 +21125,8 @@ INSERT INTO `menu` (`id`, `name`, `link`, `icon`, `parent_id`, `partner_type_id`
 (48, 'rooms', 'settings/room_inventory/rooms', '', 32, 1),
 (49, 'room types', 'settings/room_inventory/room_types', '', 32, 1),
 (78, 'feature settings', 'settings/company/feature_settings', '', 29, 1),
-(85, 'Extensions', 'settings/extensions', '', 5, 1),
-(87, 'API access', 'settings/api_access', '', 5, 1);
+(87, 'API access', 'settings/api_access', '', 6, 1);
+
 
 
 -- --------------------------------------------------------
