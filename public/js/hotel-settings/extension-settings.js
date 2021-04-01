@@ -1,7 +1,15 @@
 
 $(document).on('click', '.extension-status-button', function () {
 	var extensionName = $(this).attr('name');
-    var extensionStatus = $(this).data('status');
+    // var extensionStatus = $(this).data('status');
+
+    if ($(this).prop("checked")) {
+      
+         var extension_action = extensionStatus = 0;
+    } else {
+    
+    	 var extension_action = extensionStatus = 1;
+    }
 
     var extension_action = extensionStatus == 1 ? "deactivate" : "activate";
 	

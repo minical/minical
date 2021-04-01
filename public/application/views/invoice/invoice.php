@@ -53,7 +53,7 @@
                         </div>
                     </div>
 
-                    <?php if(check_active_extensions('payment_gateway', $this->company_id)){ ?>
+                    <?php //if(check_active_extensions('payment_gateway', $this->company_id)){ ?>
                     <div style="display:none;" class="form-group use-payment-gateway-btn ">
                         <label for="payment_amount" class="col-sm-4 control-label">
                             <?php echo l('use_payment_gateway'); ?>
@@ -64,7 +64,7 @@
                         </div>
                     </div>
                     
-                    <?php }
+                    <?php //}
                     if (count(array_filter($customers)) > 0):
                         ?>
                         <div class="form-group">
