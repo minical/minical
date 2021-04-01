@@ -50,6 +50,7 @@ class Extensions extends MY_Controller
 	        			$extension['description'] = $module['description'];
                         $extension['extension_folder_name'] = $module['extension_folder_name'];
                         $extension['extension_name'] = $module['name'];
+                        $extension['image_name'] = $module['image_name'];
 	        			$final_modules[] = $extension;
 	        			$flag = false;
 	        		}

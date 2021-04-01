@@ -487,6 +487,7 @@ input:checked + .slider:before {
   border-radius: 20px;
 }
 
+
 .slider.round:before {
   border-radius: 50%;
 }
@@ -1004,9 +1005,14 @@ li.current_language a img {
 
 
 /* Extension Block */
+.extension-box{
+  float: right;
+}
 
 .extension_block {
-  padding: 8px 0px;
+  display: flex;
+  flex-direction: column;
+  height: 160px;
   border: 1px solid #ddd;
   border-radius: 5px;
   margin-bottom: 15px;
@@ -1015,6 +1021,37 @@ li.current_language a img {
   width: 90px;
   height: 90px;
 }
+.main-extension {
+  display: flex;
+    flex: 1;
+    min-height: 0;
+    padding: 16px 20px;
+}
+.icon{
+
+    align-self: flex-start;
+    display: flex;
+    padding: 6px;
+    position: relative;
+
+}
+
+.content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    margin-inline-start: 24px;
+   
+}
+
+  .extension-discription
+  {
+    font-size: 13px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  
+  }
+
 .extension_status {
   float: left;
   font-size: 16px;
@@ -1027,8 +1064,7 @@ li.current_language a img {
   margin-top: 25px;
 }
 .extension_action {
-  float: right;
-  /*margin-right: -80px;*/
+   margin-top: 25px;
 }
 .extension_image_block {
   width: 10%;
@@ -3803,3 +3839,4 @@ a.btn.disabled,fieldset:disabled a.btn{
 cursor: pointer;
 width: 100vh
 }
+
