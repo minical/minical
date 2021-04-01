@@ -460,5 +460,24 @@ define('CURRENCY_JSON',
 // define('INSTRUMENTATION_KEY', $_SERVER['INSTRUMENTATION_KEY']);	
 define('INSTRUMENTATION_KEY', isset($_SERVER['INSTRUMENTATION_KEY']) ? $_SERVER['INSTRUMENTATION_KEY'] : '');
 
+
+define('PAYMENT_GATEWAYS',
+        json_encode(array(
+            'STRIPE' => 'stripe',
+            'PAYFLOW' => 'PayflowGateway',
+            'FIRST_DATA' => 'FirstdataE4Gateway',
+            'CHASE_NET_CONNECT' => 'ChaseNetConnectGateway',
+            'AUTHORIZE_NET' => 'AuthorizeNetGateway',
+            'PAYU' => 'PayuGateway',
+            'QUICKBOOKS' => 'QuickbooksGateway',
+            'ELAVON' => 'ElavonGateway',
+            'MONERIS' => 'MonerisGateway',
+            'CIELO' => 'CieloGateway'
+            // SQUARE => 'SquareGateway',
+        ))
+    );
+
 /* End of file constants.php */
 /* Location: ./application/config/constants.php */
+
+

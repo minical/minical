@@ -96,24 +96,52 @@ class Payment_model extends CI_Model {
         $customer_id                   = isset($data['customer_id']) ? $data['customer_id'] : null;
         // make charge
         if ($use_gateway) {
-            $this->ci->load->library('PaymentGateway');
-            $payment_gateway_credentials = $this->paymentgateway->getGatewayCredentials();
-            $selected_payment_gateway = "Stripe";
-            if(isset($payment_gateway_credentials['selected_payment_gateway'])){
-                $selected_payment_gateway = $payment_gateway_credentials['selected_payment_gateway'];
+
+            $payments_gateways = json_decode(PAYMENT_GATEWAYS, true);
+            $selected_payment_gateway = $data['selected_gateway'];
+
+            $new_payment_gateway = false;
+
+            if(!in_array($selected_payment_gateway, $payments_gateways)){
+                $new_payment_gateway = true;
             }
-            
-            $payment_type    = $this->ci->paymentgateway->getPaymentGatewayPaymentType($selected_payment_gateway);
-            $payment_type_id = $payment_type['payment_type_id'];
-			$capture_type = isset($manual_payment_capture) && $manual_payment_capture ? false : true;
-            $gateway_charge_id = $this->ci->paymentgateway->createBookingCharge(
-                $data['booking_id'],
-                abs($data['amount']) * 100, // in cents, only positive
-                $customer_id,
-                $cvc,
-				$capture_type
-            );
-            $error = $this->ci->paymentgateway->getErrorMessage();
+
+            if($new_payment_gateway){
+                $this->ci->load->library('../extensions/square_payment_gateway/libraries/ProcessPayment');
+                $payment_gateway_credentials = $this->processpayment->getGatewayCredentials();
+
+                $payment_type    = $this->ci->processpayment->getPaymentGatewayPaymentType($selected_payment_gateway);
+                $payment_type_id = $payment_type['payment_type_id'];
+                $capture_type = isset($manual_payment_capture) && $manual_payment_capture ? false : true;
+                $gateway_charge_id = $this->ci->processpayment->createBookingCharge(
+                    $data['booking_id'],
+                    abs($data['amount']) * 100, // in cents, only positive
+                    $customer_id,
+                    $cvc,
+                    $capture_type
+                );
+                $error = $this->ci->processpayment->getErrorMessage();
+                
+            } else {
+                $this->ci->load->library('PaymentGateway');
+                $payment_gateway_credentials = $this->paymentgateway->getGatewayCredentials();
+                $selected_payment_gateway = "Stripe";
+                if(isset($payment_gateway_credentials['selected_payment_gateway'])){
+                    $selected_payment_gateway = $payment_gateway_credentials['selected_payment_gateway'];
+                }
+                
+                $payment_type    = $this->ci->paymentgateway->getPaymentGatewayPaymentType($selected_payment_gateway);
+                $payment_type_id = $payment_type['payment_type_id'];
+                $capture_type = isset($manual_payment_capture) && $manual_payment_capture ? false : true;
+                $gateway_charge_id = $this->ci->paymentgateway->createBookingCharge(
+                    $data['booking_id'],
+                    abs($data['amount']) * 100, // in cents, only positive
+                    $customer_id,
+                    $cvc,
+                    $capture_type
+                );
+                $error = $this->ci->paymentgateway->getErrorMessage();
+            }            
         }
 
         // mark payment as used gateway
@@ -139,6 +167,7 @@ class Payment_model extends CI_Model {
         // insert payment
         if (!$error) {
             $data['payment_status'] = 'charge';
+            unset($data['selected_gateway']);
             $this->db->insert('payment', $data);            
             $query = $this->db->query('select LAST_INSERT_ID( ) AS last_id');
             $result = $query->result_array();

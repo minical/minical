@@ -1010,6 +1010,7 @@ class Invoice extends MY_Controller {
                 "payment_type_id" => $this->input->post('payment_type_id'),
                 "description" => $this->input->post('description'),
                 "date_time" => gmdate("Y-m-d H:i:s"),
+                "selected_gateway" => $this->input->post('selected_gateway'),
                 "capture_payment_type" => trim($this->input->post('capture_payment_type'))
             );
         
