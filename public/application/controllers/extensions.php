@@ -8,16 +8,7 @@ class Extensions extends MY_Controller
 		$this->load->model('Extension_model');
 
         $view_data['menu_on']          = true;
-        $view_data['selected_menu']    = 'Settings';
-        $view_data['selected_submenu'] = 'Extensions';
-
-        $view_data['submenu'] = 'hotel_settings/hotel_settings_submenu.php';
-
-        $view_data['submenu_parent_url'] = base_url()."settings/";
-        $view_data['sidebar_menu_url'] = base_url()."settings/extensions/";
-
-        $view_data['menu_items'] = $this->Menu_model->get_menus(array('parent_id' => 5, 'wp_id' => 1));
-        $view_data['sidebar_links'] = $this->Menu_model->get_menus(array('parent_id' => 85, 'wp_id' => 1));
+       
 
         $this->load->vars($view_data);
 	}
