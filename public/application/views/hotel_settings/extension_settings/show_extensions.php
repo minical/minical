@@ -31,7 +31,7 @@ $bootstrapColWidth = 12 / $numOfCols;
      <div class="main-extension">
              <div class="icon">
 
-            <img src="<?php echo base_url().'/images/'.$extension['image_name'];?>" style="width: 40px;height: 40px">
+            <img src="<?php echo (isset($extension['image_name']) && $extension['image_name']) ?  base_url().'/images/'.$extension['image_name'] : '';?>" style="width: 40px;height: 40px">
             </div>
             <div class="extension-content">
                 <b style="font-size: 12px;"><?php
@@ -47,7 +47,12 @@ $bootstrapColWidth = 12 / $numOfCols;
             <div class="features-div-padding">
 
                 <div class="checkbox checbox-switch switch-primary">
-                    <!--  <button class=" btn btn-sm ml-2 <?php echo $extension['is_active'] == 1 ? 'btn-primary' : '' ?>" name="<?php echo $extension['extension_folder_name']; ?>" data-status="<?php echo $extension['is_active']; ?>"><?php echo $extension['is_active'] == 1 ? 'Setting' : ''; ?></button> -->
+                    <a href="<?php  if(isset( $extension['setting_link']) && $extension['setting_link'] ){echo $extension['setting_link']; }else{
+                        echo '';}?>" 
+                        class=" btn btn-sm ml-2 <?php echo $extension['is_active'] == 1 ? 'btn-primary' : '' ?>" 
+                        name="<?php echo $extension['extension_folder_name']; ?>" data-status="<?php echo $extension['is_active']; ?>"><?php echo $extension['is_active'] == 1 ? '<i class="pe-7s-config"></i>' : ''; ?>
+                            
+                        </a> 
                     <label class="extension-box" style="padding-bottom: 8px">
                      <input type="checkbox" class="extension-status-button" data-status="<?php echo $extension['is_active']; ?>" name="<?php echo $extension['extension_folder_name']; ?>"
                                <?= $extension['is_active'] ? 'checked=checked' : ''; ?>/>
