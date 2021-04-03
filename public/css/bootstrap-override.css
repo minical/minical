@@ -1003,16 +1003,19 @@ li.current_language a img {
   left: 17px;
 }
 
+.extension-card{
+  padding-top: 15px;
+}
 
 /* Extension Block */
 .extension-box{
   float: right;
-}
+      padding: 5px;}
 
 .extension_block {
   display: flex;
   flex-direction: column;
-  height: 160px;
+  height: 120px;
   border: 1px solid #ddd;
   border-radius: 5px;
   margin-bottom: 15px;
@@ -1026,7 +1029,8 @@ li.current_language a img {
   display: flex;
     flex: 1;
     min-height: 0;
-    padding: 16px 20px;
+    padding: 10px 7px;
+
 }
 .icon{
 
@@ -2642,7 +2646,9 @@ a.btn.disabled,fieldset:disabled a.btn{
 .text-success {
     color: #3ac47d !important;
 }
-
+.text-primary {
+    color: #0066D3 !important;
+}
 .m-0{
     margin:0 !important
 }

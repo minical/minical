@@ -15,7 +15,7 @@
 
 
 <div class="main-card mb-3">
-    <div class="card-body">
+    <div class="extension-card">
 
 <?php
 //Columns must be a factor of 12 (1,2,3,4,6,12)
@@ -49,11 +49,12 @@ $bootstrapColWidth = 12 / $numOfCols;
                 <div class="checkbox checbox-switch switch-primary">
                     <a href="<?php  if(isset( $extension['setting_link']) && $extension['setting_link'] ){echo $extension['setting_link']; }else{
                         echo '';}?>" 
-                        class=" btn btn-sm ml-2 <?php echo $extension['is_active'] == 1 ? 'btn-primary' : '' ?>" 
-                        name="<?php echo $extension['extension_folder_name']; ?>" data-status="<?php echo $extension['is_active']; ?>"><?php echo $extension['is_active'] == 1 ? '<i class="pe-7s-config"></i>' : ''; ?>
+                        class="ml-4 pb-2"
+                        style="font-size: 25px;float: left"
+                        name="<?php echo $extension['extension_folder_name']; ?>" data-status="<?php echo $extension['is_active']; ?>"><?php echo $extension['is_active'] == 1 ? '<i class="pe-7s-config text-primary"></i>' : ''; ?>
                             
                         </a> 
-                    <label class="extension-box" style="padding-bottom: 8px">
+                    <label class="extension-box" style="padding-right: 1.5rem !important;">
                      <input type="checkbox" class="extension-status-button" data-status="<?php echo $extension['is_active']; ?>" name="<?php echo $extension['extension_folder_name']; ?>"
                                <?= $extension['is_active'] ? 'checked=checked' : ''; ?>/>
                         <span></span>
