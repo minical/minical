@@ -14,7 +14,7 @@
 
 
 
-<div class="main-card mb-3 card">
+<div class="main-card mb-3">
     <div class="card-body">
 
 <?php

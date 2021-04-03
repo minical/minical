@@ -1016,6 +1016,7 @@ li.current_language a img {
   border: 1px solid #ddd;
   border-radius: 5px;
   margin-bottom: 15px;
+  background-color: #fff;
 }
 .extension_image {
   width: 90px;
@@ -1040,7 +1041,7 @@ li.current_language a img {
     display: flex;
     flex: 1;
     flex-direction: column;
-    margin-inline-start: 24px;
+    margin-inline-start: 20px;
    
 }
 
