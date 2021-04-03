@@ -33,7 +33,7 @@ $bootstrapColWidth = 12 / $numOfCols;
 
             <img src="<?php echo base_url().'/images/'.$extension['image_name'];?>" style="width: 40px;height: 40px">
             </div>
-            <div class="content">
+            <div class="extension-content">
                 <b style="font-size: 12px;"><?php
                 $name = $extension['extension_name'];
                 $extension_name = str_replace("_"," ",$name);
