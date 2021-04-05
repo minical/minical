@@ -1041,4 +1041,14 @@ class Company_model extends CI_Model {
         }
         return $response;
     }
+
+    function get_property_build($property_id){
+        $sql = "SELECT * FROM property_build as pb
+                WHERE pb.property_id = '$property_id' ";
+     	$que = $this->db->query($sql);
+
+          return $que->row_array();
+    } 
 }
+
+

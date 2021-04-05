@@ -21194,6 +21194,32 @@ CREATE TABLE `payment_folio` (
 
 -- --------------------------------------------------------
 
+CREATE TABLE `property_build` (
+  `id` int(11) NOT NULL,
+  `property_id` int(11) NOT NULL,
+  `property_name` varchar(255) NOT NULL,
+  `setting_json` text NOT NULL,
+  `dependences_json` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+--
+-- Dumping data for table `property_build`
+--
+
+INSERT INTO `property_build` (`id`, `property_id`, `property_name`, `setting_json`, `dependences_json`) VALUES
+(1, 1, 'Hotel', '{\r\n      \"unit_name\":{\r\n         \"singular\": \"room\", \r\n         \"plural\" : \"rooms\" \r\n         },\r\n      \"unit_type_name\" :  {\r\n         \"singular\":\"room type\",\r\n         \"plural\": \"room types\"\r\n         },\r\n      \"send_invoice_email_automatically\" : true,\r\n      \"display_tooltip\" : true,\r\n      \"is_total_balance_include_forecast\" : true\r\n   }', '{\r\n      \"todays_panel\" : \"1.0.0\",\r\n      \"online_booking_engine\" : \"1.0.0\",\r\n      \"advance_deposit_report\" : \"1.0.0\",\r\n      \"invoice_email\" : \"1.0.0\",\r\n      \"automated_night_audit\" : \"1.0.0\"\r\n   }'),
+(2, 2, 'Hostel', '{\r\n      \"unit_name\":{ \r\n         \"singular\": \"bed\", \r\n         \"plural\" : \"beds\" \r\n         },\r\n      \"unit_type_name\" : {\r\n         \"singular\":\"room type\",\r\n         \"plural\": \"room types\"\r\n         },\r\n      \"display_tooltip\" : true,\r\n      \"hourly_booking_enabled\" : true,\r\n      \"allow_free_bookings\" : true,\r\n      \"force_room_selection\" : true      \r\n   }', ' {\r\n      \"online_booking_engine\" : \"1.0.0\",\r\n      \"todays_panel\" : \"1.0.0\",\r\n      \"invoice_email\" : \"1.0.0\"      \r\n   }'),
+(3, 3, 'Vacation Rental', '{\r\n      \"unit_name\":{ \r\n         \"singular\": \"room\",\r\n         \"plural\" : \"rooms\" \r\n        },\r\n      \"unit_type_name\" :  {\r\n         \"singular\":\"room type\",\r\n         \"plural\": \"room types\"\r\n      },   \r\n      \"display_tooltip\" : true,\r\n      \"hourly_booking_enabled\" : true,\r\n      \"allow_free_bookings\" : true,\r\n      \"force_room_selection\" : true      \r\n   }', '{\r\n      \"online_booking_engine\" : \"1.0.0\",\r\n      \"todays_panel\" : \"1.0.0\",\r\n      \"invoice_email\" : \"1.0.0\"      \r\n   }'),
+(4, 4, 'Apartment', '{\r\n      \"unit_name\":{ \r\n         \"singular\": \"unit\", \r\n         \"plural\" : \"units\" \r\n         },\r\n      \"unit_type_name\" :  {\r\n         \"singular\":\"unit type\",\r\n         \"plural\": \"unit types\"\r\n      },\r\n      \"send_invoice_email_automatically\" : true,\r\n      \"display_tooltip\" : true,\r\n      \"is_total_balance_include_forecast\" : true\r\n   }', '{\r\n      \"todays_panel\" : \"1.0.0\",\r\n      \"advance_deposit_report\" : \"1.0.0\",\r\n      \"invoice_email\" : \"1.0.0\"\r\n   }'),
+(5, 5, 'Car Rental', '{\r\n      \"unit_name\":{ \r\n         \"singular\": \"vehicle\", \r\n         \"plural\" : \"vehicles\" \r\n         },\r\n      \"unit_type_name\" :  {\r\n         \"singular\":\"vehicle type\",\r\n         \"plural\": \"vehicle types\"\r\n         },\r\n      \"allow_free_bookings\" : false,\r\n      \"force_room_selection\" : true,\r\n      \"is_total_balance_include_forecast\" : true,\r\n      \"hourly_booking_enabled\" : true   }', '{\r\n     \"online_booking_engine\" : \"1.0.0\"\r\n   }'),
+(6, 6, 'Office Space', '{\r\n      \"unit_name\":{\r\n         \"singular\": \"room\", \r\n         \"plural\" : \"rooms\" \r\n         },\r\n      \"unit_type_name\" :  {\r\n         \"singular\":\"room type\",\r\n         \"plural\": \"room types\"\r\n         },\r\n         \"hourly_booking_enabled\" : true,\r\n         \"display_tooltip\" : true\r\n   }', '{\r\n      \"online_booking_engine\" : \"1.0.0\",\r\n      \"advance_deposit_report\" : \"1.0.0\",\r\n      \"automated_night_audit\" : \"1.0.0\"\r\n   }');
+
+-- Indexes for dumped tables
+--
+
+-- --------------------------------------------------------
+
 --
 -- Table structure for table `payment_type`
 --
@@ -22362,6 +22388,9 @@ ALTER TABLE `customer_card_detail`
 ALTER TABLE `charge_folio`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
+ALTER TABLE `property_build`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

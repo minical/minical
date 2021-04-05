@@ -91,6 +91,44 @@ function updateCountryPhoneLang()
  $('#property_type').on('change', function () {
     if($(this).val() == 0){
         $(".property").hide();
+
+    }
+    else if($(this).val() == 1){
+
+        $(".property").show();
+        $(".property_name").html(l('Hotel Name')+' <span style="color: red;">*</span>');
+        $(".number_of_rooms").html(l('No of Rooms')+' <span style="color: red;">*</span>');
+
+      
+    }else if($(this).val() == 2){
+
+        $(".property").show();
+        $(".property_name").html(l('Hostel Name')+' <span style="color: red;">*</span>');
+        $(".number_of_rooms").html(l('No of Beds')+' <span style="color: red;">*</span>');
+    }
+     else if($(this).val() == 3){
+        
+        $(".property").show();
+        $(".property_name").html(l('Property Name')+' <span style="color: red;">*</span>');
+        $(".number_of_rooms").html(l('No of Rooms')+' <span style="color: red;">*</span>');
+    }
+    else if($(this).val() == 4){
+        
+        $(".property").show();
+        $(".property_name").html(l('Apartment Name')+' <span style="color: red;">*</span>');
+        $(".number_of_rooms").html(l('No of Units')+' <span style="color: red;">*</span>');
+    }
+     else if($(this).val() == 5){
+     
+        $(".property").show();
+        $(".property_name").html(l('Vehicle Name')+' <span style="color: red;">*</span>');
+        $(".number_of_rooms").html(l('No of Vehicles')+' <span style="color: red;">*</span>');
+    }
+     else if($(this).val() == 6){
+        
+        $(".property").show();
+        $(".property_name").html(l('Office Name')+' <span style="color: red;">*</span>');
+        $(".number_of_rooms").html(l('No of Rooms')+' <span style="color: red;">*</span>');
     }else{
         $(".property").show();
     }
