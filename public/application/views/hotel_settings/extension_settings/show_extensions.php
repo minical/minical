@@ -46,7 +46,7 @@ $bootstrapColWidth = 12 / $numOfCols;
 
             <div class="features-div-padding">
 
-                <div class="checkbox checbox-switch switch-primary" style="margin-bottom: 5px;">
+                <div class="checkbox checbox-switch switch-primary" style="margin-bottom: 5px;margin-top: 5px">
                     <a href="<?php  if(isset( $extension['setting_link']) && $extension['setting_link'] ){echo $extension['setting_link']; }else{
                         echo '';}?>" 
                         class="ml-4"
