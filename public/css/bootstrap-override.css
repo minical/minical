@@ -1029,7 +1029,7 @@ li.current_language a img {
   display: flex;
     flex: 1;
     min-height: 0;
-    padding: 10px 7px;
+    padding: 10px 10px 0px 10px;
 
 }
 .icon{
