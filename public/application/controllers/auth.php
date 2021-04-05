@@ -972,7 +972,7 @@ class Auth extends MY_Controller
 
 
         $active_extensions = $this->Extension_model->get_active_extensions($this->company_id);
-        if(count($active_extensions) > 0){
+        if($active_extensions && count($active_extensions) > 0){
             $new_extensions = array();
             foreach ($active_extensions as $extension) {
                 $new_extensions[] = array(
@@ -1751,24 +1751,38 @@ class Auth extends MY_Controller
         );
 		$white_label_data = $this->Whitelabel_partner_model->get_whitelabel_partners();
 		$white_label_partner_id = 0;
-		foreach($white_label_data as $white_label)
-		{
-			$location = json_decode($white_label['location']);
-			if(isset($location) && $location && in_array($data['country'], $location))
-			{
-				$white_label_partner_id = $white_label['id'];
-				break;
-			}
-		}
+        if($white_label_data && count($white_label_data) > 0 ){
+    		foreach($white_label_data as $white_label)
+    		{
+    			$location = json_decode($white_label['location']);
+    			if(isset($location) && $location && in_array($data['country'], $location))
+    			{
+    				$white_label_partner_id = $white_label['id'];
+    				break;
+    			}
+    		}
+        }
 
         $Rdata = $this->_update_company($data);
 
         ///property build logic
-        $fileJson = file_get_contents("http://".$_SERVER['HTTP_HOST']."/build.json");
-        $file = json_decode($fileJson, true);
-        $data_build = $company_data = array();
-        $feature_setting = $file['settings'];
-        $dependencies= $file['dependencies'];
+         $data_build = $company_data = array();
+        if($_SERVER['HTTP_HOST'] == "app.minical.io" || $_SERVER['HTTP_HOST'] == "demo.minical.io"){
+         
+            $property_data = $this->Company_model->get_property_build($data['property_type']);
+            $feature_setting = json_decode($property_data['setting_json'], true);
+            $dependencies = json_decode($property_data['dependences_json'], true);
+           
+        }else{
+            
+             $fileJson = file_get_contents("../build.json");
+             $file = json_decode($fileJson, true);
+           
+            $feature_setting = $file['settings'];
+            $dependencies= $file['dependencies'];
+           
+        }
+
         $data_build['company_id'] = $this->company_id;
         if(isset($dependencies) && count($dependencies) > 0){
              foreach ($dependencies as $key => $value) {

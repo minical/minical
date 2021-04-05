@@ -349,18 +349,18 @@
                                     <div class="col-sm-9">
                                         <select class="form-control" name="property_type" id="property_type">
                                             <option value="0"><?php echo l('---Select property type---', true); ?></option>
-                                            <option value="1"><?php echo l('Hotel', true); ?></option>
-                                            <option value="2"><?php echo l('Hostel', true); ?></option>
-                                            <option value="3"><?php echo l('Vacation Rental', true); ?></option>
-                                            <option value="4"><?php echo l('Apartment', true); ?></option>
-                                            <option value="5"><?php echo l('Car Rental', true); ?></option>
-                                            <option value="6"><?php echo l('Office Space', true); ?></option>
+                                            <option id="hotel" value="1"><?php echo l('Hotel', true); ?></option>
+                                            <option id="hostel" value="2"><?php echo l('Hostel', true); ?></option>
+                                            <option id="vacation_retail" value="3"><?php echo l('Vacation Rental', true); ?></option>
+                                            <option id="apartment" value="4"><?php echo l('Apartment', true); ?></option>
+                                            <option id="car_rental" value="5"><?php echo l('Car Rental', true); ?></option>
+                                            <option id="office_space" value="6"><?php echo l('Office Space', true); ?></option>
                                         </select>
                                     </div>
                                 </div>
                                 <div style="display: none;" class="property">
                                  <div class="form-group" >
-                                    <label for="property_name" class="col-sm-3 control-label">
+                                    <label for="property_name" class="col-sm-3 control-label property_name">
                                         <?php echo l('property_name'); ?><span style="color: red;">*</span>
                                     </label>
                                     <div class="col-sm-9">
@@ -369,7 +369,7 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="number_of_rooms" class="col-sm-3 control-label">
+                                    <label for="number_of_rooms" class="col-sm-3 control-label number_of_rooms">
                                         <?php echo l('no_of_rooms'); ?><span style="color: red;">*</span>
                                     </label>
                                     <div class="col-sm-9">

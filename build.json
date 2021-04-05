@@ -1,0 +1,25 @@
+{
+   "name": "Hotel",
+   "version": "1.0.0",
+   "dependencies": {
+      "todays_panel" : "1.0.0",
+      "online_booking_engine" : "1.0.0",
+      "advance_deposit_report" : "1.0.0",
+      "invoice_email" : "1.0.0",
+      "automated_night_audit" : "1.0.0"
+   },
+   "settings": {
+      "unit_name":{
+         "singular": "aditi", 
+         "plural" : "aditis" 
+         },
+      "unit_type_name" :  {
+         "singular":"room type",
+         "plural": "room types"
+         },
+      "send_invoice_email_automatically" : true,
+      "display_tooltip" : true,
+      "is_total_balance_include_forecast" : true
+   }
+}
+  
