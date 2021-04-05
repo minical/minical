@@ -14,8 +14,8 @@
 
 
 
-<div class="main-card mb-3 card">
-    <div class="card-body">
+<div class="main-card mb-3">
+    <div class="extension-card">
 
 <?php
 //Columns must be a factor of 12 (1,2,3,4,6,12)
@@ -26,14 +26,14 @@ $bootstrapColWidth = 12 / $numOfCols;
 <div class="row">
 <?php if(isset($extensions) && $extensions) :
     foreach ($extensions as $extension){ ?>  
-        <div class="col-md-<?php echo $bootstrapColWidth; ?>">
+        <div class="col-md-<?php echo $bootstrapColWidth; ?>" style="padding-right: 0px">
              <div class="extension_block">
      <div class="main-extension">
              <div class="icon">
 
-            <img src="<?php echo base_url().'/images/'.$extension['image_name'];?>" style="width: 40px;height: 40px">
+            <img src="<?php echo (isset($extension['image_name']) && $extension['image_name']) ?  base_url().'/images/'.$extension['image_name'] : '';?>" style="width: 30px;height: 30px">
             </div>
-            <div class="content">
+            <div class="extension-content">
                 <b style="font-size: 12px;"><?php
                 $name = $extension['extension_name'];
                 $extension_name = str_replace("_"," ",$name);
@@ -46,9 +46,15 @@ $bootstrapColWidth = 12 / $numOfCols;
 
             <div class="features-div-padding">
 
-                <div class="checkbox checbox-switch switch-primary">
-                    <!--  <button class=" btn btn-sm ml-2 <?php echo $extension['is_active'] == 1 ? 'btn-primary' : '' ?>" name="<?php echo $extension['extension_folder_name']; ?>" data-status="<?php echo $extension['is_active']; ?>"><?php echo $extension['is_active'] == 1 ? 'Setting' : ''; ?></button> -->
-                    <label class="extension-box" style="padding-bottom: 8px">
+                <div class="checkbox checbox-switch switch-primary" style="margin-bottom: 5px;margin-top: 5px">
+                    <a href="<?php  if(isset( $extension['setting_link']) && $extension['setting_link'] ){echo $extension['setting_link']; }else{
+                        echo '';}?>" 
+                        class="ml-4"
+                        style="font-size: 25px;"
+                        name="<?php echo $extension['extension_folder_name']; ?>" data-status="<?php echo $extension['is_active']; ?>"><?php echo $extension['is_active'] == 1 ? '<i class="pe-7s-config text-primary"></i>' : ''; ?>
+                            
+                        </a> 
+                    <label class="extension-box" style="padding-right: 1.5rem !important;">
                      <input type="checkbox" class="extension-status-button" data-status="<?php echo $extension['is_active']; ?>" name="<?php echo $extension['extension_folder_name']; ?>"
                                <?= $extension['is_active'] ? 'checked=checked' : ''; ?>/>
                         <span></span>
