@@ -10,8 +10,8 @@
    },
    "settings": {
       "unit_name":{
-         "singular": "aditi", 
-         "plural" : "aditis" 
+         "singular": "room", 
+         "plural" : "rooms" 
          },
       "unit_type_name" :  {
          "singular":"room type",
@@ -23,3 +23,4 @@
    }
 }
   
+ 

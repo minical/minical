@@ -339,10 +339,11 @@
                                     </div>
                                 </div>
 
-                                <br/><br/>
 
 
-                                <div class="form-group" >
+                                <?php if($_SERVER['HTTP_HOST'] == "app.minical.io" || $_SERVER['HTTP_HOST'] == "demo.minical.io"){?>
+                                    <br/><br/>
+                                    <div class="form-group" >
                                     <label for="property_type" class="col-sm-3 control-label">
                                         <?php echo l('Property Type', true); ?><span style="color: red;">*</span>
                                     </label>
@@ -377,6 +378,31 @@
                                     </div>
                                 </div>
                             </div>
+                                    
+                            <?php }else{?>
+
+                                
+
+
+                            <div class="form-group">
+                                    <label for="property_name" class="col-sm-3 control-label">
+                                        <?php echo l('property_name'); ?><span style="color: red;">*</span>
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" name="property_name" id="property_name">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="number_of_rooms" class="col-sm-3 control-label">
+                                        <?php echo l('no_of_rooms'); ?><span style="color: red;">*</span>
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" name="number_of_rooms" id="number_of_rooms">
+                                    </div>
+                                </div>
+
+                                
+                        <?php }?>
                                 <div class="form-group">
                                     <label for="" class="col-sm-3 control-label"></label>
                                     <div class="col-sm-9">
