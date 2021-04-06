@@ -107,7 +107,7 @@ class Payment_model extends CI_Model {
             }
 
             if($new_payment_gateway){
-                $this->ci->load->library('../extensions/square_payment_gateway/libraries/ProcessPayment');
+                $this->ci->load->library('../extensions/'.$this->current_payment_gateway.'/libraries/ProcessPayment');
                 $payment_gateway_credentials = $this->processpayment->getGatewayCredentials();
 
                 $payment_type    = $this->ci->processpayment->getPaymentGatewayPaymentType($selected_payment_gateway);

@@ -15,6 +15,7 @@ class MY_Controller extends CI_Controller {
     public $language;
     public $module_assets_files;
     public $module_menus;
+    public $current_payment_gateway;
     public $is_super_admin;
 
 
@@ -40,99 +41,13 @@ class MY_Controller extends CI_Controller {
         $this->controller_name = $this->ci->uri->rsegment(1);
         $this->function_name = $this->ci->uri->rsegment(2);
 
-        if ($this->controller_name === 'booking' && $this->function_name === 'show_booking_information') {
-            $last_segment = end($this->ci->uri->segments);
-            $booking_id = $this->Booking_model->get_booking_id_from_invoice_hash($last_segment);
-            $this->company_id = $this->Booking_model->get_company_id($booking_id);
-
-            $company = $this->ci->Company_model->get_company($this->company_id);
-            $this->company_data = $company;
-
-            $this->company_name = $company['name'];
-            $this->company_timezone = $company['time_zone'];
-            $this->company_subscription_level = $company['subscription_level'];
-            $this->company_subscription_state = $company['subscription_state'];
-            $this->company_feature_limit = $company['limit_feature'];
-            $this->company_creation_date = $company['creation_date'];
-
-            $this->company_partner_id = $company['partner_id'];
-            $this->company_force_room_selection = $company['force_room_selection'];
-
-            $this->automatic_email_confirmation = $company['automatic_email_confirmation'];
-            $this->automatic_email_cancellation = $company['automatic_email_cancellation'];
-
-            $company_partner_type_id = $this->Whitelabel_partner_model->get_partner_detail($company['partner_id']);
-            $this->company_partner_type_id = isset($company_partner_type_id) && isset($company_partner_type_id['type_id']) ? $company_partner_type_id['type_id'] : 1;
-            $this->company_ui_theme = isset($company['ui_theme']) ? $company['ui_theme'] : 0;
-
-            $this->selling_date = $company['selling_date'] ? $company['selling_date'] : date('Y-m-d');
-            $this->api_key = $company['api_key'];
-            $this->user_id = $this->ci->session->userdata('user_id');
-            $this->is_tokenization_enabled = $company['enable_card_tokenization'];
-            $this->is_cc_visualization_enabled = $company['is_cc_visualization_enabled'];
-            $this->is_total_balance_include_forecast = $company['is_total_balance_include_forecast'];
-            $this->is_display_tooltip = $company['is_display_tooltip'];
-            $this->avoid_dmarc_blocking = $company['avoid_dmarc_blocking'];
-            $this->allow_free_bookings = $company['allow_free_bookings'];
-            $this->company_date_format = $company['date_format'];
-            $this->default_room_singular = $company['default_room_singular'];
-            $this->default_room_plural = $company['default_room_plural'];
-            $this->default_room_type = $company['default_room_type'];
-            $this->default_checkin_time = $company['default_checkin_time'];
-            $this->default_checkout_time = $company['default_checkout_time'];
-
-            $this->enable_new_calendar = $company['enable_new_calendar'];
-            $this->enable_hourly_booking = $this->enable_new_calendar ? $company['enable_hourly_booking'] : false;
-
-            if ($booking_id && $this->company_id) {
-                $this->session->set_userdata(
-                    array(
-                        'customer_modify_booking' =>
-                            array(
-                                'allow' => true,
-                                'booking_id' => $booking_id,
-                                'is_total_balance_include_forecast' => $company['is_total_balance_include_forecast'],
-                                'company_date_format' => $company['date_format'],
-                                'enable_hourly_booking' => $company['enable_hourly_booking'],
-                                'selling_date' => $company['selling_date'] ? $company['selling_date'] : date('Y-m-d')
-                            ),
-                        'current_company_id' => $this->company_id
-                    )
-                );
-            }
-        }
-        
         // set language strings
         $language = $this->session->userdata('language');
-        //print_r($this->lang->language);
+
         $this->language = $this->lang->language;
         $this->load->vars(array("l" => (object)$this->lang->language));
-        //echo $this->user_id." ".$this->company_id." ".$this->controller_name." ".$this->function_name;
+
         $this->check_login();
-
-        // if(!$this->session->userdata('activated_modules')){
-        //     $extensions = $this->Extension_model->get_extensions(null, $this->company_id);
-        
-        //     $extensions_name = array();
-        //     if($extensions){
-        //         foreach($extensions as $extension)
-        //         {
-        //             if($extension['is_active'] == 1)
-        //                 $extensions_name[] = $extension['extension_name'];
-        //         }
-        //     }
-            
-        // } else {
-        //     $extensions_name = $this->session->userdata('activated_modules');
-        // }
-
-        // if(in_array('register_feature', $extensions_name)){
-        //     setcookie("register_feature", 1 , time() + (86400 * 7), "/");
-        // } else {
-        //     setcookie('register_feature', 0, time() - 1, '/');
-        // }
-
-        // load css/js files for HMVC (modules)
 
         $all_active_modules = array();
         $modules_path = $this->config->item('module_location'); 
@@ -152,6 +67,11 @@ class MY_Controller extends CI_Controller {
                     require($module_config);
                     $config['extension_folder_name'] = $module;
                     $all_active_modules[$module] = $config;
+
+                    if(isset($config['gateway_key']) && isset($this->selected_payment_gateway) && $config['gateway_key'] == $this->selected_payment_gateway ){
+                        $this->current_payment_gateway = $module;
+                    }
+
                 }
                 else
                 {

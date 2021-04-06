@@ -315,7 +315,7 @@
               $customer_form.append(
                     $("<div/>", {
                         class: "form-group cc_field",
-                        style: "display: none;"
+                        // style: "display: none;"
                     })
                     .append($("<label/>", {
                         for : "credit_card",
@@ -326,11 +326,17 @@
                     $("<div/>", {
                         class: "col-sm-6"
                     }).append(
-                    $("<iframe/>", {
-                        id: "credit_card_iframe",
-                        style: "width: 100%;height: 35px;border: none;",
-                        scrolling: "no",
-                        frameborder: "0"
+                    // $("<iframe/>", {
+                    //     id: "credit_card_iframe",
+                    //     style: "width: 100%;height: 35px;border: none;",
+                    //     scrolling: "no",
+                    //     frameborder: "0"
+                    // })
+                    $("<input/>", { // a workaround to disable autocomplete for email and cvv
+                        class: "form-control cc_number",
+                        name: "cc_number",
+                        id: "cc_number",
+                        type: 'text',
                     })
                     ).append(sensitiveCardNumber)
                     .append($('<span/>', {
@@ -385,7 +391,7 @@
                     ).append(
                     $("<div/>", {
                         class: "form-group cc_field",
-                        style: "display: none;"
+                        // style: "display: none;"
                     }).append(
                         $("<label/>", {
                             for : "customer_notes",
@@ -662,14 +668,14 @@
                                             return;
                                         }
                                     });
-                                if(isTokenizationEnabled == 1 && $('#credit_card_iframe')[0].src)
-                                {
-                                    $('#credit_card_iframe')[0].contentWindow.postMessage('validate', '*');
-                                }
-                                else
-                                {
+                                // if(isTokenizationEnabled == 1 && $('#credit_card_iframe')[0].src)
+                                // {
+                                //     $('#credit_card_iframe')[0].contentWindow.postMessage('validate', '*');
+                                // }
+                                // else
+                                // {
                                     update_create_client();
-                                }
+                                // }
 
                             })
                             ).append(
@@ -856,7 +862,9 @@
                 region: $.trim($customerModal.find("[name='region']").val()),
                 country: $.trim($customerModal.find("[name='country']").val()),
                 postal_code: $.trim($customerModal.find("[name='postal_code']").val()),
-                customer_notes: $.trim($customerModal.find("[name='customer_notes']").val())
+                customer_notes: $.trim($customerModal.find("[name='customer_notes']").val()),
+                cc_number: $.trim($customerModal.find("[name='cc_number']").val()),
+                cvc: $.trim($customerModal.find("[name='cvc']").val())
             };
             if(isTokenizationEnabled == 1)
             {
