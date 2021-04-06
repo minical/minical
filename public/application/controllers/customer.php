@@ -1248,9 +1248,12 @@ class Customer extends MY_Controller {
            // 'cc_cvc_encrypted' => (isset($customer_data['cc_cvc_encrypted']) ? $customer_data['cc_cvc_encrypted'] : NULL)
         );
 
+        $company_payment_gateway_data = $this->Company_model->get_company($this->company_id);
+        
+        $stripe_secret_key = $company_payment_gateway_data['stripe_secret_key'];
 
         $cust_data = array();
-        $header = array('Authorization: Bearer '.$_SERVER['STRIPE_SECRET_KEY']);
+        $header = array('Authorization: Bearer '.$stripe_secret_key);
         $url = 'https://api.stripe.com/v1/customers';
 
         $customer_resp = $this->get_stripe_customer_id($url, $cust_data, $header);
@@ -1264,8 +1267,6 @@ class Customer extends MY_Controller {
         $customer_data['cc_cvc_encrypted'] = "";
         
         $customer_data['stripe_customer_id'] = $customer_response['id'];
-
-        $stripe_secret_key = $_SERVER['STRIPE_SECRET_KEY'];
 
         if($cc_number){
             $card_data = array(
@@ -1357,7 +1358,9 @@ class Customer extends MY_Controller {
         unset($customer_data['cvc']);
         unset($customer_data['cc_number']);
 
-        $stripe_secret_key = $_SERVER['STRIPE_SECRET_KEY'];
+        $company_payment_gateway_data = $this->Company_model->get_company($this->company_id);
+
+        $stripe_secret_key = $company_payment_gateway_data['stripe_secret_key'];
 
         $card_data = array(
                             'cvc' => $cvc,
