@@ -54,7 +54,7 @@
                     </div>
 
                     <?php if(check_active_extensions($this->current_payment_gateway, $this->company_id)){ ?>
-                    <div style="display:none;" class="form-group use-payment-gateway-btn ">
+                    <div class="form-group use-payment-gateway-btn ">
                         <label for="payment_amount" class="col-sm-4 control-label">
                             <?php echo l('use_payment_gateway'); ?>
                         </label>

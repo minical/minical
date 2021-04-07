@@ -649,9 +649,24 @@ class Payment_model extends CI_Model {
         $refund = array("success" => false, "message" => "some error occured!");
         if ($payment['payment_gateway_used'] and $payment['gateway_charge_id']) {
             $refund_payment = $payment;
+
+
+            $payments_gateways = json_decode(PAYMENT_GATEWAYS, true);
+            $new_payment_gateway = false;
+
+            if(!in_array($this->selected_payment_gateway, $payments_gateways)){
+                $new_payment_gateway = true;
+            }
+
+            if($new_payment_gateway){
+                $this->ci->load->library('../extensions/'.$this->current_payment_gateway.'/libraries/ProcessPayment');
+                $refund = $this->ci->processpayment->refundBookingPayment($payment_id, $amount, $payment_type, $booking_id);
+                
+            } else {
            
-            $this->ci->load->library('PaymentGateway');
-            $refund = $this->ci->paymentgateway->refundBookingPayment($payment_id, $amount, $payment_type, $booking_id);
+                $this->ci->load->library('PaymentGateway');
+                $refund = $this->ci->paymentgateway->refundBookingPayment($payment_id, $amount, $payment_type, $booking_id);
+            }
             if(isset($refund['success']) && $refund['success'])
             {
                 $refund_id = isset($refund['refund_id']) && $refund['refund_id'] ? $refund['refund_id'] : null;

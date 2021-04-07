@@ -130,7 +130,7 @@ class Company_model extends CI_Model {
                         GROUP BY b.company_id) as la "
                         , "la.company_id = c.company_id", "left");
         }
-		$this->db->select('c.*, capi.*, up.*, cs.subscription_level, cs.limit_feature, cs.subscription_state, cs.payment_method, cs.subscription_id, cs.balance, u.email as owner_email, p.*, count(DISTINCT r.room_id) as number_of_rooms_actual,c.partner_id,IFNULL(wp.username,"Minical") as partner_name, cpg.selected_payment_gateway, cpg.stripe_secret_key',FALSE);
+		$this->db->select('c.*, capi.*, up.*, cs.subscription_level, cs.limit_feature, cs.subscription_state, cs.payment_method, cs.subscription_id, cs.balance, u.email as owner_email, p.*, count(DISTINCT r.room_id) as number_of_rooms_actual,c.partner_id,IFNULL(wp.username,"Minical") as partner_name, cpg.selected_payment_gateway',FALSE);
 		$this->db->from('company as c');
 		$this->db->join('company_admin_panel_info as capi', 'c.company_id = capi.company_id', 'left');
 		$this->db->join('company_subscription as cs', 'c.company_id = cs.company_id', 'left');

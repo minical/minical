@@ -221,7 +221,6 @@
 
             var $modal_content = $("#customer-modal").find(".modal-content")
 
-
                 var $customer_form = $("<form/>", {
 					class: "modal-body form-horizontal"
 				})
@@ -337,19 +336,21 @@
                         name: "cc_number",
                         id: "cc_number",
                         type: 'text',
+                        value: customer.cc_number
                     })
-                    ).append(sensitiveCardNumber)
-                    .append($('<span/>', {
-                        id: "masked-card-number-label",
-                        style: "position: absolute;top: 0;left: 15px;background: white;max-width: 90%;padding: 8px;",
-                        class: "masked-card-number-label form-control "+(customer.cc_number ? "" : "hidden"),
-                        text: customer.cc_number
-                    })
-                        .on('click', function(){
-                            $(this).hide();
-                            $('#credit_card_iframe')[0].contentWindow.postMessage('focus', '*');
-                        })
                     )
+                    // .append(sensitiveCardNumber)
+                    // .append($('<span/>', {
+                    //     id: "masked-card-number-label",
+                    //     style: "position: absolute;top: 0;left: 15px;background: white;max-width: 90%;padding: 8px;",
+                    //     class: "masked-card-number-label form-control "+(customer.cc_number ? "" : "hidden"),
+                    //     text: customer.cc_number
+                    // })
+                    //     .on('click', function(){
+                    //         $(this).hide();
+                    //         $('#credit_card_iframe')[0].contentWindow.postMessage('focus', '*');
+                    //     })
+                    // )
                     .append($('<img/>', {
                         id: "card-image",
                         style: "position: absolute; top: 3px; right: 18px; width: auto; height: 28px; padding: 0;"
@@ -415,15 +416,16 @@
                                     placeholder: '***',
                                     type: 'password',
                                     maxlength: 4,
-                                    value: customer.cc_cvc_encrypted ? "***" : ""
+                                    // value: customer.cc_cvc_encrypted ? "***" : ""
+                                    value: customer.cc_number ? "***" : ""
                                 })
                             ).append(sensitiveCardCVC)
                         )
-                    .append(
-                        $("<div/>", {id: "cc_tokenization_status", class: 'col-sm-6'}).on("click", function () {
-                            alert(l("The customer's credit card has been tokenized. You can charge the customer's credit card in the Invoice page using [Add Payment] button."));
-                        })
-                    )
+                    // .append(
+                    //     $("<div/>", {id: "cc_tokenization_status", class: 'col-sm-6'}).on("click", function () {
+                    //         alert(l("The customer's credit card has been tokenized. You can charge the customer's credit card in the Invoice page using [Add Payment] button."));
+                    //     })
+                    // )
                 );
             }
             $customer_form.append(
