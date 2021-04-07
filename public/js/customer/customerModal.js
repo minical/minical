@@ -221,7 +221,6 @@
 
             var $modal_content = $("#customer-modal").find(".modal-content")
 
-
                 var $customer_form = $("<form/>", {
 					class: "modal-body form-horizontal"
 				})
@@ -315,7 +314,7 @@
               $customer_form.append(
                     $("<div/>", {
                         class: "form-group cc_field",
-                        style: "display: none;"
+                        // style: "display: none;"
                     })
                     .append($("<label/>", {
                         for : "credit_card",
@@ -326,24 +325,32 @@
                     $("<div/>", {
                         class: "col-sm-6"
                     }).append(
-                    $("<iframe/>", {
-                        id: "credit_card_iframe",
-                        style: "width: 100%;height: 35px;border: none;",
-                        scrolling: "no",
-                        frameborder: "0"
+                    // $("<iframe/>", {
+                    //     id: "credit_card_iframe",
+                    //     style: "width: 100%;height: 35px;border: none;",
+                    //     scrolling: "no",
+                    //     frameborder: "0"
+                    // })
+                    $("<input/>", { // a workaround to disable autocomplete for email and cvv
+                        class: "form-control cc_number",
+                        name: "cc_number",
+                        id: "cc_number",
+                        type: 'text',
+                        value: customer.cc_number
                     })
-                    ).append(sensitiveCardNumber)
-                    .append($('<span/>', {
-                        id: "masked-card-number-label",
-                        style: "position: absolute;top: 0;left: 15px;background: white;max-width: 90%;padding: 8px;",
-                        class: "masked-card-number-label form-control "+(customer.cc_number ? "" : "hidden"),
-                        text: customer.cc_number
-                    })
-                        .on('click', function(){
-                            $(this).hide();
-                            $('#credit_card_iframe')[0].contentWindow.postMessage('focus', '*');
-                        })
                     )
+                    // .append(sensitiveCardNumber)
+                    // .append($('<span/>', {
+                    //     id: "masked-card-number-label",
+                    //     style: "position: absolute;top: 0;left: 15px;background: white;max-width: 90%;padding: 8px;",
+                    //     class: "masked-card-number-label form-control "+(customer.cc_number ? "" : "hidden"),
+                    //     text: customer.cc_number
+                    // })
+                    //     .on('click', function(){
+                    //         $(this).hide();
+                    //         $('#credit_card_iframe')[0].contentWindow.postMessage('focus', '*');
+                    //     })
+                    // )
                     .append($('<img/>', {
                         id: "card-image",
                         style: "position: absolute; top: 3px; right: 18px; width: auto; height: 28px; padding: 0;"
@@ -385,7 +392,7 @@
                     ).append(
                     $("<div/>", {
                         class: "form-group cc_field",
-                        style: "display: none;"
+                        // style: "display: none;"
                     }).append(
                         $("<label/>", {
                             for : "customer_notes",
@@ -409,15 +416,16 @@
                                     placeholder: '***',
                                     type: 'password',
                                     maxlength: 4,
-                                    value: customer.cc_cvc_encrypted ? "***" : ""
+                                    // value: customer.cc_cvc_encrypted ? "***" : ""
+                                    value: customer.cc_number ? "***" : ""
                                 })
                             ).append(sensitiveCardCVC)
                         )
-                    .append(
-                        $("<div/>", {id: "cc_tokenization_status", class: 'col-sm-6'}).on("click", function () {
-                            alert(l("The customer's credit card has been tokenized. You can charge the customer's credit card in the Invoice page using [Add Payment] button."));
-                        })
-                    )
+                    // .append(
+                    //     $("<div/>", {id: "cc_tokenization_status", class: 'col-sm-6'}).on("click", function () {
+                    //         alert(l("The customer's credit card has been tokenized. You can charge the customer's credit card in the Invoice page using [Add Payment] button."));
+                    //     })
+                    // )
                 );
             }
             $customer_form.append(
@@ -662,14 +670,14 @@
                                             return;
                                         }
                                     });
-                                if(isTokenizationEnabled == 1 && $('#credit_card_iframe')[0].src)
-                                {
-                                    $('#credit_card_iframe')[0].contentWindow.postMessage('validate', '*');
-                                }
-                                else
-                                {
+                                // if(isTokenizationEnabled == 1 && $('#credit_card_iframe')[0].src)
+                                // {
+                                //     $('#credit_card_iframe')[0].contentWindow.postMessage('validate', '*');
+                                // }
+                                // else
+                                // {
                                     update_create_client();
-                                }
+                                // }
 
                             })
                             ).append(
@@ -856,7 +864,9 @@
                 region: $.trim($customerModal.find("[name='region']").val()),
                 country: $.trim($customerModal.find("[name='country']").val()),
                 postal_code: $.trim($customerModal.find("[name='postal_code']").val()),
-                customer_notes: $.trim($customerModal.find("[name='customer_notes']").val())
+                customer_notes: $.trim($customerModal.find("[name='customer_notes']").val()),
+                cc_number: $.trim($customerModal.find("[name='cc_number']").val()),
+                cvc: $.trim($customerModal.find("[name='cvc']").val())
             };
             if(isTokenizationEnabled == 1)
             {
