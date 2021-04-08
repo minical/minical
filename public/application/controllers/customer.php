@@ -1255,7 +1255,7 @@ class Customer extends MY_Controller {
             $new_payment_gateway = true;
         }
 
-        if($new_payment_gateway){
+        if($new_payment_gateway && $this->current_payment_gateway){
             $this->load->library('../extensions/'.$this->current_payment_gateway.'/libraries/ProcessPayment');
         
             if(
@@ -1366,7 +1366,7 @@ class Customer extends MY_Controller {
             $new_payment_gateway = true;
         }
 
-        if($new_payment_gateway){
+        if($new_payment_gateway && $this->current_payment_gateway){
             $this->load->library('../extensions/'.$this->current_payment_gateway.'/libraries/ProcessPayment');
 
             if(
