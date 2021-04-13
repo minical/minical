@@ -171,8 +171,11 @@ class MY_Controller extends CI_Controller {
             }
             
             $this->company_key_data = $company_key_data;
-            $this->company_api_key = $company_key_data[0]['key'];
 
+            if(isset($company_key_data[0]['key'])){
+                $this->company_api_key = $company_key_data[0]['key'];
+            }
+            
             $this->company_data = $company;
             $this->company_name = $company['name'];
             $this->company_email = $company['email'];
