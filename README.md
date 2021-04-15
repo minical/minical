@@ -27,7 +27,8 @@
 miniCal is an open-source booking management platform for all businesses that requires booking/appointment scheduling.
 A user-friendly interface of miniCal has already helped many businesses such as Hotels, office spaces, hair salons, car rental businesses, yoga studios, apartments, and vacation rental properties.
 
-![image](https://user-images.githubusercontent.com/604232/110356681-58e13e80-7fef-11eb-8e7c-e663b86e9d82.png)
+<img src="https://snipboard.io/KZDfkU.jpg" alt="">
+
 
 ## Documentation
 miniCal documentation is available here [minical.doc](https://github.com/minical/minical/wiki).
