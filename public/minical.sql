@@ -251,6 +251,74 @@ CREATE TABLE `channel` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `channex_manager`
+--
+
+CREATE TABLE `channex_manager` (
+  `id` bigint(20) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `meta_data` text NOT NULL,
+  `company_id` bigint(20) NOT NULL,
+  `created_date` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `channex_properties`
+--
+
+CREATE TABLE `channex_properties` (
+  `channex_id` bigint(20) NOT NULL,
+  `company_id` bigint(20) NOT NULL,
+  `channex_property_data` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `channex_rate_plans`
+--
+
+CREATE TABLE `channex_rate_plans` (
+  `channex_x_company_id` bigint(20) NOT NULL,
+  `channex_rate_plan_id` varchar(255) NOT NULL,
+  `minical_rate_plan_id` bigint(20) NOT NULL,
+  `channex_room_type_id` varchar(255) NOT NULL,
+  `channex_room_maximum_occupancy` int(10) NOT NULL DEFAULT 0,
+  `channex_lead_maximum_occupancy` int(10) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `channex_room_types`
+--
+
+CREATE TABLE `channex_room_types` (
+  `channex_x_company_id` bigint(20) NOT NULL,
+  `channex_room_type_id` varchar(255) NOT NULL,
+  `minical_room_type_id` bigint(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `channex_x_company`
+--
+
+CREATE TABLE `channex_x_company` (
+  `channex_x_company_id` bigint(20) NOT NULL,
+  `company_id` bigint(20) NOT NULL,
+  `channex_id` bigint(20) NOT NULL,
+  `channex_property_id` varchar(255) NOT NULL,
+  `is_active` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `charge`
 --
 
@@ -22062,6 +22130,12 @@ ALTER TABLE `customer_card_detail`
 ALTER TABLE `charge_folio`
   ADD PRIMARY KEY (`id`);
 
+ALTER TABLE `channex_manager`
+  ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `channex_x_company`
+  ADD PRIMARY KEY (`channex_x_company_id`);
+
 --
 -- AUTO_INCREMENT for dumped tables
 --
@@ -22390,6 +22464,14 @@ ALTER TABLE `charge_folio`
 
 ALTER TABLE `property_build`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+COMMIT;
+
+ALTER TABLE `channex_manager`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+COMMIT;
+
+ALTER TABLE `channex_x_company`
+  MODIFY `channex_x_company_id` bigint(20) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
