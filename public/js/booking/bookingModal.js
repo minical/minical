@@ -4907,9 +4907,11 @@ var bookingModalInvoker = function ($) {
 
                             // Create the event
                             var event = new CustomEvent('open_booking_modal', { "detail" : {"reservation_id" : that.booking.booking_id, "booking_data" : that.booking} });
+                            var bookingCreatedEvent = new CustomEvent('booking_created', { "detail" : {"reservation_id" : that.booking.booking_id, "booking_data" : that.booking, "booking_room_data" : data.rooms[0]} });
 
                             // Dispatch/Trigger/Fire the event
                             document.dispatchEvent(event);
+                            document.dispatchEvent(bookingCreatedEvent);
 
                             if ($("#current-page").val() === 'show_reservation_report_cm') {
                                 setTimeout(function () {
@@ -4923,11 +4925,6 @@ var bookingModalInvoker = function ($) {
                     }
 
                     if (innGrid.reloadBookings) innGrid.reloadBookings();
-
-                    innGrid.updateAvailabilities(
-                        data.rooms[0].check_in_date,
-                        data.rooms[0].check_out_date
-                    );
 
                     // mixpanel tracking
                     mixpanel.track("Booking created");
@@ -4997,10 +4994,6 @@ var bookingModalInvoker = function ($) {
 
             // update availabilities of the dates prior to update
             // why do we need it?
-            // innGrid.updateAvailabilities(
-            //        this.booking.check_in_date,
-            //        this.booking.check_out_date
-            //        );
 
             $.ajax({
                 type: "POST",
@@ -5050,10 +5043,8 @@ var bookingModalInvoker = function ($) {
 
                         // update availabilities of the dates after the update
 
-                        innGrid.updateAvailabilities(
-                            data.rooms[0].check_in_date,
-                            data.rooms[0].check_out_date
-                        );
+                        var bookingUpdatedEvent = new CustomEvent('booking_updated', { "detail" : {"reservation_id" : that.booking.booking_id, "booking_data" : data} });
+                        document.dispatchEvent(bookingUpdatedEvent);
 
                         if (action === "early-check-out") {
                             // update checkout date in modal in case of early checkout
@@ -5174,10 +5165,8 @@ var bookingModalInvoker = function ($) {
                         data = (data == "") ? data : JSON.parse(data);
                         if (data == "") // if successful, delete_booking_AJAX returns empty page
                         {
-                            innGrid.updateAvailabilities(
-                                that.booking.check_in_date,
-                                that.booking.check_out_date
-                            );
+                            var bookingDeletedEvent = new CustomEvent('booking_deleted', { "detail" : {"reservation_id" : that.booking.booking_id, "booking_data" : that.booking} });
+                            document.dispatchEvent(bookingDeletedEvent);
 
                             if (isGroupBookingDel == true) {
                                 that._getLinkedGroupBookingRoomList();
