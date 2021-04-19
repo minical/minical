@@ -33,14 +33,17 @@ switch ($_SERVER['HTTP_HOST']) {
         $config['app_environment'] = 'development';
 		$config['base_url']	= "http://" . $_SERVER['HTTP_HOST'];
 		$config['api_url']	= "http://minical.api";
-		$config['cm_url']	= "http://roomsy.local"; // production
+		break;
+	case 'demo.minical.io': // local
+        $config['app_environment'] = 'development';
+		$config['base_url']	= "http://" . $_SERVER['HTTP_HOST'];
+		$config['api_url']	= "http://minical.api";
 		break;
     default: // production // other whitelabel companies
         $config['app_environment'] = 'production';
         // whitelabel partners might not have ssl installed
         $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
 		$config['base_url']	= $protocol . $_SERVER['HTTP_HOST'];
-		$config['cm_url']	= "http://cm.roomsy.com"; // production
 		$config['api_url']	= "http://api.minical.io"; // production/staging
 		break;
 }
