@@ -37,7 +37,7 @@ switch ($_SERVER['HTTP_HOST']) {
 	case 'demo.minical.io': // local
         $config['app_environment'] = 'development';
 		$config['base_url']	= "http://" . $_SERVER['HTTP_HOST'];
-		$config['api_url']	= "http://minical.api";
+		$config['api_url']	= "http://seasonal.io/minical/opensource/demo/api";
 		break;
     default: // production // other whitelabel companies
         $config['app_environment'] = 'production';
