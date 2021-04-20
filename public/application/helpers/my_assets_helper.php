@@ -135,4 +135,89 @@ function auto_fill_credentials()
     }
 }
 
+// Convert $change's date intervals of changes into a range of dates in the correct format
+function get_array_with_range_of_dates($changes, $ota_id)
+{
+    $date_ranges = array();
+    switch ($ota_id) {
+        case SOURCE_ONLINE_WIDGET: // Roomsy's Online Booking Engine
+            $date_ranges = get_array_with_range_of_dates_iso8601($changes, FALSE);break;
+        case SOURCE_BOOKING_DOT_COM: // Booking.com
+            $date_ranges = get_array_with_range_of_dates_iso8601($changes, FALSE);break;
+        case SOURCE_EXPEDIA: // Expedia
+            $date_ranges = get_array_with_range_of_dates_iso8601($changes, TRUE);break;
+        case SOURCE_MYALLOCATOR:
+            $date_ranges = get_array_with_range_of_dates_iso8601($changes, FALSE);break;
+        case SOURCE_AGODA:
+            $date_ranges = get_array_with_range_of_dates_iso8601($changes, FALSE);break;
+        case SOURCE_SITEMINDER:
+            $date_ranges = get_array_with_range_of_dates_iso8601($changes, TRUE);break;
+        default:
+            $date_ranges = get_array_with_range_of_dates_iso8601($changes, FALSE);break;
+    }
+    return $date_ranges;
+}
+
+function get_array_with_range_of_dates_iso8601($changes, $end_date_inclusive)
+    {
+        if (!isset($changes))
+        {
+            return null;
+            
+        } elseif (sizeof($changes) < 1)
+        {
+            return null;
+        }
+        
+        $changes_indexed_by_date = array(); 
+        $date_start = null;
+        $last_change = null;
+        foreach ($changes as $change)
+        {   
+            
+            if ($last_change != null)
+            {
+                $change_detected = false;
+                foreach ($change as $key => $value)
+                {
+                    if ($key != 'date')
+                    {
+                            // compare the actual number value to 2 decimal digits.
+                            $change_in_two_decimal_digits = number_format(floatval($change[$key]), 2, ".", "");
+                            $last_change_in_two_decimal_digits = number_format(floatval($last_change[$key]), 2, ".", "");
+                            if ($change_in_two_decimal_digits != $last_change_in_two_decimal_digits) 
+                            {
+                                $change_detected = true;
+                            }
+                        
+                    }
+                }
+                if (    !$change_detected   &&
+                        $change['date'] == Date('Y-m-d', strtotime("+1 day", strtotime($last_change['date'])))
+                )
+                {
+                    $last_change = $change;
+                    continue;
+                }
+            }
+            
+            if ($date_start == null)
+            {
+                $date_start = $change['date'];
+            }
+            else
+            {
+                $changes_indexed_by_date[] = array('date_start'=>$date_start, 'date_end'=> $change['date']) + $last_change;
+                $date_start = $change['date'];
+                
+            }
+            $last_change = $change;     
+            
+        }
+        $changes_indexed_by_date[] = array('date_start'=>$date_start, 'date_end'=> $last_change['date'])+$last_change ;
+
+        return $changes_indexed_by_date;    
+    }
+
+
 ?>
