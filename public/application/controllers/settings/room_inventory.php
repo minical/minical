@@ -34,7 +34,7 @@ class Room_inventory extends MY_Controller {
         $view_data['submenu'] = 'hotel_settings/hotel_settings_submenu.php';
         
         $view_data['submenu_parent_url'] = base_url()."settings/";
-		$view_data['sidebar_menu_url'] = base_url()."settings/room_inventory/";
+        $view_data['sidebar_menu_url'] = base_url()."settings/room_inventory/";
         
         $view_data['menu_items'] = $this->Menu_model->get_menus(array('parent_id' => 5, 'wp_id' => 1));
         $view_data['sidebar_links'] = $this->Menu_model->get_menus(array('parent_id' => 32, 'wp_id' => 1));
@@ -258,7 +258,7 @@ class Room_inventory extends MY_Controller {
         $room_type_id = $this->Room_type_model->create_room_type(
                 $this->company_id, 'New Room Type', 'NRT'
         );
-		$this->_create_room_log("Create New Room Type ( [ID {$room_type_id}])");
+        $this->_create_room_log("Create New Room Type ( [ID {$room_type_id}])");
         $room_type = $this->Room_type_model->get_room_type($room_type_id);
 
         $date_range_id = $this->Date_range_model->create_date_range(
@@ -277,7 +277,7 @@ class Room_inventory extends MY_Controller {
                 )
         );
 
-        //Load data to get html code used by javascript to generate the new room type dynamically.		
+        //Load data to get html code used by javascript to generate the new room type dynamically.      
         //Instead of making the page refresh to see the new room type.
 
         $this->load->view('hotel_settings/room_inventory_settings/new_room_type', $room_type);
@@ -341,18 +341,18 @@ class Room_inventory extends MY_Controller {
             'min_occupancy' => $this->security->xss_clean($this->input->post('min_occupancy')),
             'max_adults' => $this->security->xss_clean($this->input->post('max_adults')),
             'max_children' => $this->security->xss_clean($this->input->post('max_children')),
-            'can_be_sold_online' => $this->security->xss_clean($this->input->post('can_be_sold_online')),
-            'default_room_charge' => $this->input->post('default_room_charge'),
+            'can_be_sold_online' => $this->security->xss_clean($this->input->post('can_be_sold_online')) ? $this->security->xss_clean($this->input->post('can_be_sold_online')) : 0,
+            'default_room_charge' => $this->input->post('default_room_charge') ? $this->input->post('default_room_charge') : null,
             'prevent_inline_booking' => $this->input->post('prevent_inline_booking'),
-            'description' => isset($unsanitized_post['description']) ? $unsanitized_post['description'] : "" 
+            'description' => isset($unsanitized_post['description']) ? $unsanitized_post['description'] : null
         );
         $file_name = $this->security->xss_clean($this->input->post('file_name'));
 
 
         if ($this->form_validation->run() == TRUE) {
             
-            $max_occupancy = $this->input->post('max_occupancy') ? $this->input->post('max_occupancy') : '';
-            $min_occupancy = $this->input->post('min_occupancy') ? $this->input->post('min_occupancy') : '';
+            $max_occupancy = $this->input->post('max_occupancy') ? $this->input->post('max_occupancy') : 4;
+            $min_occupancy = $this->input->post('min_occupancy') ? $this->input->post('min_occupancy') : 4;
             $max_adults = $this->input->post('max_adults');
             $max_children = $this->input->post('max_children');
             $total = $max_adults + $max_children;
@@ -401,7 +401,7 @@ class Room_inventory extends MY_Controller {
             {
                 //update room type
                 if ($this->Room_type_model->update_room_type($room_type_id, $data)) {
-					$this->_create_room_log("Update Room Type ( [ID {$room_type_id}])");
+                    $this->_create_room_log("Update Room Type ( [ID {$room_type_id}])");
                     $value = 'Save Successful';
                 } else {
                     $value = 'An error occured. Please contact adminstrator if it continues.';
@@ -435,12 +435,12 @@ class Room_inventory extends MY_Controller {
             echo json_encode($data);
             return;
         }
-		else
-		{
-			$this->_create_room_log("Delete Room Type ( [ID {$room_type_id}])");
-			$data = array('isSuccess' => TRUE, 'message' => 'Room type deleted');
-	        echo json_encode($data);
-		}
+        else
+        {
+            $this->_create_room_log("Delete Room Type ( [ID {$room_type_id}])");
+            $data = array('isSuccess' => TRUE, 'message' => 'Room type deleted');
+            echo json_encode($data);
+        }
     }
 
     function change_room_type_name() {
@@ -456,7 +456,7 @@ class Room_inventory extends MY_Controller {
             //update room type
             if ($this->Room_type_model->update_room_type($room_type_id, $data)) {
                 $value = $room_type_name;
-				$this->_create_room_log("Update Room Type Name ( [ID {$room_type_id}])");
+                $this->_create_room_log("Update Room Type Name ( [ID {$room_type_id}])");
             } else {
                 $value = 'An error occured. Please contact adminstrator if it continues.';
             }
@@ -490,7 +490,7 @@ class Room_inventory extends MY_Controller {
             //update room type
             if ($this->Room_type_model->update_room_type($room_type_id, $data)) {
                 $value = $acronym;
-				$this->_create_room_log("Update Room Type Acronym ( [ID {$room_type_id}])");
+                $this->_create_room_log("Update Room Type Acronym ( [ID {$room_type_id}])");
             } else {
                 $value = 'An error occured. Please contact adminstrator if it continues.';
             }
