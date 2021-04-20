@@ -22474,6 +22474,12 @@ ALTER TABLE `channex_x_company`
   MODIFY `channex_x_company_id` bigint(20) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
+
+ALTER TABLE `customer_card_detail` CHANGE `id` `id` BIGINT(20) NOT NULL AUTO_INCREMENT, 
+CHANGE `evc_card_status` `evc_card_status` INT(11) NULL COMMENT '1 = true, 0 = false', 
+CHANGE `card_name` `card_name` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL, 
+CHANGE `customer_id` `customer_id` BIGINT(20) NULL, CHANGE `is_card_deleted` `is_card_deleted` INT(10) NULL;
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
