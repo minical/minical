@@ -84,6 +84,7 @@ define('SOURCE_APARTMENT', '13');
 define('SOURCE_SITEMINDER', '14');
 define('SOURCE_SEASONAL', '15');
 define('SOURCE_OTHER_TRAVEL_AGENCY', '20');
+define('SOURCE_CHANNEX', '16');
 
 // these booking sources are hardcoded and common for each user
 define('COMMON_BOOKING_SOURCES', 
@@ -104,7 +105,8 @@ define('COMMON_BOOKING_SOURCES',
             SOURCE_APARTMENT => 'Apartment',
             SOURCE_OTHER_TRAVEL_AGENCY => 'Other Travel Agency',
             SOURCE_SITEMINDER => 'Siteminder',
-            SOURCE_SEASONAL => 'seasonal.io'
+            SOURCE_SEASONAL => 'seasonal.io',
+            SOURCE_CHANNEX => 'Channex'
         ))
     );
 

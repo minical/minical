@@ -152,6 +152,8 @@ function get_array_with_range_of_dates($changes, $ota_id)
             $date_ranges = get_array_with_range_of_dates_iso8601($changes, FALSE);break;
         case SOURCE_SITEMINDER:
             $date_ranges = get_array_with_range_of_dates_iso8601($changes, TRUE);break;
+        case SOURCE_CHANNEX:
+            $date_ranges = get_array_with_range_of_dates_iso8601($changes, FALSE);break;
         default:
             $date_ranges = get_array_with_range_of_dates_iso8601($changes, FALSE);break;
     }

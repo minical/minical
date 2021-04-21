@@ -21718,6 +21718,24 @@ CREATE TABLE `key_x_company` (
   `company_id` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ota_bookings`
+--
+
+CREATE TABLE `ota_bookings` (
+  `id` int(11) NOT NULL,
+  `ota_booking_id` varchar(16) NOT NULL,
+  `ota_type` varchar(100) DEFAULT NULL,
+  `booking_type` varchar(10) DEFAULT NULL,
+  `create_date_time` datetime DEFAULT NULL,
+  `pms_booking_id` bigint(20) NOT NULL,
+  `check_in_date` date DEFAULT NULL,
+  `check_out_date` date DEFAULT NULL,
+  `xml_out` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --
 -- Indexes for dumped tables
 --
@@ -22136,6 +22154,9 @@ ALTER TABLE `channex_manager`
 ALTER TABLE `channex_x_company`
   ADD PRIMARY KEY (`channex_x_company_id`);
 
+ALTER TABLE `ota_bookings`
+  ADD PRIMARY KEY (`id`);
+
 --
 -- AUTO_INCREMENT for dumped tables
 --
@@ -22472,6 +22493,10 @@ COMMIT;
 
 ALTER TABLE `channex_x_company`
   MODIFY `channex_x_company_id` bigint(20) NOT NULL AUTO_INCREMENT;
+COMMIT;
+
+ALTER TABLE `ota_bookings`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 
