@@ -58,7 +58,7 @@ $my_companies = $this->Company_model->get_companies($this->user_id);
 
                         <?php $sub_menus = $this->Menu_model->get_menus(array('parent_id' => $m_menu['id'], 'partner_type_id' => 1)); ?>
                         <?php 
-
+                        
                         $sub_menu_max_key = count($sub_menus) > 0 ? max(array_keys($sub_menus)) : 1;
                         $sub_menu_max_key = $sub_menu_max_key + 1;
 
@@ -171,20 +171,41 @@ $my_companies = $this->Company_model->get_companies($this->user_id);
                             <?php 
                             if(count($module_menus) > 0){
                                 foreach($module_menus as $key => $mod_menu){ 
-                                    foreach($mod_menu as $m_menu){ 
+                                    foreach($mod_menu as $key1 => $m_menu){ 
                                         if($m_menu['location'] == 'PRIMARY'){ ?>
                                             <li class="<?php if ($first_segment  == $m_menu['link']) echo 'mm-active'; ?>">
-                                                <a class="<?php if ($first_segment  ==  $m_menu['link']) echo 'mm-active'; ?>" href="<?php echo base_url().$m_menu['link'];?>">
-                                                    <i class="metismenu-icon pe-7s-menu"></i>
-                                                    <?php echo l($m_menu["label"]);?>
-                                                </a>
-                                            </li>
-                                        <?php   } 
-                                    }
-                                } 
-                            } ?>
-
-                        </ul>
+                                                    <?php if($m_menu['link'] == ''){ ?> 
+                                                            <a href="#" aria-expanded="<?php if ($first_segment.'/'.$second_segment  ==  $m_menu['link'])  echo true; ?>">
+                                                                <i class="metismenu-icon pe-7s-note2"></i>
+                                                                <?php echo l($m_menu['label']);?>
+                                                                <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                                                            </a>
+                                                    <?php }else{ ?>
+                                                                <a class="<?php if ($first_segment.'/'.$second_segment  ==  $m_menu['link']) 
+                                                                    echo 'mm-active'; ?>" href="<?php echo base_url().$m_menu['link'];?>">
+                                                                    <?php echo l($m_menu["label"]);?>
+                                                                    <i class="metismenu-icon pe-7s-menu"></i>
+                                                                </a>
+                                                    <?php }?>
+                                        <?php } 
+                                        elseif($m_menu['location'] == 'SECONDARY'){
+                                            if( ucwords($m_menu['parent_menu']) == $mod_menu[0]['label']){ ?>
+                                                <ul class="mm-collapse <?php if ($first_segment ==  $m_menu['link']) echo   'mm-show'; ?>">
+                                                    <li class="<?php if ($first_segment  == $m_menu['link']) echo 'mm-active'; ?>">
+                                                        <a class="<?php if ($first_segment.'/'.$second_segment  ==  $m_menu['link']) 
+                                                                echo 'mm-active'; ?>" 
+                                                            href="<?php echo base_url().$m_menu['link'];?>">
+                                                            <?php echo $m_menu['label'];?>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            <?php }
+                                            } 
+                                        } ?>
+                                    </li>
+                            <?php  } 
+                                } ?>
+                            </ul>
                     </div>
 
           

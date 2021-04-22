@@ -15,7 +15,7 @@ innGrid.addDays = function(date, numDays) {
 var show_decimal = true;
 $.ajax({
         type   : "GET",
-        url    : getBaseURL() + 'settings/rates/get_features_AJAX/hide_decimal_places',
+        url    : getBaseURL() + 'rates/get_features_AJAX/hide_decimal_places',
         success: function (data) {
             if(data != 0){
                 show_decimal = false;
@@ -24,7 +24,7 @@ $.ajax({
     });
     
 innGrid.loadRateDetail = function(ratePlanID, startDate, roomTypeID) {
-	$.post(getBaseURL() + 'settings/rates/get_rates_JSON', {
+	$.post(getBaseURL() + 'rates/get_rates_JSON', {
 		rate_plan_id: ratePlanID,
 		start_date: startDate,
                 room_type_id: roomTypeID
@@ -339,7 +339,7 @@ innGrid.createRate = function() {
 
     });
     console.log(rateArray);
-	$.post(getBaseURL() + 'settings/rates/create_rate_AJAX/',
+	$.post(getBaseURL() + 'rates/create_rate_AJAX/',
 		rateArray,
 		function(data){
 			console.log(data);
@@ -447,7 +447,7 @@ innGrid.createSuppliedRate = function() {
 
 	});
     console.log(rateArray);
-	$.post(getBaseURL() + 'settings/rates/create_supplied_rate_AJAX/',
+	$.post(getBaseURL() + 'rates/create_supplied_rate_AJAX/',
 		rateArray,
 		function(data){
 			console.log(data);
