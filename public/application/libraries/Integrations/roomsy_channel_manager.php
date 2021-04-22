@@ -28,9 +28,14 @@ class Roomsy_channel_manager {
 		$this->ci->load->spark('restclient/2.2.1');	
         $this->ci->load->model('Company_model');
 
+        $api_key = '';
+        if(isset($this->company_api_key)){
+            $api_key = $this->ci->company_api_key;
+        }
+
 		$config = array(
 						'server'            => $this->ci->config->item('cm_url').'/api',
-						'api_key'           => $this->ci->company_api_key
+						'api_key'           => $api_key
 		                );
         
 		$this->ci->rest->initialize($config);
