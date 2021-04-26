@@ -283,9 +283,9 @@ CREATE TABLE `ota_properties` (
 
 CREATE TABLE `ota_rate_plans` (
   `ota_x_company_id` bigint(20) NOT NULL,
-  `ota_rate_plan_id` varchar(255) NOT NULL,
-  `minical_rate_plan_id` bigint(20) NOT NULL,
-  `ota_room_type_id` varchar(255) NOT NULL
+  `ota_rate_plan_id` varchar(255) DEFAULT NULL,
+  `minical_rate_plan_id` bigint(20) DEFAULT NULL,
+  `ota_room_type_id` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -297,7 +297,7 @@ CREATE TABLE `ota_rate_plans` (
 CREATE TABLE `ota_room_types` (
   `ota_x_company_id` bigint(20) NOT NULL,
   `ota_room_type_id` varchar(255) NOT NULL,
-  `minical_room_type_id` bigint(20) NOT NULL
+  `minical_room_type_id` bigint(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -21724,7 +21724,7 @@ CREATE TABLE `key_x_company` (
 
 CREATE TABLE `ota_bookings` (
   `id` int(11) NOT NULL,
-  `ota_booking_id` varchar(16) NOT NULL,
+  `ota_booking_id` varchar(100) NOT NULL,
   `ota_type` varchar(100) DEFAULT NULL,
   `booking_type` varchar(10) DEFAULT NULL,
   `create_date_time` datetime DEFAULT NULL,
