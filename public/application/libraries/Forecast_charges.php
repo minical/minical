@@ -23,7 +23,7 @@ class Forecast_charges
     function _get_forecast_charges($booking_id, $get_amount_only = false, $booking_details = false)
     {
         $booking_details = $booking_details ? $booking_details : $this->ci->Booking_model->get_booking_detail($booking_id);
-        $company_details = $this->ci->company_data ? $this->ci->company_data : $this->ci->Company_model->get_company($booking_details['company_id']);
+        $company_details = isset($this->ci->company_data) && $this->ci->company_data ? $this->ci->company_data : $this->ci->Company_model->get_company($booking_details['company_id']);
 
         if (!$booking_details || $booking_details['state'] == CANCELLED || $booking_details['state'] == CHECKOUT || $booking_details['state'] == NO_SHOW)
 		{
