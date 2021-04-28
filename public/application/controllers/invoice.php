@@ -1016,7 +1016,7 @@ class Invoice extends MY_Controller {
         
             $payment_folio_id = $this->input->post('folio_id');
             $card_data = $this->Card_model->get_active_card($data['customer_id'], $this->company_id);
-            $data['credit_card_id'] = "";
+            $data['credit_card_id'] = null;
             if (isset($card_data) && $card_data) {
                 $data['credit_card_id'] = $card_data['id'];
             }
