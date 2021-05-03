@@ -24,8 +24,8 @@
 * [License](#license)
 
 ## What is miniCal?
-miniCal is an open-source booking management platform for all businesses that requires booking/appointment scheduling.
-A user-friendly interface of miniCal has already helped many businesses such as Hotels, office spaces, hair salons, car rental businesses, yoga studios, apartments, and vacation rental properties.
+miniCal is an open-source CRM with Booking management baked-in. It's primarily designed for startups launching B2B SaaS business, but individual businesses can use it also.
+Pretty much all businesses that's deal with CRM + appointment-scheduling can use miniCal. Some examples are: Hotels, hair salons, car rentals, and yoga studios.
 
 <img src="https://snipboard.io/KZDfkU.jpg" alt="">
 
