@@ -437,7 +437,7 @@
                                 </li>
                             <?php }
                         } else { ?>
-                            <li class="active <?=count($charges) || count($payments) ? "non-empty-folio" : "";?>" data-folio-id="">
+                            <li class="active <?= (isset($charges) && count($charges)) || (isset($payments) && count($payments)) ? "non-empty-folio" : "";?>" data-folio-id="">
                                 <div>
                                     <a href="<?= base_url()."invoice/show_invoice/".$booking_detail['booking_id'];?>">
                                         <div><?php echo l('Folio', true); ?> #1</div>
