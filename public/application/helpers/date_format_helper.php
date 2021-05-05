@@ -42,7 +42,7 @@ function get_local_formatted_date($date) {
     $dateParts = explode('-',$dateAr[0]);
 
 	$CI =& get_instance();
-    $companyDateFormat = $CI->company_date_format ? $CI->company_date_format : 'YY-MM-DD';
+    $companyDateFormat = isset($CI->company_date_format) && $CI->company_date_format ? $CI->company_date_format : 'YY-MM-DD';
     $currentDateFormat = strtolower($companyDateFormat);
     
     if ($currentDateFormat == 'yy-mm-dd') {

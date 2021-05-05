@@ -136,7 +136,7 @@ function auto_fill_credentials()
 }
 
 // Convert $change's date intervals of changes into a range of dates in the correct format
-function get_array_with_range_of_dates($changes, $ota_id)
+function get_array_with_range_of_dates($changes, $ota_id = null)
 {
     $date_ranges = array();
     switch ($ota_id) {

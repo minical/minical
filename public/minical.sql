@@ -602,8 +602,8 @@ CREATE TABLE `company_payment_gateway` (
   `selected_payment_gateway` varchar(45) DEFAULT NULL,
   `stripe_secret_key` varchar(255) DEFAULT NULL,
   `stripe_publishable_key` varchar(255) DEFAULT NULL,
-  `gateway_login` varchar(255) NOT NULL,
-  `gateway_password` text NOT NULL,
+  `gateway_login` varchar(255) DEFAULT NULL,
+  `gateway_password` text DEFAULT NULL,
   `gateway_meta_data` text,
   `store_cc_in_booking_engine` int(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -21240,7 +21240,7 @@ CREATE TABLE `payment` (
   `customer_id` bigint(20) DEFAULT NULL,
   `payment_gateway_used` varchar(255) DEFAULT NULL,
   `gateway_charge_id` varchar(255) DEFAULT NULL,
-  `read_only` int(1) NOT NULL,
+  `read_only` int(1) DEFAULT NULL,
   `payment_status` varchar(20) DEFAULT NULL,
   `parent_charge_id` varchar(255) DEFAULT NULL,
   `is_captured` tinyint(1) NOT NULL DEFAULT '1',
@@ -22501,7 +22501,7 @@ COMMIT;
 ALTER TABLE `customer_card_detail` CHANGE `id` `id` BIGINT(20) NOT NULL AUTO_INCREMENT, 
 CHANGE `evc_card_status` `evc_card_status` INT(11) NULL COMMENT '1 = true, 0 = false', 
 CHANGE `card_name` `card_name` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL, 
-CHANGE `customer_id` `customer_id` BIGINT(20) NULL, CHANGE `is_card_deleted` `is_card_deleted` INT(10) NULL;
+CHANGE `customer_id` `customer_id` BIGINT(20) NULL, CHANGE `is_card_deleted` `is_card_deleted` INT(10) NOT NULL DEFAULT '0';
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
