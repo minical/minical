@@ -306,10 +306,10 @@
 
             if(isTokenizationEnabled == true)
             {
-                console.log(innGrid.isCCVisualizationEnabled);
+                console.log(innGrid.isAsaasPaymentEnabled);
                 var sensitiveCardNumber =
-               innGrid.isCCVisualizationEnabled ?( customer.cc_number ? '<a style="position: absolute; right: 26px; top: 7px; z-index: 9999;" title = "Show Card Number" class="show_cc" data-cc_number="'+customer.cc_number+'" data-cc_detail="card_number" href="javascript:"><i class="fa fa-eye" ></i></a><input type="hidden" class="customer_id" data-cc_token="'+customer.cc_tokenex_token+'" data-cc_cvc="'+customer.cc_cvc_encrypted+'" value="'+customer.customer_id+'"/>' : ''):"";
-                var sensitiveCardCVC = innGrid.isCCVisualizationEnabled ?( customer.cc_cvc_encrypted ? '<a style="position: absolute; right: 26px; top: 7px; z-index: 9999;" title = "Show Card CVC" class="show_cc" data-cc_number="'+customer.cc_number+'" data-cc_detail="card_cvc" href="javascript:"><i class="fa fa-eye" ></i></a>' : ''):"";
+               innGrid.isAsaasPaymentEnabled ? ( customer.cc_number_encrypted ? '<a style="position: absolute; right: 26px; top: 7px; z-index: 9999;" title = "Show Card Number" class="show_cc" data-cc_number_encrypted="'+customer.cc_number_encrypted+'" data-cc_number="'+customer.cc_number+'" data-cc_detail="card_number" href="javascript:"><i class="fa fa-eye" ></i></a><input type="hidden" class="customer_id" data-cc_token="'+customer.cc_tokenex_token+'" data-cc_cvc="'+customer.cc_cvc_encrypted+'" value="'+customer.customer_id+'"/>' : '') : "";
+                var sensitiveCardCVC = innGrid.isAsaasPaymentEnabled ? ( customer.cc_cvc_encrypted ? '<a style="position: absolute; right: 26px; top: 7px; z-index: 9999;" title = "Show Card CVC" class="show_cc" data-cc_number_encrypted="'+customer.cc_number_encrypted+'" data-cc_number="'+customer.cc_number+'" data-cc_detail="card_cvc" href="javascript:"><i class="fa fa-eye" ></i></a>' : '') : "";
            
               $customer_form.append(
                     $("<div/>", {
@@ -339,18 +339,18 @@
                         value: customer.cc_number
                     })
                     )
-                    // .append(sensitiveCardNumber)
-                    // .append($('<span/>', {
-                    //     id: "masked-card-number-label",
-                    //     style: "position: absolute;top: 0;left: 15px;background: white;max-width: 90%;padding: 8px;",
-                    //     class: "masked-card-number-label form-control "+(customer.cc_number ? "" : "hidden"),
-                    //     text: customer.cc_number
-                    // })
-                    //     .on('click', function(){
-                    //         $(this).hide();
-                    //         $('#credit_card_iframe')[0].contentWindow.postMessage('focus', '*');
-                    //     })
-                    // )
+                    .append(sensitiveCardNumber)
+                    .append($('<span/>', {
+                        id: "masked-card-number-label",
+                        style: "position: absolute;top: 0;left: 15px;background: white;max-width: 90%;padding: 8px;",
+                        class: "masked-card-number-label form-control "+(customer.cc_number ? "" : "hidden"),
+                        text: customer.cc_number
+                    })
+                        .on('click', function(){
+                            $(this).hide();
+                            $('#credit_card_iframe')[0].contentWindow.postMessage('focus', '*');
+                        })
+                    )
                     .append($('<img/>', {
                         id: "card-image",
                         style: "position: absolute; top: 3px; right: 18px; width: auto; height: 28px; padding: 0;"
@@ -956,24 +956,24 @@
 $('body').on('click', '.show_cc', function(){
 
     var cc_detail = $(this).data('cc_detail');
+    var cc_number_encrypted = $(this).data('cc_number_encrypted');
     var cc_number = $(this).data('cc_number');
-    var cc_token = $('.customer_id').data('cc_token');
     var cc_cvc = $('.customer_id').data('cc_cvc');
 
     $.ajax({
             type: "POST",
             url: getBaseURL() + "customer/get_credit_card_number",
             data: {
-                cc_token: cc_token,
                 cc_cvc: cc_cvc,
-                cc_detail: cc_detail
+                cc_detail: cc_detail,
+                cc_number: cc_number_encrypted
             },
             dataType: "json",
             success: function (resp) {
                 if(resp.success == 1)
                 {
                     if(cc_detail == 'card_number') {
-                        $('.masked-card-number-label').text(resp.data);
+                        $('.masked-card-number-label').text(resp.cc_number);
                         setTimeout( function(){
                             $('.masked-card-number-label').text(cc_number);
                         }, 10000);

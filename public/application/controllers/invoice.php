@@ -763,7 +763,13 @@ class Invoice extends MY_Controller {
         $this->load->library('PaymentGateway');
         $booking_id = $this->input->post('booking_id');
         $customer_id = $this->input->post('customer_id');
-        $available  = $this->paymentgateway->isGatewayPaymentAvailableForBooking($booking_id, $customer_id);
+
+        if($this->current_payment_gateway){
+            $this->load->library('../extensions/'.$this->current_payment_gateway.'/libraries/ProcessPayment');
+            $available  = $this->processpayment->isGatewayPaymentAvailableForBooking($booking_id, $customer_id);
+        } else {
+            $available  = $this->paymentgateway->isGatewayPaymentAvailableForBooking($booking_id, $customer_id);
+        }
         echo $available ? 1 : 0;
     }
 
