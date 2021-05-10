@@ -56,31 +56,24 @@ class Customer extends MY_Controller {
         echo json_encode($response);
     }
 
-   function get_credit_card_number()
-   {
+    function get_credit_card_number()
+    {
 
-        if(!$this->is_cc_visualization_enabled){
-            return;
-        }
-       if(!$this->input->is_ajax_request()){
-           return;
-       }
        $cc_detail = $this->input->post('cc_detail');
-       $cc_token = $this->input->post('cc_token');
        $cc_cvc = $this->input->post('cc_cvc');
+       $cc_number = $this->input->post('cc_number');
 
        $response = array();
 
-       if($cc_detail== 'card_number') {
+       if($cc_detail == 'card_number') {
 
-           $data = array("Token" => $cc_token);
-           $response = $this->tokenex->detokenize($data);
+           $response['cc_number'] = base64_decode($cc_number);
            $response['success'] = true;
 
        } else if($cc_detail== 'card_cvc') {
 
-           $cvc = $this->encrypt->decode($cc_cvc, $cc_token);
-           $response = array('success' => true, 'cvc' => $cvc);
+           $response['cvc'] = base64_decode($cc_cvc);
+           $response['success'] = true;
        }
 
        echo json_encode($response);
@@ -1188,6 +1181,11 @@ class Customer extends MY_Controller {
         $card_details = $this->Card_model->get_customer_primary_card($customer_id);
         
             if(isset($card_details) && $card_details){
+                if(!strrpos($card_details['cc_number'], 'X') && preg_match("/[a-z]/i", $card_details['cc_number'])){
+                    $card_details['cc_number_encrypted'] = $card_details['cc_number'];
+                    $card_details['cc_number'] = 'XXXX XXXX XXXX '.substr(base64_decode($card_details['cc_number']), -4);
+                }
+                $customer['cc_number_encrypted'] = isset($card_details['cc_number_encrypted']) && $card_details['cc_number_encrypted'] ? $card_details['cc_number_encrypted'] : null;
                 $customer['cc_number'] = $card_details['cc_number'];
                 $customer['cc_expiry_month'] = $card_details['cc_expiry_month'];
                 $customer['cc_expiry_year'] = $card_details['cc_expiry_year'];
@@ -1257,25 +1255,47 @@ class Customer extends MY_Controller {
 
         if($new_payment_gateway && $this->current_payment_gateway){
             $this->load->library('../extensions/'.$this->current_payment_gateway.'/libraries/ProcessPayment');
-        
-            if(
-                $cc_number && 
-                is_numeric($cc_number) &&
-                !strrpos($cc_number, 'X') && 
-                $cvc && 
-                is_numeric($cvc) &&
-                !strrpos($cvc, '*')
-            ){
+            switch ($this->selected_payment_gateway) {
+                case 'stripe': 
+                    if(
+                        $cc_number && 
+                        is_numeric($cc_number) &&
+                        !strrpos($cc_number, 'X') && 
+                        $cvc && 
+                        is_numeric($cvc) &&
+                        !strrpos($cvc, '*')
+                    ){
 
-                $create_token_response = $this->processpayment->create_token($cvc, $cc_number, $card_details['cc_expiry_month'], $card_details['cc_expiry_year']);
+                        $create_token_response = $this->processpayment->create_token($cvc, $cc_number, $card_details['cc_expiry_month'], $card_details['cc_expiry_year']);
 
-                $card_details['cc_tokenex_token'] = $create_token_response['success'] ? $create_token_response['token'] : null;
-                $card_details['cc_number'] = $create_token_response['success'] ? 'XXXX XXXX XXXX '.$create_token_response['cc_last_digits'] : null;
-            }
+                        $card_details['cc_tokenex_token'] = $create_token_response['success'] ? $create_token_response['token'] : null;
+                        $card_details['cc_number'] = $create_token_response['success'] ? 'XXXX XXXX XXXX '.$create_token_response['cc_last_digits'] : null;
+                    }
 
-            if(isset($card_details['cc_tokenex_token']) && $card_details['cc_tokenex_token']){
-                $create_customer_response = $this->processpayment->create_customer_id($card_details['cc_tokenex_token']);
-                $customer_data['stripe_customer_id'] = $create_customer_response['success'] ? $create_customer_response['customer_id'] : null;
+                    if(isset($card_details['cc_tokenex_token']) && $card_details['cc_tokenex_token']){
+                        $create_customer_response = $this->processpayment->create_customer_id($card_details['cc_tokenex_token']);
+                        $customer_data['stripe_customer_id'] = $create_customer_response['success'] ? $create_customer_response['customer_id'] : null;
+                    }
+                break;
+
+                case 'asaas': 
+                    if(
+                        $cc_number && 
+                        is_numeric($cc_number) &&
+                        !strrpos($cc_number, 'X') && 
+                        $cvc && 
+                        is_numeric($cvc) &&
+                        !strrpos($cvc, '*')
+                    ){
+                        $create_customer_response = $this->processpayment->create_customer($customer_data);
+                    }
+
+                    $card_details['cc_number'] = base64_encode($cc_number);
+                    $card_details['cc_cvc_encrypted'] = base64_encode($cvc);
+
+                    $meta['customer_id'] = isset($create_customer_response['success']) && $create_customer_response['success'] && isset($create_customer_response['customer_id']) && $create_customer_response['customer_id'] ? $create_customer_response['customer_id'] : null;
+                    $card_details['customer_meta_data'] = json_encode($meta);
+                break;
             }
         }
 
@@ -1369,16 +1389,34 @@ class Customer extends MY_Controller {
         if($new_payment_gateway && $this->current_payment_gateway){
             $this->load->library('../extensions/'.$this->current_payment_gateway.'/libraries/ProcessPayment');
 
-            if(
-                $cc_number && 
-                is_numeric($cc_number) &&
-                !strrpos($cc_number, 'X') && 
-                $cvc && 
-                is_numeric($cvc) &&
-                !strrpos($cvc, '*')
-            ){
-                $create_token_response = $this->processpayment->create_token($cvc, $cc_number, $customer_data['cc_expiry_month'], $customer_data['cc_expiry_year']);
-            }
+            switch ($this->selected_payment_gateway) {
+                case 'stripe': 
+                    if(
+                        $cc_number && 
+                        is_numeric($cc_number) &&
+                        !strrpos($cc_number, 'X') && 
+                        $cvc && 
+                        is_numeric($cvc) &&
+                        !strrpos($cvc, '*')
+                    ){
+                        $create_token_response = $this->processpayment->create_token($cvc, $cc_number, $customer_data['cc_expiry_month'], $customer_data['cc_expiry_year']);
+                    }
+                break;
+
+                case 'asaas': 
+                    if(
+                        $cc_number && 
+                        is_numeric($cc_number) &&
+                        !strrpos($cc_number, 'X') && 
+                        $cvc && 
+                        is_numeric($cvc) &&
+                        !strrpos($cvc, '*')
+                    ){
+                        $create_customer_response = $this->processpayment->create_customer($customer_data);
+                    }
+                break;
+                    // prx($create_customer_response);
+                }
         }
 
         $card_data = $this->Card_model->get_active_card($customer_id, $this->company_id);
@@ -1440,19 +1478,36 @@ class Customer extends MY_Controller {
            $customer_data['cc_cvc_encrypted'] = "";
         
         if($new_payment_gateway){
-            if(
-                isset($create_token_response) &&
-                isset($create_token_response['success']) &&
-                isset($create_token_response['token'])
-            ){
-                $card_details['cc_tokenex_token'] = isset($create_token_response['success']) && $create_token_response['success'] ? $create_token_response['token'] : null;
-                $card_details['cc_number'] = isset($create_token_response['success']) && $create_token_response['success'] ? 'XXXX XXXX XXXX '.$create_token_response['cc_last_digits'] : null;
-            }
+            switch ($this->selected_payment_gateway) {
+                case 'stripe': 
+                    if(
+                        isset($create_token_response) &&
+                        isset($create_token_response['success']) &&
+                        isset($create_token_response['token'])
+                    ){
+                        $card_details['cc_tokenex_token'] = isset($create_token_response['success']) && $create_token_response['success'] ? $create_token_response['token'] : null;
+                        $card_details['cc_number'] = isset($create_token_response['success']) && $create_token_response['success'] ? 'XXXX XXXX XXXX '.$create_token_response['cc_last_digits'] : null;
+                    }
 
-            if(isset($card_details['cc_tokenex_token']) && $card_details['cc_tokenex_token']){
-                $create_customer_response = $this->processpayment->create_customer_id($card_details['cc_tokenex_token']);
-                $customer_data['stripe_customer_id'] = $create_customer_response['success'] ? $create_customer_response['customer_id'] : null;
+                    if(isset($card_details['cc_tokenex_token']) && $card_details['cc_tokenex_token']){
+                        $create_customer_response = $this->processpayment->create_customer_id($card_details['cc_tokenex_token']);
+                        $customer_data['stripe_customer_id'] = $create_customer_response['success'] ? $create_customer_response['customer_id'] : null;
+                    }
+                break;
+
+                case 'asaas': 
+
+                    if(isset($create_customer_response['success']) && $create_customer_response['success'] && isset($create_customer_response['customer_id']) && $create_customer_response['customer_id']){
+                        $card_details['cc_number'] = base64_encode($cc_number);
+                        $card_details['cc_cvc_encrypted'] = base64_encode($cvc);
+
+                        $meta['customer_id'] =  $create_customer_response['customer_id'];
+                        $card_details['customer_meta_data'] = json_encode($meta);
+                    }
+                    
+                break;
             }
+            
         }
 
         $this->Customer_model->update_customer($customer_id, $customer_data);

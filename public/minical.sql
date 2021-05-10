@@ -925,6 +925,7 @@ CREATE TABLE `customer_card_detail` (
   `cc_tokenex_token` varchar(255) DEFAULT NULL,
   `cc_cvc_encrypted` varchar(255) DEFAULT NULL,
   `is_card_deleted` int(10) NOT NULL
+  `customer_meta_data` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
