@@ -29,9 +29,9 @@
                             $month_before_today = date ( 'Y-m-d' , strtotime ( '-1 month' , $today ) );
                             $month_after_today = date ( 'Y-m-d' , strtotime ( '+1 month' , $today ) );
 						
-                            echo "<a href='".base_url()."reports/ledger/show_monthly_payment_report/".$month_before_today."'> << </a>";
+                            echo "<a href='".base_url()."reports/show_monthly_payment_report/".$month_before_today."'> << </a>";
                             echo date("F, Y",strtotime($date)); 
-                            echo "<a href='".base_url()."reports/ledger/show_monthly_payment_report/".$month_after_today."'> >> </a>";			
+                            echo "<a href='".base_url()."reports/show_monthly_payment_report/".$month_after_today."'> >> </a>";			
                         }
                     ?>
 				</div> <!-- /.form-group -->
@@ -42,7 +42,7 @@
                 <div class="col-md-3 col-lg-3 col-xs-12 col-sm-3">
                     <button id="printReportButton" class="btn btn-primary pull-right hidden-print"><span class="glyphicon glyphicon-print" title="Print Report"></span></button>
                     <?php $url_date = ($this->uri->segment(4) != '') ? $this->uri->segment(4) : ""; ?>       
-                    <a style="margin: 0 10px;" href="<?php if($url_date != '//'){ echo base_url()."reports/ledger/download_payments_csv_export/".$url_date; } else { echo base_url()."reports/ledger/download_payments_csv_export/"; } ?>" class="btn btn-primary pull-right ">
+                    <a style="margin: 0 10px;" href="<?php if($url_date != '//'){ echo base_url()."reports/download_payments_csv_export/".$url_date; } else { echo base_url()."reports/download_payments_csv_export/"; } ?>" class="btn btn-primary pull-right ">
                         <span title="Export to CSV" class="glyphicon glyphicon-download-alt"></span>
                     </a>
                 </div>
@@ -94,7 +94,7 @@
 			foreach ($r as $pi => $p)  {
 					if ($pi == 'Selling Date') { // pi represents column index
 						// generate link to daily sale report
-						echo "<td class='date_td'><a href='".base_url()."reports/ledger/show_daily_report/".$p."'>".$p."</a></td>";							
+						echo "<td class='date_td'><a href='".base_url()."reports/show_daily_report/".$p."'>".$p."</a></td>";							
 					} else { // not include date in total
 						echo '<td class="text-right">'.number_format($p, 2, ".", ",").'</td>';
 						$total[$pi] += $p;
