@@ -924,7 +924,7 @@ CREATE TABLE `customer_card_detail` (
   `cc_expiry_year` varchar(255) DEFAULT NULL,
   `cc_tokenex_token` varchar(255) DEFAULT NULL,
   `cc_cvc_encrypted` varchar(255) DEFAULT NULL,
-  `is_card_deleted` int(10) NOT NULL
+  `is_card_deleted` int(10) NOT NULL,
   `customer_meta_data` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -21176,11 +21176,10 @@ INSERT INTO `menu` (`id`, `name`, `link`, `icon`, `parent_id`, `partner_type_id`
 (5, 'Extensions', 'extensions', 'metismenu-icon pe-7s-keypad', 0, 1),
 (6, 'settings', 'settings', 'metismenu-icon pe-7s-settings', 0, 1),
 (7, 'room status', 'room', '', 3, 1),
-(9, 'ledger', 'reports/ledger', '', 4, 1),
-(14, 'summary', 'reports/show_ledger_summary_report', '', '', 1),
-(15, 'charges', 'reports/show_monthly_charge_report', '', '', 1),
-(16, 'payments', 'reports/show_monthly_payment_report', '', '', 1),
-(17, 'taxes', 'reports/show_monthly_tax_report', '', '', 1),
+(14, 'summary', 'reports/ledger/show_ledger_summary_report', '', 4, 1),
+(15, 'charges', 'reports/ledger/show_monthly_charge_report', '', 4, 1),
+(16, 'payments', 'reports/ledger/show_monthly_payment_report', '', 4, 1),
+(17, 'taxes', 'reports/ledger/show_monthly_tax_report', '', 4, 1),
 (29, 'company', 'settings/company', '', 6, 1),
 (30, 'accounting', 'settings/accounting', '', 6, 1),
 (32, 'room inventory', 'settings/room_inventory', '', 6, 1),
@@ -22498,10 +22497,9 @@ ALTER TABLE `ota_bookings`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
-
-ALTER TABLE `customer_card_detail` CHANGE `id` `id` BIGINT(20) NOT NULL AUTO_INCREMENT, 
-CHANGE `evc_card_status` `evc_card_status` INT(11) NULL COMMENT '1 = true, 0 = false', 
-CHANGE `card_name` `card_name` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL, 
+ALTER TABLE `customer_card_detail` CHANGE `id` `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+CHANGE `evc_card_status` `evc_card_status` INT(11) NULL COMMENT '1 = true, 0 = false',
+CHANGE `card_name` `card_name` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
 CHANGE `customer_id` `customer_id` BIGINT(20) NULL, CHANGE `is_card_deleted` `is_card_deleted` INT(10) NOT NULL DEFAULT '0';
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
