@@ -86,7 +86,7 @@ innGrid.renderReport = function(dateStart, dateEnd, groupBy, customerTypeId) {
 
 					if ($("#groupBy").val() === "daily")
 					{
-						var dateLabel = "<a href='"+getBaseURL()+"reports/ledger/show_daily_report/"+index+"'>"+index+" "+innGrid.getWeekday(index)+"</a>";
+						var dateLabel = "<a href='"+getBaseURL()+"reports/show_daily_report/"+index+"'>"+index+" "+innGrid.getWeekday(index)+"</a>";
 					}
 					else if ($("#groupBy").val() === "monthly")
 					{
@@ -248,7 +248,7 @@ $(function() {
         var roomType = $("select[name='room_type']").val();
         
         
-        window.location.href = getBaseURL() +"reports/ledger/show_sales_summary_report/"+dateStart+"/"+dateEnd+"/"+reportType+"/"+roomType;
+        window.location.href = getBaseURL() +"reports/show_sales_summary_report/"+dateStart+"/"+dateEnd+"/"+reportType+"/"+roomType;
 	});
         
     $('#generateDepositReport').click(function (){
@@ -256,7 +256,7 @@ $(function() {
         var dateEnd = $("input[name='date_end']").val();
         var depositType = $("select[name='depositType']").val();
         
-        window.location.href = getBaseURL() +"reports/ledger/advanced_deposits/"+dateStart+"/"+dateEnd+"/"+depositType;
+        window.location.href = getBaseURL() +"reports/advanced_deposits/"+dateStart+"/"+dateEnd+"/"+depositType;
     });
 
     $('#generateFolioAuditReport').click(function (){
@@ -268,7 +268,7 @@ $(function() {
 		    return false;
 	    }
 		else {
-            window.location.href = base_url + "/reports/ledger/show_folio_audit_trail_report/" + startDate+'--'+endDate;
+            window.location.href = base_url + "/reports/show_folio_audit_trail_report/" + startDate+'--'+endDate;
 		}
     });
 
@@ -328,7 +328,7 @@ $(function() {
 		    return false;
 	    }
 		else{
-			window.location.assign(getBaseURL() +"reports/ledger/daily_account_summary/" + startDate+'--'+endDate);
+			window.location.assign(getBaseURL() +"reports/daily_account_summary/" + startDate+'--'+endDate);
 		}
 	});
 });
