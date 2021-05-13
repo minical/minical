@@ -228,6 +228,18 @@ class MY_Controller extends CI_Controller {
             $admin_user_ids = $this->Whitelabel_partner_model->get_partner_detail();
             $this->is_super_admin = ($this->company_email == SUPER_ADMIN ||  $this->user_id == $admin_user_ids['admin_user_id']);
 
+            if($this->is_super_admin){
+                $get_active_extensions = $this->Extension_model->get_active_extensions($this->company_id, 'reseller_package');
+                if(empty($get_active_extensions) && $this->company_id){
+                    $new_extensions = array(
+                                    'extension_name' => 'reseller_package',
+                                    'company_id' => $this->company_id,
+                                    'is_active' => 1
+                                );
+                    $this->Extension_model->add_extension($new_extensions);
+                }
+            }
+
             $host_name = $_SERVER['HTTP_HOST'];
             if ((!$whitelabelinfo && $this->company_data['partner_id']) || ($whitelabelinfo && ($host_name ==  'http://'. $_SERVER['HTTP_HOST']) && isset($whitelabelinfo['id']) && $whitelabelinfo['id'] != $this->company_data['partner_id'])) {
                 $white_label_detail = $this->Whitelabel_partner_model->get_partners(array('id' => $this->company_data['partner_id']));
