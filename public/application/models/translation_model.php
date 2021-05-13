@@ -108,13 +108,18 @@ class Translation_model extends CI_Model {
     }
 
     function get_all_phrases ($language_id, $non_translated_phrase) {
+        $join = "INNER";
+        if($language_id){
+            $join = "LEFT";
+        }
+
         $sql = "SELECT 
                     `p`.*, `t`.*, 
                     `p`.`id` as pid, 
                     `t`.`id` as tid, 
                     IFNULL(te.phrase, `p`.phrase_keyword) as default_key 
                 FROM (`language_phrase` as p) 
-                LEFT JOIN `language_translation` as t 
+                $join JOIN `language_translation` as t 
                     ON `t`.`phrase_id` = `p`.`id` AND t.language_id = '$language_id'
                 LEFT JOIN `language_translation` as te 
                     ON `te`.`phrase_id` = `p`.`id` AND te.language_id = 1 ";

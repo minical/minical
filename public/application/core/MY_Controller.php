@@ -223,9 +223,11 @@ class MY_Controller extends CI_Controller {
             $this->first_name = $user['first_name'];
             $this->last_name = $user['last_name'];
 
-            $this->is_super_admin = ($this->company_email == SUPER_ADMIN);
-
             $whitelabelinfo = $this->ci->session->userdata('white_label_information');
+
+            $admin_user_ids = $this->Whitelabel_partner_model->get_partner_detail();
+            $this->is_super_admin = ($this->company_email == SUPER_ADMIN ||  $this->user_id == $admin_user_ids['admin_user_id']);
+
             $host_name = $_SERVER['HTTP_HOST'];
             if ((!$whitelabelinfo && $this->company_data['partner_id']) || ($whitelabelinfo && ($host_name ==  'http://'. $_SERVER['HTTP_HOST']) && isset($whitelabelinfo['id']) && $whitelabelinfo['id'] != $this->company_data['partner_id'])) {
                 $white_label_detail = $this->Whitelabel_partner_model->get_partners(array('id' => $this->company_data['partner_id']));
