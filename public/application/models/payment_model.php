@@ -394,7 +394,7 @@ class Payment_model extends CI_Model {
         $this->db->join('payment_type', 'payment.payment_type_id = payment_type.payment_type_id', 'left');
         $this->db->join('user_profiles', 'payment.user_id = user_profiles.user_id', 'left');
         $this->db->join('customer', 'payment.customer_id = customer.customer_id', 'left');
-        $this->db->select('payment.payment_id, payment.is_captured, description, customer_name, date_time, booking_id, amount, payment_status, payment.is_deleted, payment_type, payment.payment_type_id, payment.payment_gateway_used, gateway_charge_id, read_only, selling_date, CONCAT_WS(" ",first_name,  last_name ) as user_name,payment_folio.folio_id as folio_id');
+        $this->db->select('payment.payment_id, payment.is_captured, description, customer_name, date_time, booking_id, amount, payment_status, payment.is_deleted, payment_type, payment.payment_type_id, payment.payment_gateway_used, gateway_charge_id, read_only, selling_date, CONCAT_WS(" ",first_name,  last_name ) as user_name,payment_folio.folio_id as folio_id, payment.payment_link_id');
         $this->db->order_by('selling_date', 'ASC');
         $this->db->order_by('date_time', 'ASC');
         $query = $this->db->get("payment");

@@ -60,7 +60,7 @@
                         </label>
 
                         <div class="col-sm-8" id="use-gateway-div">
-                            <div class="col-sm-2"><input type="checkbox" class="form-control" data-gateway_name="<?=$selected_payment_gateway;?>" name="use_gateway"></div>
+                            <div class="col-sm-2"><input type="checkbox" class="form-control use-gateway" data-gateway_name="<?=$selected_payment_gateway;?>" name="<?=$selected_payment_gateway;?>_use_gateway"></div>
                         </div>
                     </div>
                     
@@ -114,19 +114,19 @@
                 </div>
                 <div class="modal-footer">
                     <input type="hidden"  id="manual_payment_capture" value="<?=$company['manual_payment_capture'];?>">
-                    <?php if($company['manual_payment_capture'] != 1){ ?>
+                    <?php //if($company['manual_payment_capture'] != 1){ ?>
                         <button type="button" class="btn btn-success add_payment_button hidden" id="add_payment_button">
                             <?php echo l('add').' '.l('payment'); ?>
                         </button>
 
-                    <?php } else { ?>
-                        <button type="button" class="btn btn-success add_payment_button hidden" id="auth_and_capture">
+                    <?php //} else { ?>
+                        <!-- <button type="button" class="btn btn-success add_payment_button hidden" id="auth_and_capture">
                             <?php echo l('Charge'); ?>
                         </button>
                         <button type="button" class="btn btn-success add_payment_button hidden" id="authorize_only">
                             <?php echo l('Pre-Authorize'); ?>
-                        </button>
-                    <?php } ?>
+                        </button> -->
+                    <?php //} ?>
                     <button type="button" class="btn btn-success add_payment_button" id="add_payment_normal">
                         <?php echo l('add').' '.l('payment'); ?>
                     </button>
@@ -786,7 +786,7 @@
                                     }else{
                                         printf(
                                             '%s %s',
-                                            $payment['amount'] > 0 ? 'Charge ID:' : 'Refund ID:',
+                                            $payment['amount'] > 0 && $payment['gateway_charge_id'] ? 'Charge ID:' : ($payment['gateway_charge_id'] ? 'Refund ID:' : ''),
                                             $payment['gateway_charge_id']
                                         );
                                     }
@@ -832,15 +832,20 @@
                                         <?php } ?>
                                         <span class="visible-print-block"><?php echo l('Authorized', true); ?></span>
                                     <?php } else { ?>
-                                        <span><?php echo ($payment['payment_status'] == 'charge') ? 'Captured' : 'Refunded'; ?></span>
+                                        <span><?php echo ($payment['payment_status'] == 'charge') ? 'Captured' : ($payment['payment_status'] == 'payment_link' ? 'Pending' : 'Refunded'); ?></span>
                                         <div class="payment_status_buttons">
-                                            <?php if (!$payment['read_only']){ ?>
+                                            <?php if (!$payment['read_only']){ if($payment['is_captured']){?>
                                                 <button class="btn btn-primary delete-payment" data-toggle="tooltip" title="Refund"  title="Created by <?php echo $payment['user_name']; ?>">
                                                     <i class="fa fa-reply" aria-hidden="true"></i>
                                                 </button>
                                                 <button type="button" class="btn btn-danger capture-payment-button hidden-print not-allowed" disabled>
                                                     <i class="fa fa-credit-card" aria-hidden="true"></i>
                                                 </button>
+                                            <?php } else { ?>
+                                                <button type="button" class="btn btn-info verify_payment" data-payment_link_id="<?php echo $payment['payment_link_id']; ?>" data-payment_id="<?php echo $payment['payment_id']; ?>">
+                                                    Verify
+                                                </button>
+                                            <?php } ?>
                                             <?php } else { ?>
                                                 <button class="btn btn-primary delete-payment not-allowed" data-toggle="tooltip" title="Refund" disabled>
                                                     <i class="fa fa-reply" aria-hidden="true"></i>
