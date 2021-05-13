@@ -605,9 +605,18 @@ function initializeRefundModal(paymentID, refundHeading, amountStatus, amountTot
                             if(typeof data.success === "undefined" || !data.success){
                                 //insufficient access
                                 $('#refund-payment-btn').attr('disabled', false);
-                                if(data.message){
+
+                                var error_html = "";
+                                // console.log(jQuery.isArray( data.message ));
+                                if(jQuery.isArray( data.message )){
+                                    $.each(data.message, function(i,v){
+                                        error_html += v.description+'\n';
+                                    });
+                                    console.log(error_html);
+                                    alert(error_html);
+                                } else if(data.message){
                                     alert(data.message);
-                                }else{
+                                } else {
                                     alert(l("insufficient access", true));
                                 }
                                 return;
@@ -1517,134 +1526,133 @@ $(function() {
         innGrid.populatePaymentInformation();
     });
 
-    // gateway button
-    var $methods_list = $('select[name="payment_type_id"]');
-    var gateway_button = $('input[name="use_gateway"]');
-    var selected_gateway = $('input[name="use_gateway"]').data('gateway_name');
+    // // gateway button
+    // var $methods_list = $('select[name="payment_type_id"]');
+    // var gateway_button = $('input[name="use_gateway"]');
+    // var selected_gateway = $('input[name="use_gateway"]').data('gateway_name');
     
-    var gatewayTypes = {
-        'stripe': 'Stripe',
-        'PayflowGateway': 'PayPal Payflow Pro',
-        'FirstdataE4Gateway': 'FirstData Gateway e4(Payeezy)',
-        'ChaseNetConnectGateway': 'Chase Payment Gateway',
-        'AuthorizeNetGateway': 'Authorize.Net',
-        'PayuGateway': 'Payu Gateway',
-        'QuickbooksGateway': 'Quickbooks Gateway',
-        'ElavonGateway': 'Elavon My Virtual Merchant',
-        'MonerisGateway': 'Moneris eSelect Plus',
-        'CieloGateway': 'Cielo Gateway',
-        'SquareGateway': 'Square Gateway'
-    };
-    selected_gateway = gatewayTypes[selected_gateway];
+    // var gatewayTypes = {
+    //     'PayflowGateway': 'PayPal Payflow Pro',
+    //     'FirstdataE4Gateway': 'FirstData Gateway e4(Payeezy)',
+    //     'ChaseNetConnectGateway': 'Chase Payment Gateway',
+    //     'AuthorizeNetGateway': 'Authorize.Net',
+    //     'PayuGateway': 'Payu Gateway',
+    //     'QuickbooksGateway': 'Quickbooks Gateway',
+    //     'ElavonGateway': 'Elavon My Virtual Merchant',
+    //     'MonerisGateway': 'Moneris eSelect Plus',
+    //     'CieloGateway': 'Cielo Gateway',
+    //     'SquareGateway': 'Square Gateway'
+    // };
+    // selected_gateway = gatewayTypes[selected_gateway];
     
-    $methods_list.prop('disabled', false);
-    gateway_button.prop('checked',0);
+    // $methods_list.prop('disabled', false);
+    // gateway_button.prop('checked',0);
 
-    gateway_button.on('click',function(){
-        $that = $(this);
+    // gateway_button.on('click',function(){
+    //     $that = $(this);
         
-        var checked = $that.prop('checked');
-        $methods_list.prop('disabled', checked);
-        var manualPaymentCapture = $("#manual_payment_capture").val();
-        if(checked)
-        {
-            if(manualPaymentCapture == 1)
-            {
-                $('#auth_and_capture').removeClass('hidden');
-                $('#authorize_only').removeClass('hidden');
-                $('#add_payment_normal').addClass('hidden');
-            }
-            else{
-                $('#add_payment_button').removeClass('hidden');
-                $('#add_payment_normal').addClass('hidden');
-                $('#auth_and_capture').addClass('hidden');
-                $('#authorize_only').addClass('hidden');
-            }
-            $methods_list
-                .append(
-                $('<option></option>',{
-                    id : 'gateway_option'
-                })
-                    .val('gateway')
-                    .html(selected_gateway)
-            );
-            $methods_list.val('gateway');
+    //     var checked = $that.prop('checked');
+    //     $methods_list.prop('disabled', checked);
+    //     var manualPaymentCapture = $("#manual_payment_capture").val();
+    //     if(checked)
+    //     {
+    //         if(manualPaymentCapture == 1)
+    //         {
+    //             $('#auth_and_capture').removeClass('hidden');
+    //             $('#authorize_only').removeClass('hidden');
+    //             $('#add_payment_normal').addClass('hidden');
+    //         }
+    //         else{
+    //             $('#add_payment_button').removeClass('hidden');
+    //             $('#add_payment_normal').addClass('hidden');
+    //             $('#auth_and_capture').addClass('hidden');
+    //             $('#authorize_only').addClass('hidden');
+    //         }
+    //         $methods_list
+    //             .append(
+    //             $('<option></option>',{
+    //                 id : 'gateway_option'
+    //             })
+    //                 .val('gateway')
+    //                 .html(selected_gateway)
+    //         );
+    //         $methods_list.val('gateway');
             
-            var available_gateway = $('.paid-by-customers').children('option:selected').data('available-gateway');
+    //         var available_gateway = $('.paid-by-customers').children('option:selected').data('available-gateway');
             
-            // false by default. until we find proper solution to store cvc
-            if(false && available_gateway == 'tokenex')
-            {
-                $that.parents('#use-gateway-div').append(
-                    $('<div/>',{
-                        class: 'col-sm-10',
-                        id: 'cvc-field'
-                    }).append(
-                         $("<label/>", {
-                            for : "cvc",
-                            class: "col-sm-3 control-label",
-                            text: l("CVC", true)
-                        })
-                    ).append(
-                        $("<div/>", {
-                            class: "col-sm-9"
-                        }).append(
-                        $("<input/>", {
-                            class: "form-control",
-                            name: "cvc",
-                            placeholder: '***',
-                            type: 'password',
-                            maxlength: 4,
-                            autocomplete: false,
-                            required: "required"
-                        })
-                        )
-                    )
-                );
-            }
-        }else{
-            if(manualPaymentCapture == 1)
-            {
-                $('#auth_and_capture').addClass('hidden');
-                $('#authorize_only').addClass('hidden');
-                $('#add_payment_normal').removeClass('hidden');
-            }
-            else{
-                $('#add_payment_button').addClass('hidden');
-                $('#add_payment_normal').removeClass('hidden');
-                $('#auth_and_capture').removeClass('hidden');
-                $('#authorize_only').removeClass('hidden');
-            }
-            $('#gateway_option').remove();
-            $('#cvc-field').remove();
-        }
-    });
+    //         // false by default. until we find proper solution to store cvc
+    //         if(false && available_gateway == 'tokenex')
+    //         {
+    //             $that.parents('#use-gateway-div').append(
+    //                 $('<div/>',{
+    //                     class: 'col-sm-10',
+    //                     id: 'cvc-field'
+    //                 }).append(
+    //                      $("<label/>", {
+    //                         for : "cvc",
+    //                         class: "col-sm-3 control-label",
+    //                         text: l("CVC", true)
+    //                     })
+    //                 ).append(
+    //                     $("<div/>", {
+    //                         class: "col-sm-9"
+    //                     }).append(
+    //                     $("<input/>", {
+    //                         class: "form-control",
+    //                         name: "cvc",
+    //                         placeholder: '***',
+    //                         type: 'password',
+    //                         maxlength: 4,
+    //                         autocomplete: false,
+    //                         required: "required"
+    //                     })
+    //                     )
+    //                 )
+    //             );
+    //         }
+    //     }else{
+    //         if(manualPaymentCapture == 1)
+    //         {
+    //             $('#auth_and_capture').addClass('hidden');
+    //             $('#authorize_only').addClass('hidden');
+    //             $('#add_payment_normal').removeClass('hidden');
+    //         }
+    //         else{
+    //             $('#add_payment_button').addClass('hidden');
+    //             $('#add_payment_normal').removeClass('hidden');
+    //             $('#auth_and_capture').removeClass('hidden');
+    //             $('#authorize_only').removeClass('hidden');
+    //         }
+    //         $('#gateway_option').remove();
+    //         $('#cvc-field').remove();
+    //     }
+    // });
     
-    // show "Use Payment Gateway" option 
-    $('.paid-by-customers').on('change', function(){
-        var isGatewayAvailable = $(this).find('option:selected').attr('is-gateway-available');
-        if(isGatewayAvailable == 'true'){
-            $('.use-payment-gateway-btn').show();
-            $('input[name="use_gateway"]').prop('checked', false);
-            $('#cvc-field').remove();
-            //$('select[name = "payment_type_id"]').attr('disabled');
-            $checked = $('input[name="use_gateway"]').prop('checked');
-            if($checked){
-                $('select[name = "payment_type_id"]')
-                        .append('<option id="gateway_option" value="gateway">'+selected_gateway+'</option>')
-            }
-        }
-        else
-        {
-            $('.use-payment-gateway-btn').hide();
-            $('select[name = "payment_type_id"]').removeAttr('disabled');
-            $('#gateway_option').remove();
-            $('input[name="use_gateway"]').prop('checked', 0);
-        }
-    });
-    if( $('.paid-by-customers option:selected').attr('is-gateway-available') == 'true'){
-        $('.use-payment-gateway-btn').show();
-    }
+    // // show "Use Payment Gateway" option 
+    // $('.paid-by-customers').on('change', function(){
+    //     var isGatewayAvailable = $(this).find('option:selected').attr('is-gateway-available');
+    //     if(isGatewayAvailable == 'true'){
+    //         $('.use-payment-gateway-btn').show();
+    //         $('input[name="use_gateway"]').prop('checked', false);
+    //         $('#cvc-field').remove();
+    //         //$('select[name = "payment_type_id"]').attr('disabled');
+    //         $checked = $('input[name="use_gateway"]').prop('checked');
+    //         if($checked){
+    //             $('select[name = "payment_type_id"]')
+    //                     .append('<option id="gateway_option" value="gateway">'+selected_gateway+'</option>')
+    //         }
+    //     }
+    //     else
+    //     {
+    //         $('.use-payment-gateway-btn').hide();
+    //         $('select[name = "payment_type_id"]').removeAttr('disabled');
+    //         $('#gateway_option').remove();
+    //         $('input[name="use_gateway"]').prop('checked', 0);
+    //     }
+    // });
+    // if( $('.paid-by-customers option:selected').attr('is-gateway-available') == 'true'){
+    //     $('.use-payment-gateway-btn').show();
+    // }
   
     // FF cache... 
     $add_payment_button = $(".add_payment_button");
@@ -1760,7 +1768,7 @@ $(function() {
                         description     : $("textarea[name='description']").val(),
                         cvc             : $("input[name='cvc']").val(),
                         folio_id        : $('#current_folio_id').val(),
-                        selected_gateway : $('input[name="use_gateway"]').data('gateway_name'),
+                        selected_gateway : $('input[name="'+innGrid.featureSettings.selectedPaymentGateway+'_use_gateway"]').data('gateway_name'),
                         capture_payment_type : capture_payment_type
                     }, function (data) {
                         console.log('expire ',data);
@@ -1780,7 +1788,19 @@ $(function() {
                         }
                         else
                         {
-                            alert(data.message ? data.message : data);
+                            var error_html = "";
+                            // console.log(jQuery.isArray( data.message ));
+                            if(jQuery.isArray( data.message )){
+                                $.each(data.message, function(i,v){
+                                    error_html += v.description+'\n';
+                                });
+                                console.log(error_html);
+                                alert(error_html);
+                            } else {
+                                alert(data.message ? data.message : data);
+                            }
+                            
+                            
                             $(that).prop("disabled", false);
                         }
                     });
