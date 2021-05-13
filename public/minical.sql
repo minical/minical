@@ -21244,7 +21244,8 @@ CREATE TABLE `payment` (
   `payment_status` varchar(20) DEFAULT NULL,
   `parent_charge_id` varchar(255) DEFAULT NULL,
   `is_captured` tinyint(1) NOT NULL DEFAULT '1',
-  `logs` text
+  `logs` text,
+  `payment_link_id` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------

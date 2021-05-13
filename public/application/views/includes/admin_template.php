@@ -26,7 +26,13 @@
 		$this->load->view('includes/bootstrapped_header', $data);
         
         $permissions = $this->session->userdata("permissions");
-        $is_salesperson = in_array("is_salesperson", $permissions);
+
+        if(isset($permissions) && $permissions){
+        	$is_salesperson = in_array("is_salesperson", $permissions);
+        } else {
+        	$is_salesperson = 0;
+        }
+        
 	?>
 
 	<body>

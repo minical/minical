@@ -14,6 +14,15 @@
 			<li>
 				<a href="<?php echo base_url(); ?>admin/dashboard">Dashboard</a>
 			</li>
+			<li>
+				<a href="<?php echo base_url(); ?>admin/translate_keywords">Language Translation</a>
+			</li>
+			<li>
+				<a href="<?php echo base_url(); ?>admin/whitelabel_partners">Whitelabel Partners</a>
+			</li>
+			<li>
+				<a href="<?php echo base_url(); ?>auth/logout" >Logout</a>
+			</li>
       	</ul>
 	    
 	    <div class="col-sm-1 col-md-1">
