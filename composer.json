@@ -1,6 +1,7 @@
 {
   "require": {
   	"stripe/stripe-php": "^7.77",
-    "vlucas/phpdotenv": "^4.2"
+    "vlucas/phpdotenv": "^4.2",
+    "lifenpag/asaas-php": "^1.0"
   }
 }

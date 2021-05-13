@@ -17,9 +17,11 @@
 			<li>
 				<a href="<?php echo base_url(); ?>admin/translate_keywords">Language Translation</a>
 			</li>
-			<li>
-				<a href="<?php echo base_url(); ?>admin/whitelabel_partners">Whitelabel Partners</a>
-			</li>
+			<?php if($this->company_email == SUPER_ADMIN): ?>
+				<li>
+					<a href="<?php echo base_url(); ?>admin/whitelabel_partners">Whitelabel Partners</a>
+				</li>
+			<?php endif; ?>
 			<li>
 				<a href="<?php echo base_url(); ?>auth/logout" >Logout</a>
 			</li>

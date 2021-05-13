@@ -833,16 +833,19 @@ class Auth extends MY_Controller
         // create company in minical
         $company_id = $this->Company_model->create_company($company_data);
         
-        $this->User_model->add_user_permission($company_id, $data['user_id'], 'is_admin'); // support@minical.io will have admin permission
+        if(isset($data['email']) && $data['email'] == SUPER_ADMIN){
+            $this->User_model->add_user_permission($company_id, $data['user_id'], 'is_admin');
+        }
+         // support@minical.io will have admin permission
         
         // check for whitelabel partner
-        $admin_user_ids = $this->Whitelabel_partner_model->get_whitelabel_admin_ids($data['user_id']);        
-        foreach($admin_user_ids as $admin_user_id){
-            if($admin_user_id && $admin_user_id != SUPER_ADMIN_USER_ID)
-            {
-                $this->User_model->add_user_permission($company_id, $admin_user_id , 'is_admin');
-            }
-        }
+        // $admin_user_ids = $this->Whitelabel_partner_model->get_whitelabel_admin_ids($data['user_id']);        
+        // foreach($admin_user_ids as $admin_user_id){
+        //     if($admin_user_id && $admin_user_id != SUPER_ADMIN_USER_ID)
+        //     {
+        //         $this->User_model->add_user_permission($company_id, $admin_user_id , 'is_admin');
+        //     }
+        // }
         	
         if (isset($data['user_id']))
         {
