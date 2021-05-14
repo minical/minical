@@ -251,7 +251,7 @@ class Company extends MY_Controller
             if (is_null($user = $this->users->get_user_by_email($email)))
             {
 
-                echo "email doesn't exist in Minical. creating a new user";
+                echo l("email doesn't exist in Minical. creating a new user",true);
                 //Note: password is not set for employees until they register
                 $data = array(
                     'email'              => $email,

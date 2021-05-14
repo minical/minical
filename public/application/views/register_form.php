@@ -16,10 +16,10 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title" id="myModalLabel">Your request has been submitted!</h4>
+        <h4 class="modal-title" id="myModalLabel"><?php echo l('Your request has been submitted!', true);?></h4>
       </div>
       <div class="modal-body">
-        We are setting up your property. Please wait...
+        <?php echo l('We are setting up your property. Please wait...', true);?>
       </div>
     </div>
   </div>
@@ -40,8 +40,8 @@
             ?>
 		</a>
 		<br/>
-                Sign up with <?php if($whitelabelinfo){ echo ucfirst($whitelabelinfo['name']);}else{echo $this->config->item('branding_name');} ?><br/>
-		<small>No Credit Card Information required</small>
+                <?php echo l('Sign up with', true);?> <?php if($whitelabelinfo){ echo ucfirst($whitelabelinfo['name']);}else{echo $this->config->item('branding_name');} ?><br/>
+		<small><?php echo l('No Credit Card Information required', true);?></small>
 	</h2>
 </div>
 
@@ -58,20 +58,20 @@
 		
 	
 	<div class="col-md-3" >
-		<h3> Our demo comes with</h3>
+		<h3> <?php echo l('Our demo comes with', true);?></h3>
 		
 		<div class="list-group">
 			<div class="list-group-item">
-			    <h4 class="list-group-item-heading">Personal training</h4>
-			    <p class="list-group-item-text">Our customer service specialist will get in touch with you and give you a tutorial over the phone</p>
+			    <h4 class="list-group-item-heading"><?php echo l('Personal training', true);?></h4>
+			    <p class="list-group-item-text"><?php echo l('Our customer service specialist will get in touch with you and give you a tutorial over the phone', true);?></p>
 		  	</div>
 		  	<div class="list-group-item">
-		  		<h4 class="list-group-item-heading">14-day trial</h4>
-			    <p class="list-group-item-text">Try out all features unlocked!</p>
+		  		<h4 class="list-group-item-heading"><?php echo l('14-day trial', true);?></h4>
+			    <p class="list-group-item-text"><?php echo l('Try out all features unlocked!', true);?></p>
 		  	</div>
 		  	<div class="list-group-item">
-		  		<h4 class="list-group-item-heading">Free consultation</h4>
-			    <p class="list-group-item-text">Ask us questions on how we can help to make the most out of your business!</p>
+		  		<h4 class="list-group-item-heading"><?php echo l('Free consultation', true);?></h4>
+			    <p class="list-group-item-text"><?php echo l('Ask us questions on how we can help to make the most out of your business!', true);?></p>
 		  	</div>
 		</div>
 		
@@ -81,16 +81,16 @@
 		<div class="panel panel-success">
 			<div class="panel-heading">
 				<h3 class="panel-title">
-					Please tell us about you
+				<?php echo l('Please tell us about you', true);?>
 				</h3>
 			</div>
 			<div class="panel-body">
 				<div class="form-group input-group-lg">
-					<label for="email" class="sr-only">Email: </label>
+					<label for="email" class="sr-only"><?php echo l('Email', true);?>:</label>
 					<input name="email" class="form-control" type="text" placeholder="Email" autocomplete="off" value="<?php echo set_value('email');?>" />
 				</div>
 				<div class="form-group input-group-lg">
-					<label for="email" class="sr-only">Password: </label>
+					<label for="email" class="sr-only"><?php echo l('Password', true);?>: </label>
 					<input name="password" class="form-control" type="password" placeholder="Password" autocomplete="off" value="<?php echo set_value('password');?>" />
 				</div>
                 <div style="margin-bottom: 15px" class="g-recaptcha" data-sitekey="<?php echo $this->config->item('recaptcha_site_key', 'tank_auth'); ?>"></div>
@@ -110,24 +110,24 @@
 		</div>
         
 		<?php echo "By creating an account you agree to our "; ?> 
-        <a href="https://demo.minical.io/auth/show_terms_of_service">Terms Of Service</a>
+        <a href="https://demo.minical.io/auth/show_terms_of_service"><?php echo l('Terms Of Service', true);?></a>
         <?php echo ", and " ?>
-        <a href="https://demo.minical.io/auth/show_privacy_policy">Privacy Policy</a>
+        <a href="https://demo.minical.io/auth/show_privacy_policy"><?php echo l('Privacy Policy', true);?></a>
 	</div>
 
 	<div class="col-md-3 text-center" >
 		<div class="panel panel-success">
 			<div class="panel-body">
 				<h3 class="panel-title">
-					A real blessing to our business
+				<?php echo l('A real blessing to our business', true);?>
 				</h3>
 				<br/>
 
-				<p>The best cloud based PMS I’ve ever used. </p>
-				Everything from Reservations to Accounting is simple and makes it easy to train employees to use and input data accurately.
-				We get more bookings through our website now than any time before.
+				<p><?php echo l('The best cloud based PMS I’ve ever used.', true);?> </p>
+				<?php echo l('Everything from Reservations to Accounting is simple and makes it easy to train employees to use and input data accurately.', true);?>
+				<?php echo l('We get more bookings through our website now than any time before.', true);?>
 				<br/><br/>
-				Jay, Owner - Welcome Travelier Motel
+				<?php echo l('Jay, Owner - Welcome Travelier Motel', true);?>
 			</div>
 			
 		</div>

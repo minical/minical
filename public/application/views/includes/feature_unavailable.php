@@ -1,9 +1,9 @@
 <div class='settings_container'>
 	<div class="header_container">
-		<h1>Feature Not Available</h1>
+		<h1><?php echo l('Feature Not Available', true);?></h1>
 		<br />
-		<h2>Your subscription package does not have this feature.</h2>
-		<h2>To gain access, upgrade your subscription package.</h2>
-		<h2>Contact us for a free trial.</h2>
+		<h2><?php echo l('Your subscription package does not have this feature.', true);?></h2>
+		<h2><?php echo l('To gain access, upgrade your subscription package.', true);?></h2>
+		<h2><?php echo l('Contact us for a free trial.', true);?></h2>
 	</div>
 </div>

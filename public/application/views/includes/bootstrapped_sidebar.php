@@ -83,7 +83,7 @@ $my_companies = $this->Company_model->get_companies($this->user_id);
                             <li class="<?php if ($first_segment == $m_menu['link']) echo 'mm-active'; ?>">
                                 <a href="#" > 
                                     <i class="<?php echo $m_menu['icon']; ?>"></i>
-                                    <?php echo ucwords($m_menu['name']); ?> 
+                                    <?php echo ucwords(l($m_menu['name'])); ?> 
                                     <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
                                 </a>
                                 <ul class="mm-collapse <?php if ($first_segment ==  $m_menu['link']) echo 'mm-show'; ?>">
@@ -126,7 +126,7 @@ $my_companies = $this->Company_model->get_companies($this->user_id);
                                             <li class="<?php if ($first_segment.'/'.$second_segment ==  $m_menu_one['link']) echo 'mm-active'; ?>">
                                                 <a href="#">
                                                     <i class="metismenu-icon"></i>
-                                                    <?php echo ucwords($m_menu_one['name']); ?>
+                                                    <?php echo ucwords(l($m_menu_one['name'])); ?>
                                                     <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
                                                 </a>
                                                 <ul class="mm-collapse <?php if ($first_segment.'/'.$second_segment ==  $m_menu_one['link']) echo 'mm-show'; ?>">
@@ -135,7 +135,7 @@ $my_companies = $this->Company_model->get_companies($this->user_id);
                                                         <li class="<?php if ($first_segment.'/'.$second_segment.'/'.$third_segment == $m_menu_two['link']) echo 'mm-active'; ?>">
                                                             <a class="<?php if ($first_segment.'/'.$second_segment.'/'.$third_segment ==  $m_menu_two['link']) echo 'mm-active'; ?>" href="<?php echo base_url().$m_menu_two['link']; ?>">
                                                                 <i class="metismenu-icon"></i>
-                                                                <?php echo ucwords($m_menu_two['name']); ?>
+                                                                <?php echo ucwords(l($m_menu_two['name'])); ?>
                                                             </a>
                                                         </li>
                                                     <?php } $sidebar_menus = array(); ?>
@@ -147,7 +147,7 @@ $my_companies = $this->Company_model->get_companies($this->user_id);
                                                 <a class="<?php if ($first_segment.'/'.$second_segment ==  $m_menu_one['link']) echo 'mm-active'; ?>" href="<?php echo base_url().$m_menu_one['link']; ?>">
                                                     <i class="<?php echo $m_menu_one['icon']; ?>"></i>
                                                     <?php
-                                                    echo ucwords($m_menu_one['name']);
+                                                    echo ucwords(l($m_menu_one['name']));
                                                     ?>
                                                 </a>
                                             </li>
@@ -161,7 +161,7 @@ $my_companies = $this->Company_model->get_companies($this->user_id);
                                     <a class="<?php if ($first_segment == $m_menu['link']) echo 'mm-active'; ?>" href="<?php echo base_url().$m_menu['link']; ?>">
                                         <i class="<?php echo $m_menu['icon']; ?>"></i>
                                         <?php
-                                        echo ucwords($m_menu['name']);
+                                        echo ucwords(l($m_menu['name']));
                                         ?>
                                     </a>
                                 </li>
@@ -195,7 +195,7 @@ $my_companies = $this->Company_model->get_companies($this->user_id);
                                                         <a class="<?php if ($first_segment.'/'.$second_segment  ==  $m_menu['link']) 
                                                                 echo 'mm-active'; ?>" 
                                                             href="<?php echo base_url().$m_menu['link'];?>">
-                                                            <?php echo $m_menu['label'];?>
+                                                            <?php echo l($m_menu['label']);?>
                                                         </a>
                                                     </li>
                                                 </ul>

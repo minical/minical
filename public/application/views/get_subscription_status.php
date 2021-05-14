@@ -21,13 +21,13 @@
 			<body>
 	        	<table>
 	        		<tr>
-	        			<th>Company Id</th>
-	        			<th>Company Name</th>
-	        			<th>Subscription Id</th>
-	        			<th>Minical / Chargify Subscription Type</th>
-	        			<th>Minical / Chargify Subscription State</th>
-	        			<th>Minical / Chargify Renewal Period</th>
-	        			<th>Minical / Chargify Renewal Cost</th>
+	        			<th><?php echo l('Company Id', true);?></th>
+	        			<th><?php echo l('Company Name', true);?></th>
+	        			<th><?php echo l('Subscription Id', true);?></th>
+	        			<th><?php echo l('Minical / Chargify Subscription Type', true);?></th>
+	        			<th><?php echo l('Minical / Chargify Subscription State', true);?></th>
+	        			<th><?php echo l('Minical / Chargify Renewal Period', true);?></th>
+	        			<th><?php echo l('Minical / Chargify Renewal Cost', true);?></th>
 	        		</tr>
 
 	        		<?php foreach ($comp_list as $key => $value) { ?>

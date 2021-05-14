@@ -54,9 +54,9 @@
                     
                     
                     <div class="dropdown-menu dropdown-menu-right">
-                        <a class="dropdown-item" href="pages-profile.html"><i class="align-middle mr-1" data-feather="user"></i> Profile</a>
+                        <a class="dropdown-item" href="pages-profile.html"><i class="align-middle mr-1" data-feather="user"></i><?php echo l('Profile', true);?></a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Log out</a>
+                        <a class="dropdown-item" href="#"><?php echo l('Log out', ture);?></a>
                     </div>
                 </li>
             </ul>

@@ -103,7 +103,7 @@ class Account_settings extends MY_Controller {
             
             if($this->input->is_ajax_request())
             {
-                echo 'success';
+                echo l('success',true);
                 return;
             }
             else
@@ -135,7 +135,7 @@ class Account_settings extends MY_Controller {
         $this->session->set_userdata(array( 'language_id' => $language_id ));
         // Call function to load translation of language
         load_translations($language_id);
-        echo 'success';
+        echo l('success',true);
 	}
 }
 

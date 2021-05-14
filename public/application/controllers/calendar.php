@@ -55,10 +55,10 @@ class Calendar extends MY_Controller
 			$this->_update_booking_rate_plan($booking_id, $destination);
 			$this->Booking_model->update_booking_balance($booking_id);
             
-			echo "success";
+			echo l("success",true);
 			return;
 		}
-		echo "Warning: Selected cannot be modified";
+		echo l("Warning: Selected cannot be modified",true);
 		return;
 	}
 	
@@ -145,12 +145,12 @@ class Calendar extends MY_Controller
             $this->_update_booking_rate_plan($booking_id, $destination);
             $this->Booking_model->update_booking_balance($booking_id);
             
-			echo "success";
+			echo l("success",true);
 			return;
 			
 			
 		}
-		echo "Warning: Selected cannot be modified";
+		echo l("Warning: Selected cannot be modified",true);
 		return;
 	}
 	

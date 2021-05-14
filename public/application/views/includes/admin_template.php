@@ -48,15 +48,15 @@
 					</div>
 					<div class="modal-footer">
                         <button type="button" class="btn btn-danger pull-left" id="delete_company_button" data-dismiss="modal">
-							Soft Delete
+							<?php echo l('Soft Delete',true);?>
 						</button>
                         <?php if(!$is_salesperson){ ?>
 						<button type="button" class="btn btn-success" id="update_company_button" data-dismiss="modal">
-							Update
+							<?php echo l('Update',true);?>
 						</button>
                         <?php } ?>
 						<button type="button" class="btn btn-default" data-dismiss="modal">
-							Close
+							<?php echo l('Close',true);?>
 						</button>
 					</div>
 				</div><!-- /.modal-content -->
@@ -75,10 +75,10 @@
                                         </div>
                                         <div class="modal-footer">
                                                 <button type="button" class="btn btn-success" id="create_company_button" data-dismiss="modal">
-                                                        Create
+												    <?php echo l('Create',true);?>
                                                 </button>
                                                 <button type="button" class="btn btn-default" data-dismiss="modal">
-                                                        Close
+													<?php echo l('Close',true);?>  
                                                 </button>
                                         </div>
                                 </div><!-- /.modal-content -->

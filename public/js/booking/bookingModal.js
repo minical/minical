@@ -3690,7 +3690,7 @@ var bookingModalInvoker = function ($) {
                                                 }
                                             }
                                             if (new Date(innGrid._getBaseFormattedDate(this.value)) < new Date(innGrid._getBaseFormattedDate($("[name='check_in_date']").val()))) {
-                                                alert("Check-out-date can't be less than Check-in-date");
+                                                alert(l("Check-out-date can't be less than Check-in-date"));
                                                 $("[name='check_out_date']").val($("[name='check_in_date']").val());
                                                 $("[name='check_out_date']").focus();
                                             }
