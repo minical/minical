@@ -29,7 +29,7 @@
                                     echo l($menu_item['name']);
                                 }
                                 else{
-                                    echo l($menu_item['name']);
+                                    echo $menu_item['name'];
                                 }
                                 ?>
                             </a>

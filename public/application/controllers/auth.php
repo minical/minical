@@ -338,7 +338,7 @@ class Auth extends MY_Controller
         if ($this->tank_auth->is_logged_in()) {
             // logged in
             //redirect('');
-            echo l('Already loggedin with another user!', true);
+            echo 'Already loggedin with another user!';
 
         } else { 
             // check Whitelabel partner access or not
@@ -374,7 +374,7 @@ class Auth extends MY_Controller
             $accept_tnc =  $this->input->post("accept_tnc");
 
             if(!empty($this->input->post()) && $accept_tnc == ''){ 
-               echo l("Please accept our terms and conditions.",true);
+               echo "Please accept our terms and conditions.";
                return;
             }
             
@@ -521,7 +521,7 @@ class Auth extends MY_Controller
                         }
                         else
                         {
-                            echo l('success',true);
+                            echo 'success';
                         }
 
                     //redirect('booking');
@@ -1921,7 +1921,7 @@ class Auth extends MY_Controller
         $this->User_model->update_user($user_id, array('new_email_key' => $data['new_email_key']));
         
         $this->_send_email('activate', $data['email'], $data);
-        echo l('successfully sent', true);    
+        echo 'successfully sent';    
    }
    
     function google_recaptcha_validate_token($secret_key, $recaptcha_token)
