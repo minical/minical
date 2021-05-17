@@ -407,7 +407,7 @@ class Accounting extends MY_Controller
 			}
 			else
 			{
-				$value = 'An error occured. Please contact adminstrator if it continues.';
+				$value = l('An error occured. Please contact adminstrator if it continues.', true);
 			}
 			
 			$data = array (
@@ -457,7 +457,7 @@ class Accounting extends MY_Controller
 			}
 			else
 			{
-				$value = 'An error occured. Please contact adminstrator if it continues.';
+				$value = l('An error occured. Please contact adminstrator if it continues.', true);
 			}
 			
 			$data = array (

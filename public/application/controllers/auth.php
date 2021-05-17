@@ -338,7 +338,7 @@ class Auth extends MY_Controller
         if ($this->tank_auth->is_logged_in()) {
             // logged in
             //redirect('');
-            echo l('Already loggedin with another user!0', true);
+            echo l('Already loggedin with another user!', true);
 
         } else { 
             // check Whitelabel partner access or not
