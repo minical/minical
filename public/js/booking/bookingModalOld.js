@@ -1342,7 +1342,7 @@
                                             data = JSON.parse(data);
                                             if(data.status == "success"){
                                                 that.newRatePlanId = data.new_rate_plan_id;
-                                                alert('rates have been updated successfully');
+                                                alert(l('rates have been updated successfully'));
                                                 $('#update-rate-btn').prop('disabled', false);
                                                 that._getCustomRates(data.new_rate_plan_id);
                                             }
@@ -1846,7 +1846,7 @@
                                     }
                                 }
                                 if (new Date(this.value) < new Date($("[name='check_in_date']").val())) {
-                                    alert("Check-out-date can't be less than Check-in-date");
+                                    alert(l("Check-out-date can't be less than Check-in-date"));
                                     $("[name='check_out_date']").val($("[name='check_in_date']").val());
                                     $("[name='check_out_date']").focus();
                                 }
@@ -2090,7 +2090,7 @@
                                                     }).on('change', function () {
 
                                                         if (new Date(this.value) < new Date($("[name='check_in_date']").val())) {
-                                                            alert("Check-out-date can't be less than Check-in-date");
+                                                            alert(l("Check-out-date can't be less than Check-in-date"));
                                                             $("[name='check_out_date']").val($("[name='check_in_date']").val());
                                                             $("[name='check_out_date']").focus();
                                                         }
@@ -2307,10 +2307,10 @@
                                                         children_count = Number(children_count);
                                                         var selected_room_type = $(this).closest(".capicity-block").find("[name=room_type_id]").text();
                                                         if (adult_count > max_adults || children_count > max_children) {
-                                                            alert("Maximum capacity for room " +
+                                                            alert(l("Maximum capacity for room ") +
                                                                     selected_room_type +
-                                                                    " is \nMaximun adults " + max_adults +
-                                                                    " \nMaximun children " + max_children);
+                                                                    l(" is \nMaximun adults ") + max_adults +
+                                                                    l(" \nMaximun children ") + max_children);
                                                             if (adult_count > max_adults)
                                                                 $(this).closest(".capicity-block").find("[name='adult_count']").val(max_adults);
                                                             if (children_count > max_children)
@@ -3104,7 +3104,7 @@
                         }
                         else
                         {
-                            alert("You do not have permission to delete booking");
+                            alert(l("You do not have permission to delete booking"));
                         }
 
                     }
@@ -3624,10 +3624,10 @@
             var max_adults = $selected_room_type.data('max_adults');
             var max_children = $selected_room_type.data('max_children');
             if (adult_count > max_adults || children_count > max_children) {
-                alert("Maximum capacity for room " +
+                alert(l("Maximum capacity for room ") +
                         $selected_room_type.text() +
-                        " is \nMaximun adults " + max_adults +
-                        " \nMaximun children " + max_children);
+                        l(" is \nMaximun adults ") + max_adults +
+                        l(" \nMaximun children ") + max_children);
                 if (adult_count > max_adults)
                     this.$modalBody.find('[name="adult_count"]').val(max_adults);
                 if (children_count > max_children)
@@ -3949,7 +3949,7 @@
                 }
             });
             if (booking_ids.length < 1) {
-                alert("Select at least one room");
+                alert(l("Select at least one room"));
                 return;
             }
 

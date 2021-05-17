@@ -3690,7 +3690,7 @@ var bookingModalInvoker = function ($) {
                                                 }
                                             }
                                             if (new Date(innGrid._getBaseFormattedDate(this.value)) < new Date(innGrid._getBaseFormattedDate($("[name='check_in_date']").val()))) {
-                                                alert("Check-out-date can't be less than Check-in-date");
+                                                alert(l("Check-out-date can't be less than Check-in-date"));
                                                 $("[name='check_out_date']").val($("[name='check_in_date']").val());
                                                 $("[name='check_out_date']").focus();
                                             }
@@ -3712,7 +3712,7 @@ var bookingModalInvoker = function ($) {
                                                 }
                                             }
                                             if (new Date(innGrid._getBaseFormattedDate(this.value)) < new Date(innGrid._getBaseFormattedDate($("[name='check_in_date']").val()))) {
-                                                alert("Check-out-date can't be less than Check-in-date");
+                                                alert(l("Check-out-date can't be less than Check-in-date",true));
                                                 $("[name='check_out_date']").val($("[name='check_in_date']").val());
                                                 $("[name='check_out_date']").focus();
                                             }
@@ -5842,12 +5842,12 @@ var bookingModalInvoker = function ($) {
                 var maxChildren = roomTypeDIV.find('select[name="room_type_id"] option:selected').attr('data-max_children');
 
                 if($('select[name=adult_count]').val() > maxAdult){
-                    alert(l(maxAdult + (maxAdult > 1 ? ' Adults are' : ' Adult is') + ' not compatible, please update max adults in selected room type'));
+                    alert(maxAdult + (maxAdult > 1 ? 'Adults are' : ' Adult is') + l(' not compatible, please update max adults in selected room type', true));
                     $('select[name=adult_count]').val(1);
                 }
 
                 if($('select[name=children_count]').val() > maxChildren){
-                    alert(l(maxChildren + (maxChildren > 1 ? ' Children are' : ' Child is') + ' not compatible, please update max children in selected room type'));
+                    alert(maxChildren + (maxChildren > 1 ? ' Children are' : ' Child is') + l(' not compatible, please update max children in selected room type'));
                     $('select[name=children_count]').val(0);
                 }
                 

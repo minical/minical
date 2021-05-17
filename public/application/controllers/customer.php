@@ -2132,7 +2132,7 @@ class Customer extends MY_Controller {
 
             echo json_encode(array('success' => true));
         } else {
-            echo json_encode(array('success' => false, 'message' => 'Unused cards unavailable.'));
+            echo json_encode(array('success' => false, 'message' => l('Unused cards unavailable.', true)));
         }
     }
 

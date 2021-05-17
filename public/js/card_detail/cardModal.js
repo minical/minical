@@ -302,7 +302,7 @@
                         )
                     .append(
                         $("<div/>", {id: "cc_tokenization_status", class: 'col-sm-6 card_cvc_div'}).on("click", function () {
-                            alert("The customer's credit card has been tokenized. You can charge the customer's credit card in the Invoice page using [Add Payment] button.");
+                            alert(l("The customer's credit card has been tokenized. You can charge the customer's credit card in the Invoice page using [Add Payment] button."));
                         })
                     )
                 );

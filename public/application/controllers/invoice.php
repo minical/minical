@@ -1081,7 +1081,7 @@ class Invoice extends MY_Controller {
         }
         else
         {
-            echo "ERROR: booking doesn't belong to company";
+            echo l("ERROR: booking doesn't belong to company",true);
         }
     }
 
@@ -1094,7 +1094,7 @@ class Invoice extends MY_Controller {
         }
         else
         {
-            echo "ERROR: booking doesn't belong to company";
+            echo l("ERROR: booking doesn't belong to company",true);
         }
     }
 
@@ -1105,7 +1105,7 @@ class Invoice extends MY_Controller {
             $this->email_template->send_master_invoice_email($booking_id, $group_id);
         }
         else {
-            echo "ERROR: booking doesn't belong to company";
+            echo l("ERROR: booking doesn't belong to company",true);
         }
     }
     

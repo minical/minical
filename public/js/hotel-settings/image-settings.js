@@ -86,7 +86,7 @@ $(function (){
 						$(".cropImgWrapper").append('<div class="loader bubblingG"><span id="bubblingG_1"></span><span id="bubblingG_2"></span><span id="bubblingG_3"></span></div>');
 					},
 					onError: function(errormsg){ 
-                        alert('Some error occured. Please try again.');
+                        alert(l('Some error occured. Please try again.'));
                         $(".bubblingG").remove(); // init/reset
 						console.log('onError:'+errormsg);
 					}

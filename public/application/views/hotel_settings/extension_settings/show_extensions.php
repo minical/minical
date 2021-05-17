@@ -37,7 +37,7 @@ $bootstrapColWidth = 12 / $numOfCols;
                 <b style="font-size: 12px;"><?php
                 $name = $extension['extension_name'];
                 $extension_name = str_replace("_"," ",$name);
-                echo ucwords($extension_name); ?></b>
+                echo ucwords(l($extension_name, true)); ?></b>
                  <div >
                 <p class="extension-discription" ><?php echo substr($extension['description'], 0,60).'...  '; ?><a href="<?php echo (isset($extension['marketplace_product_link']) && $extension['marketplace_product_link'] ? $extension['marketplace_product_link']: "")?>" style="font-size: 14px">more</a></p>
             </div>

@@ -112,7 +112,7 @@ class Company extends MY_controller
 	function delete($company_id)
 	{
 		$this->Company_model->delete_company($company_id);
-		echo "company deleted";
+		echo l("company deleted",true);
 	}
     
     function update_logo_image_group_id()

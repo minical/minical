@@ -75,10 +75,10 @@
                                         </div>
                                         <div class="modal-footer">
                                                 <button type="button" class="btn btn-success" id="create_company_button" data-dismiss="modal">
-                                                        Create
+												    Create
                                                 </button>
                                                 <button type="button" class="btn btn-default" data-dismiss="modal">
-                                                        Close
+													Close  
                                                 </button>
                                         </div>
                                 </div><!-- /.modal-content -->

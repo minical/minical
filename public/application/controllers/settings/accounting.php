@@ -155,7 +155,7 @@ class Accounting extends MY_Controller
 		}
 		else
 		{
-			echo 'An error occured changing the charge type name. Contact administrator if problems persist.';
+			echo l('An error occured changing the charge type name. Contact administrator if problems persist.',true);
 		}
 	}
 	
@@ -376,7 +376,7 @@ class Accounting extends MY_Controller
 		}
 		else
 		{
-			echo 'An error occured changing the tax type name. Contact administrator if problems persist.';
+			echo l('An error occured changing the tax type name. Contact administrator if problems persist.',true);
 		}
 	}
 	
@@ -407,7 +407,7 @@ class Accounting extends MY_Controller
 			}
 			else
 			{
-				$value = 'An error occured. Please contact adminstrator if it continues.';
+				$value = l('An error occured. Please contact adminstrator if it continues.', true);
 			}
 			
 			$data = array (
@@ -457,7 +457,7 @@ class Accounting extends MY_Controller
 			}
 			else
 			{
-				$value = 'An error occured. Please contact adminstrator if it continues.';
+				$value = l('An error occured. Please contact adminstrator if it continues.', true);
 			}
 			
 			$data = array (
@@ -554,7 +554,7 @@ class Accounting extends MY_Controller
 		}
 		else
 		{
-			echo 'An occured changing the payment type name. Please contact adminstrator if this persists.';
+			echo l('An occured changing the payment type name. Please contact adminstrator if this persists.',true);
 		}
 	}
 	

@@ -94,10 +94,10 @@
 		</div>
 		<div class="modal-footer">
 			<button type="button" class="btn btn-success" id="add_new_company_button">
-				Add Property
+			Add Property
 			</button>
 			<button type="button" class="btn btn-light" data-dismiss="modal">
-				Close
+			Close
 			</button>
 		</div>
     </div>
