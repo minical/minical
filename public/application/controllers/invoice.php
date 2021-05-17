@@ -1293,11 +1293,7 @@ class Invoice extends MY_Controller {
         }
     }
 
-    function search_pos_items() {
-        $item_name = $this->input->post('item');
-        $result = $this->Extra_model->get_pos_extra_items($this->company_id, $item_name);
-        echo json_encode($result);
-    }
+   
 
     
 }
