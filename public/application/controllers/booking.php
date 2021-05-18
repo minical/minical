@@ -1144,7 +1144,7 @@ class Booking extends MY_Controller
     function send_booking_cancellation_email_AJAX($booking_id) {
         $result_array = $this->send_booking_cancellation_email($booking_id);
         if ($result_array && $result_array['success']) {
-            $message = l("Cancellation Email Sent to " true);
+            $message = l("Cancellation Email Sent to ", true);
             echo $message . $result_array['customer_email'];
         } else {
             echo l("Customer email not found!", true);

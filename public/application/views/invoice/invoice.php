@@ -212,7 +212,71 @@
 </div>
 
 <input type="hidden" name="pos_booking_id" class="pos_booking_id" value="<?php echo $booking_detail['booking_id']; ?>">
-
+<div class="modal fade"  id="pos_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index:11111;">
+    <div class="modal-dialog" style="width: 90%;height: 90vh;">
+        <div class="modal-content" style="height: 100%;">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <div class="col-md-1">
+                    <h4 class="modal-title"><?php echo l('Items'); ?></h4>
+                </div>
+                <div class="col-md-7" style="padding: 0">
+                    <input type="text" name="search_pos" placeholder="<?php echo l('Search Item', true); ?>" class="form-control search_pos" style="max-width: 200px;float: right;">
+                </div>
+                
+            </div>
+            <div class="modal-body form-horizontal" style="height: calc(100% - 55px);padding: 0;">
+                <div class="col-sm-8" style="height: 100%;border-right: 1px solid #eeeeee;height: 100%;overflow-x: hidden; overflow-y: auto;">
+                    <div class="form-group pos_items">
+                        <?php if ($pos_extras && count($pos_extras) > 0) {
+                            foreach ($pos_extras as $key => $extra): ?>
+                                <div class="col-sm-3 pos-item" title="click to add" id="<?php echo $extra['extra_id']; ?>" onclick="posItem('<?php echo $extra['extra_id']; ?>','<?php echo $extra['extra_name']; ?>','<?php echo (isset($extra['rate']) && $extra['rate']) ? $extra['rate'] : 0; ?>','<?php echo $extra['charge_type_id']; ?>','<?php foreach ($charge_types as $charge_type) :
+                                    if ($extra['charge_type_id'] == $charge_type['id']) echo $charge_type['name']; ?>
+                                        <?php endforeach; ?>','<?php echo (isset($extra['rate']) && $extra['rate']) ? $extra['rate'] : 0; ?>')">
+                                    <input type="hidden" name="booking_id" class="inv_booking_id" value="<?php echo $booking_detail['booking_id']; ?>">
+                                    <h4 class="extra_name_<?php echo $extra['extra_id']; ?>" data-extra_name="<?php echo $extra['extra_name']; ?>">
+                                        <?php echo $extra['extra_name']; ?>
+                                    </h4>
+                                    <div>
+                                        
+                                        <div class="pull-left extra_charge_type_<?php echo $extra['extra_id']; ?>" id="<?php echo $extra['charge_type_id']; ?>">
+                                            <small>
+                                                <?php foreach ($charge_types as $charge_type) :
+                                                    if ($extra['charge_type_id'] == $charge_type['id']) echo $charge_type['name']; ?>
+                                                <?php endforeach; ?>
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php endforeach;
+                        } else { ?>
+                            <div class="col-sm-12"><?php echo l('No extra items found. Please add extras', true); ?> <a href="/settings/rates/extras" target="_blank"><?php echo l('here', true); ?></a>.</div>
+                        <?php } ?>
+                        
+                    </div>
+                </div>
+                <div class="col-sm-4" style="padding: 0;height: 100%;overflow-x: hidden; overflow-y: auto;" id="show-extra-package">
+                    <div>
+                        <div class="cart-is-empty" style="transform: translateX(-50%); margin-left: 50%; margin-top: 10%; text-align: center;"><?php echo l('Cart is empty', true); ?>!</div>
+                    </div>
+                    <div class="modal-footer" style="position: absolute;bottom: 0;width: 100%;">
+                        <div class="pull-left" style="font-size: 15px;text-align: left;">
+                            <b><?php echo l('Total', true); ?></b>: <span class="pos-total">0.00</span>
+                            <br/>
+                            <small><?php echo l('exclusive taxes', true); ?></small>
+                        </div>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            <?php echo l('Close'); ?>
+                        </button>
+                        <button type="button" class="btn btn-success" id="save-extra-charges" >
+                            <?php echo l('Save'); ?>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
 
 <!--bootstrap popover-->
