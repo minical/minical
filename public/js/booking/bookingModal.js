@@ -2225,7 +2225,7 @@ var bookingModalInvoker = function ($) {
                                                                         if (that.booking.add_daily_charge != undefined && that.booking.add_daily_charge != 1) {
                                                                             add_remaining_daily_charges = false;
                                                                             $('.add-daily-charge').prop('checked', false);
-                                                                            $("input[name='residual_rate']").val('');
+                                                                            $("input[name='residual_rate']").val(0);
                                                                             $('#residual_rate_div').addClass('hidden');
                                                                         } else {
                                                                             add_remaining_daily_charges = true;
