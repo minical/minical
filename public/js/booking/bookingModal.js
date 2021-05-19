@@ -4638,7 +4638,7 @@ var bookingModalInvoker = function ($) {
 //                    booked_by_id = $(this).attr("id") ? $(this).attr("id") : null;
 //                }
                 var customerOptions = {
-                    customer_id: $(this).attr("id") ? $(this).attr("id") : 0,
+                    customer_id: $(this).attr("id") ? $(this).attr("id") : null,
                     customer_name: $(this).find(".token-label").text()
                 };
 
