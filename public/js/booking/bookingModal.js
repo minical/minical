@@ -4705,7 +4705,7 @@ var bookingModalInvoker = function ($) {
                 source: $("[name='source'] option:selected").val(),
                 booked_by: booked_by_id,
                 add_daily_charge: (that.booking.add_daily_charge == 0 ? 0 : 1),
-                residual_rate: that.booking.residual_rate,
+                residual_rate: (that.booking.residual_rate ? that.booking.residual_rate : 0),
                 color: $("[name='color']").val()
             };
             var bookingData = {
