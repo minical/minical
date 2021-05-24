@@ -17,6 +17,7 @@ class Email_template {
         $this->ci->load->model('Image_model');
 
         $this->ci->load->library('Email');
+        $this->ci->load->helper('language_translation_helper');
 
         log_message('debug', "Email template initialized");
     }
