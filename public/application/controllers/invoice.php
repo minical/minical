@@ -800,7 +800,7 @@ class Invoice extends MY_Controller {
                     $charge['selling_date'] = date('Y-m-d', strtotime($this->selling_date));
                     $charge['booking_id'] = $booking_id;
                     $charge['customer_id'] = $customer_id;
-                    $charge['description'] = ($charge['qty'] > 1) ? $charge['description']." (". $charge['qty'] .")" : $charge['description'];
+                    $charge['description'] = (isset($charge['qty']) && $charge['qty'] > 1) ? $charge['description']." (". $charge['qty'] .")" : $charge['description'];
                     unset($charge['extra_id']);
                     unset($charge['extra_qty']);
                     unset($charge['qty']);
@@ -824,7 +824,8 @@ class Invoice extends MY_Controller {
                 }
                 
                 // check if evc booking, then check if EVC FOLIO exist ? move to EVE : create EVC Folio and move
-                // else 
+                // else
+                $folio_id = $folio_id ? $folio_id : 0;
                 $charge_folio_id = $this->Charge_model->insert_charge_folio($charge_id , $folio_id);
                 //invoice log 
                 $invoice_log_data = array();

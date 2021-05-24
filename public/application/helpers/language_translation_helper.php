@@ -64,10 +64,37 @@ if ( ! function_exists('get_languages'))
     {
         $CI = & get_instance();
         $CI->load->model('translation_model');
-
-        $result = $CI->translation_model->get_all_phrases_by_language($language_id);
         $data_arr = array();
 
+        $language_name = $CI->session->userdata('language');
+        $modules_path = APPPATH.'extensions/';
+        $modules = scandir($modules_path);
+       
+        foreach($modules as $module)
+        {
+            if($module === '.' || $module === '..') continue;
+            if(is_dir($modules_path) . $module)
+            {
+                $config = array();
+                $files_path = $modules_path . $module."/language/".$language_name."/index.php";
+                if(file_exists($files_path))
+                {
+                    require($files_path);
+                    foreach($lang[$module] as $key => $value)
+                    {
+                        $data_arr[strtolower($module.'/'.$key)] = $value;
+                    }
+
+                }
+                else
+                {
+                    continue;
+                }
+            }
+        }
+
+        $result = $CI->translation_model->get_all_phrases_by_language($language_id);
+       
         if(!empty($result))
         {
             foreach ($result as $key => $value)
@@ -85,7 +112,7 @@ if ( ! function_exists('get_languages'))
     // Function to return a value of phrase key
     function l($phrase_key, $return_plain_text = null)
     {
-        $CI = & get_instance();
+        $CI = & get_instance();   
         $CI->load->model('translation_model');
 
         $translation_version = $CI->session->userdata('translation_version');

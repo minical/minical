@@ -44,7 +44,7 @@
 				<button id="printReportButton" class="btn btn-primary pull-right hidden-print"><span class="glyphicon glyphicon-print" title="Print Report"></span></button>
                     <?php $url_date = ($this->uri->segment(4) != '') ? $this->uri->segment(4) : ""; ?>       
                     <?php $param = $url_date;  ?> 
-                <a style="margin: 0 10px;" href="<?php if($param != '//'){ echo base_url()."reports/download_charges_csv_export/".$url_date; } else { echo base_url()."reports/download_charges_csv_export/"; } ?>" class="btn btn-primary pull-right ">
+                // <a style="margin: 0 10px;" href="<?php if($param != '//'){ echo base_url()."reports/ledger/download_charges_csv_export/".$url_date; } else { echo base_url()."reports/ledger/download_charges_csv_export/"; } ?>" class="btn btn-primary pull-right ">
                     <span title="Export to CSV" class="glyphicon glyphicon-download-alt"></span>
                 </a>
 			</div><!-- /.form-inline -->

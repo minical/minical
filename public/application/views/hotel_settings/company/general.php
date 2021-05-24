@@ -87,7 +87,7 @@
 			</div>
 			<div class="col-md-6">
 				<div class="position-relative form-group">
-					<label for="exampleState" class=""><?php echo l('timezone'); ?></label>
+					<label for="exampleState" class=""><?php echo l('timezone'); ?><span style="color: red;">*</span></label>
 					<select name="time_zone" class="form-control">
 						<?php
 						foreach ($timezones as $timezone => $timezone_name):
@@ -112,7 +112,7 @@
 	<div class="form-row">
 		<div class="col-md-6">
 			<div class="position-relative form-group">
-				<label for="exampleZip" class=""><?php echo l('default_currency'); ?></label>
+				<label for="exampleZip" class=""><?php echo l('default_currency'); ?><span style="color: red;">*</span></label>
 				<select name="default_currency" class="form-control">
 					<?php	foreach ($available_currencies as $available_currency): ?>
 						<option 
@@ -128,7 +128,7 @@
 		</div>
 		<div class="col-md-6">
 			<div class="position-relative form-group">
-				<label for="exampleCity" class=""><?php echo l('Default Language', true); ?></label>
+				<label for="exampleCity" class=""><?php echo l('Default Language', true); ?><span style="color: red;">*</span></label>
 				<select name="default_language" class="form-control">
 					<?php foreach ($languages as $language): ?>
 						<option 
@@ -150,7 +150,7 @@
 	<div class="form-row">
 		<div class="col-md-6">
 			<div class="position-relative form-group">
-				<label for="exampleState" class=""><?php echo l('company_name'); ?></label>
+				<label for="exampleState" class=""><?php echo l('company_name'); ?><span style="color: red;">*</span></label>
 				<input type="text" name="company_name" class="form-control" value="<?php 
 				if(isset($company)) 
 				echo $company['name']; 
@@ -160,7 +160,7 @@
 		</div>
 		<div class="col-md-6">
 			<div class="position-relative form-group">
-				<label for="exampleZip" class=""><?php echo l('no_of_rooms'); ?></label>
+				<label for="exampleZip" class=""><?php echo l('no_of_rooms'); ?><span style="color: red;">*</span></label>
 				<input class="form-control" READONLY type="text" name="number_of_rooms" value="<?php 
 				if(isset($company)) 
 				echo $company['number_of_rooms']; 
@@ -174,7 +174,7 @@
 	<div class="form-row">
 		<div class="col-md-12">
 			<div class="position-relative form-group">
-				<label for="exampleAddress" class=""><?php echo l('address'); ?>:</label>
+				<label for="exampleAddress" class=""><?php echo l('address'); ?><span style="color: red;">*</span></label>
 				<input type="text" name="company_address" class="form-control" value="<?php
 				if(isset($company)) 
 				echo $company['address']; 
@@ -186,7 +186,7 @@
 		<div class="form-row">
 			<div class="col-md-4">
 				<div class="position-relative form-group">
-					<label for="exampleCity" class=""><?php echo l('city'); ?></label>
+					<label for="exampleCity" class=""><?php echo l('city'); ?><span style="color: red;">*</span></label>
 					<input type="text" name="company_city" class="form-control" value="<?php 
 					if(isset($company)) 
 					echo $company['city']; 
@@ -196,7 +196,7 @@
 			</div>
 			<div class="col-md-4">
 				<div class="position-relative form-group">
-					<label for="exampleState" class=""><?php echo l('region'); ?>:</label>
+					<label for="exampleState" class=""><?php echo l('region'); ?><span style="color: red;">*</span></label>
 					<input type="text" name="company_region" class="form-control" value="<?php 
 					if(isset($company)) 
 					echo $company['region'];
@@ -206,7 +206,7 @@
 			</div>
 			<div class="col-md-4">
 				<div class="position-relative form-group">
-					<label for="exampleZip" class=""><?php echo l('country'); ?></label>
+					<label for="exampleZip" class=""><?php echo l('country'); ?><span style="color: red;">*</span></label>
 					<input type="text" name="company_country" class="form-control" value="<?php 
 					if(isset($company)) 
 					echo $company['country']; 
@@ -218,7 +218,7 @@
 		<div class="form-row">
 			<div class="col-md-6">
 				<div class="position-relative form-group">
-					<label for="exampleZip" class=""><?php echo l('postal_code'); ?></label>
+					<label for="exampleZip" class=""><?php echo l('postal_code'); ?><span style="color: red;">*</span></label>
 					<input type="text" name="company_country" class="form-control" value="<?php 
 					if(isset($company)) 
 					echo $company['country']; 
@@ -228,7 +228,7 @@
 			</div>
 			<div class="col-md-6">
 				<div class="position-relative form-group">
-					<label for="exampleZip" class=""><?php echo l('phone'); ?></label>
+					<label for="exampleZip" class=""><?php echo l('phone'); ?><span style="color: red;">*</span></label>
 					<input type="text" name="company_phone" maxlength="20" class="form-control" value="<?php
 					if(isset($company)) 
 					echo $company['phone'];
@@ -241,7 +241,7 @@
 		<div class="form-row">
 			<div class="col-md-6">
 				<div class="position-relative form-group">
-					<label for="exampleZip" class=""><?php echo l('fax'); ?>:</label>
+					<label for="exampleZip" class=""><?php echo l('fax'); ?><span style="color: red;">*</span></label>
 					<input type="text" name="company_fax" class="form-control" value="<?php 
 					if(isset($company)) 
 					echo $company['fax']; 
@@ -251,7 +251,7 @@
 			</div>
 			<div class="col-md-6">
 				<div class="position-relative form-group">
-					<label for="exampleZip" class=""><?php echo l('email'); ?>:</label>
+					<label for="exampleZip" class=""><?php echo l('email'); ?><span style="color: red;">*</span></label>
 					<input type="text" name="company_email" class="form-control" value="<?php 
 					if(isset($company)) 
 					echo $company['email']; 
@@ -265,7 +265,7 @@
 		<div class="form-row">
 			<div class="col-md-12">
 				<div class="position-relative form-group">
-					<label for="exampleAddress" class=""><?php echo l('website'); ?>:</label>
+					<label for="exampleAddress" class=""><?php echo l('website'); ?><span style="color: red;">*</span></label>
 					<input type="text" name="company_website" class="form-control" value="<?php 
 					if(isset($company)) 
 					echo $company['website']; 

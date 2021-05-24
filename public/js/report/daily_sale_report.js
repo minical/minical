@@ -18,7 +18,7 @@ $(function () {
         startDate = startDate[2]+'-'+startDate[0]+'-'+startDate[1];
         endDate = endDate[2]+'-'+endDate[0]+'-'+endDate[1];
         
-        window.location.href = base_url + "/reports/show_monthly_payment_report/" + startDate+'--'+endDate;
+        window.location.href = base_url + "/reports/ledger/show_monthly_payment_report/" + startDate+'--'+endDate;
     });
      $('.show_charge_report').click(function () {
         $('.monthselectpicker').css('display', 'none');
@@ -30,6 +30,6 @@ $(function () {
         startDate = startDate[2]+'-'+startDate[0]+'-'+startDate[1];
         endDate = endDate[2]+'-'+endDate[0]+'-'+endDate[1];
         
-        window.location.href = base_url + "/reports/show_monthly_charge_report/" + startDate+'--'+endDate;
+        window.location.href = base_url + "/reports/ledger/show_monthly_charge_report/" + startDate+'--'+endDate;
     });
 });
