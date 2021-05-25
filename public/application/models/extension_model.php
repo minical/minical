@@ -54,7 +54,7 @@ class Extension_model extends CI_Model {
 		return true;
 	}
 
-	function get_active_extensions($company_id = null, $module_name = null)
+	function get_active_extensions($company_id = null, $module_name = null, $is_active = true)
 	{
 		$this->db->select('*');
 		$this->db->from('extensions_x_company');
@@ -65,7 +65,8 @@ class Extension_model extends CI_Model {
 		if($module_name)
 			$this->db->where('extension_name', $module_name);
 
-		$this->db->where('is_active', 1);
+		if($is_active)
+			$this->db->where('is_active', 1);
 
 		$query = $this->db->get();
 		
