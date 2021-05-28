@@ -186,7 +186,7 @@ $my_companies = $this->Company_model->get_companies($this->user_id);
                                                             <a class="<?php if ($first_segment.'/'.$second_segment  ==  $m_menu['link']) 
                                                             echo 'mm-active'; ?>" href="<?php echo base_url().$m_menu['link'];?>">
                                                             <?php echo l($m_menu["label"]);?>
-                                                            <i class="metismenu-icon pe-7s-menu"></i>
+                                                            <i class="metismenu-icon pe-7s-cash"></i>
                                                         </a>
                                                     <?php } } else { ?>
 
