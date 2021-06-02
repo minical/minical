@@ -189,9 +189,10 @@ $my_companies = $this->Company_model->get_companies($this->user_id);
                                                     <?php }?>
                                         <?php } 
                                         elseif($m_menu['location'] == 'SECONDARY'){
+                                            // echo $m_menu['link'];
                                             if( ucwords($m_menu['parent_menu']) == $mod_menu[0]['label']){ ?>
-                                                <ul class="mm-collapse <?php if ($first_segment ==  $m_menu['link']) echo   'mm-show'; ?>">
-                                                    <li class="<?php if ($first_segment  == $m_menu['link']) echo 'mm-active'; ?>">
+                                                <ul class="mm-collapse <?php if ($first_segment.'/'.$second_segment  ==  $m_menu['link']) echo   'mm-show'; ?>">
+                                                    <li class="<?php if ($first_segment.'/'.$second_segment   == $m_menu['link']) echo 'mm-active'; ?>">
                                                         <a class="<?php if ($first_segment.'/'.$second_segment  ==  $m_menu['link']) 
                                                                 echo 'mm-active'; ?>" 
                                                             href="<?php echo base_url().$m_menu['link'];?>">
