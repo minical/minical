@@ -272,7 +272,7 @@ class Charge_model extends CI_Model {
 				'date_time' => $date_time,
 				'selling_date' => $selling_date,
 				'description' => trim($row['description']),
-				'customer_id' => trim(isset($row['customer_id'])?$row['customer_id']:""),
+				'customer_id' => trim(isset($row['customer_id']) ? $row['customer_id'] : 0),
 				'charge_type_id' => trim($row['charge_type_id']),
 				'amount' => trim($row['amount']),
 				'booking_id' => $row['booking_id'],

@@ -8399,7 +8399,7 @@ CREATE TABLE `invoice_log` (
   `date_time` datetime NOT NULL,
   `user_id` bigint(20) NOT NULL,
   `action_id` int(2) NOT NULL COMMENT '''1'' : Add Charge , ''2'' : Edit Charge, ''3'' : Delete Charge ,''4'' : ''Add Payment'' , ''5'' : Refund Payment , ''6'' : Delete Payment',
-  `log` mediumtext NOT NULL,
+  `log` mediumtext DEFAULT NULL,
   `charge_or_payment_id` bigint(20) NOT NULL,
   `new_amount` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -21735,6 +21735,35 @@ CREATE TABLE `ota_bookings` (
   `xml_out` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE `ota_xml_logs` (
+  `xml_log_id` int(11) NOT NULL,
+  `xml_in` text,
+  `xml_out` text,
+  `datetime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `ota_x_company_id` int(11) DEFAULT NULL,
+  `request_type` tinyint(1) DEFAULT NULL,
+  `response_type` tinyint(1) DEFAULT NULL,
+  `ota_id` int(11) DEFAULT NULL,
+  `ota_hotel_id` varchar(16) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE `hoteli_pay_bank_details` (
+  `id` bigint(20) NOT NULL,
+  `company_id` bigint(20) NOT NULL,
+  `bank_code` varchar(100) DEFAULT NULL,
+  `owner_name` varchar(100) DEFAULT NULL,
+  `cpf_cnpj` varchar(100) DEFAULT NULL,
+  `agency` bigint(20) DEFAULT NULL,
+  `bank_account_number` bigint(20) DEFAULT NULL,
+  `bank_account_digit` bigint(20) DEFAULT NULL,
+  `account_type` varchar(100) DEFAULT NULL,
+  `amount` decimal(10,2) DEFAULT NULL,
+  `transfer_id` varchar(255) DEFAULT NULL,
+  `transfer_status` varchar(100) DEFAULT NULL,
+  `created_date` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 --
 -- Indexes for dumped tables
 --
@@ -22156,6 +22185,7 @@ ALTER TABLE `ota_x_company`
 ALTER TABLE `ota_bookings`
   ADD PRIMARY KEY (`id`);
 
+
 --
 -- AUTO_INCREMENT for dumped tables
 --
@@ -22502,6 +22532,37 @@ ALTER TABLE `customer_card_detail` CHANGE `id` `id` BIGINT(20) NOT NULL AUTO_INC
 CHANGE `evc_card_status` `evc_card_status` INT(11) NULL COMMENT '1 = true, 0 = false',
 CHANGE `card_name` `card_name` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
 CHANGE `customer_id` `customer_id` BIGINT(20) NULL, CHANGE `is_card_deleted` `is_card_deleted` INT(10) NOT NULL DEFAULT '0';
+
+ALTER TABLE `ota_xml_logs`
+  ADD PRIMARY KEY (`xml_log_id`);
+
+ALTER TABLE `hoteli_pay_bank_details`
+  ADD PRIMARY KEY (`id`);
+  
+ALTER TABLE `ota_xml_logs`
+  MODIFY `xml_log_id` int(11) NOT NULL AUTO_INCREMENT;
+COMMIT;
+
+ALTER TABLE `hoteli_pay_bank_details`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+COMMIT;
+
+ALTER TABLE `ota_xml_logs` CHANGE `ota_hotel_id` `ota_property_id` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
+
+ALTER TABLE `ota_xml_logs` CHANGE `request_type` `request_type` TINYINT(1) NULL DEFAULT NULL COMMENT '0=AVAILABILITY_UPDATE, 1=RATE_UPDATE, 2=BOOKING_RETRIEVAL, 3=GET_ROOM_TYPES_AND_RATES';
+
+ALTER TABLE `ota_xml_logs` CHANGE `response_type` `response_type` TINYINT(1) NULL DEFAULT NULL COMMENT '0=SUCCESS, 1=ERROR, 2=WARNING';
+
+ALTER TABLE `booking` ADD `is_invoice_auto_sent` TINYINT(1) NOT NULL DEFAULT '0' AFTER `residual_rate`;
+
+ALTER TABLE `invoice_log` CHANGE `booking_id` `booking_id` BIGINT(20) NULL, 
+CHANGE `date_time` `date_time` DATETIME NULL, 
+CHANGE `user_id` `user_id` BIGINT(20) NULL, 
+CHANGE `action_id` `action_id` INT(2) NULL COMMENT '\'1\' : Add Charge , \'2\' : Edit Charge, \'3\' : Delete Charge ,\'4\' : \'Add Payment\' , \'5\' : Refund Payment , \'6\' : Delete Payment', 
+CHANGE `log` `log` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL, 
+CHANGE `charge_or_payment_id` `charge_or_payment_id` BIGINT(20) NULL, 
+CHANGE `new_amount` `new_amount` DECIMAL(10,2) NULL;
+
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

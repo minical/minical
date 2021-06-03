@@ -520,8 +520,6 @@ class Night_audit {
 		}
         
 		// insert all charges in one transaction
-        $charge_data['customer_id'] = 0;
-
 		$response = $this->ci->Charge_model->insert_charges($company_id, $charge_data);
         //$this->ci->Charge_model->insert_charges($company_id, $charge_data);
         //invoice log

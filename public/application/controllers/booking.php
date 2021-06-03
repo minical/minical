@@ -1916,7 +1916,7 @@ class Booking extends MY_Controller
                     $new_data['booking']['booking_customer_id'] = $paying_customer_id;
                 }
             } else {
-                $new_data['booking']['booking_customer_id'] = '';
+                $new_data['booking']['booking_customer_id'] = 0;
             }
 
 

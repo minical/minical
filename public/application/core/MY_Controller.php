@@ -229,7 +229,7 @@ class MY_Controller extends CI_Controller {
             $this->is_super_admin = ($user['email'] == SUPER_ADMIN || $this->user_id == $admin_user_ids['admin_user_id']);
 
             if($this->is_super_admin){
-                $get_active_extensions = $this->Extension_model->get_active_extensions($this->company_id, 'reseller_package');
+                $get_active_extensions = $this->Extension_model->get_active_extensions($this->company_id, 'reseller_package', false);
                 if(empty($get_active_extensions) && $this->company_id){
                     $new_extensions = array(
                                     'extension_name' => 'reseller_package',

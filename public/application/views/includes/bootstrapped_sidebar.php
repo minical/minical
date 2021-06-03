@@ -15,7 +15,7 @@ $my_companies = $this->Company_model->get_companies($this->user_id);
 
     <div class="scrollbar-sidebar ps ps--active-y">
         <div class="sidebar__logo ">
-           
+         
             <ul class="multi-properties hide_properties <?=$this->session->userdata('user_role') == "is_housekeeping" ? "hidden" : "";?>">
                 <?php if(count($my_companies) > 1){ ?>
                     <a href='#' id="myPropertyMenu"  data-toggle="dropdown" aria-expanded="true" tabindex="-1">
@@ -50,7 +50,7 @@ $my_companies = $this->Company_model->get_companies($this->user_id);
                         </ul>
                     <?php } ?>
                 </ul>
-            
+                
             </div>
             <div class="app-sidebar__inner">
                 <ul class="vertical-nav-menu metismenu">
@@ -168,52 +168,60 @@ $my_companies = $this->Company_model->get_companies($this->user_id);
 
                             <?php } } ?>
 
-                            <?php 
+                           <?php 
                             if(count($module_menus) > 0){
                                 foreach($module_menus as $key => $mod_menu){ 
                                     foreach($mod_menu as $key1 => $m_menu){ 
                                         if($m_menu['location'] == 'PRIMARY'){ ?>
                                             <li class="<?php if ($first_segment  == $m_menu['link']) echo 'mm-active'; ?>">
-                                                    <?php if($m_menu['link'] == ''){ ?> 
-                                                            <a href="#" aria-expanded="<?php if ($first_segment.'/'.$second_segment  ==  $m_menu['link'])  echo true; ?>">
-                                                                <i class="metismenu-icon pe-7s-note2"></i>
-                                                                <?php echo l($m_menu['label']);?>
-                                                                <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
-                                                            </a>
-                                                    <?php }else{ ?>
-                                                                <a class="<?php if ($first_segment.'/'.$second_segment  ==  $m_menu['link']) 
-                                                                    echo 'mm-active'; ?>" href="<?php echo base_url().$m_menu['link'];?>">
-                                                                    <?php echo l($m_menu["label"]);?>
-                                                                    <i class="metismenu-icon pe-7s-menu"></i>
-                                                                </a>
-                                                    <?php }?>
-                                        <?php } 
-                                        elseif($m_menu['location'] == 'SECONDARY'){
-                                            if( ucwords($m_menu['parent_menu']) == $mod_menu[0]['label']){ ?>
-                                                <ul class="mm-collapse <?php if ($first_segment.'/'.$second_segment  ==  $m_menu['link']) echo   'mm-show'; ?>">
-                                                    <li class="<?php if ($first_segment.'/'.$second_segment   == $m_menu['link']) echo 'mm-active'; ?>">
-                                                        <a class="<?php if ($first_segment.'/'.$second_segment  ==  $m_menu['link']) 
-                                                                echo 'mm-active'; ?>" 
-                                                            href="<?php echo base_url().$m_menu['link'];?>">
-                                                            <?php echo l($m_menu['label']);?>
+                                                <?php if($m_menu['link'] == ''){ ?> 
+                                                    <a href="#" aria-expanded="<?php if ($first_segment.'/'.$second_segment  ==  $m_menu['link'])  echo true; ?>">
+                                                        <i class="metismenu-icon pe-7s-note2"></i>
+                                                        <?php echo l($m_menu['label']);?>
+                                                        <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                                                    </a>
+                                                <?php } else { 
+                                                    if($m_menu["label"] == 'Hoteli.pay') {
+                                                        if( $this->selected_payment_gateway == 'asaas' ){ ?>
+                                                            <a class="<?php if ($first_segment.'/'.$second_segment  ==  $m_menu['link']) 
+                                                            echo 'mm-active'; ?>" href="<?php echo base_url().$m_menu['link'];?>">
+                                                            <?php echo l($m_menu["label"]);?>
+                                                            <i class="metismenu-icon pe-7s-cash"></i>
                                                         </a>
-                                                    </li>
-                                                </ul>
-                                            <?php }
+                                                    <?php } } else { ?>
+
+                                                        <a class="<?php if ($first_segment.'/'.$second_segment  ==  $m_menu['link']) 
+                                                        echo 'mm-active'; ?>" href="<?php echo base_url().$m_menu['link'];?>">
+                                                        <?php echo l($m_menu["label"]);?>
+                                                        <i class="metismenu-icon pe-7s-menu"></i>
+                                                    </a>
+                                                <?php } } }
+                                                elseif($m_menu['location'] == 'SECONDARY'){
+                                                    if( ucwords($m_menu['parent_menu']) == $mod_menu[0]['label']){ ?>
+                                                        <ul class="mm-collapse <?php if ($first_segment.'/'.$second_segment ==  $m_menu['link']) echo   'mm-show'; ?>">
+                                                            <li class="<?php if ($first_segment.'/'.$second_segment  == $m_menu['link']) echo 'mm-active'; ?>">
+                                                                <a class="<?php if ($first_segment.'/'.$second_segment  ==  $m_menu['link']) 
+                                                                echo 'mm-active'; ?>" 
+                                                                href="<?php echo base_url().$m_menu['link'];?>">
+                                                                <?php echo l($m_menu['label']);?>
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                <?php }
                                             } 
                                         } ?>
                                     </li>
-                            <?php  } 
-                                } ?>
-                            </ul>
+                                <?php  } 
+                            } ?>
+                        </ul>
                     </div>
 
-          
-    
+                    
+                    
 
                 </div>
 
-                   <ul class="ui-theme-settings">
+                <ul class="ui-theme-settings">
 
                     <?php $languages = get_enabled_languages();
                     $current_language = $this->session->userdata('language'); ?>
@@ -253,7 +261,7 @@ $my_companies = $this->Company_model->get_companies($this->user_id);
                                 <div class="dropdown-menu-header-inner bg-dark">
                                     <div class="menu-header-content">
                                         <h5 class="menu-header-title"><?php echo($this->session->userdata('email'));?></h5>
-                                       <hr/>
+                                        <hr/>
                                     </div>
                                 </div>
                             </div>
@@ -276,7 +284,7 @@ $my_companies = $this->Company_model->get_companies($this->user_id);
 
                     </div>
                 </li>
-        </ul>
-           
-    </div>
+            </ul>
+            
+        </div>
         

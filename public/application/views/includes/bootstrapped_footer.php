@@ -29,14 +29,14 @@
 </div>
 
 <input type="hidden" id="currentCompanyId" value="<?php echo $this->company_id; ?>"/>
-<input type="hidden" id="companySubscriptionLevel" value="<?php echo $this->company_subscription_level; ?>"/>
-<input type="hidden" id="companySubscriptionState" value="<?php echo $this->company_subscription_state; ?>">
-<input type="hidden" id="companyFeatureLimit" value="<?php echo $this->company_feature_limit; ?>">
-<input type="hidden" id="RoomSingular" value="<?php echo $this->default_room_singular; ?>">
-<input type="hidden" id="RoomPlular" value="<?php echo $this->default_room_plural; ?>">
-<input type="hidden" id="RoomType" value="<?php echo $this->default_room_type; ?>">
-<input type="hidden" id="CheckInTime" value="<?php echo $this->default_checkin_time; ?>">
-<input type="hidden" id="CheckOutTime" value="<?php echo $this->default_checkout_time; ?>">
+<input type="hidden" id="companySubscriptionLevel" value="<?php echo isset($this->company_subscription_level) && $this->company_subscription_level ? $this->company_subscription_level : 0; ?>"/>
+<input type="hidden" id="companySubscriptionState" value="<?php echo isset($this->company_subscription_state) && $this->company_subscription_state ? $this->company_subscription_state : 0; ?>">
+<input type="hidden" id="companyFeatureLimit" value="<?php echo isset($this->company_feature_limit) && $this->company_feature_limit ? $this->company_feature_limit : ''; ?>">
+<input type="hidden" id="RoomSingular" value="<?php echo isset($this->default_room_singular) && $this->default_room_singular ? $this->default_room_singular : ''; ?>">
+<input type="hidden" id="RoomPlular" value="<?php echo isset($this->default_room_plural) && $this->default_room_plural ? $this->default_room_plural : ''; ?>">
+<input type="hidden" id="RoomType" value="<?php echo isset($this->default_room_type) && $this->default_room_type ? $this->default_room_type : ''; ?>">
+<input type="hidden" id="CheckInTime" value="<?php echo isset($this->default_checkin_time) && $this->default_checkin_time ? $this->default_checkin_time : ''; ?>">
+<input type="hidden" id="CheckOutTime" value="<?php echo isset($this->default_checkout_time) && $this->default_checkout_time ? $this->default_checkout_time : ''; ?>">
 
 
 <script type="text/javascript">
