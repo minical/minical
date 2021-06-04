@@ -160,7 +160,7 @@ $my_companies = $this->Company_model->get_companies($this->user_id);
                                 </li>
                             <?php } else { 
                                 ?>
-                                <?php if(ucwords(l($m_menu['name'])) != 'Extensions'){?>
+                                <?php if($m_menu['link'] != 'extensions'){?>
                                 <li class="<?php if ($first_segment == $m_menu['link'] ) echo 'mm-active'; ?>">
                                     <a class="<?php if ($first_segment == $m_menu['link'] ) echo 'mm-active'; ?>" href="<?php echo base_url().$m_menu['link']; ?>">
                                         <i class="<?php echo $m_menu['icon']; ?>"></i>
@@ -228,7 +228,7 @@ $my_companies = $this->Company_model->get_companies($this->user_id);
                         $sub_menu_max_key = count($sub_menus) > 0 ? max(array_keys($sub_menus)) : 1;
                         $sub_menu_max_key = $sub_menu_max_key + 1;
 
-                         if(ucwords(l($m_menu['name'])) == 'Extensions'){?>
+                         if($m_menu['link'] == 'extensions'){?>
                                 <li class="<?php if ($first_segment == $m_menu['link'] ) echo 'mm-active'; ?>">
                                     <a class="<?php if ($first_segment == $m_menu['link'] ) echo 'mm-active'; ?>" href="<?php echo base_url().$m_menu['link']; ?>">
                                         <i class="<?php echo $m_menu['icon']; ?>"></i>
