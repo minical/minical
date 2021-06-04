@@ -45,7 +45,7 @@
 
 .fc-event-container .fc-event {
     height: 25px;
-    margin-top: 3px;
+    margin-top: 8px;
     border-radius: 3px;
 }
 .fc-event-container .fc-event.border-red {
