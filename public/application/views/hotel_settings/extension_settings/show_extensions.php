@@ -45,13 +45,20 @@ $bootstrapColWidth = 12 / $numOfCols;
     </div>
 
             <div class="features-div-padding">
-
+            
                 <div class="checkbox checbox-switch switch-primary" style="margin-bottom: 5px;margin-top: 5px">
-                    <a href="<?php  if(isset( $extension['setting_link']) && $extension['setting_link'] ){echo $extension['setting_link']; }else{
+                    <a href="<?php  if(isset( $extension['setting_link']) && $extension['setting_link'] ){echo $extension           ['setting_link']; }else{
                         echo '';}?>" 
                         class="ml-4"
                         style="font-size: 25px;"
-                        name="<?php echo $extension['extension_folder_name']; ?>" data-status="<?php echo $extension['is_active']; ?>"><?php echo $extension['is_active'] == 1 ? '<i class="pe-7s-config text-primary"></i>' : ''; ?>
+                        name="<?php echo $extension['extension_folder_name']; ?>"
+                        data-status="<?php echo $extension['is_active']; ?>">
+                        
+                        <?php if($extension['is_active'] == 1 && $extension['setting_link'] !=null){
+                            echo '<i class="pe-7s-config text-primary"></i>';
+                        }else{
+                            echo '';
+                        } ?>
                             
                         </a> 
                     <label class="extension-box" style="padding-right: 1.5rem !important;">
