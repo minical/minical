@@ -108,8 +108,21 @@
 }
 
 .fc-resource-area.fc-widget-content td:first-child {
+    height: 30px;
     position:relative;
     cursor: pointer;
+}
+
+.fc-time-area .fc-rows td>div {
+    height: 36px;
+}
+
+.fc-event-container .fc-event {
+    height: 25px;
+     top: -4px;
+   
+    margin-top: 4.4px !important;
+    border-radius: 3px;
 }
 
 .group-booking .fc-title {
