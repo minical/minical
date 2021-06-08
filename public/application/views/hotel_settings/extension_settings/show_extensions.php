@@ -73,7 +73,7 @@ $bootstrapColWidth = 12 / $numOfCols;
                         data-status="<?php echo $extension['is_active']; ?>">
                         
                         <?php if($extension['is_active'] == 1 && $extension['view_link'] !=null){
-                            echo '<i class="pe-7s-info text-primary"></i>';
+                            echo '<i class="pe-7s-look  text-primary"></i>';
                         }?>
                        </a>
                     <label class="extension-box" style="padding-right: 1.5rem !important;">
