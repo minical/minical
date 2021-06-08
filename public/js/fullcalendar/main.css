@@ -1,6 +1,12 @@
 #calendar {
     margin-top: 10px;
 }
+
+.fc-scroller {
+    overflow-y: hidden !important;
+    overflow-x: hidden !important;
+}
+
 .column-title-date {
     font-size: 10px;
     font-weight: normal;
