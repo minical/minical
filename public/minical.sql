@@ -981,14 +981,15 @@ CREATE TABLE `customer_x_customer_field` (
 
 CREATE TABLE `date_color` (
   `id` int(11) NOT NULL,
-  `name` varchar(50) NOT NULL,
-  `start_date` date NOT NULL,
-  `end_date` date NOT NULL,
-  `color_code` varchar(50) NOT NULL,
+  `name` varchar(50) DEFAULT NULL,
+  `start_date` date DEFAULT NULL,
+  `end_date` date DEFAULT NULL,
+  `color_code` varchar(50) DEFAULT NULL,
   `company_id` bigint(20) NOT NULL,
-  `user_id` bigint(20) NOT NULL,
+  `user_id` bigint(20) DEFAULT NULL,
   `is_deleted` int(11) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 -- --------------------------------------------------------
 
@@ -21183,6 +21184,9 @@ INSERT INTO `menu` (`id`, `name`, `link`, `icon`, `parent_id`, `partner_type_id`
 (29, 'company', 'settings/company', '', 6, 1),
 (30, 'accounting', 'settings/accounting', '', 6, 1),
 (32, 'room inventory', 'settings/room_inventory', '', 6, 1),
+(33, 'rates', 'settings/rates', '', 6, 1),
+(34, 'rate plans', 'settings/rates/rate_plans', '', 33, 1),
+(35, 'products', 'settings/rates/products', '', 33, 1),
 (38, 'general information', 'settings/company/general', '', 29, 1),
 (39, 'Team', 'settings/company/employees', '', 29, 1),
 (43, 'charge types', 'settings/accounting/charge_types', '', 30, 1),
@@ -21191,8 +21195,13 @@ INSERT INTO `menu` (`id`, `name`, `link`, `icon`, `parent_id`, `partner_type_id`
 (48, 'rooms', 'settings/room_inventory/rooms', '', 32, 1),
 (49, 'room types', 'settings/room_inventory/room_types', '', 32, 1),
 (78, 'feature settings', 'settings/company/feature_settings', '', 29, 1),
-(87, 'API access', 'settings/api_access', '', 6, 1);
-
+(87, 'API access', 'settings/api_access', '', 6, 1),
+(88, 'Customer', 'settings/customer', '', 6, 1),
+(89, 'Booking', 'settings/booking', '', 6, 1),
+(90, 'booking source', 'settings/reservations/booking_source', '', 89, 1),
+(91, 'booking fields', 'settings/reservations/booking_fields', '', 89, 1),
+(92, 'customer types', 'settings/reservations/customer_types', '', 88, 1),
+(93, 'customer fields', 'settings/reservations/customer_fields', '', 88, 1);
 
 
 -- --------------------------------------------------------
