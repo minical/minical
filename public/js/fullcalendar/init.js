@@ -707,7 +707,7 @@ innGrid.bookingResized = function (info) {
                 end2: encodeURIComponent(dateTo2)
             },
             success: function(data){
-                if (data != "success") {
+                if (data.trim() != "success") {
                     alert(data);
                     info.revert();
                 } else {
