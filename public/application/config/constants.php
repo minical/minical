@@ -111,8 +111,8 @@ define('COMMON_BOOKING_SOURCES',
     );
 
 // Customer Types
-define('BLACKLIST', '1');
-define('VIP', '2');
+define('BLACKLIST', '-1');
+define('VIP', '-2');
 
 // these customer types are hardcoded and common for each user
 define('COMMON_CUSTOMER_TYPES', 
