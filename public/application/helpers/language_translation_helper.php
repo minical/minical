@@ -80,11 +80,12 @@ if ( ! function_exists('get_languages'))
                 if(file_exists($files_path))
                 {
                     require($files_path);
-                    foreach($lang[$module] as $key => $value)
-                    {
-                        $data_arr[strtolower($module.'/'.$key)] = $value;
+                    if(isset($lang[$module])){
+                        foreach($lang[$module] as $key => $value)
+                        {
+                            $data_arr[strtolower($module.'/'.$key)] = $value;
+                        }
                     }
-
                 }
                 else
                 {
