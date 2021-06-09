@@ -64,7 +64,7 @@
 }
 .fc-ltr .fc-h-event .fc-end-resizer, .fc-rtl .fc-h-event .fc-start-resizer {
         cursor: e-resize;
-        right: 0px !important;
+        right: 1px !important;
 }    
 
 .fc-event-container .fc-event .fc-title {

@@ -3857,5 +3857,5 @@ width: 100vh
     right: 0px !important;
 }
 .fc-resizer{
-    width: 0px !important;
+    /* width: 0px !important; */
 }
