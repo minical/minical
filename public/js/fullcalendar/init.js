@@ -544,9 +544,9 @@ function convertToEvents(data) {
 
     for (var i in data) {
         var flag = '';
-        if (data[i].customer_type_id == '1') {
+        if (data[i].customer_type_id == '-1') {
             flag = 'blacklist';
-        } else if (data[i].customer_type_id == '2') {
+        } else if (data[i].customer_type_id == '-2') {
             flag = 'vip';
         }
 
@@ -628,7 +628,7 @@ function occupacyMoved(info) {
                 end2: encodeURIComponent(dateTo2)
             },
             success: function(data){
-                if (data != "success") {
+                if (data.trim()  != "success") {
                     alert(data);
                     info.revert();
                 } else {

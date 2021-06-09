@@ -582,7 +582,7 @@ class PaymentGateway
         $result                                = $credentials;
 
         if ($filter) {
-            $result                             = isset($result[$filter]) ? $result[$filter] : $result['payment_gateway'];
+            $result                             = isset($result[$filter]) ? $result[$filter] : (isset($result['payment_gateway']) && $result['payment_gateway'] ? $result['payment_gateway'] : null);
             $result['selected_payment_gateway'] = $this->selected_gateway; // itodo legacy
         }
 

@@ -1678,8 +1678,8 @@ li.current_language a img {
     background-color:#fff;
     background-clip:border-box;
     border:1px solid rgba(26,54,126,0.125);
-    border-radius:.25rem
-        box-shadow: 0 0.46875rem 2.1875rem rgba(4,9,20,0.03), 0 0.9375rem 1.40625rem rgba(4,9,20,0.03), 0 0.25rem 0.53125rem rgba(4,9,20,0.05), 0 0.125rem 0.1875rem rgba(4,9,20,0.03);
+    border-radius:.25rem;
+    box-shadow: 0 0.46875rem 2.1875rem rgba(4,9,20,0.03), 0 0.9375rem 1.40625rem rgba(4,9,20,0.03), 0 0.25rem 0.53125rem rgba(4,9,20,0.05), 0 0.125rem 0.1875rem rgba(4,9,20,0.03);
     border-width: 0;
     transition: all .2s;
 }
@@ -3847,3 +3847,15 @@ cursor: pointer;
 width: 100vh
 }
 
+.fix-height{
+    line-height: 0.4;
+}
+
+.fc-ltr .fc-h-event .fc-end-resizer, .fc-rtl .fc-h-event .fc-start-resizer {
+
+    cursor: e-resize !important;
+    right: 0px !important;
+}
+.fc-resizer{
+    width: 0px !important;
+}

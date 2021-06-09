@@ -1,6 +1,12 @@
 #calendar {
     margin-top: 10px;
 }
+
+.fc-scroller {
+    overflow-y: hidden !important;
+    overflow-x: hidden !important;
+}
+
 .column-title-date {
     font-size: 10px;
     font-weight: normal;
@@ -49,8 +55,18 @@
     border-radius: 3px;
 }
 .fc-event-container .fc-event.border-red {
-    border: 0.2rem solid red !important;
+    height: 20px !important;
+     border: 2px solid red !important;
 }
+
+.fc-event.border-red{
+    top: 0.3px !important;
+}
+.fc-ltr .fc-h-event .fc-end-resizer, .fc-rtl .fc-h-event .fc-start-resizer {
+        cursor: e-resize;
+        right: 0px !important;
+}    
+
 .fc-event-container .fc-event .fc-title {
     font-size: 15px;
 }
