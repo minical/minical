@@ -99,7 +99,7 @@ class Calendar extends MY_Controller
 			$error_message = l("Warning: In-house guest's check-in date cannot change", true);			
 		}
 		elseif ($state == CHECKOUT) {
-			$error_message = l("Warning: Checked-out cannot be modified", true);
+			$error_message = l("Warning: Already checked-out booking cannot be modified", true);
 		}
 		elseif ($this->Booking_room_history_model->check_if_booking_exists_between_two_dates($room_id, $start2, $end2, $booking_id)) {
 			$error_message = l("Warning: This room is already occupied", true);
@@ -107,7 +107,7 @@ class Calendar extends MY_Controller
 		if ($error_message != "")
 		{
 			echo $error_message;
-			return;
+			return true;
 		}
 		
 		$latest_booking_room_history_data = $this->Booking_room_history_model->get_latest_booking_room_history($booking_id);
@@ -145,8 +145,8 @@ class Calendar extends MY_Controller
             $this->_update_booking_rate_plan($booking_id, $destination);
             $this->Booking_model->update_booking_balance($booking_id);
             
-			echo l("success",true);
-			return;
+			echo "success";
+			return true;
 			
 			
 		}
