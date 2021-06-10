@@ -13,8 +13,8 @@ $(document).on('click', '.extension-status-button', function () {
 
     var extension_action = extensionStatus == 1 ? "deactivate" : "activate";
 	
-	var r = confirm(l('Are you sure you want to '+extension_action+' this extension?'));
-	if (r == true) {
+	//var r = confirm(l('Are you sure you want to '+extension_action+' this extension?'));
+	//if (r == true) {
 	    $.post(getBaseURL() + 'extensions/change_extension_status', {
 		extension_name: extensionName,
         extension_status: extensionStatus
@@ -26,5 +26,5 @@ $(document).on('click', '.extension-status-button', function () {
 					//alert(results.message);
 				}
 			}, 'json');
-	}
+	//}
 });

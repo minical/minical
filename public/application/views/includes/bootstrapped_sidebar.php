@@ -79,7 +79,169 @@ $my_companies = $this->Company_model->get_companies($this->user_id);
                             }
                         }
 
-                        if(count($sub_menus) > 0){ ?>
+                        if(count($sub_menus) > 0 && $m_menu['link'] != 'settings'){ ?>
+                            <li class="<?php if ($first_segment == $m_menu['link']) echo 'mm-active'; ?>">
+                                <a href="#" > 
+                                    <i class="<?php echo $m_menu['icon']; ?>"></i>
+                                    <?php echo ucwords(l($m_menu['name'])); ?> 
+                                    <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                                </a>
+                                <ul class="mm-collapse <?php if ($first_segment ==  $m_menu['link']) echo 'mm-show'; ?>">
+                                    <?php 
+                                    $unique_submenu = array_unique($sub_menus,SORT_REGULAR);
+
+                                    foreach($unique_submenu as $m_menu_one) { 
+                                        if(isset($m_menu_one['id']) && $m_menu_one['id'])
+                                            $sidebar_menus = $this->Menu_model->get_menus(array('parent_id' => $m_menu_one['id'], 'partner_type_id' => 1));
+
+
+                                        $sidebar_menu_max_key = count($sidebar_menus) > 0 ? max(array_keys($sidebar_menus)) : 1;
+                                        $sidebar_menu_max_key = $sidebar_menu_max_key + 1;
+
+                                        foreach ($module_menus as $module_sidebar_menus) {
+                                            foreach ($module_sidebar_menus as $key => $value) {
+                                                if($value['location'] == "THIRD"){
+                                                    if(isset($value['parent_menu']) && $value['parent_menu']){
+                                                        $ext_menu = explode('/', $value['parent_menu']);
+                                                    }
+                                                    if(isset($value['parent_menu']) && 
+                                                        ucwords($ext_menu[0]) == ucwords($m_menu['name']) && 
+                                                        ucwords($ext_menu[1]) == ucwords($m_menu_one['name'])
+                                                    ) 
+                                                    {
+                                                        $side_menus['id'] = null;
+                                                        $side_menus['name'] = $value['label'];
+                                                        $side_menus['link'] = $value['link'];
+                                                        $side_menus['icon'] = null;
+                                                        $side_menus['parent_id'] = null;
+                                                        $side_menus['partner_type_id'] = null;
+
+                                                        $sidebar_menus[] = $side_menus;
+                                                    }
+                                                }
+                                            }
+                                        }
+
+                                        if(count($sidebar_menus) > 0) { ?>
+                                            <li class="<?php if ($first_segment.'/'.$second_segment ==  $m_menu_one['link']) echo 'mm-active'; ?>">
+                                                <a href="#">
+                                                    <i class="metismenu-icon"></i>
+                                                    <?php echo ucwords(l($m_menu_one['name'])); ?>
+                                                    <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                                                </a>
+                                                <ul class="mm-collapse <?php if ($first_segment.'/'.$second_segment ==  $m_menu_one['link']) echo 'mm-show'; ?>">
+                                                    <?php  
+                                                    foreach($sidebar_menus as $m_menu_two) { ?>
+                                                        <li class="<?php if ($first_segment.'/'.$second_segment.'/'.$third_segment == $m_menu_two['link']) echo 'mm-active'; ?>">
+                                                            <a class="<?php if ($first_segment.'/'.$second_segment.'/'.$third_segment ==  $m_menu_two['link']) echo 'mm-active'; ?>" href="<?php echo base_url().$m_menu_two['link']; ?>">
+                                                                <i class="metismenu-icon"></i>
+                                                                <?php echo ucwords(l($m_menu_two['name'])); ?>
+                                                            </a>
+                                                        </li>
+                                                    <?php } $sidebar_menus = array(); ?>
+                                                </ul>
+                                            </li>
+                                        <?php } else { ?>
+
+                                            <li class="<?php if ($first_segment.'/'.$second_segment == $m_menu_one['link']) echo 'mm-active'; ?>">
+                                                <a class="<?php if (($first_segment ==  $m_menu_one['link']) || ($first_segment.'/'.$second_segment ==  $m_menu_one['link']) || ($first_segment.'/'.$second_segment.'/'.$third_segment ==  $m_menu_one['link'])) echo 'mm-active'; ?>" href="<?php echo base_url().$m_menu_one['link']; ?>">
+                                                    <i class="<?php echo $m_menu_one['icon']; ?>"></i>
+                                                    <?php
+                                                    echo ucwords(l($m_menu_one['name']));
+                                                    ?>
+                                                </a>
+                                            </li>
+
+                                        <?php } } ?>
+                                    </ul>
+                                </li>
+                            <?php } elseif($m_menu['link'] != 'extensions' && $m_menu['link'] != 'settings') { ?>
+
+                                <li class="<?php if ($first_segment == $m_menu['link']) echo 'mm-active'; ?>">
+                                    <a class="<?php if ($first_segment == $m_menu['link']) echo 'mm-active'; ?>" href="<?php echo base_url().$m_menu['link']; ?>">
+                                        <i class="<?php echo $m_menu['icon']; ?>"></i>
+                                        <?php
+                                        echo ucwords(l($m_menu['name']));
+                                        ?>
+                                    </a>
+                                </li>
+
+                            <?php } } ?>
+
+                            <?php 
+                            if(count($module_menus) > 0){
+                                foreach($module_menus as $key => $mod_menu){ 
+                                    foreach($mod_menu as $key1 => $m_menu){
+                                        if($m_menu['location'] == 'PRIMARY'){ ?>
+                                            <li class="<?php if ($first_segment  == $m_menu['link']) echo 'mm-active'; ?>">
+                                                <?php if($m_menu['link'] == ''){ ?> 
+                                                    <a href="#" aria-expanded="<?php if ($first_segment.'/'.$second_segment  ==  $m_menu['link'])  echo true; ?>">
+                                                        <i class="metismenu-icon pe-7s-note2"></i>
+                                                        <?php echo l($m_menu['label']);?>
+                                                        <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                                                    </a>
+                                                <?php } else { 
+                                                    if($m_menu["label"] == 'Hoteli.pay') {
+                                                        if( $this->selected_payment_gateway == 'asaas' ){ ?>
+                                                            <a class="<?php if ($first_segment.'/'.$second_segment  ==  $m_menu['link']) 
+                                                            echo 'mm-active'; ?>" href="<?php echo base_url().$m_menu['link'];?>">
+                                                            <?php echo l($m_menu["label"]);?>
+                                                            <i class="metismenu-icon pe-7s-menu"></i>
+                                                        </a>
+                                                    <?php } } else { ?>
+
+                                                        <a class="<?php if ($first_segment.'/'.$second_segment  ==  $m_menu['link']) 
+                                                        echo 'mm-active'; ?>" href="<?php echo base_url().$m_menu['link'];?>">
+                                                        <?php echo l($m_menu["label"]);?>
+                                                        <i class="metismenu-icon pe-7s-menu"></i>
+                                                    </a>
+                                                <?php } } }
+                                                elseif($m_menu['location'] == 'SECONDARY'){
+                                                    if( ucwords($m_menu['parent_menu']) == $mod_menu[0]['label']){ ?>
+                                                        <ul class="mm-collapse <?php if ($first_segment ==  $m_menu['link']) echo   'mm-show'; ?>">
+                                                            <li class="<?php if ($first_segment  == $m_menu['link']) echo 'mm-active'; ?>">
+                                                                <a class="<?php if ($first_segment.'/'.$second_segment  ==  $m_menu['link']) 
+                                                                echo 'mm-active'; ?>" 
+                                                                href="<?php echo base_url().$m_menu['link'];?>">
+                                                                <?php echo l($m_menu['label']);?>
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                <?php }
+                                            } 
+                                        } ?>
+                                    </li>
+                                <?php  } 
+                            } ?>
+
+
+                        <!-- Only for extensions and settings menus -->
+                        <?php foreach($primary_menus as $m_menu){ ?>
+
+                        <?php $sub_menus = $this->Menu_model->get_menus(array('parent_id' => $m_menu['id'], 'partner_type_id' => 1)); ?>
+                        <?php 
+                        
+                        $sub_menu_max_key = count($sub_menus) > 0 ? max(array_keys($sub_menus)) : 1;
+                        $sub_menu_max_key = $sub_menu_max_key + 1;
+
+                        foreach ($module_menus as $module_sub_menus) {
+                            foreach ($module_sub_menus as $key => $value) {
+                                if($value['location'] == "SECONDARY"){
+                                    if(isset($value['parent_menu']) && ucwords($value['parent_menu']) == ucwords($m_menu['name'])){
+                                        $sub_menus[$sub_menu_max_key]['id'] = null;
+                                        $sub_menus[$sub_menu_max_key]['name'] = $value['label'];
+                                        $sub_menus[$sub_menu_max_key]['link'] = $value['link'];
+                                        $sub_menus[$sub_menu_max_key]['icon'] = null;
+                                        $sub_menus[$sub_menu_max_key]['parent_id'] = null;
+                                        $sub_menus[$sub_menu_max_key]['partner_type_id'] = null;
+
+                                        $sub_menu_max_key = $sub_menu_max_key + 1;
+                                    }
+                                }
+                            }
+                        }
+
+                        if(count($sub_menus) > 0 && $m_menu['link'] == 'settings'){ ?>
                             <li class="<?php if ($first_segment == $m_menu['link']) echo 'mm-active'; ?>">
                                 <a href="#" > 
                                     <i class="<?php echo $m_menu['icon']; ?>"></i>
@@ -155,7 +317,7 @@ $my_companies = $this->Company_model->get_companies($this->user_id);
                                         <?php } } ?>
                                     </ul>
                                 </li>
-                            <?php } else { ?>
+                            <?php } elseif($m_menu['link'] == 'extensions') { ?>
 
                                 <li class="<?php if ($first_segment == $m_menu['link']) echo 'mm-active'; ?>">
                                     <a class="<?php if ($first_segment == $m_menu['link']) echo 'mm-active'; ?>" href="<?php echo base_url().$m_menu['link']; ?>">
@@ -168,51 +330,10 @@ $my_companies = $this->Company_model->get_companies($this->user_id);
 
                             <?php } } ?>
 
-                            <?php 
-                            if(count($module_menus) > 0){
-                                foreach($module_menus as $key => $mod_menu){ 
-                                    foreach($mod_menu as $key1 => $m_menu){
-                                        if($m_menu['location'] == 'PRIMARY'){ ?>
-                                            <li class="<?php if ($first_segment  == $m_menu['link']) echo 'mm-active'; ?>">
-                                                <?php if($m_menu['link'] == ''){ ?> 
-                                                    <a href="#" aria-expanded="<?php if ($first_segment.'/'.$second_segment  ==  $m_menu['link'])  echo true; ?>">
-                                                        <i class="metismenu-icon pe-7s-note2"></i>
-                                                        <?php echo l($m_menu['label']);?>
-                                                        <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
-                                                    </a>
-                                                <?php } else { 
-                                                    if($m_menu["label"] == 'Hoteli.pay') {
-                                                        if( $this->selected_payment_gateway == 'asaas' ){ ?>
-                                                            <a class="<?php if ($first_segment.'/'.$second_segment  ==  $m_menu['link']) 
-                                                            echo 'mm-active'; ?>" href="<?php echo base_url().$m_menu['link'];?>">
-                                                            <?php echo l($m_menu["label"]);?>
-                                                            <i class="metismenu-icon pe-7s-menu"></i>
-                                                        </a>
-                                                    <?php } } else { ?>
 
-                                                        <a class="<?php if ($first_segment.'/'.$second_segment  ==  $m_menu['link']) 
-                                                        echo 'mm-active'; ?>" href="<?php echo base_url().$m_menu['link'];?>">
-                                                        <?php echo l($m_menu["label"]);?>
-                                                        <i class="metismenu-icon pe-7s-menu"></i>
-                                                    </a>
-                                                <?php } } }
-                                                elseif($m_menu['location'] == 'SECONDARY'){
-                                                    if( ucwords($m_menu['parent_menu']) == $mod_menu[0]['label']){ ?>
-                                                        <ul class="mm-collapse <?php if ($first_segment ==  $m_menu['link']) echo   'mm-show'; ?>">
-                                                            <li class="<?php if ($first_segment  == $m_menu['link']) echo 'mm-active'; ?>">
-                                                                <a class="<?php if ($first_segment.'/'.$second_segment  ==  $m_menu['link']) 
-                                                                echo 'mm-active'; ?>" 
-                                                                href="<?php echo base_url().$m_menu['link'];?>">
-                                                                <?php echo l($m_menu['label']);?>
-                                                            </a>
-                                                        </li>
-                                                    </ul>
-                                                <?php }
-                                            } 
-                                        } ?>
-                                    </li>
-                                <?php  } 
-                            } ?>
+
+
+
                         </ul>
                     </div>
 
