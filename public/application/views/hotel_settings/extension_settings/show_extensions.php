@@ -39,10 +39,10 @@ $bootstrapColWidth = 12 / $numOfCols;
                 $extension_name = str_replace("_"," ",$name);
                 echo ucwords(l($extension_name, true)); ?></b>
                  <div>
-                 <?php if(isset($extension['is_admin_module'])){ ?>
+                 <?php if(isset($extension['is_admin_module']) && $extension['is_admin_module']){ ?>
                     <span style="font-size: 11px;color: gray;font-weight: 500;padding: 0px 0 5px;">SUPERADMIN ONLY</span>
                  <?php }
-                 elseif(isset($extension['is_vendor_module'])){ ?>
+                 elseif(isset($extension['is_vendor_module']) && $extension['is_vendor_module']){ ?>
                     <span style="font-size: 11px;color: gray;font-weight: 500;padding: 0px 0 5px;">VENDOR ONLY</span>
                  <?php }?>
 
