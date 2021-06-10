@@ -54,6 +54,9 @@ class Extensions extends MY_Controller
                         $extension['setting_link']= isset($module['setting_link'])?$module['setting_link']:"";
 						$extension['view_link']= isset($module['view_link'])?$module['view_link']:"";
                         $extension['marketplace_product_link']= isset($module['marketplace_product_link'])?$module['marketplace_product_link']:"";
+						$extension['is_vendor_module'] = isset($module['is_vendor_module']) && $module['is_vendor_module'] ?true : false;
+						$extension['is_admin_module'] = isset($module['is_admin_module']) && $module['is_admin_module'] ?true : false;
+
 	        			$final_modules[] = $extension;
 	        			$flag = false;
 	        		}
