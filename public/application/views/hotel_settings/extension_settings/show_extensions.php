@@ -40,11 +40,11 @@ $bootstrapColWidth = 12 / $numOfCols;
                 echo ucwords(l($extension_name, true)); ?></b>
                  <div>
                  <?php if(isset($extension['is_admin_module']) && $extension['is_admin_module']){ ?>
-                    <span style="font-size: 11px;color: gray;font-weight: 500;padding: 0px 0 5px;">SUPERADMIN ONLY</span>
-                 <?php }
-                 elseif(isset($extension['is_vendor_module']) && $extension['is_vendor_module']){ ?>
                     <span style="font-size: 11px;color: gray;font-weight: 500;padding: 0px 0 5px;">VENDOR ONLY</span>
-                 <?php }?>
+                 <?php }
+                 //elseif(isset($extension['is_vendor_module']) && $extension['is_vendor_module']){ ?>
+                    <!-- <span style="font-size: 11px;color: gray;font-weight: 500;padding: 0px 0 5px;">VENDOR ONLY</span> -->
+                 <?php //}?>
 
                 <p class="extension-discription" ><?php echo substr($extension['description'], 0,60).'...  '; ?><a href="<?php echo (isset($extension['marketplace_product_link']) && $extension['marketplace_product_link'] ? $extension['marketplace_product_link']: "")?>" style="font-size: 14px">more</a></p>
             </div>
