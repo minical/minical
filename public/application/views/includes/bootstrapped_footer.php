@@ -13,7 +13,7 @@
      echo isset($whitelabelinfo['name']) && $whitelabelinfo['name'] ? $whitelabelinfo['name']." &copy; " . $year ."  " : "Minical Inc."." &copy; " . $year ."  ";
     ?>
 
-    <?php  if(check_active_extensions('terms_and_privacy', $this->company_id)){
+    <?php  //if(check_active_extensions('terms_and_privacy', $this->company_id)){
      if(isset($whitelabelinfo['terms_of_service']) && $whitelabelinfo['terms_of_service']) { ?>
         <a href="<?php echo $whitelabelinfo['terms_of_service']; ?>" target="_blank"><?php echo l('Terms Of Service', true); ?></a>
     <?php } else { ?>
@@ -25,7 +25,7 @@
         <a href="<?php echo $whitelabelinfo['privacy_policy']; ?>" target="_blank"><?php echo l('Privacy Policy', true); ?></a>
     <?php } else { ?>
         <a href="<?php echo base_url();?>auth/privacy_policy" target="_blank"><?php echo l('Privacy Policy', true); ?></a>
-    <?php } }?>
+    <?php } //}?>
 </div>
 
 <input type="hidden" id="currentCompanyId" value="<?php echo $this->company_id; ?>"/>

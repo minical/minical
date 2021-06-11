@@ -3859,3 +3859,12 @@ width: 100vh
 .fc-resizer{
     /* width: 0px !important; */
 }
+
+.admin-main {
+    background-color: #F1F4F6;
+    height: fit-content;
+    min-height: 92vh;
+    padding: 30px 10px 0px 12px;
+    flex: 1;
+}
+

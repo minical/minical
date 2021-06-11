@@ -21,6 +21,10 @@
 				<li>
 					<a href="<?php echo base_url(); ?>admin/whitelabel_partners">Whitelabel Partners</a>
 				</li>
+			<?php else: ?>
+				<li>
+					<a href="<?php echo base_url(); ?>admin/profile_setting">Settings</a>
+				</li>
 			<?php endif; ?>
 			<li>
 				<a href="<?php echo base_url(); ?>auth/logout" >Logout</a>
