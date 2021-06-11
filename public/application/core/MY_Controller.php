@@ -237,6 +237,13 @@ class MY_Controller extends CI_Controller {
                                     'is_active' => 1
                                 );
                     $this->Extension_model->add_extension($new_extensions);
+
+                    $new_extensions = array(
+                                    'extension_name' => 'multi_property_management',
+                                    'company_id' => $this->company_id,
+                                    'is_active' => 1
+                                );
+                    $this->Extension_model->add_extension($new_extensions);
                 }
             }
 
