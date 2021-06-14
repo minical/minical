@@ -63,8 +63,51 @@ $autoload['libraries'] = array('database', 'session');
 |	$autoload['helper'] = array('url', 'file');
 */
 
+
 $autoload['helper'] = array( 'url', 'form', 'global_helper'); 
 
+$modules = $active_extensions = array();
+// load helpers for HMVC (modules)
+$modules_path = APPPATH.'extensions/';
+
+if(isset($_COOKIE['active_extensions']) && $_COOKIE['active_extensions']){
+    $active_extensions = json_decode($_COOKIE['active_extensions'], true);
+}
+
+if($active_extensions){
+    foreach ($active_extensions as $key => $extension) {
+        $modules[] = $extension['extension_name'];
+    }
+}
+
+
+if($modules && count($modules) > 0){
+    foreach($modules as $module)
+    {
+        $extension_helper = array();
+        if($module === '.' || $module === '..') continue;
+        if(is_dir($modules_path) . '/' . $module)
+        {
+            $helpers_path = $modules_path . $module . '/config/autoload.php';
+            if(file_exists($helpers_path))
+            {
+                require($helpers_path);
+
+                if($extension_helper && is_array($extension_helper)){
+    	            foreach($extension_helper as $key => $extension_helper_item) {
+    	                $autoload['helper'][] = '../extensions/'.$module . '/helpers/' . $extension_helper_item;
+    	            }
+    	        }
+            }
+            else
+            {
+                continue;
+            }
+        }
+    }
+}
+
+// echo '<pre>'; print_r($autoload); echo '</pre>';  die;
 
 /*
 | -------------------------------------------------------------------
@@ -113,3 +156,5 @@ $autoload['model'] = array();
 
 /* End of file autoload.php */
 /* Location: ./application/config/autoload.php */
+
+

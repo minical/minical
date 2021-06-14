@@ -87,12 +87,17 @@ class MY_Controller extends CI_Controller {
                 $all_active_modules[$key]['extension_folder_name'] = str_replace(" ","_",$name);
             }
         }
-        
 
-        // if(empty($extensions) || (count($extensions) != count($all_active_modules))){
-            $this->session->set_userdata('all_active_modules', $all_active_modules);
+        $this->session->set_userdata('all_active_modules', $all_active_modules);
 
-        // }
+        $active_extensions = $this->Extension_model->get_active_extensions($this->company_id);
+
+        if($active_extensions){
+            $cookie_name = "active_extensions";
+            $cookie_value = json_encode($active_extensions);
+            setcookie($cookie_name, $cookie_value, time() + (86400), "/");
+        }
+            
 
         $this->module_assets_files = array();
         $modules_path = $this->config->item('module_location');     
@@ -128,12 +133,10 @@ class MY_Controller extends CI_Controller {
             {
                 $module_menu = array();
                 $module_file = $modules_path . $module . '/config/menu.php';
-                //prx($this->permission->is_extension_active($module, $this->company_id));
                 if(file_exists($module_file) && $this->permission->is_extension_active($module, $this->company_id))
                 {
                     require($module_file);
                     $this->module_menus[$module] = $module_menu;
-                    //prx($module);
                 }
                 else
                 {
@@ -141,9 +144,7 @@ class MY_Controller extends CI_Controller {
                 }
             }
         }
-        // echo $this->router->fetch_module(); die;
-        //prx($this->module_menus);
-
+        
         require APPPATH."config/routes.php";
 
         foreach ($module_permission as $module) {

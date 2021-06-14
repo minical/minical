@@ -1795,7 +1795,9 @@ $(function() {
                                     error_html += v.description+'\n';
                                 });
                                 console.log(error_html);
-                                alert(error_html);
+                                $('#display-errors').find('.modal-body').html(error_html.replace(/\n/g,'<br/>'));
+                                $('#display-errors').modal('show');
+                                // alert(error_html);
                             } else {
                                 alert(data.message ? data.message : data);
                             }

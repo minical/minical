@@ -1213,26 +1213,7 @@ class Customer extends MY_Controller {
         unset($customer_data['cc_number']);
 
         $customer_id                 = $this->Customer_model->create_customer($customer_data);
-        // $token                       = sqli_clean($this->security->xss_clean($this->input->post('token')));
         
-        // $cc_tokenex_token            = sqli_clean($this->security->xss_clean($this->input->post('cc_tokenex_token')));
-        // $cc_cvc_encrypted            = sqli_clean($this->security->xss_clean($this->input->post('cc_cvc_encrypted')));
-        
-        // if ($cc_tokenex_token) {
-        //     $customer_data['cc_tokenex_token']  = $cc_tokenex_token;
-        // }
-        // if ($cc_cvc_encrypted) {
-        //     $customer_data['cc_cvc_encrypted']  = $cc_cvc_encrypted;
-        // }
-        
-        // if ($token) {
-        //     try {
-        //         $customer_data = $this->tokenize_cc($token, $customer_id, $customer_data);
-        //     } catch (Exception $e) {
-        //         $error     = true;
-        //         $error_msg = $e->getMessage();
-        //     }
-        // } 
         $card_details = array(
            'is_primary' => 1,
            'customer_id' => $customer_id,
@@ -1241,61 +1222,49 @@ class Customer extends MY_Controller {
            'company_id' => $this->company_id,
            'cc_number' => (isset($customer_data['cc_number'])? $customer_data['cc_number'] : NULL),
            'cc_expiry_month' => (isset($customer_data['cc_expiry_month']) ? $customer_data['cc_expiry_month'] : NULL),
-           'cc_expiry_year' => (isset($customer_data['cc_expiry_year']) ? $customer_data['cc_expiry_year'] : NULL),
-           // 'cc_tokenex_token' => (isset($customer_data['cc_tokenex_token']) ? $customer_data['cc_tokenex_token'] : NULL),
-           // 'cc_cvc_encrypted' => (isset($customer_data['cc_cvc_encrypted']) ? $customer_data['cc_cvc_encrypted'] : NULL)
+           'cc_expiry_year' => (isset($customer_data['cc_expiry_year']) ? $customer_data['cc_expiry_year'] : NULL)
         );
 
-        $payments_gateways = json_decode(PAYMENT_GATEWAYS, true);
-        $new_payment_gateway = false;
+        if(
+            function_exists('tokenize') && 
+            $cc_number && 
+            is_numeric($cc_number) &&
+            !strrpos($cc_number, 'X') && 
+            $cvc && 
+            is_numeric($cvc) &&
+            !strrpos($cvc, '*')
+        ){
 
-        if(!in_array($this->selected_payment_gateway, $payments_gateways)){
-            $new_payment_gateway = true;
-        }
+            $card_data_array = array('card' => 
+                                array(
+                                    'card_number'       => $cc_number,
+                                    'card_type'         => "",
+                                    'cardholder_name'   => (isset($customer_data['customer_name']) ? $customer_data['customer_name'] : ""),
+                                    'service_code'      => $cvc,
+                                    'expiration_month'  => isset($customer_data['cc_expiry_month']) ? $customer_data['cc_expiry_month'] : null,
+                                    'expiration_year'   => isset($customer_data['cc_expiry_year']) ? $customer_data['cc_expiry_year'] : null
+                                )
+                            );
+            $card_response = array();
 
-        if($new_payment_gateway && $this->current_payment_gateway){
-            $this->load->library('../extensions/'.$this->current_payment_gateway.'/libraries/ProcessPayment');
-            switch ($this->selected_payment_gateway) {
-                case 'stripe': 
-                    if(
-                        $cc_number && 
-                        is_numeric($cc_number) &&
-                        !strrpos($cc_number, 'X') && 
-                        $cvc && 
-                        is_numeric($cvc) &&
-                        !strrpos($cvc, '*')
-                    ){
+            if($card_data_array && $card_data_array['card']['card_number'])
+                $card_response = tokenize($card_data_array);
 
-                        $create_token_response = $this->processpayment->create_token($cvc, $cc_number, $card_details['cc_expiry_month'], $card_details['cc_expiry_year']);
+            if(
+                $card_response &&
+                isset($card_response["data"]) &&
+                isset($card_response["data"]["attributes"]) &&
+                isset($card_response["data"]["attributes"]["card_token"])
+            ){
+                $card_token = $card_response["data"]["attributes"]["card_token"];
+                
+                $cvc_encrypted = get_cc_cvc_encrypted($cvc, $card_token);
 
-                        $card_details['cc_tokenex_token'] = $create_token_response['success'] ? $create_token_response['token'] : null;
-                        $card_details['cc_number'] = $create_token_response['success'] ? 'XXXX XXXX XXXX '.$create_token_response['cc_last_digits'] : null;
-                    }
+                $card_details['cc_cvc_encrypted'] = ($cvc_encrypted) ? $cvc_encrypted : "";
+                $card_details['cc_number'] = 'XXXX XXXX XXXX '.substr($cc_number,-4);
 
-                    if(isset($card_details['cc_tokenex_token']) && $card_details['cc_tokenex_token']){
-                        $create_customer_response = $this->processpayment->create_customer_id($card_details['cc_tokenex_token']);
-                        $customer_data['stripe_customer_id'] = $create_customer_response['success'] ? $create_customer_response['customer_id'] : null;
-                    }
-                break;
-
-                case 'asaas': 
-                    if(
-                        $cc_number && 
-                        is_numeric($cc_number) &&
-                        !strrpos($cc_number, 'X') && 
-                        $cvc && 
-                        is_numeric($cvc) &&
-                        !strrpos($cvc, '*')
-                    ){
-                        $create_customer_response = $this->processpayment->create_customer($customer_data);
-                    }
-
-                    $card_details['cc_number'] = base64_encode($cc_number);
-                    $card_details['cc_cvc_encrypted'] = base64_encode($cvc);
-
-                    $meta['customer_id'] = isset($create_customer_response['success']) && $create_customer_response['success'] && isset($create_customer_response['customer_id']) && $create_customer_response['customer_id'] ? $create_customer_response['customer_id'] : null;
-                    $card_details['customer_meta_data'] = json_encode($meta);
-                break;
+                $meta['token'] = $card_token;
+                $card_details['customer_meta_data'] = json_encode($meta);
             }
         }
 
@@ -1338,100 +1307,22 @@ class Customer extends MY_Controller {
 
     public function update_customer_AJAX()
     {
-        
         $error     = false;
         $error_msg = '';
 
         $customer_id   = sqli_clean($this->security->xss_clean($this->input->post('customer_id')));
         $customer_data = ($this->security->xss_clean($this->input->post('customer_data', TRUE)));
 
-        // $token         = sqli_clean($this->security->xss_clean($this->input->post('token')));
-        // $cc_tokenex_token = sqli_clean($this->security->xss_clean($this->input->post('cc_tokenex_token')));
-        // $cc_cvc_encrypted = sqli_clean($this->security->xss_clean($this->input->post('cc_cvc_encrypted')));
-        
 		$customer_data['customer_name'] = sqli_clean($this->security->xss_clean($customer_data['customer_name']));
 		
-//         if (
-// //            empty($customer_data['cc_number'])
-//             empty($customer_data['cc_expiry_month'])
-//             or empty($customer_data['cc_expiry_year'])
-//         ) {
-//             $customer_data['cc_number']                                     = '';
-//             $customer_data['cc_expiry_month']                               = '';
-//             $customer_data['cc_expiry_year']                                = '';
-//             if ($this->paymentgateway->getExternalEntityField()) {
-//                 $customer_data[$this->paymentgateway->getExternalEntityField()] = '';
-//             }
-//         }
-        
-//         if ($cc_tokenex_token) {
-//             $customer_data['cc_tokenex_token']  = $cc_tokenex_token;
-//         }
-
-//         if ($cc_cvc_encrypted) {
-//             $customer_data['cc_cvc_encrypted']  = $cc_cvc_encrypted;
-        // } elseif ($cc_tokenex_token) {
-            // we need to re-encrypt CVV with new token as it's encrypted using token and token is being changed.
-
         $cvc = $customer_data['cvc'];
         $cc_number = $customer_data['cc_number'];
 
         unset($customer_data['cvc']);
         unset($customer_data['cc_number']);
 
-        $payments_gateways = json_decode(PAYMENT_GATEWAYS, true);
-        $new_payment_gateway = false;
-
-        if(!in_array($this->selected_payment_gateway, $payments_gateways)){
-            $new_payment_gateway = true;
-        }
-
-        if($new_payment_gateway && $this->current_payment_gateway){
-            $this->load->library('../extensions/'.$this->current_payment_gateway.'/libraries/ProcessPayment');
-
-            switch ($this->selected_payment_gateway) {
-                case 'stripe': 
-                    if(
-                        $cc_number && 
-                        is_numeric($cc_number) &&
-                        !strrpos($cc_number, 'X') && 
-                        $cvc && 
-                        is_numeric($cvc) &&
-                        !strrpos($cvc, '*')
-                    ){
-                        $create_token_response = $this->processpayment->create_token($cvc, $cc_number, $customer_data['cc_expiry_month'], $customer_data['cc_expiry_year']);
-                    }
-                break;
-
-                case 'asaas': 
-                    if(
-                        $cc_number && 
-                        is_numeric($cc_number) &&
-                        !strrpos($cc_number, 'X') && 
-                        $cvc && 
-                        is_numeric($cvc) &&
-                        !strrpos($cvc, '*')
-                    ){
-                        $create_customer_response = $this->processpayment->create_customer($customer_data);
-                    }
-                break;
-                    // prx($create_customer_response);
-                }
-        }
-
         $card_data = $this->Card_model->get_active_card($customer_id, $this->company_id);
 
-        // if ($card_data && isset($card_data['cc_tokenex_token']) && isset($card_data['cc_cvc_encrypted'])) {
-        //         $old_cc_tokenex_token = $card_data['cc_tokenex_token'];
-        //         $old_cc_cvc_encrypted = $card_data['cc_cvc_encrypted'];
-
-        //     if ($old_cc_tokenex_token && $old_cc_cvc_encrypted && $cc_tokenex_token != $old_cc_tokenex_token) {
-        //         $cvc = $this->encrypt->decode($old_cc_cvc_encrypted, $old_cc_tokenex_token);
-        //         $cc_cvc_encrypted = $this->encrypt->encode($cvc, $cc_tokenex_token);
-        //         $customer_data['cc_cvc_encrypted']  = $cc_cvc_encrypted;
-        //     }
-        // }
-                       
         $card_details = array();
         $card_details['cc_number'] = "";
         $card_details['cc_expiry_month'] = "";
@@ -1464,6 +1355,50 @@ class Customer extends MY_Controller {
         }else{
             unset($card_details['cc_cvc_encrypted']);
         }
+
+        if(
+            function_exists('tokenize') &&
+            $cc_number && 
+            is_numeric($cc_number) &&
+            !strrpos($cc_number, 'X') && 
+            $cvc && 
+            is_numeric($cvc) &&
+            !strrpos($cvc, '*')
+        ){
+
+            $card_data_array = array('card' => 
+                                array(
+                                    'card_number'       => $cc_number,
+                                    'card_type'         => "",
+                                    'cardholder_name'   => (isset($customer_data['customer_name']) ? $customer_data['customer_name'] : ""),
+                                    'service_code'      => $cvc,
+                                    'expiration_month'  => isset($customer_data['cc_expiry_month']) ? $customer_data['cc_expiry_month'] : null,
+                                    'expiration_year'   => isset($customer_data['cc_expiry_year']) ? $customer_data['cc_expiry_year'] : null
+                                )
+                            );
+
+            $card_response = array();
+
+            if($card_data_array && $card_data_array['card']['card_number'])
+                $card_response = tokenize($card_data_array);
+
+            if(
+                $card_response &&
+                isset($card_response["data"]) &&
+                isset($card_response["data"]["attributes"]) &&
+                isset($card_response["data"]["attributes"]["card_token"])
+            ){
+                $card_token = $card_response["data"]["attributes"]["card_token"];
+                
+                $cvc_encrypted = get_cc_cvc_encrypted($cvc, $card_token);
+
+                $card_details['cc_cvc_encrypted'] = ($cvc_encrypted) ? $cvc_encrypted : "";
+                $card_details['cc_number'] = 'XXXX XXXX XXXX '.substr($cc_number,-4);
+
+                $meta['token'] = $card_token;
+                $card_details['customer_meta_data'] = json_encode($meta);
+            }
+        }
             
         
         if(isset($customer_data['cc_number']) && $customer_data['cc_number'])
@@ -1477,39 +1412,6 @@ class Customer extends MY_Controller {
         if(isset($customer_data['cc_cvc_encrypted']) && $customer_data['cc_cvc_encrypted'])
            $customer_data['cc_cvc_encrypted'] = "";
         
-        if($new_payment_gateway){
-            switch ($this->selected_payment_gateway) {
-                case 'stripe': 
-                    if(
-                        isset($create_token_response) &&
-                        isset($create_token_response['success']) &&
-                        isset($create_token_response['token'])
-                    ){
-                        $card_details['cc_tokenex_token'] = isset($create_token_response['success']) && $create_token_response['success'] ? $create_token_response['token'] : null;
-                        $card_details['cc_number'] = isset($create_token_response['success']) && $create_token_response['success'] ? 'XXXX XXXX XXXX '.$create_token_response['cc_last_digits'] : null;
-                    }
-
-                    if(isset($card_details['cc_tokenex_token']) && $card_details['cc_tokenex_token']){
-                        $create_customer_response = $this->processpayment->create_customer_id($card_details['cc_tokenex_token']);
-                        $customer_data['stripe_customer_id'] = $create_customer_response['success'] ? $create_customer_response['customer_id'] : null;
-                    }
-                break;
-
-                case 'asaas': 
-
-                    if(isset($create_customer_response['success']) && $create_customer_response['success'] && isset($create_customer_response['customer_id']) && $create_customer_response['customer_id']){
-                        $card_details['cc_number'] = base64_encode($cc_number);
-                        $card_details['cc_cvc_encrypted'] = base64_encode($cvc);
-
-                        $meta['customer_id'] =  $create_customer_response['customer_id'];
-                        $card_details['customer_meta_data'] = json_encode($meta);
-                    }
-                    
-                break;
-            }
-            
-        }
-
         $this->Customer_model->update_customer($customer_id, $customer_data);
         /*update card */
         $cus_res = $this->Card_model->get_customer_cards($customer_id);
