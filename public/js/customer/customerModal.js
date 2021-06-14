@@ -339,7 +339,7 @@
                         value: customer.cc_number
                     })
                     )
-                    .append(sensitiveCardNumber)
+                    //.append(sensitiveCardNumber)
                     .append($('<span/>', {
                         id: "masked-card-number-label",
                         style: "position: absolute;top: 0;left: 15px;background: white;max-width: 90%;padding: 8px;",
@@ -419,7 +419,7 @@
                                     // value: customer.cc_cvc_encrypted ? "***" : ""
                                     value: customer.cc_number ? "***" : ""
                                 })
-                            ).append(sensitiveCardCVC)
+                            )//.append(sensitiveCardCVC)
                         )
                     // .append(
                     //     $("<div/>", {id: "cc_tokenization_status", class: 'col-sm-6'}).on("click", function () {
