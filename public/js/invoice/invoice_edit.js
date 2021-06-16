@@ -613,7 +613,14 @@ function initializeRefundModal(paymentID, refundHeading, amountStatus, amountTot
                                         error_html += v.description+'\n';
                                     });
                                     console.log(error_html);
-                                    alert(error_html);
+                                    $('#display-errors').find('.modal-body').html(error_html.replace(/\n/g,'<br/>'));
+                                    $('#refund-payment-modal').modal('hide');
+                                    $('#display-errors').modal('show');
+
+                                    $('#display-errors').on('hidden.bs.modal', function () {
+                                        $('#refund-payment-modal').modal('show');
+                                    });
+                                    // alert(error_html);
                                 } else if(data.message){
                                     alert(data.message);
                                 } else {
