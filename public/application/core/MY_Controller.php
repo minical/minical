@@ -262,6 +262,7 @@ class MY_Controller extends CI_Controller {
             $this->booking_cancelled_with_balance = $company['booking_cancelled_with_balance'];
 
             $user = $this->User_model->get_user_by_id($this->user_id, FALSE);
+            $this->user_email = $user['email'];
             $this->company_is_tos_agreed = ($user['tos_agreed_date'] >= TOS_PUBLISH_DATE);
             $this->is_overview_calendar = false; // $user['is_overview_calendar'];
 
