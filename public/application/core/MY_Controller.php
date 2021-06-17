@@ -90,15 +90,6 @@ class MY_Controller extends CI_Controller {
 
         $this->session->set_userdata('all_active_modules', $all_active_modules);
 
-        $active_extensions = $this->Extension_model->get_active_extensions($this->company_id);
-
-        if($active_extensions){
-            $cookie_name = "active_extensions";
-            $cookie_value = json_encode($active_extensions);
-            setcookie($cookie_name, $cookie_value, time() + (86400), "/");
-        }
-            
-
         $this->module_assets_files = array();
         $modules_path = $this->config->item('module_location');     
         $modules = scandir($modules_path);
@@ -147,11 +138,67 @@ class MY_Controller extends CI_Controller {
         
         require APPPATH."config/routes.php";
 
-        foreach ($module_permission as $module) {
-            if($this->router->fetch_module() != '' && !strpos($module, $this->router->fetch_module()) && !($this->permission->is_extension_active($this->router->fetch_module(), $this->company_id))){
+        foreach ($module_permission as $key => $module) {
+            if(
+                strpos($key, 'cron') && 
+                (
+                    isset($this->company_id) && 
+                    $this->company_id != '' && 
+                    $this->router->fetch_module() != '' && 
+                    !strpos($module, $this->router->fetch_module()) && 
+                    !($this->permission->is_extension_active($this->router->fetch_module(), $this->company_id))
+                )
+            ){
                 show_404();
             }
         }
+
+        if($this->uri->segment(3) != ''){
+            $company_id = $this->uri->segment(3);
+        } else {
+            $company_id = $this->company_id;
+        }
+
+        $active_extensions = $this->Extension_model->get_active_extensions($company_id);
+        $modules_path = APPPATH.'extensions/';
+
+        $active_modules = array();
+        if($active_extensions){
+            foreach ($active_extensions as $key => $extension) {
+                $active_modules[] = $extension['extension_name'];
+            }
+        }
+
+        $autoload_helpers = array();
+        if($active_modules && count($active_modules) > 0){
+            foreach($active_modules as $module)
+            {
+                $extension_helper = array();
+                if($module === '.' || $module === '..') continue;
+                if(is_dir($modules_path) . '/' . $module)
+                {
+                    $helpers_path = $modules_path . $module . '/config/autoload.php';
+                    if(file_exists($helpers_path))
+                    {
+                        require($helpers_path);
+
+                        if($extension_helper && is_array($extension_helper)){
+                            foreach($extension_helper as $key => $extension_helper_item) {
+                                $autoload_helpers[$extension_helper_item] = '../extensions/'.$module . '/helpers/' . $extension_helper_item;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                }
+            }
+        }
+        // prx($autoload_helpers);
+        if($autoload_helpers && count($autoload_helpers) > 0)
+            $this->load->helper($autoload_helpers);
+
     }
 
     public function check_login()
