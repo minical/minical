@@ -28,13 +28,19 @@ class Permission_model extends CI_Model {
             ($controller_name === "help") ||
 			($controller_name === "channel_manager") ||
             (
-                $this->session->userdata['customer_modify_booking'] &&
+                isset($this->session->userdata['customer_modify_booking']) && $this->session->userdata['customer_modify_booking'] &&
                 $this->session->userdata['customer_modify_booking']['allow'] &&
                 $controller_name === "booking" && 
                 (
                     $function_name === 'show_booking_information' ||
                     $function_name === 'check_overbooking_AJAX' ||
                     $function_name === 'guest_update_booking'
+                )
+            ) ||
+            (
+                $controller_name === "channex_bookings" && 
+                (
+                    $function_name === 'channex_get_bookings'
                 )
             )
 
