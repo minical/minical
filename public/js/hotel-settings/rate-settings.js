@@ -350,13 +350,16 @@ innGrid.createRate = function() {
 			else
 			{
 
-
 				// update channel_manager
-				innGrid.updateRates(
-                                rateArray.date_start, 
-                                rateArray.date_end,
-                                rateArray.rate_plan_id
-                            );
+
+				var rateCreatedEvent = new CustomEvent('rate_created', { "detail" : {"rate_data" : rateArray} });
+                document.dispatchEvent(rateCreatedEvent);
+
+				// innGrid.updateRates(
+    //                             rateArray.date_start, 
+    //                             rateArray.date_end,
+    //                             rateArray.rate_plan_id
+    //                         );
 				$('#create_rate_modal').modal("hide");
 
 				// clear all fields after saving
