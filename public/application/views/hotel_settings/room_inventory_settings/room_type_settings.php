@@ -6,7 +6,7 @@
             <div class="page-title-icon">
                 <i class="pe-7s-home text-success"></i>
             </div>
-           <?php echo l('room_type') . " " . l('settings'); ?>
+           <?php echo l('Room type settings'); ?>
         </div>
     </div>
   </div>

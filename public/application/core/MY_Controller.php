@@ -94,6 +94,12 @@ class MY_Controller extends CI_Controller {
         $modules_path = $this->config->item('module_location');     
         $modules = scandir($modules_path);
 
+        if(!$this->company_id && $this->uri->segment(3) != ''){
+            $company_id = $this->uri->segment(3);
+        } else {
+            $company_id = $this->company_id;
+        }
+
         foreach($modules as $module)
         {
             if($module === '.' || $module === '..') continue;
@@ -101,7 +107,7 @@ class MY_Controller extends CI_Controller {
             {
                 $config = array();
                 $files_path = $modules_path . $module . '/config/autoload.php';
-                if(file_exists($files_path) && $this->permission->is_extension_active($module, $this->company_id))
+                if(file_exists($files_path) && $this->permission->is_extension_active($module, $company_id))
                 {
                     require($files_path);
                     $this->module_assets_files[$module] = $config;
@@ -287,12 +293,12 @@ class MY_Controller extends CI_Controller {
                                 );
                     $this->Extension_model->add_extension($new_extensions);
 
-                    $new_extensions = array(
-                                    'extension_name' => 'multi_property_management',
-                                    'company_id' => $this->company_id,
-                                    'is_active' => 1
-                                );
-                    $this->Extension_model->add_extension($new_extensions);
+                    // $new_extensions = array(
+                    //                 'extension_name' => 'multi_property_management',
+                    //                 'company_id' => $this->company_id,
+                    //                 'is_active' => 1
+                    //             );
+                    // $this->Extension_model->add_extension($new_extensions);
                 }
             }
 

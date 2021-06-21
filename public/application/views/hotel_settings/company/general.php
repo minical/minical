@@ -241,7 +241,7 @@
 		<div class="form-row">
 			<div class="col-md-6">
 				<div class="position-relative form-group">
-					<label for="exampleZip" class=""><?php echo l('fax'); ?><span style="color: red;">*</span></label>
+					<label for="exampleZip" class=""><?php echo l('fax'); ?></label>
 					<input type="text" name="company_fax" class="form-control" value="<?php 
 					if(isset($company)) 
 					echo $company['fax']; 
@@ -265,7 +265,7 @@
 		<div class="form-row">
 			<div class="col-md-12">
 				<div class="position-relative form-group">
-					<label for="exampleAddress" class=""><?php echo l('website'); ?><span style="color: red;">*</span></label>
+					<label for="exampleAddress" class=""><?php echo l('website'); ?></label>
 					<input type="text" name="company_website" class="form-control" value="<?php 
 					if(isset($company)) 
 					echo $company['website']; 

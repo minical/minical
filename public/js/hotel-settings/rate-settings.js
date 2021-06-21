@@ -638,6 +638,14 @@ $(function() {
 	$(document).on('click', '.modifiable', function() {
         $(this).parents(".input-group").find(".modified").prop("checked", true);
 	});
+
+	$(document).on('click','#modify-rates', function(){
+		$('#create_rate_modal').modal('show');
+	});
+
+	$(document).on('click','#modify-supplied-rates', function(){
+		$('#create_supplied_rate_modal').modal('show');
+	});
         
         
 	$("#modify_rates_button").on('click', function() {		

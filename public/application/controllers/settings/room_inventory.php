@@ -277,6 +277,15 @@ class Room_inventory extends MY_Controller {
                 )
         );
 
+        if (!is_null($charge_types = $this->Charge_type_model->get_charge_types($this->company_id)))
+        {
+            $room_type['charge_types'] = $charge_types;
+        }
+
+        $room_type['rate_plans'] = $this->Rate_plan_model->get_rate_plans_by_room_type_id($room_type_id);
+
+        $room_type['room_type'] = $room_type;
+
         //Load data to get html code used by javascript to generate the new room type dynamically.      
         //Instead of making the page refresh to see the new room type.
 

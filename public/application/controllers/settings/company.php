@@ -73,15 +73,14 @@ class Company extends MY_Controller
 
         // Validation
         $this->form_validation->set_rules('company_name', 'Company Name', 'required|trim');
-        $this->form_validation->set_rules('company_address', 'Address', 'trim');
+        $this->form_validation->set_rules('company_address', 'Address', 'required|trim');
         $this->form_validation->set_rules('company_phone', 'Phone', 'required|trim');
-        $this->form_validation->set_rules('company_city', 'City', 'trim');
-        $this->form_validation->set_rules('company_region', 'Region', 'trim');
-        $this->form_validation->set_rules('company_country', 'Country', 'trim');
+        $this->form_validation->set_rules('company_city', 'City', 'required|trim');
+        $this->form_validation->set_rules('company_region', 'Region', 'required|trim');
+        $this->form_validation->set_rules('company_country', 'Country', 'required|trim');
         $this->form_validation->set_rules('company_postal_code', 'Postal Code', 'trim');
-        $this->form_validation->set_rules('company_website', 'Website', 'trim');
+        // $this->form_validation->set_rules('company_website', 'Website', 'required|trim');
         $this->form_validation->set_rules('company_email', 'Email', 'valid_email|trim');
-        $this->form_validation->set_rules('company_fax', 'Fax', 'trim');
 
         if ($this->form_validation->run() == true) {
 
