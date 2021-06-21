@@ -68,6 +68,40 @@
             </div>                                    
         </div>	
 
+        <div class="form-group">
+            <label class="col-sm-3 control-label"><?php echo l('show_on_website'); ?></label>
+			<div class="col-sm-2">
+                <select class="enter form-control" name="can-be-sold-online">
+                    <option value="0" <?php if ($room_type['can_be_sold_online'] == "0") echo "SELECTED"; ?>><?php echo l('No', true); ?></option>
+                    <option value="1" <?php if ($room_type['can_be_sold_online'] == "1") echo "SELECTED"; ?>><?php echo l('Yes', true); ?></option>
+                </select>
+            </div>
+
+            <label class="col-sm-3 control-label"><?php echo l('Default Room Charge'); ?></label>
+			<div class="col-sm-4">
+                <select class="enter form-control" name="default_room_charge">
+                    <?php if (!$this->allow_free_bookings) {
+						echo '<option>--Select Charge Type--</option>';
+					} ?>
+                	<optgroup label="Charge Types">
+                	<?php foreach ($charge_types as $charge_type) { ?>
+                		<option value="<?php echo $charge_type['id']; ?>" <?php echo $charge_type['id'] == $room_type['default_room_charge'] ? 'selected' : ''; ?>><?php echo $charge_type['name']; ?></option>
+            		<?php } ?>
+
+            		<optgroup label="Rate Plans">
+                	<?php foreach ($rate_plans as $rp) { ?>
+					<option value="<?php echo $rp['rate_plan_id']; ?>" 
+					<?php echo $rp['rate_plan_id'] == $room_type['default_room_charge'] ? 'selected' : ''; ?>
+						><?php echo $rp['rate_plan_name']; ?></option>
+            		<?php 
+					} ?>
+                    <?php if ($this->allow_free_bookings) {
+						echo '<option ' . ($room_type['default_room_charge'] ? '' : 'SELECTED=SELECTED') . ' value="">' . l("None (FREE)", true) . '</option>';
+					} ?>
+                </select>
+            </div>
+        </div>
+
 		<div class="form-group">
 			<label for="description" class="col-sm-3 control-label">
 				<?php echo l('Description', true); ?>

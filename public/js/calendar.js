@@ -106,7 +106,7 @@ innGrid.bookingResized = function(event, dayDelta, minuteDelta, revertFunc) {
                 end2: encodeURIComponent(dateTo2)
             },
             success: function(data){
-                if (data != "success") {
+                if (data.trim() != "success") {
                     alert(data);
                     info.revert();
                 } else {
@@ -819,7 +819,7 @@ function occupacyMoved(event,dayDelta,minuteDelta,allDay,revertFunc,ev,ui,roomDe
                 end2: encodeURIComponent(dateTo2)
             },
             success: function(data){
-                if (data != "success") {
+                if (data.trim() != "success") {
                     alert(data);
                     revertFunc();
                 } else {

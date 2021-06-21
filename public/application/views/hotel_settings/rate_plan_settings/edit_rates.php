@@ -1,5 +1,5 @@
 <div class="page-header h3">
-    <a href="javascript:history.back()" class="btn btn-default">
+    <a href="javascript:history.back()" class="btn btn-light">
         <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
         <?php echo l('Back', true); ?>
     </a>
@@ -1024,20 +1024,14 @@
 
 <input name="today" type='hidden' value="<?php echo $today; ?>" />	
 <button id='modify-rates'
-        class="btn btn-primary"
-        data-toggle="modal" 
-        data-target="#create_rate_modal"
-        >
+        class="btn btn-primary">
     <?php echo l('Modify Rates', true); ?>
 </button>
 <?php
 if ($this->session->userdata('user_role') == "is_admin") {
     ?>
     <button id='modify-supplied-rates'
-            class="btn btn-primary"
-            data-toggle="modal" 
-            data-target="#create_supplied_rate_modal"
-            >
+            class="btn btn-primary">
         <?php echo l('Modify Supplied Rates', true); ?>
     </button>
     <?php
@@ -1045,11 +1039,11 @@ if ($this->session->userdata('user_role') == "is_admin") {
 ?>    
 
 <div class="pull-right">
-    <span class='btn btn-default' id='show-previous-month'>
+    <span class='btn btn-light' id='show-previous-month'>
         <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
         <?php echo l('Previous 4 weeks', true); ?>
     </span>
-    <span class='btn btn-default' id='show-next-month'>
+    <span class='btn btn-light' id='show-next-month'>
         <?php echo l('Next 4 weeks', true); ?>
         <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
     </span>
