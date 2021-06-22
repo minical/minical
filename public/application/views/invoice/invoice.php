@@ -54,7 +54,7 @@
                     </div>
 
                     <?php if(check_active_extensions($this->current_payment_gateway, $this->company_id)){ ?>
-                    <div class="form-group use-payment-gateway-btn ">
+                    <div style="display:none;" class="form-group use-payment-gateway-btn ">
                         <label for="payment_amount" class="col-sm-4 control-label">
                             <?php echo l('use_payment_gateway'); ?>
                         </label>
@@ -79,7 +79,7 @@
                                         } else {
                                             $selected_customer = '';
                                         }
-                                        if ($customer['stripe_customer_id'] || $customer['cc_tokenex_token']) {
+                                        if ($customer['stripe_customer_id'] || $customer['cc_tokenex_token'] || $customer['customer_meta_token']) {
                                             $is_gateway_available = 'true';
                                             if($customer['stripe_customer_id'])
                                                 $available_gateway = 'stripe';
