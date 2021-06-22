@@ -23,8 +23,8 @@ $my_companies = $this->Company_model->get_companies($this->user_id);
                         <a href='#'  id="myPropertyMenu">
                         <?php } ?>
 
-                        <span class="logo"> <b><?php echo substr($this->company_name, 0, 30).((strlen($this->company_name)>30)?'...':''); ?></b>
-                        </span>
+                        <b style="font-size: large;"><?php echo substr($this->company_name, 0, 30).((strlen($this->company_name)>30)?'...':''); ?></b>
+                        
                         <?php if(count($my_companies) > 1) { ?><span class="caret multi-prop"></span> <?php } ?>
 
                     </a>

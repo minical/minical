@@ -975,11 +975,11 @@ function convertToEvents(data){
         bookings[i].customer_type_id = ""+data[i].customer_type_id;
         bookings[i].room_id = ""+data[i].room_id;
             var flag = '';
-            if(data[i].customer_type_id == '1')
+            if(data[i].customer_type_id == '-1')
             {
                 flag = 'blacklist';
             }
-            else if(data[i].customer_type_id == '2')
+            else if(data[i].customer_type_id == '-2')
             {
                 flag = 'vip';
             }
