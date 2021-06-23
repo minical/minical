@@ -616,7 +616,11 @@ function DayEventRenderer() {
 
     function buildSegEventElement (seg) {
         var $element = $("<a>");
-
+        
+        $element.css({
+	                margin: "0.06rem"
+	            });
+        
 		if (seg.event.color && seg.event.color != "transparent") {
         	if(innGrid.isDarkTheme){
         		$element.css({
