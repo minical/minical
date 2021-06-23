@@ -616,8 +616,9 @@ function DayEventRenderer() {
 
     function buildSegEventElement (seg) {
         var $element = $("<a>");
+        
         $element.css({
-	                marginTop: "0.07rem"
+	                margin: "0.06rem"
 	            });
         
 		if (seg.event.color && seg.event.color != "transparent") {
