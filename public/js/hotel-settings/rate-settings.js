@@ -376,7 +376,8 @@ innGrid.createRate = function() {
 				});
 
 				// Update end date place holder
-                $('#date_end').prop('placeholder', l('End Date'));
+                $('#date_end').prop('placeholder', l('Forever'));
+                // $('#date_end').prop('placeholder', l('End Date'));
 
                 $(".default_radio").each(function() {
                     $(this).prop("checked", true);
