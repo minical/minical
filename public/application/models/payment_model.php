@@ -115,7 +115,7 @@ class Payment_model extends CI_Model {
                 $capture_type = isset($manual_payment_capture) && $manual_payment_capture ? false : true;
                 $gateway_charge_id = $this->ci->processpayment->createBookingCharge(
                     $data['booking_id'],
-                    abs($data['amount']) * 100, // in cents, only positive
+                    abs($data['amount']), // in cents, only positive
                     $customer_id,
                     $cvc,
                     $capture_type
@@ -659,6 +659,11 @@ class Payment_model extends CI_Model {
             }
 
             if($new_payment_gateway){
+
+                if($payment_type == 'partial' || $payment_type == 'remaining') {
+                    $amount = abs($refund_amount); // amount in cents
+                }
+
                 $this->ci->load->library('../extensions/'.$this->current_payment_gateway.'/libraries/ProcessPayment');
                 $refund = $this->ci->processpayment->refundBookingPayment($payment_id, $amount, $payment_type, $booking_id);
                 
