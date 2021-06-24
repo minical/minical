@@ -32,14 +32,14 @@ $dotenv = Dotenv\Dotenv::createImmutable(__DIR__. '/../')->load();
  *
  */
 
-if(isset($_GET['dev_mode']) && $_GET['dev_mode'] == "b1m8V0I5ZT"){ // for debugging only
-    define('ENVIRONMENT', 'development');
-}
-
 if ($_SERVER['HTTP_HOST'] == "localhost" || $_SERVER['HTTP_HOST'] == "minical.core" || $_SERVER['HTTP_HOST'] == "demo.minical.io") //
 	define('ENVIRONMENT', 'development');
 else
 	define('ENVIRONMENT', 'production');
+
+if(isset($_GET['dev_mode']) && $_GET['dev_mode'] == "b1m8V0I5ZT"){ // for debugging only
+    define('ENVIRONMENT', 'development');
+}
 /*
  *---------------------------------------------------------------
  * ERROR REPORTING
