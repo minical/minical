@@ -608,9 +608,9 @@ class Rates extends MY_Controller
 
 		// Validates the end date:
         // if there is any plan except default plan then need to check the user has entered end date or not
-		if ($this->Rate_model->get_total_rates_by_rate_plan_id($rate_plan_id) > 1) {
-            $this->form_validation->set_rules('date_end', 'End Date', 'required|trim|callback_date_format_check');
-        }
+		// if ($this->Rate_model->get_total_rates_by_rate_plan_id($rate_plan_id) > 1) {
+  //           $this->form_validation->set_rules('date_end', 'End Date', 'required|trim|callback_date_format_check');
+  //       }
 		$response = array();
 
 		if ($this->form_validation->run() == TRUE)

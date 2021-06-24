@@ -3873,6 +3873,7 @@ label.error {
     font-size: 1rem;
     display: block;
     margin-top: 5px;
+    font-weight: 470;
 }
 
 input.error {
