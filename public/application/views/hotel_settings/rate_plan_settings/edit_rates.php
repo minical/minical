@@ -33,7 +33,8 @@
                                 <input name='date_start' id='date_start' class='date form-control' value='<?php echo $today; ?>' placeholder="<?php echo l('Start Date', true); ?>">
                                &nbsp; <?php echo l('and', true); ?> &nbsp;
                                 <?php
-                                    $end_placeholder = ($has_rate_plan > 1) ? l('End Date', true) : l('Forever', true);
+                                    // $end_placeholder = ($has_rate_plan > 1) ? l('End Date', true) : l('Forever', true);
+                                    $end_placeholder = l('Forever', true);
                                 ?>
                                 <input name='date_end' id='date_end' class='date form-control' value='<?php //echo $next_year;  ?>' placeholder="<?php echo $end_placeholder; ?>">
                             </div>

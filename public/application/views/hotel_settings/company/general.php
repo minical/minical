@@ -40,9 +40,9 @@
 	<div class="card-body">
 		
 		<form class="" 
-		method="post" 
-		action="<?php echo base_url();?>settings/company/general" 
-		enctype="multipart/form-data">
+		id="basic-form"method="post"
+		action="<?php echo base_url();?>settings/company/general"
+		enctype="multipart/form-data" >
 		<div class="form-row">
 			<div class="col-md-2">
 				<div class="position-relative form-group  image-group" id="<?php echo $company['logo_image_group_id']; ?> ">
@@ -87,8 +87,8 @@
 			</div>
 			<div class="col-md-6">
 				<div class="position-relative form-group">
-					<label for="exampleState" class=""><?php echo l('timezone'); ?><span style="color: red;">*</span></label>
-					<select name="time_zone" class="form-control">
+					<label for="time_zone" class=""><?php echo l('timezone'); ?><span style="color: red;">*</span></label>
+					<select name="time_zone" id="time_zone" class="form-control">
 						<?php
 						foreach ($timezones as $timezone => $timezone_name):
 							?>
@@ -112,8 +112,8 @@
 	<div class="form-row">
 		<div class="col-md-6">
 			<div class="position-relative form-group">
-				<label for="exampleZip" class=""><?php echo l('default_currency'); ?><span style="color: red;">*</span></label>
-				<select name="default_currency" class="form-control">
+				<label for="default_currency" class=""><?php echo l('default_currency'); ?><span style="color: red;">*</span></label>
+				<select name="default_currency" id="default_currency"class="form-control">
 					<?php	foreach ($available_currencies as $available_currency): ?>
 						<option 
 						value="<?php echo $available_currency['currency_id']; ?>"
@@ -128,8 +128,8 @@
 		</div>
 		<div class="col-md-6">
 			<div class="position-relative form-group">
-				<label for="exampleCity" class=""><?php echo l('Default Language', true); ?><span style="color: red;">*</span></label>
-				<select name="default_language" class="form-control">
+				<label for="default_language" class=""><?php echo l('Default Language', true); ?><span style="color: red;">*</span></label>
+				<select name="default_language" id="default_language" class="form-control">
 					<?php foreach ($languages as $language): ?>
 						<option 
 						value="<?php echo $language['id']; ?>"
@@ -150,8 +150,8 @@
 	<div class="form-row">
 		<div class="col-md-6">
 			<div class="position-relative form-group">
-				<label for="exampleState" class=""><?php echo l('company_name'); ?><span style="color: red;">*</span></label>
-				<input type="text" name="company_name" class="form-control" value="<?php 
+				<label for="company_name" class=""><?php echo l('company_name'); ?><span style="color: red;">*</span></label>
+				<input type="text" name="company_name" id="company_name" class="form-control" value="<?php 
 				if(isset($company)) 
 				echo $company['name']; 
 				else 
@@ -160,7 +160,7 @@
 		</div>
 		<div class="col-md-6">
 			<div class="position-relative form-group">
-				<label for="exampleZip" class=""><?php echo l('no_of_rooms'); ?><span style="color: red;">*</span></label>
+				<label for="number_of_rooms" class=""><?php echo l('no_of_rooms'); ?><span style="color: red;">*</span></label>
 				<input class="form-control" READONLY type="text" name="number_of_rooms" value="<?php 
 				if(isset($company)) 
 				echo $company['number_of_rooms']; 
@@ -174,8 +174,8 @@
 	<div class="form-row">
 		<div class="col-md-12">
 			<div class="position-relative form-group">
-				<label for="exampleAddress" class=""><?php echo l('address'); ?><span style="color: red;">*</span></label>
-				<input type="text" name="company_address" class="form-control" value="<?php
+				<label for="company_address" class=""><?php echo l('address'); ?><span style="color: red;">*</span></label>
+				<input type="text" name="company_address" id="company_address" class="form-control" value="<?php
 				if(isset($company)) 
 				echo $company['address']; 
 				else
@@ -186,8 +186,8 @@
 		<div class="form-row">
 			<div class="col-md-4">
 				<div class="position-relative form-group">
-					<label for="exampleCity" class=""><?php echo l('city'); ?><span style="color: red;">*</span></label>
-					<input type="text" name="company_city" class="form-control" value="<?php 
+					<label for="company_city" class=""><?php echo l('city'); ?><span style="color: red;">*</span></label>
+					<input type="text" name="company_city" id="company_city" class="form-control" value="<?php 
 					if(isset($company)) 
 					echo $company['city']; 
 					else
@@ -196,8 +196,8 @@
 			</div>
 			<div class="col-md-4">
 				<div class="position-relative form-group">
-					<label for="exampleState" class=""><?php echo l('region'); ?><span style="color: red;">*</span></label>
-					<input type="text" name="company_region" class="form-control" value="<?php 
+					<label for="company_region" class=""><?php echo l('region'); ?><span style="color: red;">*</span></label>
+					<input type="text" name="company_region" id="company_region" class="form-control" value="<?php 
 					if(isset($company)) 
 					echo $company['region'];
 					else
@@ -206,8 +206,8 @@
 			</div>
 			<div class="col-md-4">
 				<div class="position-relative form-group">
-					<label for="exampleZip" class=""><?php echo l('country'); ?><span style="color: red;">*</span></label>
-					<input type="text" name="company_country" class="form-control" value="<?php 
+					<label for="company_country" class=""><?php echo l('country'); ?><span style="color: red;">*</span></label>
+					<input type="text" name="company_country" id="company_country" class="form-control" value="<?php 
 					if(isset($company)) 
 					echo $company['country']; 
 					else
@@ -218,18 +218,18 @@
 		<div class="form-row">
 			<div class="col-md-6">
 				<div class="position-relative form-group">
-					<label for="exampleZip" class=""><?php echo l('postal_code'); ?><span style="color: red;">*</span></label>
-					<input type="text" name="company_country" class="form-control" value="<?php 
+					<label for="company_postal_code" class=""><?php echo l('postal_code'); ?><span style="color: red;">*</span></label>
+					<input type="text" name="company_postal_code" id="company_postal_code" class="form-control" value="<?php 
 					if(isset($company)) 
-					echo $company['country']; 
+					echo $company['postal_code']; 
 					else
 					echo set_value('company_country'); ?>" />	
 				</div>
 			</div>
 			<div class="col-md-6">
 				<div class="position-relative form-group">
-					<label for="exampleZip" class=""><?php echo l('phone'); ?><span style="color: red;">*</span></label>
-					<input type="text" name="company_phone" maxlength="20" class="form-control" value="<?php
+					<label for="company_phone" class=""><?php echo l('phone'); ?><span style="color: red;">*</span></label>
+					<input type="text" id="company_phone"  name="company_phone" maxlength="20" class="form-control" value="<?php
 					if(isset($company)) 
 					echo $company['phone'];
 					else
@@ -246,13 +246,13 @@
 					if(isset($company)) 
 					echo $company['fax']; 
 					else
-					echo set_value('company_fax'); ?>" />	
+					echo set_value('company_fax'); ?>"  />	
 				</div>
 			</div>
 			<div class="col-md-6">
 				<div class="position-relative form-group">
-					<label for="exampleZip" class=""><?php echo l('email'); ?><span style="color: red;">*</span></label>
-					<input type="text" name="company_email" class="form-control" value="<?php 
+					<label for="company_email" class=""><?php echo l('email'); ?><span style="color: red;">*</span></label>
+					<input type="text" name="company_email" id="company_email" class="form-control" value="<?php 
 					if(isset($company)) 
 					echo $company['email']; 
 					else 
@@ -274,7 +274,29 @@
 				</div>
 			</div>
 		</div>
-		<button class="mt-2 ml-2 btn btn-primary" ><?php echo l('Update Company Info', true); ?></button>
+		<button class="mt-2 ml-2 btn btn-primary submit" ><?php echo l('Update Company Info', true); ?></button>
 	</form>
+	
+ <!--    <form id="basic-form" action="" method="post">
+    <p>
+      <label for="name">Name <span>(required, at least 3 characters)</span></label>
+      <input id="name" name="name">
+    </p>
+  <p>
+      <label for="age">Your Age <span>(minimum 18)</span></label>
+      <input id="age" name="age">
+    </p>
+    <p>
+      <label for="email">E-Mail <span>(required)</span></label>
+      <input id="email" name="email">
+    </p>
+  <p>
+    <label for="weight">Weight <span>(required if age over 50)</span></label>
+    <input id="weight" name="weight">
+    </p>
+    <p>
+      <input class="submit" type="submit" value="SUBMIT">
+    </p>
+</form> -->
 </div>
 </div>
