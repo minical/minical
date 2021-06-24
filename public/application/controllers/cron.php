@@ -38,7 +38,7 @@ class Cron extends CI_Controller
 		    $result = curl_exec($ch);
 		    curl_close($ch);
 
-		    prx($result);
+		    echo $company_id. ' => '; prx($result, 1);
 
 		}
 	}
