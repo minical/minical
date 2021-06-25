@@ -22581,6 +22581,8 @@ ALTER TABLE `ota_xml_logs` DROP `ota_x_company_id`;
 
 ALTER TABLE `customer` CHANGE `customer_type_id` `customer_type_id` INT(11) NULL DEFAULT '1';
 
+ALTER TABLE `ota_room_types` ADD `company_id` BIGINT(20) NULL AFTER `minical_room_type_id`;
+ALTER TABLE `ota_rate_plans` ADD `company_id` BIGINT(20) NULL AFTER `ota_room_type_id`;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
