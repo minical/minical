@@ -38,7 +38,7 @@ class Cron extends CI_Controller
 		    $result = curl_exec($ch);
 		    curl_close($ch);
 
-		    prx($result);
+		    echo $company_id. ' => '; prx($result, 1);
 
 		}
 	}
@@ -88,7 +88,14 @@ class Cron extends CI_Controller
 
 					    	$meta = $customer_meta_data;
 					    	$meta['token'] = null;
-	            			$update_data = array('customer_meta_data' => json_encode($meta));
+	            			$update_data = array(
+	            								'customer_meta_data' => NULL,
+	            								'cc_number' => NULL,
+	            								'cc_expiry_month' => NULL,
+	            								'cc_expiry_year' => NULL,
+	            								'cc_tokenex_token' => NULL,
+	            								'cc_cvc_encrypted' => NULL,
+	            								);
 
 					    	$this->Card_model->update_customer_primary_card($booking['customer_id'], $update_data);
 

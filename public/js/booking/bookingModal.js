@@ -4919,8 +4919,22 @@ var bookingModalInvoker = function ($) {
                                 }, 500);
                             }
                         } else {
+
+                            that.booking = data.booking;
+                            console.log('response',response);
+                                
                             that._closeBookingModal();
                         }
+
+
+
+                        // Create the event
+                        var event = new CustomEvent('open_booking_modal', { "detail" : {"reservation_id" : that.booking.booking_id, "booking_data" : that.booking} });
+                        var bookingCreatedEvent = new CustomEvent('booking_created', { "detail" : {"booking_data" : that.booking, "booking_room_data" : response} });
+
+                        // Dispatch/Trigger/Fire the event
+                        document.dispatchEvent(event);
+                        document.dispatchEvent(bookingCreatedEvent);
 
                     }
 

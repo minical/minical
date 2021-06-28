@@ -58,25 +58,12 @@ class Customer extends MY_Controller {
 
     function get_credit_card_number()
     {
+        if(function_exists('show_cc_details')){
+            $customer_pci_token = $this->input->get('customer_pci_token');
+            $response = show_cc_details($customer_pci_token);
 
-       $cc_detail = $this->input->post('cc_detail');
-       $cc_cvc = $this->input->post('cc_cvc');
-       $cc_number = $this->input->post('cc_number');
-
-       $response = array();
-
-       if($cc_detail == 'card_number') {
-
-           $response['cc_number'] = base64_decode($cc_number);
-           $response['success'] = true;
-
-       } else if($cc_detail== 'card_cvc') {
-
-           $response['cvc'] = base64_decode($cc_cvc);
-           $response['success'] = true;
-       }
-
-       echo json_encode($response);
+            echo $response;
+        }
    }
 
 	/**
@@ -1191,8 +1178,9 @@ class Customer extends MY_Controller {
                 $customer['cc_expiry_year'] = $card_details['cc_expiry_year'];
                 $customer['cc_tokenex_token'] = $card_details['cc_tokenex_token'];
                 $customer['cc_cvc_encrypted'] = $card_details['cc_cvc_encrypted'];
+                $customer['customer_pci_token'] = json_decode($card_details['customer_meta_data'], true)['token'];
             }
-            
+
         echo json_encode($customer);
 	}
 	function create_customer_AJAX()
