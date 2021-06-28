@@ -2677,7 +2677,8 @@ class Booking extends MY_Controller
                         'check_out_date' => $check_out_date,
                         'booking_id' => $booking_id,
                         'room_cancelled' => $room_cancelled,
-                        'room_id' => $booking_block['room_id']
+                        'room_id' => $booking_block['room_id'],
+                        'room_type_id' => $booking_block['room_type_id']
                     );
                 }
             }

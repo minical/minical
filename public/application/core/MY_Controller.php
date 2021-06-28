@@ -33,7 +33,7 @@ class MY_Controller extends CI_Controller {
         $this->load->library('tank_auth');
         $this->load->library('permission');
         $this->load->library('Template');
-        $this->load->model(array('Booking_model','Menu_model','User_model','Whitelabel_partner_model','Company_model','Extension_model'));
+        $this->load->model(array('Booking_model','Menu_model','User_model','Whitelabel_partner_model','Company_model','Extension_model','Booking_source_model'));
 
         $this->load->helper('language');
         $this->load->helper('my_assets_helper');
@@ -299,6 +299,24 @@ class MY_Controller extends CI_Controller {
                     //                 'is_active' => 1
                     //             );
                     // $this->Extension_model->add_extension($new_extensions);
+                }
+            }
+
+            $common_booking_sources = json_decode(COMMON_BOOKING_SOURCES, true);
+            $i = 0;
+            $booking_sources = $this->Booking_source_model->get_common_booking_sources_settings($this->company_id);
+            
+            if(empty($booking_sources)){
+                foreach($common_booking_sources as $key => $source)
+                {
+                    $data = array(
+                        'booking_source_id' => $key,
+                        'company_id' => $this->company_id,
+                        'is_hidden' => 0,
+                        'sort_order' => $i++,
+                        'commission_rate' => 0
+                    );
+                    $this->Booking_source_model->update_common_booking_sources_settings($this->company_id, $key, $data);
                 }
             }
 
