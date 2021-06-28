@@ -28,7 +28,7 @@
 
 
 <div class="main-card mb-3 card">
-    <div class="card-body">
+    <div class="card-body" style="padding: 1.2rem 1.2rem 0 1.2rem;">
 <?php 
     $flag = 1;
     $permissions = $this->session->userdata('permissions');

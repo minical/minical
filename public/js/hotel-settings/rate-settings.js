@@ -376,7 +376,8 @@ innGrid.createRate = function() {
 				});
 
 				// Update end date place holder
-                $('#date_end').prop('placeholder', l('End Date'));
+                $('#date_end').prop('placeholder', l('Forever'));
+                // $('#date_end').prop('placeholder', l('End Date'));
 
                 $(".default_radio").each(function() {
                     $(this).prop("checked", true);
@@ -637,6 +638,14 @@ $(function() {
 
 	$(document).on('click', '.modifiable', function() {
         $(this).parents(".input-group").find(".modified").prop("checked", true);
+	});
+
+	$(document).on('click','#modify-rates', function(){
+		$('#create_rate_modal').modal('show');
+	});
+
+	$(document).on('click','#modify-supplied-rates', function(){
+		$('#create_supplied_rate_modal').modal('show');
 	});
         
         

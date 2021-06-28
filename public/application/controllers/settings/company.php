@@ -73,15 +73,14 @@ class Company extends MY_Controller
 
         // Validation
         $this->form_validation->set_rules('company_name', 'Company Name', 'required|trim');
-        $this->form_validation->set_rules('company_address', 'Address', 'trim');
+        $this->form_validation->set_rules('company_address', 'Address', 'required|trim');
         $this->form_validation->set_rules('company_phone', 'Phone', 'required|trim');
-        $this->form_validation->set_rules('company_city', 'City', 'trim');
-        $this->form_validation->set_rules('company_region', 'Region', 'trim');
-        $this->form_validation->set_rules('company_country', 'Country', 'trim');
+        $this->form_validation->set_rules('company_city', 'City', 'required|trim');
+        $this->form_validation->set_rules('company_region', 'Region', 'required|trim');
+        $this->form_validation->set_rules('company_country', 'Country', 'required|trim');
         $this->form_validation->set_rules('company_postal_code', 'Postal Code', 'trim');
-        $this->form_validation->set_rules('company_website', 'Website', 'trim');
+        // $this->form_validation->set_rules('company_website', 'Website', 'required|trim');
         $this->form_validation->set_rules('company_email', 'Email', 'valid_email|trim');
-        $this->form_validation->set_rules('company_fax', 'Fax', 'trim');
 
         if ($this->form_validation->run() == true) {
 
@@ -112,7 +111,8 @@ class Company extends MY_Controller
         $data['js_files'] = array(
             base_url().auto_version('js/hotel-settings/cropper_jsmin.js'),
             base_url().auto_version('js/company_settings.js'),
-            base_url().auto_version('js/hotel-settings/logo-image-settings.js')
+            base_url().auto_version('js/hotel-settings/logo-image-settings.js'),
+           "http://ajax.aspnetcdn.com/ajax/jquery.validate/1.7/jquery.validate.min.js",
         );
 
         $data['company_ID'] = $this->company_id;

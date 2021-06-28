@@ -1697,7 +1697,7 @@ li.current_language a img {
 }
 .card-body{
     flex:1 1 auto;
-    padding:2.0rem
+    padding:2.0rem;
 }
 .card-title{
     margin-bottom:.75rem
@@ -3868,3 +3868,16 @@ width: 100vh
     flex: 1;
 }
 
+label.error {
+    color: red;
+    font-size: 1rem;
+    display: block;
+    margin-top: 5px;
+    font-weight: 470;
+}
+
+input.error {
+    border: 1px dashed red;
+    font-weight: 300;
+    color: red;
+}

@@ -310,6 +310,26 @@ class Room_type_model extends CI_Model {
 		else // otherwise, return insert_id;
 			return $room_type_id;
 	}
+
+	function add_new_room_type($data){
+		$this->db->insert('room_type', $data);
+	    $query = $this->db->query('select LAST_INSERT_ID( ) AS last_id');
+	    $result = $query->result_array();
+	    if(isset($result[0]))
+	    {  
+	      	$room_type_id = $result[0]['last_id'];
+	    }
+	    else
+	    {  
+	      	$room_type_id = null;
+	    }
+
+		// if there's an error in query, show error message
+		if ($this->db->_error_message())
+			show_error($this->db->_error_message());
+		else // otherwise, return insert_id;
+			return $room_type_id;
+	}
 	
 	function update_room_type($room_type_id, $data)
 	{

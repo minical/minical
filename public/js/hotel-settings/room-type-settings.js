@@ -99,6 +99,58 @@ innGrid.updateRoomType = function(roomType) {
 	}, 'json');
 }
 
+innGrid.createRoomType = function(roomType) {
+    
+    var descrip_id = 'desc_new_roomtype';
+ 
+    var description = CKEDITOR.instances[descrip_id].getData();
+    // var roomTypeId = roomType.attr('id');
+    var roomTypeName = roomType.find('[name="room-type-name"]').val();
+    var roomTypeAcronym = roomType.find('[name="room-type-acronym"]').val();
+    var maxAdults = roomType.find('[name="max-adults"]').val();
+    var maxChildren = roomType.find('[name="max-children"]').val();     
+    var canBeSoldOnline = roomType.find('[name="can-be-sold-online"]').val();
+    var maxOccupancy = roomType.find('[name="max-occupancy"]').val();
+    var minOccupancy = roomType.find('[name="min-occupancy"]').val();
+    var defaultRoomCharge = roomType.find('[name="default_room_charge"]').val();
+    var preventInlineBooking = roomType.find('[name="prevent_inline_booking"]').prop('checked') ? 1 : 0;
+        
+    //Populate updates to standard room type information
+    $.post(getBaseURL() + 'settings/room_inventory/create_room_type', {
+            // room_type_id: roomTypeId,
+            room_type_name: roomTypeName,
+            acronym: roomTypeAcronym,
+            description: description,
+            max_occupancy: maxOccupancy,
+            min_occupancy: minOccupancy,
+            max_adults: maxAdults,
+            max_children: maxChildren,
+            can_be_sold_online: canBeSoldOnline,
+            default_room_charge: defaultRoomCharge,
+            prevent_inline_booking: preventInlineBooking
+        }, function (result) {
+                    if(result.error == 'error')
+                    {
+                        alert(result.value);
+                        return false;
+                    }
+                    else
+                    {
+                        // innGrid.updateAvailabilities("","");
+                        // roomType.find(".updated-message").removeClass("hidden");
+                        // window.setTimeout(function() {
+                        //     roomType.find(".updated-message").fadeTo(500, 0).slideUp(500, function(){
+                        //         roomType.find(".updated-message").addClass("hidden");
+                        //         roomType.removeClass('new-panel');
+                        //     });
+                        // }, 1000);
+                        //  innGrid.populateRoomTypeList();
+                        window.location.reload();
+                    }
+                    
+    }, 'json');
+}
+
 
 $('.edit_room_type').click(function(){
  
@@ -186,24 +238,19 @@ $(function() {
 	// 	innGrid.addRatePlan(ratePlan);
     // });
     
-   $('.add-room').click(function () {
+   $('.add_room_type').click(function () {
    
         var roomType = $('#addnew_room_type_model').find('.new-room-type-modal');
-        innGrid.updateRoomType(roomType);
+        innGrid.createRoomType(roomType);
            
    });
 
-  
-	$('#add-room-type-button').click(function () {		
-
-		$.post(getBaseURL() + 'settings/room_inventory/create_room_type', function (data) {
-
+    $('#add-room-type-button').click(function(){
+        $.post(getBaseURL() + 'settings/room_inventory/add_room_type', function (data) {
             $("#addnew_room_type_model").modal("show");
-			
             $("#addnew_room_type_model .modal-body").html(data);
 
-		    $("#addnew_room_type_model .modal-body")
-                // .append($(data).fadeIn('slow'))
+            $("#addnew_room_type_model .modal-body")
                 .find(".slider-range")
                 .first()
                 .slider({
@@ -217,42 +264,77 @@ $(function() {
                     }
                 });
 
-            innGrid.populateRoomTypeList();
-            innGrid.updateAvailabilities("","");
-
-            mixpanel.track(l("Room Type created in settings", true));
-            // Intercom tracking
-            var metadata = {
-                room_type_id: $(data).attr('id')
-            };
-            // Intercom('trackEvent', 'roomtype-created', metadata);
-
-
-            var room_count = $(data).attr('id');
-            var button_count = 1001;
-
             setTimeout(function(){
-                $( '.update-room-type-button').each( function() {
-                    $(this).attr('count',button_count);
-                    button_count++;
-               });
-            }, 3000);
-
-            setTimeout(function(){
-                $( 'textarea').each( function() {
-                    $(this).attr('id','desc_'+room_count);
-
-                    CKEDITOR.replace( $(this).attr('id'),{
-                        customConfig: '/application/third_party/ckeditor/config.js'
-                    } );
-                    // room_count++;
-                });
-           }, 3000);
+                $("#addnew_room_type_model .modal-body").find('textarea').each(function () {
+                        $(this).attr('id', 'desc_new_roomtype');
+                        CKEDITOR.replace($(this).attr('id'), {
+                            customConfig: '/application/third_party/ckeditor/config.js'
+                        });
+                    });
+            }, 300);
         });
+    });
+
+  
+	// $('#add-room-type-button').click(function () {		
+
+	// 	$.post(getBaseURL() + 'settings/room_inventory/create_room_type', function (data) {
+
+ //            $("#addnew_room_type_model").modal("show");
+			
+ //            $("#addnew_room_type_model .modal-body").html(data);
+
+	// 	    $("#addnew_room_type_model .modal-body")
+ //                // .append($(data).fadeIn('slow'))
+ //                .find(".slider-range")
+ //                .first()
+ //                .slider({
+ //                    range: true,
+ //                    min: 1,
+ //                    max: 30,
+ //                    values: [ 1, 8 ],
+ //                    slide: function( event, ui ) {
+ //                        $(this).parents('.range_occupancy').find('.min_occupancy').val(ui.values[ 0 ]);
+ //                        $(this).parents('.range_occupancy').find('.max_occupancy').val(ui.values[ 1 ]);
+ //                    }
+ //                });
+
+ //            innGrid.populateRoomTypeList();
+ //            innGrid.updateAvailabilities("","");
+
+ //            mixpanel.track(l("Room Type created in settings", true));
+ //            // Intercom tracking
+ //            var metadata = {
+ //                room_type_id: $(data).attr('id')
+ //            };
+ //            // Intercom('trackEvent', 'roomtype-created', metadata);
+
+
+ //            var room_count = $(data).attr('id');
+ //            var button_count = 1001;
+
+ //            setTimeout(function(){
+ //                $( '.update-room-type-button').each( function() {
+ //                    $(this).attr('count',button_count);
+ //                    button_count++;
+ //               });
+ //            }, 3000);
+
+ //            setTimeout(function(){
+ //                $( 'textarea').each( function() {
+ //                    $(this).attr('id','desc_'+room_count);
+
+ //                    CKEDITOR.replace( $(this).attr('id'),{
+ //                        customConfig: '/application/third_party/ckeditor/config.js'
+ //                    } );
+ //                    // room_count++;
+ //                });
+ //           }, 3000);
+ //        });
         
     	
 
-	});             
+	// });             
         
 	$(document).on('click', '.delete-room-type-button', function () {
 		var roomType = $(this).closest(".room-type-div");
@@ -280,10 +362,6 @@ $(function() {
                    
 	$(document).on('click', '.update-room-type-button', function () {	
         var roomType = $('#room_type_model').find('.room-type-div');
-        // var roomType = $(this).closest('.room-type-div');
-        // console.log(roomTypeDiv);
-                // var count = $(this).attr('count');
-                //var descrip_id = 'desc_'+count;
 		innGrid.updateRoomType(roomType);
 	});
 	

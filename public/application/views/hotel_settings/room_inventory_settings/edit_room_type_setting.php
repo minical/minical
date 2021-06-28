@@ -76,8 +76,8 @@
                                     <label class="col-sm-3 control-label"><?php echo l('show_on_website'); ?></label>
 									<div class="col-sm-2">
                                         <select class="enter form-control" name="can-be-sold-online">
-                                            <option value="0" <?php if ($room_type['can_be_sold_online'] == "0") echo "SELECTED"; ?>><?php echo l('No', true); ?></option>
                                             <option value="1" <?php if ($room_type['can_be_sold_online'] == "1") echo "SELECTED"; ?>><?php echo l('Yes', true); ?></option>
+                                            <option value="0" <?php if ($room_type['can_be_sold_online'] == "0") echo "SELECTED"; ?>><?php echo l('No', true); ?></option>
                                         </select>
                                     </div>
 

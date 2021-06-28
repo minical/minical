@@ -254,37 +254,129 @@ class Room_inventory extends MY_Controller {
         $this->load->view('includes/bootstrapped_template', $view_data);
     }
 
-    function create_room_type() {
-        $room_type_id = $this->Room_type_model->create_room_type(
-                $this->company_id, 'New Room Type', 'NRT'
-        );
-        $this->_create_room_log("Create New Room Type ( [ID {$room_type_id}])");
-        $room_type = $this->Room_type_model->get_room_type($room_type_id);
+    function add_room_type(){
 
-        $date_range_id = $this->Date_range_model->create_date_range(
-                Array(
-                    'date_start' => '2000-01-01',
-                    'date_end' => '2030-01-01',
-                )
-        );
+        if (!is_null($charge_types = $this->Charge_type_model->get_charge_types($this->company_id)))
+        {
+            $data['charge_types'] = $charge_types;
+        }
 
+        $data['rate_plans'] = $this->Rate_plan_model->get_rate_plans($this->company_id);
 
-        $this->Date_range_model->create_date_range_x_room_type(
-                Array(
-                    'room_type_id' => $room_type_id,
-                    'date_range_id' => $date_range_id
-                //'ota_availability' => '999' this is done as database default value
-                )
-        );
-
-        //Load data to get html code used by javascript to generate the new room type dynamically.      
-        //Instead of making the page refresh to see the new room type.
-
-        $this->load->view('hotel_settings/room_inventory_settings/new_room_type', $room_type);
+        $this->load->view('hotel_settings/room_inventory_settings/new_room_type', $data);
     }
 
+    function create_room_type() {
+        global $unsanitized_post;
+        $this->form_validation->set_rules('room_type_id', 'Room Type ID', 'trim');
 
-   
+        // $room_type_id = $this->security->xss_clean($this->input->post('room_type_id'));
+        
+        $data = array(
+            'name' => $this->security->xss_clean($this->input->post('room_type_name')),
+            'acronym' => $this->security->xss_clean($this->input->post('acronym')),
+            'max_occupancy' => $this->security->xss_clean($this->input->post('max_occupancy')),
+            'min_occupancy' => $this->security->xss_clean($this->input->post('min_occupancy')),
+            'max_adults' => $this->security->xss_clean($this->input->post('max_adults')),
+            'max_children' => $this->security->xss_clean($this->input->post('max_children')),
+            'can_be_sold_online' => $this->security->xss_clean($this->input->post('can_be_sold_online')) ? $this->security->xss_clean($this->input->post('can_be_sold_online')) : 0,
+            'default_room_charge' => $this->input->post('default_room_charge') ? $this->input->post('default_room_charge') : null,
+            'prevent_inline_booking' => $this->input->post('prevent_inline_booking'),
+            'description' => isset($unsanitized_post['description']) ? $unsanitized_post['description'] : null,
+            'company_id' => $this->company_id
+        );
+        $file_name = $this->security->xss_clean($this->input->post('file_name'));
+
+
+        if ($this->form_validation->run() == TRUE) {
+            
+            $max_occupancy = $this->input->post('max_occupancy') ? $this->input->post('max_occupancy') : 4;
+            $min_occupancy = $this->input->post('min_occupancy') ? $this->input->post('min_occupancy') : 4;
+            $max_adults = $this->input->post('max_adults');
+            $max_children = $this->input->post('max_children');
+            $total = $max_adults + $max_children;
+            
+            if($min_occupancy > $max_occupancy)
+            {
+                $value = 'An error occured. Number of Min Occupancy should be equal or less than Max Occupancy.';
+                $data = array(
+                    'error' => 'error',
+                    'value' => $value
+                );
+            }
+            else if($max_occupancy && $max_adults > $max_occupancy)
+            {
+                $value = 'An error occured. Number of adults should be less than Max Occupancy.';
+                $data = array(
+                    'error' => 'error',
+                    'value' => $value
+                );
+            }
+            else if($max_adults < 1 && $min_occupancy)
+            {
+                $value = 'An error occured. Number of adults should be atleast 1.';
+                $data = array(
+                    'error' => 'error',
+                    'value' => $value
+                );
+            }
+            else if($total < $min_occupancy)
+            {
+                $value = 'An error occured. Number of guests should be equal or greater than Min Occupancy.';
+                $data = array(
+                    'error' => 'error',
+                    'value' => $value
+                );
+            }
+            else if($max_occupancy && $max_children >= $max_occupancy)
+            {
+                $value = 'An error occured. Number of childrens should be less than Max Occupancy.';
+                $data = array(
+                    'error' => 'error',
+                    'value' => $value
+                );
+            }
+            else
+            {
+                //add room type
+                if ($room_type_id = $this->Room_type_model->add_new_room_type($data)) {
+                    $this->_create_room_log("Create New Room Type ( [ID {$room_type_id}])");
+
+                    $date_range_id = $this->Date_range_model->create_date_range(
+                            Array(
+                                'date_start' => '2000-01-01',
+                                'date_end' => '2030-01-01',
+                            )
+                    );
+
+                    $this->Date_range_model->create_date_range_x_room_type(
+                            Array(
+                                'room_type_id' => $room_type_id,
+                                'date_range_id' => $date_range_id
+                            )
+                    );
+
+                    $value = 'Save Successful';
+                } else {
+                    $value = 'An error occured. Please contact adminstrator if it continues.';
+                }
+
+                $data = array(
+                    'error' => '',
+                    'value' => $value
+                );
+            }
+
+            echo json_encode($data);
+        } else { //Validation failed. Add error message
+            $data = array(
+                'error' => form_error('room_type_name'),
+                'value' => ''
+            );
+
+            echo json_encode($data);
+        }
+    }
 
     function edit_room_type(){
         $room_type_id = $this->input->post('room_type_id');

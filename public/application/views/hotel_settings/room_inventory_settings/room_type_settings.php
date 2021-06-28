@@ -6,7 +6,7 @@
             <div class="page-title-icon">
                 <i class="pe-7s-home text-success"></i>
             </div>
-           <?php echo l('room_type') . " " . l('settings'); ?>
+           <?php echo l('Room type settings'); ?>
         </div>
     </div>
   </div>
@@ -189,9 +189,9 @@
 									<button type="button" class="btn btn-danger" data-dismiss="modal">
 										<?php echo l('Cancel', true); ?>
 									</button>
-									<button class="btn btn-success add-room" count="">
-						<?php echo l('add_room_type'); ?>
-					</button>
+									<button class="btn btn-success add_room_type" count="">
+										<?php echo l('add_room_type'); ?>
+									</button>
 								</div>
 							</div>
 						</div>

@@ -106,7 +106,7 @@ innGrid.bookingResized = function(event, dayDelta, minuteDelta, revertFunc) {
                 end2: encodeURIComponent(dateTo2)
             },
             success: function(data){
-                if (data != "success") {
+                if (data.trim() != "success") {
                     alert(data);
                     info.revert();
                 } else {
@@ -819,7 +819,7 @@ function occupacyMoved(event,dayDelta,minuteDelta,allDay,revertFunc,ev,ui,roomDe
                 end2: encodeURIComponent(dateTo2)
             },
             success: function(data){
-                if (data != "success") {
+                if (data.trim() != "success") {
                     alert(data);
                     revertFunc();
                 } else {
@@ -975,11 +975,11 @@ function convertToEvents(data){
         bookings[i].customer_type_id = ""+data[i].customer_type_id;
         bookings[i].room_id = ""+data[i].room_id;
             var flag = '';
-            if(data[i].customer_type_id == '1')
+            if(data[i].customer_type_id == '-1')
             {
                 flag = 'blacklist';
             }
-            else if(data[i].customer_type_id == '2')
+            else if(data[i].customer_type_id == '-2')
             {
                 flag = 'vip';
             }
