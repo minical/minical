@@ -22583,6 +22583,9 @@ ALTER TABLE `customer` CHANGE `customer_type_id` `customer_type_id` INT(11) NULL
 
 ALTER TABLE `ota_room_types` ADD `company_id` BIGINT(20) NULL AFTER `minical_room_type_id`;
 ALTER TABLE `ota_rate_plans` ADD `company_id` BIGINT(20) NULL AFTER `ota_room_type_id`;
+
+ALTER TABLE `booking_source` CHANGE `id` `id` INT(11) NOT NULL AUTO_INCREMENT, CHANGE `commission_rate` `commission_rate` VARCHAR(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL, CHANGE `is_deleted` `is_deleted` TINYINT(1) NOT NULL DEFAULT '0';
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
