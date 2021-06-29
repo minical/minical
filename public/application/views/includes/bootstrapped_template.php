@@ -172,7 +172,7 @@
                     	</button>
                 		</div>
             		</div>
-					<?php if(current_url() != "http://" . $_SERVER['HTTP_HOST'].'/auth/register' && current_url() != "http://" . $_SERVER['HTTP_HOST'].'/auth/login' && current_url() != "http://" . $_SERVER['HTTP_HOST'].'/auth/forgot_password'){?>
+					<?php if($menu_on && current_url() != "http://" . $_SERVER['HTTP_HOST'].'/auth/register' && current_url() != "http://" . $_SERVER['HTTP_HOST'].'/auth/login' && current_url() != "http://" . $_SERVER['HTTP_HOST'].'/auth/forgot_password'){?>
 						<div  >
 
 							<?php 
@@ -183,13 +183,15 @@
 						</div>
 					<?php }?>
 
-					
+					<?php if($menu_on){ ?>
 					<div class="app-main__outer main" >
-						
-						<div class="app-main__inner">
-						<?php 
+					<div class="app-main__inner">
+					<?php } else { ?>
+						<div class="main" >
+						<div class="">
+					<?php }
 						$this->load->view($main_content);
-						?>
+					?>
 					</div>
 
 						<div class="push"></div>

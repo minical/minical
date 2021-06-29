@@ -95,7 +95,17 @@ if ( ! function_exists('get_languages'))
                 }
                 else
                 {
-                    continue;
+                    $files_path = $modules_path . $module."/language/english/index.php";
+                    if(file_exists($files_path))
+                    {
+                        require($files_path);
+                        if(isset($lang[$module])){
+                            foreach($lang[$module] as $key => $value)
+                            {
+                                $data_arr[strtolower($module.'/'.$key)] = $value;
+                            }
+                        }
+                    }
                 }
             }
         }
