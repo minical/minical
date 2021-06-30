@@ -260,6 +260,10 @@
                     <button class="btn btn-primary m-1" id="print-invoice-button">
                         <?php echo l('print').' '.l('invoice'); ?>
                     </button>
+
+                    <?php
+                    if ($menu_on === true):
+                        ?>
                     <button class="btn btn-primary dropdown-toggle m-1 " type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
                         <?php echo l('more').' '.l('options'); ?>
                        <!--  <span class="caret"></span> -->
@@ -281,6 +285,8 @@
                             </a>
                         </li>
                     </ul>
+                    <?php
+                    endif; ?>
                 </div>
                 
             </div>
@@ -858,7 +864,7 @@
                                                 <button type="button" class="btn btn-danger capture-payment-button hidden-print not-allowed" disabled>
                                                     <i class="fa fa-credit-card" aria-hidden="true"></i>
                                                 </button>
-                                            <?php } else { ?>
+                                            <?php } else if($menu_on === true) { ?>
                                                 <button type="button" class="btn btn-info verify_payment" data-payment_link_id="<?php echo $payment['payment_link_id']; ?>" data-payment_id="<?php echo $payment['payment_id']; ?>">
                                                     Verify
                                                 </button>

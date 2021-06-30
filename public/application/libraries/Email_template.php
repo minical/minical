@@ -15,6 +15,7 @@ class Email_template {
         $this->ci->load->model('Company_model');
         $this->ci->load->model('Charge_type_model');
         $this->ci->load->model('Image_model');
+        $this->ci->load->model('Booking_source_model');
 
         $this->ci->load->library('Email');
         $this->ci->load->helper('language_translation_helper');
@@ -398,15 +399,51 @@ class Email_template {
         }
 
         $common_booking_sources = json_decode(COMMON_BOOKING_SOURCES, true);
-
-        $booking_source = '';
-        foreach ($common_booking_sources as $key => $value) {
-            if($key == $booking_data['source'])
+        $coomon_sources_setting = $this->ci->Booking_source_model->get_common_booking_sources_settings($company_id);
+        $sort_order = 0;
+        foreach($common_booking_sources as $id => $name)
+        {
+            if(!(isset($coomon_sources_setting[$id]) && $coomon_sources_setting[$id]['is_hidden'] == 1))
             {
-                $booking_source = $value;
-                break;
+                $source_data[] = array(
+                    'id' => $id,
+                    'name' => $name,
+                    'sort_order' => isset($coomon_sources_setting[$id]) ? $coomon_sources_setting[$id]['sort_order'] : $sort_order
+                );
+            }
+            $sort_order++;
+        }
+
+        $booking_sources = $this->ci->Booking_source_model->get_booking_source($company_id);
+        if (!empty($booking_sources)) {
+            foreach ($booking_sources as $booking_source) {
+                if($booking_source['is_hidden'] != 1)
+                {
+                    $source_data[] = array(
+                        'id' => $booking_source['id'],
+                        'name' => $booking_source['name'],
+                        'sort_order' => $booking_source['sort_order']
+                    );
+                }
             }
         }
+        usort($source_data, function($a, $b) {
+            return $a['sort_order'] - $b['sort_order'];
+        });
+
+        $booking_sources = $source_data;
+
+        $booking_source = '';
+
+        if($booking_sources){
+            foreach ($booking_sources as $key => $value) {
+                if($value['id'] == $booking_data['source'])
+                {
+                    $booking_source = $value['name'];
+                    break;
+                }
+            }
+        }         
 
         //Send confirmation email
         $email_data = array (
