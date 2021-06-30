@@ -172,7 +172,7 @@
                     	</button>
                 		</div>
             		</div>
-					<?php if($menu_on && current_url() != "http://" . $_SERVER['HTTP_HOST'].'/auth/register' && current_url() != "http://" . $_SERVER['HTTP_HOST'].'/auth/login' && current_url() != "http://" . $_SERVER['HTTP_HOST'].'/auth/forgot_password'){?>
+					<?php if(isset($menu_on) && $menu_on && current_url() != "http://" . $_SERVER['HTTP_HOST'].'/auth/register' && current_url() != "http://" . $_SERVER['HTTP_HOST'].'/auth/login' && current_url() != "http://" . $_SERVER['HTTP_HOST'].'/auth/forgot_password'){?>
 						<div  >
 
 							<?php 
@@ -183,7 +183,7 @@
 						</div>
 					<?php }?>
 
-					<?php if($menu_on){ ?>
+					<?php if(isset($menu_on) && $menu_on){ ?>
 					<div class="app-main__outer main" >
 					<div class="app-main__inner">
 					<?php } else { ?>
