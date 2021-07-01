@@ -60,23 +60,26 @@ function Header(calendar, options) {
 								{
 									id: 'booking_search',
 									method: 'GET',
-									class: "form-group hidden-xs",
+									class: "input-group hidden-xs",
 									action: getBaseURL()+"booking/show_bookings/",
                                     style: 'margin-left:10px'
 								}
 							)
+							.append("<input class='form-control' name='search_query' type='text' value='' placeholder='"+l('search_bookings')+"...'>")
 							.append(
-								$("<div/>", {
-									class: "form-group"
+								$("<span/>", {
+									class: "input-group-btn"
 								})
-								.append("<input class='form-control' name='search_query' type='text' value='' placeholder='"+l('search_bookings')+"...'>")
+								.append(
+									$("<button/>", {
+										class: "btn btn-light",
+										style: "border: 1px solid #ccc; line-height: 1.45;",
+										html: "<i class='fa fa-search'></i>"
+									})
+
+								)
 							)
-							// .append(
-							// 	$("<div/>", {
-							// 		class: "form-group"
-							// 	})
-							// 	.append("<input class='btn btn-light' type='submit' style='margin-left:10px;' value='"+l('search_bookings')+"'>")
-							// )
+
 						)
 						.append(
 							$("<div/>", {
