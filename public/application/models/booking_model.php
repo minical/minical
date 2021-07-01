@@ -83,21 +83,21 @@ class Booking_model extends CI_Model {
         return NULL; 
     }
     
-    function get_ota_bookings($ota_booking_id = null)
-    {
-        $sql = "SELECT * FROM booking as b
-                left join booking_block as brh on brh.booking_id = b.booking_id
-                where b.booking_notes LIKE 'created via Booking.com. Booking ID: ".$ota_booking_id."%'
-                and b.state != 4 and b.is_deleted = 0";
+//     function get_ota_bookings($ota_booking_id = null)
+//     {
+//         $sql = "SELECT * FROM booking as b
+//                 left join booking_block as brh on brh.booking_id = b.booking_id
+//                 where b.booking_notes LIKE 'created via Booking.com. Booking ID: ".$ota_booking_id."%'
+//                 and b.state != 4 and b.is_deleted = 0";
         
-        $query = $this->db->query($sql);
-//        echo $this->db->last_query();
-        if($query->num_rows() >= 1)
-        {
-            return $query->result_array();
-        }
-        return array();
-    }
+//         $query = $this->db->query($sql);
+// //        echo $this->db->last_query();
+//         if($query->num_rows() >= 1)
+//         {
+//             return $query->result_array();
+//         }
+//         return array();
+//     }
     
     //get booking table based on filters
     //elements of the filter array are: start_date, end_date, state, order_by, order, offset, num
@@ -2760,5 +2760,27 @@ class Booking_model extends CI_Model {
             $booking_fields[$field['id']] = $field['value'];
         }
         return $booking_fields;
+    }
+
+    function get_ota_bookings($company_id){
+
+        $where = "(JSON_TYPE(JSON_EXTRACT(customer_meta_data, '$.token')) != 'NULL')";
+
+        $this->db->from('booking as b');
+        $this->db->join('booking_block as bb', 'bb.booking_id = b.booking_id');
+        $this->db->join('customer as c', 'c.customer_id = b.booking_customer_id');
+        $this->db->join('customer_card_detail as ccd', 'ccd.customer_id = c.customer_id');
+        $this->db->where('c.is_deleted','0');
+        $this->db->where('b.is_deleted','0');
+        $this->db->where('b.is_ota_booking','1');
+        $this->db->where($where);
+        $this->db->where('b.company_id',$company_id);
+
+        $query = $this->db->get();
+
+        if($query->num_rows() >= 1){
+            return $query->result_array();
+        }
+        return NULL;
     }
 }

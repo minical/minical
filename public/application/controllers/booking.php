@@ -1650,7 +1650,15 @@ class Booking extends MY_Controller
             {
                 $balance = 0;
             }
-            $response[] = array('booking_id' => $booking_id, 'balance' => $balance);
+
+            $room_type_id = $room['room_type_id'];
+            $response[] = array(
+                            'booking_id' => intval($booking_id),
+                            'balance' => $balance, 
+                            'room_type_id' => intval($room_type_id),
+                            'check_in_date' => $room['check_in_date'],
+                            'check_out_date' => $room['check_out_date']
+                        );
 
             $this->Booking_model->create_booking_fields($booking_id, $custom_booking_fields);
         }
@@ -2669,7 +2677,8 @@ class Booking extends MY_Controller
                         'check_out_date' => $check_out_date,
                         'booking_id' => $booking_id,
                         'room_cancelled' => $room_cancelled,
-                        'room_id' => $booking_block['room_id']
+                        'room_id' => $booking_block['room_id'],
+                        'room_type_id' => $booking_block['room_type_id']
                     );
                 }
             }

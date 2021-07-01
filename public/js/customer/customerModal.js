@@ -308,7 +308,7 @@
             {
                 console.log(innGrid.isAsaasPaymentEnabled);
                 var sensitiveCardNumber =
-               innGrid.isAsaasPaymentEnabled ? ( customer.cc_number_encrypted ? '<a style="position: absolute; right: 26px; top: 7px; z-index: 9999;" title = "Show Card Number" class="show_cc" data-cc_number_encrypted="'+customer.cc_number_encrypted+'" data-cc_number="'+customer.cc_number+'" data-cc_detail="card_number" href="javascript:"><i class="fa fa-eye" ></i></a><input type="hidden" class="customer_id" data-cc_token="'+customer.cc_tokenex_token+'" data-cc_cvc="'+customer.cc_cvc_encrypted+'" value="'+customer.customer_id+'"/>' : '') : "";
+               innGrid.isAsaasPaymentEnabled ? ( customer.customer_pci_token ? '<a style="position: absolute; right: 26px; top: 7px; z-index: 9999;" title = "Show Card Number" class="show_cc" data-cc_number_encrypted="'+customer.cc_number_encrypted+'" data-cc_number="'+customer.cc_number+'" data-customer_pci_token="'+customer.customer_pci_token+'" data-cc_detail="card_number" href="javascript:"><i class="fa fa-eye" ></i></a><input type="hidden" class="customer_id" data-cc_token="'+customer.cc_tokenex_token+'" data-cc_cvc="'+customer.cc_cvc_encrypted+'" value="'+customer.customer_id+'"/>' : '') : "";
                 var sensitiveCardCVC = innGrid.isAsaasPaymentEnabled ? ( customer.cc_cvc_encrypted ? '<a style="position: absolute; right: 26px; top: 7px; z-index: 9999;" title = "Show Card CVC" class="show_cc" data-cc_number_encrypted="'+customer.cc_number_encrypted+'" data-cc_number="'+customer.cc_number+'" data-cc_detail="card_cvc" href="javascript:"><i class="fa fa-eye" ></i></a>' : '') : "";
            
               $customer_form.append(
@@ -339,7 +339,7 @@
                         value: customer.cc_number
                     })
                     )
-                    //.append(sensitiveCardNumber)
+                    .append(sensitiveCardNumber)
                     .append($('<span/>', {
                         id: "masked-card-number-label",
                         style: "position: absolute;top: 0;left: 15px;background: white;max-width: 90%;padding: 8px;",
@@ -953,42 +953,22 @@
         );
     } 
     
-$('body').on('click', '.show_cc', function(){
+    $('body').on('click', '.show_cc', function(){
 
-    var cc_detail = $(this).data('cc_detail');
-    var cc_number_encrypted = $(this).data('cc_number_encrypted');
-    var cc_number = $(this).data('cc_number');
-    var cc_cvc = $('.customer_id').data('cc_cvc');
+        var customer_pci_token = $(this).data('customer_pci_token');
 
-    $.ajax({
-            type: "POST",
-            url: getBaseURL() + "customer/get_credit_card_number",
-            data: {
-                cc_cvc: cc_cvc,
-                cc_detail: cc_detail,
-                cc_number: cc_number_encrypted
-            },
-            dataType: "json",
-            success: function (resp) {
-                if(resp.success == 1)
-                {
-                    if(cc_detail == 'card_number') {
-                        $('.masked-card-number-label').text(resp.cc_number);
-                        setTimeout( function(){
-                            $('.masked-card-number-label').text(cc_number);
-                        }, 10000);
-                    } else if(cc_detail == 'card_cvc') {
-                        $('.credit_card_cvc').attr('type','text');
-                        $('.credit_card_cvc').val(resp.cvc);
-                        setTimeout( function(){
-                            $('.credit_card_cvc').attr('type','password');
-                            $('.credit_card_cvc').val('***');
-                        }, 10000);
-                    }
-                }
-            }
-        });
-});
+        var iframe = document.createElement('iframe');
+        iframe.src = getBaseURL() + "customer/get_credit_card_number?customer_pci_token=" + customer_pci_token;
+        iframe.height = '300px';
+        iframe.width  = '100%';
+        iframe.style = 'border-style: none';
+
+        console.log('iframe',iframe);
+
+        $('#display-cc-details').find('.modal-body').html(iframe);
+        $('#display-cc-details').modal('show');
+
+    });
 
 })(jQuery, window, document);
 

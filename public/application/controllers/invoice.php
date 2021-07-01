@@ -170,6 +170,8 @@ class Invoice extends MY_Controller {
             {
                 $data['booking_customer']['customer_name'] = $booking_customer['customer_name'].", ".implode(", ", $staying_customer_names);
             }
+
+            $customer_id = $data['booking_detail']['booking_customer_id'];
         }
         /*Get data from card table*/
       
@@ -190,8 +192,9 @@ class Invoice extends MY_Controller {
                 $data['customers'][$key]['cc_tokenex_token'] = $card_data['cc_tokenex_token'];
                 $data['customers'][$key]['cc_cvc_encrypted'] = $card_data['cc_cvc_encrypted'];
                 $data['customers'][$key]['evc_card_status'] = $card_data['evc_card_status'];
+                $data['customers'][$key]['customer_meta_token'] = json_decode($card_data['customer_meta_data'], true)['token'];
             }
-        } 
+        }
         // for company logo
         $data['company_logos']   = $this->Image_model->get_images($data['company']['logo_image_group_id']);
         

@@ -861,7 +861,7 @@ class Auth extends MY_Controller
         else
         {
             //Create customer types
-            $this->Customer_type_model->create_customer_type($company_id, 'Traveller');
+            //$this->Customer_type_model->create_customer_type($company_id, 'Traveller');
             $room_type_id = $this->Room_type_model->create_room_type($company_id, 'Sample Room Type', 'SRT', 2, 1, 1);
 
             if ($room_type_id) {
@@ -1846,12 +1846,14 @@ class Auth extends MY_Controller
             'number_of_rooms'  => isset($data['number_of_rooms'])?$data['number_of_rooms']:'15',
             'country'          => isset($data['country'])?$data['country']:'',
             'phone'            => isset($data['phone'])?$data['phone']:'',
-            'property_type'    => $data['property_type']
+            'property_type'    => $data['property_type'],
+            'enable_api_access' => 1
         );
 
         // create company in minical
         $this->Company_model->update_company($company_id, $company_data);
-
+        $api_key = md5(uniqid(rand(), true));
+        $this->Company_model->insert_company_api_key($company_id, $api_key);
         // create all the default data entries. Such as rooms, room types, charge types, etc...
         //First remove previous charge types associated with this company
         $this->Charge_type_model->delete_charge_type($company_id);

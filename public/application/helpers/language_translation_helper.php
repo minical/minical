@@ -67,6 +67,12 @@ if ( ! function_exists('get_languages'))
         $data_arr = array();
 
         $language_name = $CI->session->userdata('language');
+        
+        if($language_name == ''){
+            $language_data = $CI->translation_model->get_record_where('language', array('id' => $language_id));
+            $language_name = $language_data[0]['flag'];
+        }
+
         $modules_path = APPPATH.'extensions/';
         $modules = scandir($modules_path);
        
@@ -89,7 +95,17 @@ if ( ! function_exists('get_languages'))
                 }
                 else
                 {
-                    continue;
+                    $files_path = $modules_path . $module."/language/english/index.php";
+                    if(file_exists($files_path))
+                    {
+                        require($files_path);
+                        if(isset($lang[$module])){
+                            foreach($lang[$module] as $key => $value)
+                            {
+                                $data_arr[strtolower($module.'/'.$key)] = $value;
+                            }
+                        }
+                    }
                 }
             }
         }

@@ -2626,6 +2626,9 @@ var bookingModalInvoker = function ($) {
                                         style: 'display:block;border-top: 1px solid #ddd;padding: 5px 15px; background:' + activeRoomBg + ';color:' + cRoomColor,
                                         id: objVal.booking_id,
                                         'data-room-id': objVal.room_id,
+                                        'data-room_type_id': objVal.room_type_id,
+                                        'data-check_in_date': objVal.check_in_date,
+                                        'data-check_out_date': objVal.check_out_date,
                                         'data-booking-cancelled': objVal.room_cancelled
                                     }).append(
                                         $("<div/>", {
@@ -4919,6 +4922,18 @@ var bookingModalInvoker = function ($) {
                                 }, 500);
                             }
                         } else {
+
+                            that.booking = data.booking;
+                            console.log('response',response);
+
+                            // Create the event
+                            var event = new CustomEvent('open_booking_modal', { "detail" : {"reservation_id" : that.booking.booking_id, "booking_data" : that.booking} });
+                            var bookingCreatedEvent = new CustomEvent('booking_created', { "detail" : {"booking_data" : that.booking, "booking_room_data" : response} });
+
+                            // Dispatch/Trigger/Fire the event
+                            document.dispatchEvent(event);
+                            document.dispatchEvent(bookingCreatedEvent);
+                                
                             that._closeBookingModal();
                         }
 
@@ -5117,10 +5132,10 @@ var bookingModalInvoker = function ($) {
                             $('.booking_balance').html(number_format(response.balance, 2, ".", ""));
                         }
 
-                        innGrid.updateAvailabilities(
-                            that.booking.check_in_date,
-                            that.booking.check_out_date
-                        );
+                        // update availabilities of the dates after the update
+
+                        var bookingUpdatedEvent = new CustomEvent('booking_updated', { "detail" : {"reservation_id" : bookingId, "booking_data" : data} });
+                        document.dispatchEvent(bookingUpdatedEvent);
 
                         that._getLinkedGroupBookingRoomList();
                         if (bookingId == that.booking.booking_id && cancelledTrue != '') {
@@ -6867,9 +6882,15 @@ var bookingModalInvoker = function ($) {
         _cancelDeleteGroupBookingRoom: function (action) {
             var that = this;
             var booking_ids = [];
+            var booking_room_ids = [];
+            var booking_check_ins = [];
+            var booking_check_outs = [];
             $('.room-lists').find(".room-list-info").each(function () {
                 if ($(this).find(".cancelled-room-checkbox").prop('checked') && $(this).attr("id") !== 'undefined') {
                     booking_ids.push($(this).attr("id"));
+                    booking_room_ids[$(this).attr("id")] = $(this).data("room_type_id");
+                    booking_check_ins[$(this).attr("id")] = $(this).data("check_in_date");
+                    booking_check_outs[$(this).attr("id")] = $(this).data("check_out_date");
                 }
             });
             if (booking_ids.length < 1) {
@@ -6891,10 +6912,14 @@ var bookingModalInvoker = function ($) {
                 });
             }
 
+            var booking_blocks = [];
             $.each(booking_ids, function (key, value) {
                 if (action == 'Cancel') {
                     var bookingId = value;
-                    var bookingData = {booking: {state: 4}}
+                    booking_blocks.push({room_type_id: booking_room_ids[bookingId], check_in_date: booking_check_ins[bookingId], check_out_date: booking_check_outs[bookingId]});
+                    var booking_data = [];
+                    booking_data[0] = booking_blocks[key];
+                    var bookingData = {booking: {state: 4}, rooms: booking_data}
                     that._updateGroupBooking(bookingData, l('Booking is cancelled'), bookingId);
                 }
                 if (action == 'Delete') {

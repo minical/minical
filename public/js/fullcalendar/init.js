@@ -349,21 +349,19 @@ innGrid.buildCalendar = function (rooms) {
 
             // get booking sources text
             var sources = [];
-            for (var key in COMMON_BOOKING_SOURCES) {
-                sources.push({id: key, name: COMMON_BOOKING_SOURCES[key]});
+            for(var i = 0; i < innGrid.bookingSources.length; i++)
+            {
+                sources.push({id: innGrid.bookingSources[i].id, name: innGrid.bookingSources[i].name});
             }
-
+            
             var sourceVal = info.event.extendedProps.data.booking_source;
             var sourceText = '';
-            if (parseInt(sourceVal) < 21) {
-                $.each(sources, function (i, source) {
-                    if (source.id == sourceVal) {
-                        sourceText = source.name;
-                    }
-                });
-            } else {
-                sourceText = sourceVal;
-            }
+            $.each(sources, function (i, source) {
+                if (source.id == sourceVal)
+                {
+                    sourceText = source.name;
+                }
+            });
 
             var notes = info.event.extendedProps.data.booking_notes.length > 120 ? info.event.extendedProps.data.booking_notes.substr(0, info.event.extendedProps.data.booking_notes.lastIndexOf(' ', 120)) + '...' : info.event.extendedProps.data.booking_notes;
 
