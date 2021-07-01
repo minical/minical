@@ -1,10 +1,5 @@
 DirectoryIndex index.php
 RewriteEngine on
-
-#redirect to new domain secure.roomsy.com
-RewriteCond %{HTTP_HOST} ^v2.roomsy.com$ [NC]
-RewriteRule ^(.*)$ https://secure.roomsy.com/$1 [R=301,L]
-
 RewriteCond $1 !^(index\.php|images|css|js|robots\.txt|favicon\.ico)
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d

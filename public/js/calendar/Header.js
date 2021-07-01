@@ -69,14 +69,14 @@ function Header(calendar, options) {
 								$("<div/>", {
 									class: "form-group"
 								})
-								.append("<input class='form-control' name='search_query' type='text' value=''>")
+								.append("<input class='form-control' name='search_query' type='text' value='' placeholder='"+l('search_bookings')+"...'>")
 							)
-							.append(
-								$("<div/>", {
-									class: "form-group"
-								})
-								.append("<input class='btn btn-light' type='submit' style='margin-left:10px;' value='"+l('search_bookings')+"'>")
-							)
+							// .append(
+							// 	$("<div/>", {
+							// 		class: "form-group"
+							// 	})
+							// 	.append("<input class='btn btn-light' type='submit' style='margin-left:10px;' value='"+l('search_bookings')+"'>")
+							// )
 						)
 						.append(
 							$("<div/>", {
@@ -89,7 +89,6 @@ function Header(calendar, options) {
 									$("<button/>", {
 										href: '#',
 										class: 'btn btn-light filter-booking',
-                                        style: 'margin-left:10px',
 										text: l('More')
 									}).on('click', function() {
 										$('#filter-booking').slideToggle(); 
