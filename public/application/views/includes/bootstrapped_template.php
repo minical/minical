@@ -184,9 +184,10 @@
 					<?php }?>
 
 				<?php if(isset($menu_on) && $menu_on){ ?>
-                    <div class="app-main__outer main" >
-                        <?php if(current_url() != "http://" . $_SERVER['HTTP_HOST'].'/booking'){?><div class="app-main__inner"><?php }else{?>
-                            <div class="app_inner"><?php }?>
+
+                   
+                        <?php if(current_url() != "http://" . $_SERVER['HTTP_HOST'].'/booking'){?> <div class="app-main__outer main" ><div class="app-main__inner"><?php }else{?>
+                           <div class="app_outer main" > <div class="app_inner"><?php }?>
                                 <?php } else { ?>
                                 <div class="main" >
                                     <div class="">

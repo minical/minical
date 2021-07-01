@@ -2997,6 +2997,11 @@ a.btn.disabled,fieldset:disabled a.btn{
 
     padding-left:250px
 }
+.fixed-sidebar .app-main .app_outer{
+    padding-left:220px;
+    padding-top: 0px;
+    background: none;
+}
 
 .fixed-sidebar:not(.fixed-header) .app-sidebar .app-header__logo{
     display:flex
