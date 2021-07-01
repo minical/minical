@@ -23,12 +23,12 @@ function Header(calendar, options) {
 			element = $("<div/>",
 						{
 							class: "fc-header pad-btn form-inline col-md-12",
-							style:"margin-bottom: 1.0rem;",
+							// style:"margin-bottom: 1.0rem;",
 						})
 						.append(
 							$("<div/>", {
 								class: "form-group",
-								style: 'margin: 10px;'
+								// style: 'margin: 10px;'
 							})
 							.append(
 								$("<div/>",
