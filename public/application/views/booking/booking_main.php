@@ -1,34 +1,6 @@
-<!-- multi-language support for create new booking button -->
-<!-- Bad method. We should use ajax call instead -->
-
-
-<div class="app-page-title">
-    <div class="page-title-wrapper">
-        <div class="page-title-heading">
-            <div class="page-title-icon">
-                <i class="pe-7s-date text-success"></i>
-            </div>
-            <div class="page-title-actions">
-                <?php echo l('Booking'); ?>
-
-        </div>
-        <div>
-            
-          <?php if(check_active_extensions('todays_panel', $this->company_id)){?>
-            <div id="booking_list_wrap" class="col-sm-5 col-lg-4 hidden-xs">
-    <?php echo l("Loading today's panel", true); ?>...
-</div>
-<?php }?>
-        </div>
-    </div>
-  </div>
-</div>
-
-
-
 
 <div class="main-card mb-3 card">
-    <div class="card-body" style="padding: 1.2rem 1.2rem 0 1.2rem;">
+    <div class="card-body" style="padding: 1.2rem 1.2rem 1.2rem 1.2rem;">
 <?php 
     $flag = 1;
     $permissions = $this->session->userdata('permissions');
@@ -92,7 +64,13 @@
 </div>
 
 
-</div></div>
+</div>
+ <?php if(check_active_extensions('todays_panel', $this->company_id)){?>
+            <div id="booking_list_wrap" class="col-sm-5 col-lg-4 hidden-xs">
+    <?php echo l("Loading today's panel", true); ?>...
+</div>
+<?php }?>
+</div>
 
 <div class="modal fade" id="dialog-onhold-message" data-backdrop="static" 
    data-keyboard="false" 
