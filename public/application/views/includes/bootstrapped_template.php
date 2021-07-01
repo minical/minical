@@ -183,27 +183,25 @@
 						</div>
 					<?php }?>
 
-					<?php if(isset($menu_on) && $menu_on){ ?>
-					<div class="app-main__outer main" >
-					<div class="app-main__inner">
-					<?php } else { ?>
-						<div class="main" >
-						<div class="">
-					<?php }
-						$this->load->view($main_content);
-					?>
-					</div>
+				<?php if(isset($menu_on) && $menu_on){ ?>
+                    <div class="app-main__outer main" >
+                        <?php if(current_url() != "http://" . $_SERVER['HTTP_HOST'].'/booking'){?><div class="app-main__inner"><?php }else{?>
+                            <div class="app_inner"><?php }?>
+                                <?php } else { ?>
+                                <div class="main" >
+                                    <div class="">
+                                        <?php }
+                                        $this->load->view($main_content);
+                                        ?>
+                                    </div>
+                                    <div class="push"></div>
+                                    <?php
+                                    //Load footer
+                                    $this->load->view('includes/bootstrapped_footer');
+                                    ?>
+                                </div>
 
-						<div class="push"></div>
-						<?php
-							//Load footer
-						$this->load->view('includes/bootstrapped_footer');
-
-						?>
-					</div>
-				
-				</div>
-
+                            </div>
 
 <?php } ?>
 			</div>
