@@ -861,7 +861,7 @@ class Auth extends MY_Controller
         else
         {
             //Create customer types
-            $this->Customer_type_model->create_customer_type($company_id, 'Traveller');
+            //$this->Customer_type_model->create_customer_type($company_id, 'Traveller');
             $room_type_id = $this->Room_type_model->create_room_type($company_id, 'Sample Room Type', 'SRT', 2, 1, 1);
 
             if ($room_type_id) {

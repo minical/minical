@@ -172,7 +172,7 @@
                     	</button>
                 		</div>
             		</div>
-					<?php if($menu_on && current_url() != "http://" . $_SERVER['HTTP_HOST'].'/auth/register' && current_url() != "http://" . $_SERVER['HTTP_HOST'].'/auth/login' && current_url() != "http://" . $_SERVER['HTTP_HOST'].'/auth/forgot_password'){?>
+					<?php if(isset($menu_on) && $menu_on && current_url() != "http://" . $_SERVER['HTTP_HOST'].'/auth/register' && current_url() != "http://" . $_SERVER['HTTP_HOST'].'/auth/login' && current_url() != "http://" . $_SERVER['HTTP_HOST'].'/auth/forgot_password'){?>
 						<div  >
 
 							<?php 
@@ -183,27 +183,26 @@
 						</div>
 					<?php }?>
 
-					<?php if($menu_on){ ?>
-					<div class="app-main__outer main" >
-					<div class="app-main__inner">
-					<?php } else { ?>
-						<div class="main" >
-						<div class="">
-					<?php }
-						$this->load->view($main_content);
-					?>
-					</div>
+				<?php if(isset($menu_on) && $menu_on){ ?>
 
-						<div class="push"></div>
-						<?php
-							//Load footer
-						$this->load->view('includes/bootstrapped_footer');
+                   
+                        <?php if(current_url() != "http://" . $_SERVER['HTTP_HOST'].'/booking'){?> <div class="app-main__outer main" ><div class="app-main__inner"><?php }else{?>
+                           <div class="app_outer main" > <div class="app_inner"><?php }?>
+                                <?php } else { ?>
+                                <div class="main" >
+                                    <div class="">
+                                        <?php }
+                                        $this->load->view($main_content);
+                                        ?>
+                                    </div>
+                                    <div class="push"></div>
+                                    <?php
+                                    //Load footer
+                                    $this->load->view('includes/bootstrapped_footer');
+                                    ?>
+                                </div>
 
-						?>
-					</div>
-				
-				</div>
-
+                            </div>
 
 <?php } ?>
 			</div>
