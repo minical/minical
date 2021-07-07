@@ -855,7 +855,7 @@
                                         <?php } ?>
                                         <span class="visible-print-block"><?php echo l('Authorized', true); ?></span>
                                     <?php } else { ?>
-                                        <span><?php echo ($payment['payment_status'] == 'charge') ? 'Captured' : ($payment['payment_status'] == 'payment_link' ? 'Pending' : 'Refunded'); ?></span>
+                                        <span><?php echo ($payment['payment_status'] == 'charge') ? l('Captured', true) : ($payment['payment_status'] == 'payment_link' ? l('Pending', true) : l('Refunded', true)); ?></span>
                                         <div class="payment_status_buttons">
                                             <?php if (!$payment['read_only']){ if($payment['is_captured']){?>
                                                 <button class="btn btn-primary delete-payment" data-toggle="tooltip" title="Refund"  title="Created by <?php echo $payment['user_name']; ?>">
