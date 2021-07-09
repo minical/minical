@@ -1,6 +1,9 @@
 
 <p>
-	<h1 align="center">miniCal</h1>
+	<h1 align="center">
+		![minical logo](https://user-images.githubusercontent.com/604232/125140727-03658d00-e0c8-11eb-9842-eb4c3fb44398.png)
+		<br/>
+	miniCal</h1>
 </p>
 
 
