@@ -1,14 +1,14 @@
 
 <p>
 	<h1 align="center">
-		<img src="https://user-images.githubusercontent.com/604232/125140727-03658d00-e0c8-11eb-9842-eb4c3fb44398.png"/>
+		<img src="https://user-images.githubusercontent.com/604232/125141099-e5e4f300-e0c8-11eb-9477-3e8601382ec9.png"/>
 		<br/>
 	miniCal</h1>
 </p>
 
 
 <p align="center">
-	<b>An Open-source Booking Management Platform</b> (http://www.minical.io)	
+	<b>An Open-source Property Management Platform</b> (http://www.minical.io)	
 </p>
 
 ## Table of Contents
