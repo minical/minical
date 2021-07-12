@@ -30,7 +30,7 @@
 miniCal is an open-source PMS (Property Management System). It was originally designed for hotel software companies, but other businesses like car rental business can use it also. 
 
 ## Our mission
-We see hundreds of PMS companies developing the same features and integrations as everyone else, and we think it's a waste of resources. Our mission is develop a single best technology that can replace all PMS companies' in-house developed products, and take a technical (and financial) burden off of their shoulders.
+We see hundreds of PMS companies developing the same features and integrations as everyone else, and we think it's a waste of resources. Our mission is develop a single best technology that can perform better than the most PMS companies' in-house developed products, and completely take technical burden off of their shoulders.
 
 <img src="https://snipboard.io/KZDfkU.jpg" alt="">
 
