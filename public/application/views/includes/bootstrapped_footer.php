@@ -170,32 +170,32 @@
     
     // js file versions, loading from js files
     var js_version = {};
-    js_version['defaults'] = '<?= str_replace("/js/calendar/", "", auto_version('/js/calendar/defaults.js'));?>';
-    js_version['main'] = '<?=str_replace("/js/calendar/", "", auto_version('/js/calendar/main.js'));?>';
-    js_version['Calendar'] = '<?=str_replace("/js/calendar/", "", auto_version('/js/calendar/Calendar.js'));?>';
-    js_version['Header'] = '<?=str_replace("/js/calendar/", "", auto_version('/js/calendar/Header.js'));?>';
-    js_version['EventManager'] = '<?=str_replace("/js/calendar/", "", auto_version('/js/calendar/EventManager.js'));?>';
-    js_version['RelativeView'] = '<?=str_replace("/js/calendar/", "", auto_version('/js/calendar/basic/RelativeView.js'));?>';
-    js_version['BasicView'] = '<?=str_replace("/js/calendar/", "", auto_version('/js/calendar/basic/BasicView.js'));?>';
-    js_version['MonthView'] = '<?=str_replace("/js/calendar/", "", auto_version('/js/calendar/basic/MonthView.js'));?>';
-    js_version['CustomView'] = '<?=str_replace("/js/calendar/", "", auto_version('/js/calendar/basic/CustomView.js'));?>';
-    js_version['BasicEventRenderer'] = '<?=str_replace("/js/calendar/", "", auto_version('/js/calendar/basic/BasicEventRenderer.js'));?>';
-    js_version['View'] = '<?=str_replace("/js/calendar/", "", auto_version('/js/calendar/common/View.js'));?>';
-    js_version['DayEventRenderer'] = '<?=str_replace("/js/calendar/", "", auto_version('/js/calendar/common/DayEventRenderer.js'));?>';
-    js_version['SelectionManager'] = '<?=str_replace("/js/calendar/", "", auto_version('/js/calendar/common/SelectionManager.js'));?>';
-    js_version['OverlayManager'] = '<?=str_replace("/js/calendar/", "", auto_version('/js/calendar/common/OverlayManager.js'));?>';
-    js_version['CoordinateGrid'] = '<?=str_replace("/js/calendar/", "", auto_version('/js/calendar/common/CoordinateGrid.js'));?>';
-    js_version['date'] = '<?=str_replace("/js/calendar/", "", auto_version('/js/calendar/common/date.js'));?>';
-    js_version['HoverListener'] = '<?=str_replace("/js/calendar/", "", auto_version('/js/calendar/common/HoverListener.js'));?>';
-    js_version['HorizontalPositionCache'] = '<?=str_replace("/js/calendar/", "", auto_version('/js/calendar/common/HorizontalPositionCache.js'));?>';
-    js_version['util'] = '<?=str_replace("/js/calendar/", "", auto_version('/js/calendar/common/util.js'));?>';
+    js_version['defaults'] = '<?= base_url() . auto_version('js/calendar/defaults.js');?>';
+    js_version['main'] = '<?= base_url() . auto_version('js/calendar/main.js');?>';
+    js_version['Calendar'] = '<?= base_url() . auto_version('js/calendar/Calendar.js');?>';
+    js_version['Header'] = '<?= base_url() . auto_version('js/calendar/Header.js');?>';
+    js_version['EventManager'] = '<?= base_url() . auto_version('js/calendar/EventManager.js');?>';
+    js_version['RelativeView'] = '<?= base_url() . auto_version('js/calendar/basic/RelativeView.js');?>';
+    js_version['BasicView'] = '<?= base_url() . auto_version('js/calendar/basic/BasicView.js');?>';
+    js_version['MonthView'] = '<?= base_url() . auto_version('js/calendar/basic/MonthView.js');?>';
+    js_version['CustomView'] = '<?= base_url() . auto_version('js/calendar/basic/CustomView.js');?>';
+    js_version['BasicEventRenderer'] = '<?= base_url() . auto_version('js/calendar/basic/BasicEventRenderer.js');?>';
+    js_version['View'] = '<?= base_url() . auto_version('js/calendar/common/View.js');?>';
+    js_version['DayEventRenderer'] = '<?= base_url() . auto_version('js/calendar/common/DayEventRenderer.js');?>';
+    js_version['SelectionManager'] = '<?= base_url() . auto_version('js/calendar/common/SelectionManager.js');?>';
+    js_version['OverlayManager'] = '<?= base_url() . auto_version('js/calendar/common/OverlayManager.js');?>';
+    js_version['CoordinateGrid'] = '<?= base_url() . auto_version('js/calendar/common/CoordinateGrid.js');?>';
+    js_version['date'] = '<?= base_url() . auto_version('js/calendar/common/date.js');?>';
+    js_version['HoverListener'] = '<?= base_url() . auto_version('js/calendar/common/HoverListener.js');?>';
+    js_version['HorizontalPositionCache'] = '<?= base_url() . auto_version('js/calendar/common/HorizontalPositionCache.js');?>';
+    js_version['util'] = '<?= base_url() . auto_version('js/calendar/common/util.js');?>';
     
     
     var css_version = {};
-    css_version['main'] = '<?=str_replace("/js/calendar/", "", auto_version('/js/calendar/main.css'));?>';
-    css_version['common'] = '<?=str_replace("/js/calendar/", "", auto_version('/js/calendar/common/common.css'));?>';
-    css_version['basic'] = '<?=str_replace("/js/calendar/", "", auto_version('/js/calendar/basic/basic.css'));?>';
-    css_version['custom'] = '<?=str_replace("/js/calendar/", "", auto_version('/js/calendar/custom.css'));?>';
+    css_version['main'] = '<?= base_url() . auto_version('js/calendar/main.css');?>';
+    css_version['common'] = '<?= base_url() . auto_version('js/calendar/common/common.css');?>';
+    css_version['basic'] = '<?= base_url() . auto_version('js/calendar/basic/basic.css');?>';
+    css_version['custom'] = '<?= base_url() . auto_version('js/calendar/custom.css');?>';
 
     <!-- Below script used for store current session value  -->
     <?php $user_role = $this->session->userdata('user_role');

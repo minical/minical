@@ -26,8 +26,8 @@ date_default_timezone_set("America/Los_Angeles"); // temporary quick fix
 switch ($_SERVER['HTTP_HOST']) {
 	case 'localhost': // local
         $config['app_environment'] = 'development';
-		$config['base_url']	= "http://localhost/minical/public"; // localhost
-		$config['cm_url']	= "http://localhost/innGrid_cm/cm"; // production
+		$config['base_url']	= $_SERVER['PROJECT_URL']; // localhost
+		$config['api_url']	= str_replace("public","api",$_SERVER['PROJECT_URL']); // production
 		break;
     case 'minical.core': // local
         $config['app_environment'] = 'development';

@@ -51,7 +51,7 @@
 		}
 		
 		if(isset($this->company_ui_theme) && $this->company_ui_theme != THEME_DEFAULT) {
-			$css_files[] = auto_version('/css/themes/theme-'.$this->company_ui_theme.'.css');
+            $css_files[] = base_url() . auto_version('css/themes/theme-'.$this->company_ui_theme.'.css');
 		}
 		
 		//Load header
@@ -68,6 +68,10 @@
 		$data = array ( 'css_files' => $css_files, 'js_files' => $js_files );
 		$this->load->view('includes/bootstrapped_header', $data);
 		?>
+
+        <?php if($_SERVER['HTTP_HOST'] == 'localhost'){ ?>
+			<input type="hidden" name="project_url" id="project_url" value="<?php echo $_SERVER['PROJECT_URL']; ?>">
+		<?php } ?>
 
 		<!-- Google Tag Manager (noscript) -->
 		<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MLXS7DC"

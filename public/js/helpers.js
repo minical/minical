@@ -49,7 +49,7 @@ var getBaseURL = function () {
 	url = protocol + '//' + host + "/";
 	if (host == "localhost") 
 	{
-		url = 'http://localhost/innGrid/public/'; // for local development
+        url = $('#project_url').val() + '/'; // for local development
 	}
 	
 	return url;

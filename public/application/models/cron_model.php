@@ -51,5 +51,23 @@ class Cron_model extends CI_Model {
 		return NULL;
 	}
 
+	function handle_session_overflow()
+    {
+        $SQL = "
+            DELETE FROM `sessions` 
+            WHERE 
+            (`user_agent` like '%UptimeRobot%' or `ip_address` = '66.42.82.40')
+            AND `session_id` NOT IN (
+              SELECT `session_id`
+              FROM (
+                SELECT `session_id`
+                FROM `sessions` 
+                ORDER BY `last_activity` DESC
+                LIMIT 100 -- keep this many records
+              ) foo
+            );
+        ";
+        $this->db->query($SQL);
+    }
 
 }
