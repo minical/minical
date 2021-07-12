@@ -8,7 +8,7 @@
 
 
 <p align="center">
-	<b>An Open-source Property Management Platform</b> (http://www.minical.io)	
+	<b>Open-source PMS</b> (http://www.minical.io)	
 </p>
 
 ## Table of Contents
@@ -27,10 +27,11 @@
 * [License](#license)
 
 ## What is miniCal?
-miniCal is an open-source CRM with Booking Management baked-in. It's primarily designed for startups launching B2B SaaS business, but individual businesses can use it also.
-Pretty much all businesses that's deal with CRM + appointment-scheduling can use miniCal. Some examples are: Hotels, hair salons, car rentals, and yoga studios.
-
+miniCal is an open-source PMS (Property Management System). It was originally designed for hotel software companies, but other businesses like car rental business can use it also. 
 <img src="https://snipboard.io/KZDfkU.jpg" alt="">
+
+## Our mission
+We see hundreds of PMS companies developing the same features and integrations as everyone else, and we think it's a huge waste of time and money. Our mission is develop a single best technology that can replace all PMS companies' in-house developed products, and take a huge technical (and financial) burden off of their shoulders.
 
 
 ## Documentation
