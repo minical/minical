@@ -54,11 +54,11 @@ miniCal documentation is available here [minical.doc](https://github.com/minical
 * Install the stable version of PHP 7.2.0, MySQL 5.0.4, and OS-specific dependency tools.
 * Create a MySql database with any name.
 * Do the basic [configuration updates](https://github.com/minical/minical/wiki/configuration) on the public->build.json file.
-* Create a new file named ".env" by copying the .env.example file which is located in the root. Update database credentials including the above database name, for more details check the [.env example](https://github.com/minical/minical/wiki/.env-example).
+* Create a new file named ".env" by copying the .env.example file which is located in the root. 
+* Update database credentials and project URL in .env file, for more details check the [.env example](https://github.com/minical/minical/wiki/.env-example).
 * Run the "composer install" command on your project.
-* Make your-server.com point to /public directory of miniCal installation.
-* Install miniCal by going to `http://your-server.com/install.php` in your browser and create an admin account.
-* you are done!
+* Install miniCal by going to `http://localhost/minical/public/install.php` in your browser and create an admin account.
+* That's it. You are done! Visit miniCal at `http://localhost/minical/public`
 
 ## Demo
 Visit [miniCal Demo](http://demo.minical.io/).
