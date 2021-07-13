@@ -123,20 +123,7 @@ class Customer_field_model extends CI_Model {
         return $response;
     }
 
-    function get_customer_field_by_name($name, $company_id){
- 		
- 		$this->db->where('company_id', $company_id);
-		$this->db->where('name', $name);
-		$this->db->where('is_deleted', 0);
-		$charge_type_query = $this->db->get('charge_type');
-		
-		if ($charge_type_query->num_rows >= 1) 
-		{
-			return $charge_type_query->row_array();
-		}
-		return NULL;
-
-    }
+   
 }
 
 /* End of file customer_model.php */

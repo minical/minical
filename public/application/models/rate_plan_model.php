@@ -63,26 +63,26 @@ class Rate_plan_model extends CI_Model {
 		}
 		return NULL;
 	}
-	function get_rate_plan_by_name($rate_plan_id)
-	{
+    function get_rate_plan_by_name($rate_plan_id)
+    {
         $this->db->select("rp.*");
-		$this->db->from("rate_plan as rp");
-		$this->db->where("rp.is_deleted != '1'");
-		$this->db->where("rp.rate_plan_name", $rate_plan_id);
-		
-		$query = $this->db->get();
-		//echo $this->db->last_query();
-		if ($this->db->_error_message()) // error checking
-			show_error($this->db->_error_message());
-		if ($query->num_rows >= 1) 
-		{
-			$q = $query->result_array();
-			return $q[0];
-		}
-		return NULL;
-	}
-    
-	function get_rate_plans_by_room_type_id($room_type_id, $previous_rate_plan_id=null, $get_all_rate_plans = false, $extra_ids = null)
+        $this->db->from("rate_plan as rp");
+        $this->db->where("rp.is_deleted != '1'");
+        $this->db->where("rp.rate_plan_name", $rate_plan_id);
+
+        $query = $this->db->get();
+
+        if ($this->db->_error_message()) // error checking
+            show_error($this->db->_error_message());
+        if ($query->num_rows >= 1)
+        {
+            $q = $query->result_array();
+            return $q[0];
+        }
+        return NULL;
+    }
+
+    function get_rate_plans_by_room_type_id($room_type_id, $previous_rate_plan_id=null, $get_all_rate_plans = false, $extra_ids = null)
 	{
 		$where_condition = " rp.room_type_id = '$room_type_id' OR ";
 		if($get_all_rate_plans)

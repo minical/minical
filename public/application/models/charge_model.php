@@ -1017,16 +1017,16 @@ class Charge_model extends CI_Model {
         $this->db->update("charge", $data);
 		//echo $this->db->last_query();
 	}
-	function update_charge_booking($old_booking_id, $new_booking_id,$customer_id) {
-		
-		$data = array(
-			'booking_id' => $new_booking_id,
-			'customer_id' => $customer_id
-		);
-		$this->db->where('booking_id', $old_booking_id);
+    function update_charge_booking($old_booking_id, $new_booking_id, $customer_id) {
+
+        $data = array(
+            'booking_id' => $new_booking_id,
+            'customer_id' => $customer_id
+        );
+        $this->db->where('booking_id', $old_booking_id);
         $this->db->update("charge", $data);
-		// echo $this->db->last_query();echo "<br/>";
-	}	
+
+    }
   
     function get_last_applied_charge($booking_id, $charge_type_id, $end_date = null, $only_night_audit_charge = false)
 	{

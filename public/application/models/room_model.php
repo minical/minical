@@ -838,25 +838,24 @@ class Room_model extends CI_Model {
 		}
 	}
 
-	function get_room_by_name($name , $room_type_id = null){
-		if($room_type_id){
-			$this->db->where('r.room_type_id',$room_type_id);
-		}
-		$this->db->where('r.room_name',$name);
-		$query = $this->db->get('room as r');
-		
-		
-		if ($query->num_rows() > 0)
-		{
-			$result = $query->result_array(0);			
-			return $result;
-		}
-		else
-		{
-			return NULL;
-		}
+    function get_room_by_name($name , $room_type_id = null){
+        if($room_type_id){
+            $this->db->where('r.room_type_id',$room_type_id);
+        }
+        $this->db->where('r.room_name',$name);
+        $query = $this->db->get('room as r');
 
-	}
+        if ($query->num_rows() > 0)
+        {
+            $result = $query->result_array(0);
+            return $result;
+        }
+        else
+        {
+            return NULL;
+        }
+
+    }
 
 
 }
