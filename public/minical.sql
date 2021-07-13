@@ -8381,6 +8381,17 @@ CREATE TABLE `image_type` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `import_mapping`
+--
+
+CREATE TABLE `import_mapping` (
+  `id` int(11) NOT NULL,
+  `new_id` bigint(20) NOT NULL,
+  `old_id` bigint(20) NOT NULL,
+  `company_id` int(11) NOT NULL,
+  `type` varchar(230) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+--
 -- Table structure for table `invoice`
 --
 
@@ -22035,6 +22046,11 @@ ALTER TABLE `image_group`
 ALTER TABLE `image_type`
   ADD PRIMARY KEY (`id`);
 
+-- Indexes for table `import_mapping`
+--
+ALTER TABLE `import_mapping`
+  ADD PRIMARY KEY (`id`);  
+
 --
 -- Indexes for table `invoice`
 --
@@ -22368,6 +22384,12 @@ ALTER TABLE `image_group`
 --
 ALTER TABLE `image_type`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+-- 
+ ALTER TABLE `import_mapping`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=453;
+COMMIT;
+  
 
 --
 -- AUTO_INCREMENT for table `invoice`
