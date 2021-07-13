@@ -934,4 +934,20 @@ class Payment_model extends CI_Model {
 			return null;
 		}
 	}
+
+    function get_payment_types_by_name($name)
+    {
+        $this->db->where('payment_type', $name);
+        $this->db->where('is_deleted', 0);
+        $this->db->where('is_read_only', 0); // read_only payment types are not shown
+
+        $query = $this->db->get('payment_type');
+
+        if ($query->num_rows >= 1)
+        {
+            return $query->result();
+        }
+
+        return NULL;
+    }
 }

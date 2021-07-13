@@ -429,5 +429,21 @@ class Room_type_model extends CI_Model {
             return null;
             
         }
+
+    function get_room_type_name($name){
+
+        $this->db->where('rt.name',$name);
+        $query = $this->db->get('room_type as rt');
+
+        if ($query->num_rows() > 0)
+        {
+            $result = $query->result_array(0);
+            return $result;
+        }
+        else
+        {
+            return NULL;
+        }
+    }
 		
 }
