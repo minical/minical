@@ -35,4 +35,27 @@ class Booking_field_model extends CI_Model {
             return $query->result_array();
         return NULL;
     }
+
+    function create_booking_fields($data){
+
+        $data = (object)$data;
+        $this->db->insert("booking_block", $data);
+
+        if ($this->db->_error_message())
+        {
+            show_error($this->db->_error_message());
+        }
+      
+      $query = $this->db->query('select LAST_INSERT_ID( ) AS last_id');
+    
+      $result = $query->result_array();
+      if(isset($result[0]))
+      {  
+        return $result[0]['last_id'];
+      }
+      else
+      {  
+        return null;
+      }
+    }
 }

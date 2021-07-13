@@ -12,6 +12,17 @@ class Company extends MY_Controller
         $this->load->model("Room_model");
         $this->load->model('Currency_model');
         $this->load->model('Employee_log_model');
+        $this->load->model('Room_type_model');
+        $this->load->model('Customer_field_model');
+        $this->load->model('Customer_type_model');
+        $this->load->model('Customer_model');
+        $this->load->model('Charge_model');
+        $this->load->model('Payment_model');
+        $this->load->model('Booking_field_model');
+        $this->load->model('Booking_source_model');
+        $this->load->model('Import_mapping_model');
+        $this->load->model('Rate_plan_model');
+        $this->load->model('Date_range_model');
 
         $this->load->library('email');
         $this->load->library('form_validation');
@@ -605,5 +616,523 @@ class Company extends MY_Controller
         $this->turn_on_off();
     }
 
+    function import()
+    {
+        $data['company_ID'] = $this->company_id;
+        $data['selected_sidebar_link'] = 'Import';
+        $data['main_content']          = 'hotel_settings/company/import';
+        $this->load->view('includes/bootstrapped_template', $data);
+    }
+
+    function import_company_data(){
+
+        if($_FILES['file']['name'] != '')
+        {
+            $file_name = $_FILES['file']['name'];
+            $array = explode(".", $file_name);
+            $name = $array[0];
+            $ext = $array[1];
+            if($ext == 'zip')
+            {
+                $path = $_SERVER["DOCUMENT_ROOT"].'/upload/';
+                $location = $path . $file_name;
+                $result=array();
+                if(move_uploaded_file($_FILES['file']['tmp_name'], $location))
+                {
+                    $zip = new ZipArchive;
+                    if($zip->open($location))
+                    {
+                        $zip->extractTo($path);
+                        $zip->close();
+                    }
+                    $files = scandir($path);
+
+                    foreach($files as $file)
+                    {
+
+                        if($file === '.' || $file === '..') continue;
+
+                        $file_ext = explode(".", $file);
+
+                        $allowed_ext = array('csv');
+                        $ext_allowed = array('json');
+
+                        if(in_array($file_ext[1], $allowed_ext))
+                        {
+
+                            if (!($fp = fopen($path.$file, 'r'))) {
+                                die("Can't open file...");
+                            }
+                            //read csv headers
+                            $key = fgetcsv($fp,"1024",",");
+                            $zip_name = explode(".",$file);
+                            // parse csv rows into array
+                            $json = array();
+                            while ($row = fgetcsv($fp,"1024",",")) {
+                                $json[] = array_combine($key, $row);
+                            }
+                            $result[$zip_name[0]] = $json;
+                            // release file handle
+                            fclose($fp);
+                            unlink($path.'/'.$file);
+                        }
+
+                        if(in_array($file_ext[1], $ext_allowed)){
+                            $fp = fopen($path.$file, 'r');
+                            $setting = fgets($fp);
+                            $result['setting'] = $setting;
+                        }
+                    }
+
+                    $csv_data = $result;
+
+                    if (isset($csv_data['room'])) {
+                        $this->import_rooms_csv($csv_data['room']);
+                    }
+                    if (isset($csv_data['charge'])) {
+                        $this->import_charges_csv($csv_data['charge']);
+                    }
+                    if (isset($csv_data['rate'])) {
+                        $this->import_rates_csv($csv_data['rate']);
+                    }
+                    if (isset($csv_data['customer'])) {
+                        $this->import_customers_csv($csv_data['customer']);
+                    }
+                    if (isset($csv_data['booking'])) {
+                        $this->import_bookings_csv($csv_data['booking']);
+                    }
+                    if (isset($csv_data['payment'])) {
+                        $this->import_payments_csv($csv_data['payment']);
+                    }
+                    if (isset($csv_data['setting'])) {
+                        $this->import_payments_csv($csv_data['payment']);
+                    }
+
+                    unlink($location);
+                    // rmdir($path . $name);  
+                }
+            }
+        }
+
+        redirect('/settings/company/import');
+    }
+
+    function import_rooms_csv($value){
+
+        foreach ($value as $room) {
+            $get_room_type = $this->Room_type_model->get_room_type_name($room['Room Type Name']);
+
+            if (empty($get_room_type)) {
+                $data = array(
+                    'company_id' => $this->company_id,
+                    'name' => $room['Room Type Name'],
+                    'acronym' => $room['Acronym'],
+                    'max_adults' => $room['Max Adults'],
+                    'max_children' => $room['Max Children'],
+                    'max_occupancy' => $room['Max Occupancy'],
+                    'min_occupancy' => $room['Min Occupancy'],
+                    'can_be_sold_online' => $room['Can be Sold online']
+                );
+
+                $room_type_id = $this->Room_type_model->add_new_room_type($data);
+                $data_import_mapping = Array(
+                    "new_id" => $room_type_id,
+                    "old_id" => $room['Room Type Id'],
+                    "company_id" => $this->company_id,
+                    "type" => "room_type"
+                );
+
+                $import_data = $this->Import_mapping_model->insert_import_mapping($data_import_mapping);
+            } else {
+                $room_type_id = isset($get_room_type[0]['id']) ? $get_room_type[0]['id'] : '';
+            }
+
+            if(!empty($room['Room Id'])){
+                $get_room = $this->Room_model->get_room_by_name($room['Room Name'], $room_type_id);
+                if(empty($get_room)){
+
+                    $room = $this->Room_model->create_room($this->company_id, $room['Room Name'], $room_type_id);
+                }
+            }
+
+        }
+    }
+
+    function import_charges_csv($value){
+
+        foreach ($value as $charge) {
+
+            $get_the_charge_type = $this->Import_mapping_model->get_mapping_charge_id($charge['Charge Type Id']);
+            // prx($get_the_charge_type);
+            if(empty($get_the_charge_type)){
+                $charge_type_id = $this->Charge_type_model->create_charge_type($this->company_id,$charge['Charge Type']);
+
+                $data_import_mapping = Array(
+                    "new_id" => $charge_type_id,
+                    "old_id" => $charge['Charge Type Id'],
+                    "company_id" => $this->company_id,
+                    "type" => "charge_type"
+                );
+
+                $import_data = $this->Import_mapping_model->insert_import_mapping($data_import_mapping);
+
+            }else{
+                $charge_type_id = isset($get_the_charge_type['new_id']) ? $get_the_charge_type['new_id'] : '';
+            }
+
+            $customer_id =  $this->Import_mapping_model->get_mapping_customer_id($charge['Customer Id']);
+            $charges =  $this->Import_mapping_model->get_mapping_charge($charge['Charge Id']);
+            // prx($charges);
+
+            if(!empty($charge['Charge Id'])){
+                if(empty($charges))
+                {
+                    switch ($charge['Pay Period']) {
+                        case "Daily" : $pay_period = '0'; break;
+                        case "Weekly" : $pay_period = '1'; break;
+                        case "Monthly" : $pay_period = '2'; break;
+                        case "One time" : $pay_period = '3'; break;
+                    }
+
+                    $data = Array(
+                        "description" => $charge['Description'],
+                        "date_time" =>$charge['Date Time'] != null ? $charge['Date Time'] : date('Y-m-d H:i:s') ,
+                        "booking_id" => $charge['Booking Id'],
+                        "amount" => $charge['Amount'],
+                        "charge_type_id" => $charge_type_id,
+                        "selling_date" => $charge['Selling Date'],
+                        "customer_id" => $customer_id['new_id'],
+                        "pay_period" => $pay_period,
+                        "is_night_audit_charge" => $charge['Night Audit Charge']
+
+                    );
+                    $charge_id = $this->Charge_model->insert_charge($data);
+
+                    $data_import_mapping = Array(
+                        "new_id" => $charge_id,
+                        "old_id" => $charge['Charge Id'],
+                        "company_id" => $this->company_id,
+                        "type" => "charge"
+                    );
+
+                    $import_data = $this->Import_mapping_model->insert_import_mapping($data_import_mapping);
+                }
+            }
+
+        }
+
+    }
+
+
+    function import_rates_csv($value){
+
+        foreach ($value as $rate) {
+            $get_rate_plan = $this->Rate_plan_model->get_rate_plan_by_name($rate['Name']);
+            $room_type =  $this->Import_mapping_model->get_mapping_room_type_id($rate['Room type Id']);
+            $room_type_id = $room_type['new_id'];
+            if(empty($room_type_id)){
+                $room_type= $this->Room_type_model->get_room_type_name($rate['Room Type Name']);
+                $room_type_id = $room_type[0]['id'];
+            }
+
+            if(empty($get_rate_plan)){
+                $data = array(
+                    "rate_plan_name" => $rate['Name'],
+                    "room_type_id" => $room_type_id,
+                    "company_id" => $this->company_id
+                );
+                $rate_plan_id = $this->Rate_plan_model->create_rate_plan($data);
+            }else{
+                $rate_plan_id = $get_rate_plan['rate_plan_id'];
+            }
+
+
+            $rate_id = $this->Rate_model->create_rate(
+                Array(
+                    'rate_plan_id' => $rate_plan_id,
+                    'base_rate' => $rate['Base Rate'],
+                    'adult_1_rate' => $rate['Adult Rate 1'] ? $rate['Adult Rate 1'] : 0,
+                    'adult_2_rate' => $rate['Adult Rate 2'] ? $rate['Adult Rate 2'] : 0,
+                    'adult_3_rate' => $rate['Adult Rate 3'] ? $rate['Adult Rate 3'] : 0,
+                    'adult_4_rate' => $rate['Adult Rate 4'] ? $rate['Adult Rate 4'] : 0,
+                    'additional_adult_rate' => $rate['Additional Adult Rate'] ? $rate['Additional Adult Rate'] : 0,
+                    'additional_child_rate' => $rate['Aditional Child Rate'] ? $rate['Aditional Child Rate'] : 0,
+                    'minimum_length_of_stay' => $rate['Min Length of Stay'] ? $rate['Min Length of Stay'] : 0,
+                    'maximum_length_of_stay' => $rate['Max Length of Stay'] ? $rate['Max Length of Stay'] : 0,
+                    'closed_to_departure' => $rate['Close to Departure'] ? $rate['Close to Departure'] : 0,
+                    'closed_to_arrival' => $rate['Close to Arrival'] ? $rate['Close to Arrival'] : 0
+                )
+            );
+
+            $date_range_id = $this->Date_range_model->create_date_range(
+                Array(
+                    'date_start' => $rate['From Date'],
+                    'date_end' => $rate['To Date'],
+                    'monday' => $rate['Monday'],
+                    'tuesday' => $rate['Tuesday'],
+                    'wednesday' => $rate['Wednesday'],
+                    'thursday' => $rate['Thursday'],
+                    'friday' => $rate['Friday'],
+                    'saturday' => $rate['Saturday'],
+                    'sunday' => $rate['Sunday']
+                )
+            );
+
+            $this->Date_range_model->create_date_range_x_rate(
+                Array(
+                    'rate_id' => $rate_id,
+                    'date_range_id' => $date_range_id
+                ));
+
+            $data_import_mapping = Array(
+                "new_id" => $rate_id,
+                "old_id" => $rate['Rate Id'],
+                "company_id" => $this->company_id,
+                "type" => "rate"
+            );
+
+            $import_data = $this->Import_mapping_model->insert_import_mapping($data_import_mapping);
+
+        }
+    }
+
+    function import_customers_csv($value){
+
+        foreach ($value as $customer) {
+
+            $get_customer_type = $this->Customer_type_model->get_customer_type_by_name($this->company_id, $customer['Customer Type']);
+            if(empty($get_customer_type)){
+                $customer_type_id = $this->Customer_type_model->create_customer_type($this->company_id, $customer['Customer Type']);
+            }else{
+                $customer_type_id = isset($get_customer_type[0]['id']) ? $get_customer_type[0]['id'] : ' ' ;
+            }
+
+            $data = Array(
+                "customer_name" => $customer['Customer Name'],
+                "address" => $customer['Address'],
+                "email" => $customer['Email'],
+                "city" => $customer['City'],
+                "region" => $customer['Region'],
+                "customer_type_id" => $customer_type_id,
+                "company_id" => $this->company_id
+            );
+
+            $get_customer = $this->Import_mapping_model->get_mapping_customer_id($customer['Customer Id']);
+
+            if(!empty($customer['Customer Id'])){
+                if(empty($get_customer)){
+                    $customer_id = $this->Customer_model->create_customer($data);
+                    $data_import_mapping = Array(
+                        "new_id" => $customer_id,
+                        "old_id" => $customer['Customer Id'],
+                        "company_id" => $this->company_id,
+                        "type" => "customer"
+                    );
+                    $import_data = $this->Import_mapping_model->insert_import_mapping($data_import_mapping);
+                }
+            }
+
+
+        }
+
+    }
+
+
+
+    function import_bookings_csv($value){
+
+        foreach ($value as $booking) {
+            $charge_type_id = $this->Charge_type_model->get_charge_type_by_name($booking['Charge Type'], $this->company_id);
+            $room_id = $this->Room_model->get_room_by_name($booking['Room']);
+            $room_type_id = $this->Room_type_model->get_room_type_name($booking['Room Type']);
+            $customer_id =  $this->Import_mapping_model->get_mapping_customer_id($booking['Booking Customer Id']);
+
+            switch ($booking['State']) {
+                case "Reservation" : $state = '0'; break;
+                case "Checked-in" : $state = '1'; break;
+                case "Checked-out" : $state = '2'; break;
+                case "Cancelled" : $state = '4'; break;
+                case "No-show" : $state = '5'; break;
+                case "Delete" : $state = '6'; break;
+                case "Unconfirmed" : $state = '7'; break;
+
+            }
+
+            switch ($booking['Pay Period']) {
+                case "Daily" : $pay_period = '0'; break;
+                case "Weekly" : $pay_period = '1'; break;
+                case "Monthly" : $pay_period = '2'; break;
+                case "One time" : $pay_period = '3'; break;
+            }
+
+            switch ($booking['Source']) {
+                case "walk In" : $source = '0'; break;
+                case "Online Widget" : $source = '1'; break;
+                case "Booking Dot Com" : $source = '2'; break;
+                case "Expedia" : $source = '3'; break;
+                case "Agoda" : $source = '4'; break;
+                case "Trip Connect" : $source = '5'; break;
+                case "Air BNB" : $source = '6'; break;
+                case "Hotel World" : $source = '7'; break;
+                case "Myallocator" : $source = '8'; break;
+                case "Company" : $source = '9'; break;
+                case "Guest Member" : $source = '10'; break;
+                case "Owner" : $source = '11'; break;
+                case "Returning Guest" : $source = '12'; break;
+                case "Apartment" : $source = '13'; break;
+                case "sitminder" : $source = '14'; break;
+                case "Seasonal" : $source = '15'; break;
+                case "Other taravel agency" : $source = '20'; break;
+
+            }
+
+            if(empty($source)){
+
+                $get_source = $this->Booking_source_model->get_booking_source_by_company($this->company_id, $booking['Source']);
+                if(empty($get_source)){
+                    $source = $this->Booking_source_model->create_booking_source($this->company_id, $booking['Source']);
+                }else{
+                    $source = isset($get_source['id']) ? $get_source['id'] : 0 ;
+                }
+
+            }
+
+            $booking_id =  $this->Import_mapping_model->get_mapping_booking_id($booking['Booking Id']);
+            if(empty($booking_id)){
+                $data = Array(
+                    "rate" => $booking['Rate'],
+                    "adult_count" => $booking['Adult Count'],
+                    "children_count" => $booking['Children Count'],
+                    "booking_customer_id" => $customer_id['new_id'],
+                    "booking_notes" => $booking['Booking Note'],
+                    "booked_by" => $booking['Booked By'],
+                    "balance" => $booking['Balance'],
+                    "balance_without_forecast" => $booking['Balance Without Forecast'],
+                    "use_rate_plan" => $booking['Use Rate Plan'],
+                    "rate_plan_id" => $booking['Rate Plan Id'],
+                    "charge_type_id" => $charge_type_id['id'],
+                    "pay_period" => isset($pay_period) ? $pay_period : 0,
+                    "source" => isset($source) ? $source : 0 ,
+                    "company_id" => $this->company_id,
+                    "state" => isset($state) ? $state : 0
+
+                );
+
+                $booking_id = $this->Booking_model->create_booking($data);
+                $booking_data_fileds = Array(
+                    "booking_id" => $booking_id,
+                    "room_id" => isset($room_id[0]['room_id']) &&  $room_id[0]['room_id'] ? $room_id[0]['room_id'] : 0,
+                    "room_type_id" => isset($room_type_id[0]['id']) && $room_type_id[0]['id'] ? $room_type_id[0]['id'] : 0,
+                    "check_in_date" => $booking['Check In Date'],
+                    "check_out_date" => $booking['Check Out Date']
+
+                );
+
+                $booking_filed = $this->Booking_field_model->create_booking_fields($booking_data_fileds);
+                $data_import_mapping = Array(
+                    "new_id" => $booking_filed,
+                    "old_id" => $booking['Booking Id'],
+                    "company_id" => $this->company_id,
+                    "type" => "booking"
+                );
+
+                $import_data = $this->Import_mapping_model->insert_import_mapping($data_import_mapping);
+
+                $charge_update = $this->Charge_model->update_charge_booking($booking['Booking Id'],$booking_filed,$customer_id['new_id']);
+
+            }
+
+
+
+        }
+
+    }
+
+    function import_payments_csv($value){
+
+        foreach ($value as $payment) {
+            $get_payment_type = $this->Payment_model->get_payment_types_by_name($payment['Payment Type']);
+
+            if(empty($get_payment_type)){
+                $payment_id = $this->Payment_model->create_payment_type($this->company_id, $payment['Payment Type']);
+            }else{
+                $payment_id = isset($get_payment_type[0]->payment_type_id) ? $get_payment_type[0]->payment_type_id : ' ' ;
+            }
+
+            $customer_id =  $this->Import_mapping_model->get_mapping_customer_id($payment['Customer Id']);
+            $booking_id =  $this->Import_mapping_model->get_mapping_booking_id($payment['Booking Id']);
+
+            if(!empty($payment['Payment Id'])){
+                $get_import_payment = $this->Import_mapping_model->get_mapping_payment_id($payment['Payment Id']);
+                if(empty($get_import_payment)){
+                    $data = Array(
+                        "description" => $payment['Description'],
+                        "date_time" => $payment['Date Time'],
+                        "booking_id" => $booking_id['new_id'],
+                        "payment_type_id" => $payment_id,
+                        "amount" => $payment['Amount'],
+                        "credit_card_id" => $payment['Credit Card Id'],
+                        "selling_date" => $payment['Selling Date'],
+                        "customer_id" => $customer_id['new_id'],
+                        "payment_status" => $payment['Payment Status'],
+                        "is_captured" => $payment['Payment Capture']
+                    );
+
+                    $payment_create_id = $this->Payment_model->insert_payment($data);
+
+                    $data_import_mapping = Array(
+                        "new_id" => $payment_create_id['payment_id'],
+                        "old_id" => $payment['Payment Id'],
+                        "company_id" => $this->company_id,
+                        "type" => "payment"
+                    );
+
+                    $import_data = $this->Import_mapping_model->insert_import_mapping($data_import_mapping);
+
+                }
+            }
+
+        }
+
+    }
+
+    function import_company_setting($values){
+
+        $value = json_decode($values,true);
+
+        $company_data = array(
+            'is_total_balance_include_forecast' => isset($value['Total Balance Include Forecast']) ? $value['Total Balance Include Forecast'] : ""  ,
+            'auto_no_show'  => isset($value['Auto No Show']) ? $value['Auto No Show'] : "",
+            'book_over_unconfirmed_reservations'=> isset($value['Book Over Unconfirmed Reservations']) ? $value['Book Over Unconfirmed Reservations'] : "" ,
+            'send_invoice_email_automatically' => isset($value['Send Invoice Email Automatically']) ? $value['Send Invoice Email Automatically']: "",
+            'hide_decimal_places'=> isset($value['Hide Decimal Places']) ? $value['Hide Decimal Places']: "",
+            'automatic_email_confirmation' => isset($value['Automatic Email Confirmation']) ? $value['Automatic Email Confirmation'] : "",
+            'automatic_email_cancellation' => isset($value['Automatic Email Cancellation']) ? $value['Automatic Email Cancellation'] : "",
+            'send_booking_notes' => isset($value['Send Booking Notes']) ? $value['Send Booking Notes']: "",
+            'make_guest_field_mandatory' => isset($value['Make Guest Field Mandatory']) ? $value['Make Guest Field Mandatory'] : "",
+            'include_cancelled_noshow_bookings' => isset($value['Include Cancelled Noshow Bookings']) ? $value['Include Cancelled Noshow Bookings']: "",
+            'hide_forecast_charges' => isset($value['Hide Forecast Charges']) ? $value['Hide Forecast Charges']:"",
+            'send_copy_to_additional_emails' => isset($value['Send Copy To Additional Emails']) ? $value['Send Copy To Additional Emails']:"",
+            'additional_company_emails' => isset($value['Additional Company Emails'])? $value['Additional Company Emails']: "",
+            'default_charge_name' => isset($value['Default Charge Name']) ? $value['Default Charge Name']:"",
+            'default_room_singular' => isset($value['Default Room Singular']) ? $value['Default Room Singular'] : "",
+            'default_room_plural' => isset($value['Default Room Plural']) ? $value['Default Room Plural'] : "",
+            'default_room_type'=> isset($value['Default Room Type'])? $value['Default Room Type'] : "",
+            'date_format' => isset($value['Date Format']) ? $value['Date Format'] : "",
+            'default_checkin_time' => isset($value['Default Checkin Time'])? $value['Default Checkin Time'] : "",
+            'default_checkout_time' => isset($value['Default Checkout Time']) ? $value['Default Checkout Time'] : "",
+            'enable_hourly_booking' => isset($value['Enable Hourly Booking']) ? $value['Enable Hourly Booking'] : "",
+            'enable_api_access'=> isset($value['Enable Api Access']) ? $value['Enable Api Access'] : "",
+            'booking_cancelled_with_balance' => isset($value['Booking Cancelled With Balance']) ? $value['Booking Cancelled With Balance'] : "",
+            'enable_new_calendar' => isset($value['Enable New Calendar']) ? $value['Enable New Calendar'] : "",
+            'hide_room_name' => isset($value['Hide Room Name']) ? $value['Hide Room Name'] : "",
+            'restrict_booking_dates_modification' => isset($value['Restrict Booking Dates Modification']) ? $value['Restrict Booking Dates Modification'] : "",
+            'restrict_checkout_with_balance' => isset($value['Restrict Checkout With Balance']) ? $value['Restrict Checkout With Balance'] : "",
+            'show_guest_group_invoice' => isset($value['Show Guest Group Invoice']) ? $value['Show Guest Group Invoice'] : ""
+        );
+        $this->Company_model->update_company($this->company_id, $company_data);
+
+
+    }
 
 }
