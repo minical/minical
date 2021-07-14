@@ -20,7 +20,7 @@
         <form enctype="multipart/form-data" method="post" action="/settings/company/import_company_data">
             <h4>Import zip file: </h4>
 
-            Download zip template <a href="/upload/import-template.zip">here.</a>
+            Download zip template <a target="_blank" href="/upload/import-template.zip">here.</a>
             <br/><br/><br/>
             <input type="file" name="file">
             <br><br>
