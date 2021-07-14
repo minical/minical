@@ -1006,8 +1006,8 @@ class Company extends MY_Controller
             if(empty($booking_id)){
                 $data = Array(
                     "rate" => $booking['Rate'] == '' ? null : $booking['Rate'],
-                    "adult_count" => $booking['Adult Count'],
-                    "children_count" => $booking['Children Count'],
+                    "adult_count" => $booking['Adult Count'] == '' ? null : $booking['Adult Count'],
+                    "children_count" => $booking['Children Count'] == '' ? null : $booking['Children Count'],
                     "booking_customer_id" => $customer_id['new_id'],
                     "booking_notes" => $booking['Booking Note'],
                     "booked_by" => $booking['Booked By'] == '' ? null : $booking['Booked By'],
@@ -1028,8 +1028,8 @@ class Company extends MY_Controller
                     "booking_id" => $booking_id,
                     "room_id" => isset($room_id[0]['room_id']) &&  $room_id[0]['room_id'] ? $room_id[0]['room_id'] : 0,
                     "room_type_id" => isset($room_type_id[0]['id']) && $room_type_id[0]['id'] ? $room_type_id[0]['id'] : 0,
-                    "check_in_date" => $booking['Check In Date'],
-                    "check_out_date" => $booking['Check Out Date']
+                    "check_in_date" => $booking['Check In Date'] == '' ? null : $booking['Check In Date'],
+                    "check_out_date" => $booking['Check Out Date'] == '' ? null : $booking['Check Out Date']
 
                 );
 
@@ -1072,14 +1072,14 @@ class Company extends MY_Controller
                 if(empty($get_import_payment)){
                     $data = Array(
                         "description" => $payment['Description'],
-                        "date_time" => $payment['Date Time'],
+                        "date_time" => $payment['Date Time'] == '' ? null : $payment['Date Time'],
                         "booking_id" => $booking_id['new_id'],
                         "payment_type_id" => $payment_id,
-                        "amount" => $payment['Amount'],
-                        "credit_card_id" => $payment['Credit Card Id'],
+                        "amount" => $payment['Amount'] == '' ? null : $payment['Amount'],
+                        "credit_card_id" => $payment['Credit Card Id'] == '' ? null : $payment['Credit Card Id'],
                         "selling_date" => $payment['Selling Date'],
                         "customer_id" => $customer_id['new_id'],
-                        "payment_status" => $payment['Payment Status'],
+                        "payment_status" => $payment['Payment Status'] == '' ? null : $payment['Payment Status'],
                         "is_captured" => $payment['Payment Capture'] == 'true' ? 1 : 0
                     );
 
