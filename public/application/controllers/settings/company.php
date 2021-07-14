@@ -944,11 +944,12 @@ class Company extends MY_Controller
 
 
     function import_bookings_csv($value){
-
+      
         foreach ($value as $booking) {
             $charge_type_id = $this->Charge_type_model->get_charge_type_by_name($booking['Charge Type'], $this->company_id);
-            $room_id = $this->Room_model->get_room_by_name($booking['Room']);
             $room_type_id = $this->Room_type_model->get_room_type_name($booking['Room Type'], $this->company_id);
+            $room_id = $this->Room_model->get_room_by_name($booking['Room'] , $room_type_id[0]['id']);
+
             $customer_id =  $this->Import_mapping_model->get_mapping_customer_id($booking['Booking Customer Id']);
 
             switch ($booking['State']) {
