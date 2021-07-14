@@ -807,7 +807,7 @@ class Company extends MY_Controller
                         "selling_date" => $charge['Selling Date'],
                         "customer_id" => $customer_id['new_id'],
                         "pay_period" => $pay_period,
-                        "is_night_audit_charge" => $charge['Night Audit Charge']
+                        "is_night_audit_charge" => $charge['Night Audit Charge'] == 'true' ? 1 : 0
 
                     );
                     $charge_id = $this->Charge_model->insert_charge($data);
@@ -1080,7 +1080,7 @@ class Company extends MY_Controller
                         "selling_date" => $payment['Selling Date'],
                         "customer_id" => $customer_id['new_id'],
                         "payment_status" => $payment['Payment Status'],
-                        "is_captured" => $payment['Payment Capture']
+                        "is_captured" => $payment['Payment Capture'] == 'true' ? 1 : 0
                     );
 
                     $payment_create_id = $this->Payment_model->insert_payment($data);
