@@ -709,7 +709,7 @@ class Company extends MY_Controller
                         $this->import_payments_csv($csv_data['payment']);
                     }
                     if (isset($csv_data['setting'])) {
-                        $this->import_payments_csv($csv_data['payment']);
+                        $this->import_company_setting($csv_data['setting']);
                     }
 
                     unlink($location);
@@ -718,13 +718,13 @@ class Company extends MY_Controller
             }
         }
 
-        redirect('/settings/company/import');
+        // redirect('/settings/company/import');
     }
 
     function import_rooms_csv($value){
 
         foreach ($value as $room) {
-            $get_room_type = $this->Room_type_model->get_room_type_name($room['Room Type Name']);
+            $get_room_type = $this->Room_type_model->get_room_type_name($room['Room Type Name'], $this->company_id);
 
             if (empty($get_room_type)) {
                 $data = array(
@@ -735,7 +735,7 @@ class Company extends MY_Controller
                     'max_children' => $room['Max Children'],
                     'max_occupancy' => $room['Max Occupancy'],
                     'min_occupancy' => $room['Min Occupancy'],
-                    'can_be_sold_online' => $room['Can be Sold online']
+                    'can_be_sold_online' => $room['Can be Sold online'] == 'true' ? 1 : 0
                 );
 
                 $room_type_id = $this->Room_type_model->add_new_room_type($data);
@@ -854,7 +854,7 @@ class Company extends MY_Controller
             $rate_id = $this->Rate_model->create_rate(
                 Array(
                     'rate_plan_id' => $rate_plan_id,
-                    'base_rate' => $rate['Base Rate'],
+                    'base_rate' => $rate['Base Rate'] == '' ? null : $rate['Base Rate'],
                     'adult_1_rate' => $rate['Adult Rate 1'] ? $rate['Adult Rate 1'] : 0,
                     'adult_2_rate' => $rate['Adult Rate 2'] ? $rate['Adult Rate 2'] : 0,
                     'adult_3_rate' => $rate['Adult Rate 3'] ? $rate['Adult Rate 3'] : 0,
@@ -863,8 +863,8 @@ class Company extends MY_Controller
                     'additional_child_rate' => $rate['Aditional Child Rate'] ? $rate['Aditional Child Rate'] : 0,
                     'minimum_length_of_stay' => $rate['Min Length of Stay'] ? $rate['Min Length of Stay'] : 0,
                     'maximum_length_of_stay' => $rate['Max Length of Stay'] ? $rate['Max Length of Stay'] : 0,
-                    'closed_to_departure' => $rate['Close to Departure'] ? $rate['Close to Departure'] : 0,
-                    'closed_to_arrival' => $rate['Close to Arrival'] ? $rate['Close to Arrival'] : 0
+                    'closed_to_departure' => $rate['Close to Departure'] == 'true' ? 1 : 0,
+                    'closed_to_arrival' => $rate['Close to Arrival'] == 'true' ? 1 : 0
                 )
             );
 
@@ -1009,11 +1009,11 @@ class Company extends MY_Controller
                     "children_count" => $booking['Children Count'],
                     "booking_customer_id" => $customer_id['new_id'],
                     "booking_notes" => $booking['Booking Note'],
-                    "booked_by" => $booking['Booked By'],
+                    "booked_by" => $booking['Booked By'] == '' ? null : $booking['Booked By'],
                     "balance" => $booking['Balance'],
                     "balance_without_forecast" => $booking['Balance Without Forecast'],
-                    "use_rate_plan" => $booking['Use Rate Plan'],
-                    "rate_plan_id" => $booking['Rate Plan Id'],
+                    "use_rate_plan" => $booking['Use Rate Plan'] == 'true' ? 1 : 0,
+                    "rate_plan_id" => $booking['Rate Plan Id'] == '' ? null : $booking['Rate Plan Id'],
                     "charge_type_id" => $charge_type_id['id'],
                     "pay_period" => isset($pay_period) ? $pay_period : 0,
                     "source" => isset($source) ? $source : 0 ,
