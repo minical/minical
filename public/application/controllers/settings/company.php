@@ -835,7 +835,7 @@ class Company extends MY_Controller
             $room_type =  $this->Import_mapping_model->get_mapping_room_type_id($rate['Room type Id']);
             $room_type_id = $room_type['new_id'];
             if(empty($room_type_id)){
-                $room_type= $this->Room_type_model->get_room_type_name($rate['Room Type Name']);
+                $room_type= $this->Room_type_model->get_room_type_name($rate['Room Type Name'] , $this->company_id);
                 $room_type_id = $room_type[0]['id'];
             }
 
@@ -948,7 +948,7 @@ class Company extends MY_Controller
         foreach ($value as $booking) {
             $charge_type_id = $this->Charge_type_model->get_charge_type_by_name($booking['Charge Type'], $this->company_id);
             $room_id = $this->Room_model->get_room_by_name($booking['Room']);
-            $room_type_id = $this->Room_type_model->get_room_type_name($booking['Room Type']);
+            $room_type_id = $this->Room_type_model->get_room_type_name($booking['Room Type'], $this->company_id);
             $customer_id =  $this->Import_mapping_model->get_mapping_customer_id($booking['Booking Customer Id']);
 
             switch ($booking['State']) {
