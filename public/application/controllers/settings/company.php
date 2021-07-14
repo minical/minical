@@ -1005,7 +1005,7 @@ class Company extends MY_Controller
             $booking_id =  $this->Import_mapping_model->get_mapping_booking_id($booking['Booking Id']);
             if(empty($booking_id)){
                 $data = Array(
-                    "rate" => $booking['Rate'],
+                    "rate" => $booking['Rate'] == '' ? null : $booking['Rate'],
                     "adult_count" => $booking['Adult Count'],
                     "children_count" => $booking['Children Count'],
                     "booking_customer_id" => $customer_id['new_id'],
