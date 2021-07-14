@@ -870,15 +870,15 @@ class Company extends MY_Controller
 
             $date_range_id = $this->Date_range_model->create_date_range(
                 Array(
-                    'date_start' => $rate['From Date'],
-                    'date_end' => $rate['To Date'],
-                    'monday' => $rate['Monday'],
-                    'tuesday' => $rate['Tuesday'],
-                    'wednesday' => $rate['Wednesday'],
-                    'thursday' => $rate['Thursday'],
-                    'friday' => $rate['Friday'],
-                    'saturday' => $rate['Saturday'],
-                    'sunday' => $rate['Sunday']
+                    'date_start' => $rate['From Date'] == '' ? null ; $rate['From Date'],
+                    'date_end' => $rate['To Date'] == '' ? null ; $rate['To Date'],
+                    'monday' => $rate['Monday'] == '' ? null ; $rate['Monday'],
+                    'tuesday' => $rate['Tuesday'] == '' ? null ; $rate['Tuesday'],
+                    'wednesday' => $rate['Wednesday'] == '' ? null ; $rate['Wednesday'],
+                    'thursday' => $rate['Thursday'] == '' ? null ; $rate['Thursday'],
+                    'friday' => $rate['Friday'] == '' ? null ; $rate['Friday'],
+                    'saturday' => $rate['Saturday'] == '' ? null ; $rate['Saturday'],
+                    'sunday' => $rate['Sunday']== '' ? null ; $rate['Sunday']
                 )
             );
 
