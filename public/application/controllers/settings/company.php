@@ -844,7 +844,7 @@ class Company extends MY_Controller
                     "rate_plan_name" => $rate['Name'],
                     "room_type_id" => $room_type_id,
                     "company_id" => $this->company_id,
-                    "is_selectable" => $rate['Read Only']
+                    "is_selectable" => $rate['Read Only'] == 'true' ? 1 : 0 
                 );
                 $rate_plan_id = $this->Rate_plan_model->create_rate_plan($data);
             }else{
