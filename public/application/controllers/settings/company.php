@@ -1048,31 +1048,33 @@ class Company extends MY_Controller
                 $charge_update = $this->Charge_model->update_charge_booking($booking['Booking Id'],$booking_filed,$customer_id['new_id']);
 
                 if(!empty($booking['Group Id'])){
-                     $group_id =  $this->Import_mapping_model->get_mapping_group_booking_id($booking['Group Id']);
+                    $group_id =  $this->Import_mapping_model->get_mapping_group_booking_id($booking['Group Id']);
 
-                     if(empty($new_group_id)){
+                    if(empty($new_group_id)){
+
                         $group_name = ($booking['Group Name']) != '' ? $booking['Group Name'] : null ;
-                        $new_group_id = $this->Booking_linked_group_model->create_booking_linked_group($group_name);
-
+                        $new_group_id = $this->Booking_linked_group_model->create_booking_linked_groups($group_name);
+                        // prx($new_group_id);
                         $data_import_mapping = Array(
                             "new_id" => $new_group_id,
                             "old_id" => $booking['Group Id'],
                             "company_id" => $this->company_id,
                             "type" => "group_booking"
-                         );
-                         $import_data = $this->Import_mapping_model->insert_import_mapping($data_import_mapping);
-
-                     }else{
-                        $new_group_id = $group_id['new_id'];
-                     }
-                      // prx($new_group_id);
-                     $data = array(
-                            "booking_id " => $booking_id,
-                            "booking_group_id" => $new_group_id
                         );
-                     
-                        $booking_linke_group = $this->Booking_linked_group_model->insert_booking_x_booking_linked_group($data);
-                        
+                        $import_data = $this->Import_mapping_model->insert_import_mapping($data_import_mapping);
+
+                    }else{
+
+                        $new_group_id = $group_id['new_id'];
+                    }
+                    // prx($new_group_id);
+                    $data = array(
+                        "booking_id " => $booking_id,
+                        "booking_group_id" => $new_group_id
+                    );
+                    // prx($data);
+                    $booking_linke_group = $this->Booking_linked_group_model->insert_booking_x_booking_linked_group($data);
+
 
                 }
 
