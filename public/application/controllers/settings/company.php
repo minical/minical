@@ -729,12 +729,12 @@ class Company extends MY_Controller
             if (empty($get_room_type)) {
                 $data = array(
                     'company_id' => $this->company_id,
-                    'name' => $room['Room Type Name'],
-                    'acronym' => $room['Acronym'],
-                    'max_adults' => $room['Max Adults'],
-                    'max_children' => $room['Max Children'],
-                    'max_occupancy' => $room['Max Occupancy'],
-                    'min_occupancy' => $room['Min Occupancy'],
+                    'name' => $room['Room Type Name'] == '' ? null : $room['Room Type Name'],
+                    'acronym' => $room['Acronym'] == ''? null : $room['Acronym'] ,
+                    'max_adults' => $room['Max Adults'] == ''  ? 0 : $room['Max Adults'] ,
+                    'max_children' => $room['Max Children'] == ''  ? 0 : $room['Max Children'] ,
+                    'max_occupancy' => $room['Max Occupancy'] == ''  ? 0 : $room['Max Occupancy'] ,
+                    'min_occupancy' => $room['Min Occupancy'] == ''  ? 0 : $room['Min Occupancy'] ,
                     'can_be_sold_online' => $room['Can be Sold online'] == 'true' ? 1 : 0
                 );
 
@@ -799,10 +799,10 @@ class Company extends MY_Controller
                     }
 
                     $data = Array(
-                        "description" => $charge['Description'],
+                        "description" => $charge['Description'] == '' ? null : $charge['Description'],
                         "date_time" =>$charge['Date Time'] != null ? $charge['Date Time'] : date('Y-m-d H:i:s') ,
                         "booking_id" => $charge['Booking Id'],
-                        "amount" => $charge['Amount'],
+                        "amount" => $charge['Amount'] == '' ? 0 : $charge['Amount'],
                         "charge_type_id" => $charge_type_id,
                         "selling_date" => $charge['Selling Date'],
                         "customer_id" => $customer_id['new_id'],
@@ -843,7 +843,8 @@ class Company extends MY_Controller
                 $data = array(
                     "rate_plan_name" => $rate['Name'],
                     "room_type_id" => $room_type_id,
-                    "company_id" => $this->company_id
+                    "company_id" => $this->company_id,
+                    "is_selectable" => $rate['Read Only']
                 );
                 $rate_plan_id = $this->Rate_plan_model->create_rate_plan($data);
             }else{
@@ -912,11 +913,11 @@ class Company extends MY_Controller
             }
 
             $data = Array(
-                "customer_name" => $customer['Customer Name'],
-                "address" => $customer['Address'],
-                "email" => $customer['Email'],
-                "city" => $customer['City'],
-                "region" => $customer['Region'],
+                "customer_name" => $customer['Customer Name'] == ''? null : $customer['Customer Name'],
+                "address" => $customer['Address'] == ''? null : $customer['Address'],
+                "email" => $customer['Email'] == ''? null : $customer['Email'],
+                "city" => $customer['City'] == ''? null : $customer['City'],
+                "region" => $customer['Region'] == ''? null : $customer['Region'],
                 "customer_type_id" => $customer_type_id,
                 "company_id" => $this->company_id
             );
@@ -1009,7 +1010,7 @@ class Company extends MY_Controller
                     "adult_count" => $booking['Adult Count'] == '' ? null : $booking['Adult Count'],
                     "children_count" => $booking['Children Count'] == '' ? null : $booking['Children Count'],
                     "booking_customer_id" => $customer_id['new_id'],
-                    "booking_notes" => $booking['Booking Note'],
+                    "booking_notes" => $booking['Booking Note'] == '' ? null : $booking['Booking Note'] ,
                     "booked_by" => $booking['Booked By'] == '' ? null : $booking['Booked By'],
                     "balance" => $booking['Balance'],
                     "balance_without_forecast" => $booking['Balance Without Forecast'],
