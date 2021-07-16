@@ -267,8 +267,9 @@ class MY_Controller extends CI_Controller {
             $this->selected_payment_gateway = $company['selected_payment_gateway'];
             $this->booking_cancelled_with_balance = $company['booking_cancelled_with_balance'];
 
-            $user = $this->User_model->get_user_by_id($this->user_id, FALSE);
+            $user = $this->User_model->get_user_by_id($this->user_id);
             $this->user_email = $user['email'];
+            
             $this->company_is_tos_agreed = ($user['tos_agreed_date'] >= TOS_PUBLISH_DATE);
             $this->is_overview_calendar = false; // $user['is_overview_calendar'];
 
@@ -281,7 +282,12 @@ class MY_Controller extends CI_Controller {
             $whitelabelinfo = $this->ci->session->userdata('white_label_information');
 
             $admin_user_ids = $this->Whitelabel_partner_model->get_partner_detail();
+            // prx($admin_user_ids);
             $this->is_super_admin = ($user['email'] == SUPER_ADMIN || $this->user_id == $admin_user_ids['admin_user_id']);
+
+            $this->vendor_id = $admin_user_ids['partner_id'] ? $admin_user_ids['partner_id'] : $this->company_data['partner_id'];
+
+            $this->user_permission = $user['permission'];
 
             if($this->is_super_admin){
                 $get_active_extensions = $this->Extension_model->get_active_extensions($this->company_id, 'reseller_package', false);

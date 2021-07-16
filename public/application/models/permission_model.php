@@ -254,7 +254,9 @@ class Permission_model extends CI_Model {
 							$function_name == 'update_notes_AJAX' || $function_name == 'set_rooms_clean'
 						)
                     )
-                )
+                ) ||
+                (
+                    $permission == 'access_to_extensions' && $controller_name == 'extensions')
             )
             {
                 return true;

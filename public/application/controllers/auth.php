@@ -1756,17 +1756,17 @@ class Auth extends MY_Controller
         );
 		$white_label_data = $this->Whitelabel_partner_model->get_whitelabel_partners();
 		$white_label_partner_id = 0;
-        if($white_label_data && count($white_label_data) > 0 ){
-    		foreach($white_label_data as $white_label)
-    		{
-    			$location = json_decode($white_label['location']);
-    			if(isset($location) && $location && in_array($data['country'], $location))
-    			{
-    				$white_label_partner_id = $white_label['id'];
-    				break;
-    			}
-    		}
-        }
+      //   if($white_label_data && count($white_label_data) > 0 ){
+    		// foreach($white_label_data as $white_label)
+    		// {
+    		// 	$location = json_decode($white_label['location']);
+    		// 	if(isset($location) && $location && in_array($data['country'], $location))
+    		// 	{
+    		// 		$white_label_partner_id = $white_label['id'];
+    		// 		break;
+    		// 	}
+    		// }
+      //   }
 
         $Rdata = $this->_update_company($data);
 

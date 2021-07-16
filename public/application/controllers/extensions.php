@@ -14,13 +14,14 @@ class Extensions extends MY_Controller
 	}
 
 	function index(){
-		$this->get_all_extensions();
+        $this->get_all_extensions();
 	}
 	
 	// Called from booking_form.js
 	function get_all_extensions()
 	{
 		$all_active_modules = $this->session->userdata('all_active_modules');
+        $installed_extensions = array();
 
         if($this->is_super_admin != 1){
             foreach ($all_active_modules as $key => $value) {
@@ -28,7 +29,9 @@ class Extensions extends MY_Controller
                     unset($all_active_modules[$key]);
                 }
             }
+
         }
+        
 
 		$modules_name = array();
 		foreach($all_active_modules as $module)
@@ -37,6 +40,62 @@ class Extensions extends MY_Controller
         }
 
         $extensions = $this->Extension_model->get_extensions($modules_name, $this->company_id);
+        
+        $installed_extensions = $this->Extension_model->get_installed_extensions(null, $this->vendor_id);
+        
+        $uninstalled_extensions = $this->Extension_model->get_uninstalled_extensions(null, $this->vendor_id);
+
+        // echo $this->company_id; echo '<br/>';
+        // echo $this->vendor_id ? $this->vendor_id : 0; echo '<br/>';
+        // echo 'extensions = '; prx($extensions, 1);
+        // echo 'installed_extensions = '; prx($installed_extensions, 1);
+        // echo 'uninstalled_extensions = '; prx($uninstalled_extensions);
+
+        $temp_ext = $temp_extension = array();
+        $is_ext_matched = false;
+        
+        if($extensions){
+            foreach ($extensions as $key => $ext) {
+                if($installed_extensions){
+                    $is_ext_matched = false;
+                    foreach ($installed_extensions as $key1 => $in_ext) {
+                        if(
+                            isset($in_ext['vendor_id']) && 
+                            $ext['extension_name'] == $in_ext['extension_name'] && 
+                            $ext['company_id'] == $in_ext['company_id']
+
+                        ){
+                            $is_ext_matched = true;
+                            $temp_ext[$key] = $installed_extensions[$key1];
+                            $temp_ext[$key]['is_active'] = $ext['is_active'];
+                        }
+                    }
+                }
+                if(!$is_ext_matched){
+                    $temp_ext[$key] = $extensions[$key];
+                }
+            }
+
+            if($installed_extensions && count($extensions) < count($installed_extensions)){
+                foreach ($installed_extensions as $key1 => $in_ext) {
+                    
+                    $temp_ext[$key1] = $installed_extensions[$key1];
+                    $temp_ext[$key1]['is_active'] = 0;
+                }
+            }
+
+            $extensions = $temp_ext;
+        }
+        else {
+            if($installed_extensions){
+                foreach ($installed_extensions as $key1 => $in_ext) {
+                    $installed_extensions[$key1]['is_active'] = 0;
+                }
+            }
+            $extensions = $installed_extensions;
+        }
+
+        // prx($extensions);
 
 		$final_modules = array();
 
@@ -77,11 +136,31 @@ class Extensions extends MY_Controller
         $activated_modules = array();
         if(count($data['extensions']) > 0){
         	foreach($data['extensions'] as $ext){
-        		if($ext['is_active'] == 1){
+        		if(isset($ext['is_active']) && $ext['is_active'] == 1){
         			$activated_modules[] = $ext['extension_folder_name'];
         		}
         	}
         }
+
+        if($data['extensions']){
+            foreach ($data['extensions'] as $key => $value) {
+                if(
+                    !isset($data['extensions'][$key]['is_installed']) &&
+                    !isset($data['extensions'][$key]['vendor_id'])
+                ){
+                    $data['extensions'][$key]['is_installed'] = 0;
+                } 
+
+                if(
+                    isset($data['extensions'][$key]['is_admin_module']) &&
+                    $data['extensions'][$key]['is_admin_module']
+                ) {
+                    $data['extensions'][$key]['is_installed'] = 1;
+                }
+            }
+        }
+
+        // prx($data['extensions']);
 
         $this->session->set_userdata('activated_modules', $activated_modules);
         
@@ -105,5 +184,31 @@ class Extensions extends MY_Controller
 		$this->Extension_model->update_extension($data);
 		echo json_encode(array('success' => true));
 	}
+
+    function uninstall_extension()
+    {
+        $whitelabel_partner_detail = $this->Whitelabel_partner_model->get_whitelabel_partner_id($this->user_id);
+
+        $data['extension_name'] = $this->input->post('extension_name');
+        $data['is_installed'] = 0;
+        $data['company_id'] = $this->company_id;
+        $data['vendor_id'] = $whitelabel_partner_detail['partner_id'] ? $whitelabel_partner_detail['partner_id'] : 0;
+
+        $this->Extension_model->update_extension_status($data);
+        echo json_encode(array('success' => true));
+    }
+
+    function install_extension()
+    {
+        $whitelabel_partner_detail = $this->Whitelabel_partner_model->get_whitelabel_partner_id($this->user_id);
+
+        $data['extension_name'] = $this->input->post('extension_name');
+        $data['is_installed'] = 1;
+        $data['company_id'] = $this->company_id;
+        $data['vendor_id'] = $whitelabel_partner_detail['partner_id'] ? $whitelabel_partner_detail['partner_id'] : 0;
+
+        $this->Extension_model->update_extension_status($data);
+        echo json_encode(array('success' => true));
+    }
 	
 }
