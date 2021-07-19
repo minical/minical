@@ -6141,7 +6141,7 @@ var bookingModalInvoker = function ($) {
                     var staying_customers = data['booking']['staying_customers'];
                     var comapany_logo = '';
                     if (show_logo == 1 && data['company_logo'] != "undefined" && data['company_logo'] != null) {
-                        comapany_logo = '<img class="img" src="https://inngrid.s3.amazonaws.com/' + data['company']['company_id'] + '/' + data['company_logo'] + '" id="company-logo-image"/><br/>';
+                        comapany_logo = '<img class="img" src="https://'+$_SERVER["AWS_S3_BUCKET"]+'.s3.amazonaws.com/' + data['company']['company_id'] + '/' + data['company_logo'] + '" id="company-logo-image"/><br/>';
                     }
 
                     $('#registration_card').html('');
