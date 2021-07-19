@@ -858,19 +858,19 @@
                                         <span><?php echo ($payment['payment_status'] == 'charge') ? l('Captured', true) : ($payment['payment_status'] == 'payment_link' ? l('Pending', true) : l('Refunded', true)); ?></span>
                                         <div class="payment_status_buttons">
                                             <?php if (!$payment['read_only']){ if($payment['is_captured']){?>
-                                                <button class="btn btn-primary delete-payment" data-toggle="tooltip" title="Refund"  title="Created by <?php echo $payment['user_name']; ?>">
+                                                <button class="btn btn-primary hidden-print delete-payment" data-toggle="tooltip" title="Refund"  title="Created by <?php echo $payment['user_name']; ?>">
                                                     <i class="fa fa-reply" aria-hidden="true"></i>
                                                 </button>
                                                 <button type="button" class="btn btn-danger capture-payment-button hidden-print not-allowed" disabled>
                                                     <i class="fa fa-credit-card" aria-hidden="true"></i>
                                                 </button>
                                             <?php } else if($menu_on === true) { ?>
-                                                <button type="button" class="btn btn-info verify_payment" data-payment_link_id="<?php echo $payment['payment_link_id']; ?>" data-payment_id="<?php echo $payment['payment_id']; ?>">
+                                                <button type="button" class="btn btn-info hidden-print verify_payment" data-payment_link_id="<?php echo $payment['payment_link_id']; ?>" data-payment_id="<?php echo $payment['payment_id']; ?>">
                                                     Verify
                                                 </button>
                                             <?php } ?>
                                             <?php } else { ?>
-                                                <button class="btn btn-primary delete-payment not-allowed" data-toggle="tooltip" title="Refund" disabled>
+                                                <button class="btn btn-primary delete-payment hidden-print not-allowed" data-toggle="tooltip" title="Refund" disabled>
                                                     <i class="fa fa-reply" aria-hidden="true"></i>
                                                 </button>
                                                 <button type="button" class="btn btn-danger capture-payment-button hidden-print not-allowed" data-toggle="tooltip" title="Capture" disabled>
