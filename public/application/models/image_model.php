@@ -104,7 +104,7 @@ class Image_model extends CI_Model {
     {
         $company_logo = $this->get_images($logo_image_group_id);
         if (!empty($company_logo[0]) && !empty($company_logo[0]['filename'])) {
-            $url = "https://inngrid.s3.amazonaws.com/".$companyId."/". $company_logo[0]['filename'];
+            $url = "https://".$_SERVER["AWS_S3_BUCKET"].".s3.amazonaws.com/".$companyId."/". $company_logo[0]['filename'];
             if ($is_mail_html) {
                 return "<div style='text-align: center;'>
                         <img src='".$url."' width='160'/></div><br><br>";

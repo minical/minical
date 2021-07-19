@@ -41,7 +41,7 @@ class Image extends MY_Controller
 				$this->_upload_to_s3($_FILES["img"]["tmp_name"], "temp_image.".$extension);
 				$response = array(
 					"status" => 'success',
-					"url" => "https://inngrid.s3.amazonaws.com/".$this->company_id."/temp_image.".$extension,
+					"url" => "https://".$_SERVER["AWS_S3_BUCKET"].".s3.amazonaws.com/".$this->company_id."/temp_image.".$extension,
 					"width" => $width,
 					"height" => $height
 				);
@@ -62,79 +62,10 @@ class Image extends MY_Controller
 
 	/**
 	* This is where image gets cropped via Croppic javascript, then
-	* gets uploaded to Amazon S3. Also updated into innGrid DB's images table.
+	* gets uploaded to Amazon S3. Also updated into minical DB's images table.
 	*/
 
 	// Image compression using Imagick
-	/*
-	function crop_to_file()
-	{
-		$imgUrl = $_POST['imgUrl'];
-		$imgInitW = $_POST['imgInitW'];
-		$imgInitH = $_POST['imgInitH'];
-		$imgW = $_POST['imgW'];
-		$imgH = $_POST['imgH'];
-		$imgY1 = $_POST['imgY1'];
-		$imgX1 = $_POST['imgX1'];
-		$cropW = $_POST['cropW'];
-		$cropH = $_POST['cropH'];
-
-		$output_filename = generate_guid();
-		$image_group_id = $_POST['imageGroupID'];
-		
-		$what = getimagesize($imgUrl);
-		switch(strtolower($what['mime']))
-		{
-		    case 'image/png':
-		        $img_r = imagecreatefrompng($imgUrl);
-				$source_image = imagecreatefrompng($imgUrl);
-				$type = '.png';
-		        break;
-		    case 'image/jpeg':
-		        $img_r = imagecreatefromjpeg($imgUrl);
-				$source_image = imagecreatefromjpeg($imgUrl);
-				$type = '.jpeg';
-		        break;
-		    case 'image/gif':
-		        $img_r = imagecreatefromgif($imgUrl);
-				$source_image = imagecreatefromgif($imgUrl);
-				$type = '.gif';
-		        break;
-		    default: die('image type not supported');
-		}
-
-		$image = new Imagick($imgUrl);
-		$image->thumbnailImage($imgW , $imgH , TRUE);
-    	$image->cropImage($cropW,$cropH, $imgX1,$imgY1);
-
-    	$filename = tempnam(sys_get_temp_dir(), "foo");
-		$image->writeImage($filename);
-
-		if ($this->_upload_to_s3($filename, $output_filename))
-		{
-			$response = array(
-				"status" => 'success',
-				"url" => "https://inngrid.s3.amazonaws.com/".$this->company_id."/".$output_filename,
-			  );
-
-			$image_data = Array(
-				"image_group_id" => $image_group_id,
-				"filename" => $output_filename
-				);
-
-			$this->Image_model->insert_image($image_data);
-		}
-		else
-		{
-			$response = array(
-				"status" => 'fail!'
-			  );
-		}
-
-		echo json_encode($response);
-		
-	}
-	*/
 
 	//image compression using GD
 	function crop_to_file()
@@ -217,7 +148,7 @@ class Image extends MY_Controller
 		{
 			$response = array(
 				"status" => 'success',
-				"url" => "https://inngrid.s3.amazonaws.com/".$this->company_id."/".$output_filename,
+				"url" => "https://".$_SERVER["AWS_S3_BUCKET"].".s3.amazonaws.com/".$this->company_id."/".$output_filename,
 			  );
 
 			$image_data = Array(
@@ -299,7 +230,7 @@ class Image extends MY_Controller
 		$this->_delete_in_s3($output_filename);
 		
 		// upload/update the s3 file with new GUID
-		if ($this->s3->putObjectFile($source_image, "innGrid", $this->company_id."/".$output_filename, S3::ACL_PUBLIC_READ)) 
+		if ($this->s3->putObjectFile($source_image, $_SERVER["AWS_S3_BUCKET"], $this->company_id."/".$output_filename, S3::ACL_PUBLIC_READ)) 
 		{
 			return true;
 		}
@@ -308,8 +239,8 @@ class Image extends MY_Controller
 	}
 
 	function _delete_in_s3($filename) {
-		$this->s3->putBucket("innGrid", S3::ACL_PUBLIC_READ);
-		$this->s3->deleteObject("innGrid", $this->company_id."/".$filename);					
+		$this->s3->putBucket($_SERVER["AWS_S3_BUCKET"], S3::ACL_PUBLIC_READ);
+		$this->s3->deleteObject($_SERVER["AWS_S3_BUCKET"], $this->company_id."/".$filename);					
 	}
 
     function upload_to_s3 ($myId) {
@@ -330,7 +261,7 @@ class Image extends MY_Controller
 
             $response = array(
                 "status" => 'success',
-                "url" => "https://inngrid.s3.amazonaws.com/".$this->company_id."/".$output_filename,
+                "url" => "https://".$_SERVER["AWS_S3_BUCKET"].".s3.amazonaws.com/".$this->company_id."/".$output_filename,
                 "width" => $width,
                 "height" => $height
             );

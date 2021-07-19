@@ -60,7 +60,7 @@
 				<?php
 				if (isset($logo_images)):
 					foreach ($logo_images as $image):
-						$image_url = "https://inngrid.s3.amazonaws.com/".$company['company_id']."/".$image['filename'];
+						$image_url = "https://".$_SERVER["AWS_S3_BUCKET"].".s3.amazonaws.com/".$company['company_id']."/".$image['filename'];
 						?>
 						<img 
 						class="thumbnail col-md-3 add-image" 

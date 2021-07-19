@@ -51,7 +51,7 @@
                                                                 <?php
                                                                     if (isset($logo_images)):
                                                                         foreach ($logo_images as $image):
-                                                                            $image_url = "https://inngrid.s3.amazonaws.com/".$company_id."/".$image['filename'];
+                                                                            $image_url = "https://".$_SERVER["AWS_S3_BUCKET"].".s3.amazonaws.com/".$company_id."/".$image['filename'];
                                                                 ?>
                                                                             <img src="<?php echo $image_url; ?>" title="<?php echo $image['filename']; ?>" style="outline:none; text-decoration:none; -ms-interpolation-mode:bicubic; max-width:100%; font-size:16px" width="100" align="middle">
                                                                 <?php
