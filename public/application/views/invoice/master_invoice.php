@@ -848,7 +848,7 @@
 			</table>
 
         </div> <!-- /.panel -->
-		<div class="container h2 text-muted" style="max-width: 100%; padding: 10px;">
+		<div class="h2 text-muted" style="max-width: 100%; padding: 10px;">
 			<div class="amount_due">
 				<div class="text-right smaller_fonts payments_text_spacing">
 					<?php echo l('amount', true).' '.l('due', true); ?>: 
