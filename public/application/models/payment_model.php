@@ -113,12 +113,21 @@ class Payment_model extends CI_Model {
                 $payment_type    = $this->ci->processpayment->getPaymentGatewayPaymentType($selected_payment_gateway);
                 $payment_type_id = $payment_type['payment_type_id'];
                 $capture_type = isset($manual_payment_capture) && $manual_payment_capture ? false : true;
+
+                $installment_charge = $data['installment_charge'];
+                $installment_count = $data['installment_count'];
+                unset($data['installment_charge']);
+                unset($data['installment_count']);
+                    
+
                 $gateway_charge_id = $this->ci->processpayment->createBookingCharge(
                     $data['booking_id'],
                     abs($data['amount']), // in cents, only positive
                     $customer_id,
                     $cvc,
-                    $capture_type
+                    $capture_type,
+                    $installment_charge,
+                    $installment_count
                 );
                 $error = $this->ci->processpayment->getErrorMessage();
                 

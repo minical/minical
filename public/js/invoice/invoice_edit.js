@@ -1766,6 +1766,16 @@ $(function() {
                     });
                 }
                 if (payFor == "this_invoice_only") {
+
+                    if(innGrid.isAsaasPaymentEnabled == 1 && $('input[name="installment_charge"]').is(":checked") == true){
+                        var installment_charge = true;
+                        var installment_count = $('select[name="installment_count"]').val();
+                    }
+                    else {
+                        var installment_charge = false;
+                        var installment_count = 0;
+                    }
+                    
                     $.post(getBaseURL() + 'invoice/insert_payment_AJAX', {
                         booking_id      : $("#booking_id").val(),
                         payment_type_id : $("select[name='payment_type_id']").val(),
@@ -1776,7 +1786,9 @@ $(function() {
                         cvc             : $("input[name='cvc']").val(),
                         folio_id        : $('#current_folio_id').val(),
                         selected_gateway : $('input[name="'+innGrid.featureSettings.selectedPaymentGateway+'_use_gateway"]').data('gateway_name'),
-                        capture_payment_type : capture_payment_type
+                        capture_payment_type : capture_payment_type,
+                        installment_charge : installment_charge,
+                        installment_count : installment_count
                     }, function (data) {
                         console.log('expire ',data);
                         if (data == "You don't have permission to access this functionality."){

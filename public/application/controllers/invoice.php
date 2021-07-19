@@ -1021,7 +1021,9 @@ class Invoice extends MY_Controller {
                 "description" => $this->input->post('description'),
                 "date_time" => gmdate("Y-m-d H:i:s"),
                 "selected_gateway" => $this->input->post('selected_gateway'),
-                "capture_payment_type" => trim($this->input->post('capture_payment_type'))
+                "capture_payment_type" => trim($this->input->post('capture_payment_type')),
+                "installment_charge" => trim($this->input->post('installment_charge')),
+                "installment_count" => trim($this->input->post('installment_count'))
             );
         
             $payment_folio_id = $this->input->post('folio_id');
