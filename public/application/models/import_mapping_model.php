@@ -53,6 +53,33 @@ class Import_mapping_model extends CI_Model {
 
     }
 
+    function get_mapping_booking_room_history_id($booking_room_history_id){
+
+        $this->db->where('company_id', $this->company_id);
+        $this->db->where('old_id', $booking_room_history_id);
+        $this->db->where('type', 'booking_block');
+
+        $query = $this->db->get('import_mapping');
+
+        if ($query->num_rows >= 1)
+            return $query->row_array();
+        return NULL;
+
+    }
+
+    function get_mapping_group_booking_id($group_booking_id){
+
+        $this->db->where('company_id', $this->company_id);
+        $this->db->where('old_id', $group_booking_id);
+        $this->db->where('type', 'group_booking');
+
+        $query = $this->db->get('import_mapping');
+
+        if ($query->num_rows >= 1)
+            return $query->row_array();
+        return NULL;
+
+    }
 
     function get_mapping_room_type_id($room_type_id){
 
@@ -81,6 +108,20 @@ class Import_mapping_model extends CI_Model {
         return NULL;
 
     }
+    function get_mapping_tax_id($tax_id){
+
+        $this->db->where('company_id', $this->company_id);
+        $this->db->where('old_id', $tax_id);
+        $this->db->where('type', 'tax_type');
+
+        $query = $this->db->get('import_mapping');
+
+        if ($query->num_rows >= 1)
+            return $query->row_array();
+        return NULL;
+
+    }
+
     function get_mapping_charge($charge_id){
 
         $this->db->where('company_id', $this->company_id);
@@ -100,6 +141,20 @@ class Import_mapping_model extends CI_Model {
         $this->db->where('company_id', $this->company_id);
         $this->db->where('old_id', $payment_id);
         $this->db->where('type', 'payment');
+
+        $query = $this->db->get('import_mapping');
+
+        if ($query->num_rows >= 1)
+            return $query->row_array();
+        return NULL;
+
+    } 
+
+     function get_rates_mapping_id($rate_id){
+
+        $this->db->where('company_id', $this->company_id);
+        $this->db->where('old_id', $rate_id);
+        $this->db->where('type', 'rate');
 
         $query = $this->db->get('import_mapping');
 
