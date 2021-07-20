@@ -36,7 +36,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group payment_type_div">
                         <label for="pay_for" class="col-sm-4 control-label"><?php echo l('method'); ?></label>
                         <div class="col-sm-8">
                             <select name="payment_type_id" class="input-field form-control">
