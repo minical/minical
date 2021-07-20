@@ -1202,6 +1202,7 @@ class Customer extends MY_Controller {
 
         $customer_id                 = $this->Customer_model->create_customer($customer_data);
         
+        $customer_data['customer_id'] = $customer_id;
         $card_details = array(
            'is_primary' => 1,
            'customer_id' => $customer_id,
@@ -1237,8 +1238,7 @@ class Customer extends MY_Controller {
                 $card_response = array();
 
                 if($card_data_array && $card_data_array['card']['card_number'])
-                    $card_response = tokenize($card_data_array);
-
+                    $card_response = tokenize($card_data_array, 'POST', $customer_data);
                 if(
                     $card_response &&
                     isset($card_response["data"]) &&
@@ -1266,16 +1266,20 @@ class Customer extends MY_Controller {
         $customer_data['cc_expiry_year'] = "";
         $customer_data['cc_tokenex_token'] = "";
         $customer_data['cc_cvc_encrypted'] = "";
+
+        $check_data = $this->Card_model->get_customer_primary_card($customer_id);
         
-        $this->Customer_model->update_customer($customer_id, $customer_data);
-        if(isset($cc_number)){
-            $this->Card_model->create_customer_card_info($card_details);
+        if(empty($check_data)){
+            $this->Customer_model->update_customer($customer_id, $customer_data);
+            if(isset($cc_number)){
+                $this->Card_model->create_customer_card_info($card_details);
+            }
+            if (isset($customer_data['customer_fields']))
+            {
+                $this->Customer_model->update_customer_fields($customer_id, $customer_data['customer_fields']);	
+            }
         }
-        if (isset($customer_data['customer_fields']))
-        {
-        	$this->Customer_model->update_customer_fields($customer_id, $customer_data['customer_fields']);	
-        }
-        
+       
         $data['customer_id'] = $customer_id;
         $data['error']       = $error;
         $data['error_msg']   = $error_msg;
@@ -1313,6 +1317,8 @@ class Customer extends MY_Controller {
 
         unset($customer_data['cvc']);
         unset($customer_data['cc_number']);
+
+        $customer_data['customer_id'] = $customer_id;
 
         $card_data = $this->Card_model->get_active_card($customer_id, $this->company_id);
 
@@ -1355,7 +1361,7 @@ class Customer extends MY_Controller {
             !strrpos($cc_number, 'X') && 
             $cvc && 
             is_numeric($cvc) &&
-            !strrpos($cvc, '*')
+            !strrpos($cvc, '*') 
         ){
             if(function_exists('tokenize'))
             {
@@ -1373,7 +1379,7 @@ class Customer extends MY_Controller {
                 $card_response = array();
 
                 if($card_data_array && $card_data_array['card']['card_number'])
-                    $card_response = tokenize($card_data_array);
+                    $card_response = tokenize($card_data_array, 'POST', $customer_data);
 
                 if(
                     $card_response &&

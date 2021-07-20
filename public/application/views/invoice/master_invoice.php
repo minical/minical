@@ -305,7 +305,7 @@
     <?php
         // show company logo image
         if (isset($company_logos[0]['filename'])) {
-            echo "<img src=\"https://inngrid.s3.amazonaws.com/".$company['company_id']."/".$company_logos[0]['filename']."\" id='company-logo-image'/><br/>";
+            echo "<img src=\"https://".$_SERVER["AWS_S3_BUCKET"].".s3.amazonaws.com/".$company['company_id']."/".$company_logos[0]['filename']."\" id='company-logo-image'/><br/>";
         }
     ?>
 
@@ -848,7 +848,7 @@
 			</table>
 
         </div> <!-- /.panel -->
-		<div class="container h2 text-muted" style="max-width: 100%; padding: 10px;">
+		<div class="h2 text-muted" style="max-width: 100%; padding: 10px;">
 			<div class="amount_due">
 				<div class="text-right smaller_fonts payments_text_spacing">
 					<?php echo l('amount', true).' '.l('due', true); ?>: 
