@@ -176,6 +176,8 @@ class MY_Controller extends CI_Controller {
         }
 
         $autoload_helpers = array();
+        $autoload_packages = array();
+
         if($active_modules && count($active_modules) > 0){
             foreach($active_modules as $module)
             {
@@ -183,6 +185,14 @@ class MY_Controller extends CI_Controller {
                 if($module === '.' || $module === '..') continue;
                 if(is_dir($modules_path) . '/' . $module)
                 {
+
+                    if(file_exists('application/extensions/'.$module . '/hooks/actions.php')) {
+                        $autoload_packages[$module.'-actions'] = '../extensions/'.$module . '/hooks/actions';
+                    }
+                    if(file_exists('application/extensions/'.$module . '/hooks/filters.php')) {
+                        $autoload_packages[$module.'-filters'] = '../extensions/'.$module . '/hooks/filters';
+                    }
+
                     $helpers_path = $modules_path . $module . '/config/autoload.php';
                     if(file_exists($helpers_path))
                     {
@@ -190,7 +200,9 @@ class MY_Controller extends CI_Controller {
 
                         if($extension_helper && is_array($extension_helper)){
                             foreach($extension_helper as $key => $extension_helper_item) {
-                                $autoload_helpers[$extension_helper_item] = '../extensions/'.$module . '/helpers/' . $extension_helper_item;
+                                if ($extension_helper_item) {
+                                    $autoload_helpers[$extension_helper_item] = '../extensions/'.$module . '/helpers/' . $extension_helper_item;
+                                }
                             }
                         }
                     }
@@ -201,9 +213,11 @@ class MY_Controller extends CI_Controller {
                 }
             }
         }
-        // prx($autoload_helpers);
+
         if($autoload_helpers && count($autoload_helpers) > 0)
             $this->load->helper($autoload_helpers);
+        if($autoload_packages && count($autoload_packages) > 0)
+            $this->load->helper($autoload_packages, true);
 
     }
 
