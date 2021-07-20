@@ -289,6 +289,8 @@ class MY_Controller extends CI_Controller {
             $this->enable_new_calendar = $company['enable_new_calendar'];
             $this->enable_hourly_booking = $this->enable_new_calendar ? $company['enable_hourly_booking'] : false;
 
+            $this->image_url = "https://".$_SERVER["AWS_S3_BUCKET"].".s3.amazonaws.com/";
+
             $this->first_name = $user['first_name'];
             $this->last_name = $user['last_name'];
 

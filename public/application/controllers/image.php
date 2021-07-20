@@ -41,7 +41,7 @@ class Image extends MY_Controller
 				$this->_upload_to_s3($_FILES["img"]["tmp_name"], "temp_image.".$extension);
 				$response = array(
 					"status" => 'success',
-					"url" => "https://".$_SERVER["AWS_S3_BUCKET"].".s3.amazonaws.com/".$this->company_id."/temp_image.".$extension,
+					"url" => $this->image_url.$this->company_id."/temp_image.".$extension,
 					"width" => $width,
 					"height" => $height
 				);
@@ -148,7 +148,7 @@ class Image extends MY_Controller
 		{
 			$response = array(
 				"status" => 'success',
-				"url" => "https://".$_SERVER["AWS_S3_BUCKET"].".s3.amazonaws.com/".$this->company_id."/".$output_filename,
+				"url" => $this->image_url.$this->company_id."/".$output_filename,
 			  );
 
 			$image_data = Array(
@@ -261,7 +261,7 @@ class Image extends MY_Controller
 
             $response = array(
                 "status" => 'success',
-                "url" => "https://".$_SERVER["AWS_S3_BUCKET"].".s3.amazonaws.com/".$this->company_id."/".$output_filename,
+                "url" => $this->image_url.$this->company_id."/".$output_filename,
                 "width" => $width,
                 "height" => $height
             );
