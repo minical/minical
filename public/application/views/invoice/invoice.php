@@ -36,7 +36,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group payment_type_div">
                         <label for="pay_for" class="col-sm-4 control-label"><?php echo l('method'); ?></label>
                         <div class="col-sm-8">
                             <select name="payment_type_id" class="input-field form-control">
@@ -238,11 +238,11 @@
         <input type="text" placeholder="Edit name" class="form-control updated-folio-name">
         <input type="hidden" class="update-folio-id" value="">
         <span class="input-group-btn">
-			<button type="button" class="btn btn-primary btn-update-folio-name">
-				<i class="fa fa-check" aria-hidden="true"></i>
-			</button>
-			<i class="fa fa-close"></i>
-		</span>
+            <button type="button" class="btn btn-primary btn-update-folio-name">
+                <i class="fa fa-check" aria-hidden="true"></i>
+            </button>
+            <i class="fa fa-close"></i>
+        </span>
     </div>
 </div>
 
@@ -455,8 +455,8 @@
                                         </a>
                                     </div>
                                     <span class="remove-folio">
-									<i class="fa fa-close"></i>
-								</span>
+                                    <i class="fa fa-close"></i>
+                                </span>
                                 </li>
                             <?php }
                         } else { ?>
@@ -532,17 +532,17 @@
                         }
                         ?> >
                             <td class="<?php echo (isset($charge["charge_id"]))?"editable_td":""; ?>" onclick="">
-									<span name="selling-date">
-										<?php echo get_local_formatted_date($charge['selling_date']); ?>
-									</span>
+                                    <span name="selling-date">
+                                        <?php echo get_local_formatted_date($charge['selling_date']); ?>
+                                    </span>
                             </td>
                             <td class="<?php echo (isset($charge["charge_id"]))?"editable_td":""; ?>" onclick="">
-									<span name="description">
-										<?php
+                                    <span name="description">
+                                        <?php
                                         // description
                                         echo $charge['description'];
                                         ?>
-									</span>
+                                    </span>
                             </td>
                             <td class="<?php echo (isset($charge['charge_id']))?"editable_td":""; ?>" onclick="">
                                 <?php
@@ -552,32 +552,32 @@
                                 if (isset($charge['charge_id']))
                                     echo $charge['customer_id'];
                                 ?>" name="customer">
-											<?php
+                                            <?php
                                             if (isset($charge['charge_id']))
                                                 echo $charge['customer_name'];
                                             ?>
-										</span>
+                                        </span>
                                 <?php
 
                                 ?>
                             </td>
                             <td class='<?php echo (isset($charge["charge_id"])) ? "editable_td" : ""; ?>' onclick="">
-									<span id="<?php echo $charge['charge_type_id']; ?>" name="charge-type">
-										<?php echo $charge['charge_type_name']; ?>
-									</span>
+                                    <span id="<?php echo $charge['charge_type_id']; ?>" name="charge-type">
+                                        <?php echo $charge['charge_type_name']; ?>
+                                    </span>
                             </td>
                             <td class='<?php echo (isset($charge["charge_id"]))?"editable_td":""; ?> text-right' onclick="">
-									<span name='amount'>
-										<?php
+                                    <span name='amount'>
+                                        <?php
                                         $rate = (float)$charge['amount'];
                                         echo number_format($rate, 2, ".", ",");
                                         ?>
-									</span>
+                                    </span>
                             </td>
                             <td class='text-right h5'>
                                 <small>
-										<span class='td-tax'>
-											<?php
+                                        <span class='td-tax'>
+                                            <?php
                                             // calculation is done in invoice temporarily
                                             // eventually migrate it to controller
                                             $combined_tax = 0;
@@ -611,17 +611,17 @@
                                                 }
                                             }
                                             ?>
-										</span>
+                                        </span>
                                 </small>
                             </td>
                             <td class='text-right'>
-											<span data-real-total-charge="<?php echo ($rate + $combined_tax); ?>" class='charge'>
-											    <?php
+                                            <span data-real-total-charge="<?php echo ($rate + $combined_tax); ?>" class='charge'>
+                                                <?php
                                                 // as stated above, combinedTax is to be migrated to controller
                                                 if (isset($charge['charge_type_id']))
                                                     echo number_format($rate + $combined_tax, 2, ".", ","); // charge
                                                 ?>
-											</span>
+                                            </span>
                             </td>
 
                             <td class="delete-td" width=30>
@@ -632,9 +632,9 @@
                                     <!-- <i class="x-button hidden-print" title="Created by <?php echo $charge['user_name']; ?>"></i> -->
                                     <!--<i class="fa fa-caret-down hidden-print " title="Created by <?php echo $charge['user_name']; ?>"></i>-->
                                     <div class="dropdown hidden-print">
-												<span class="dropdown-toggle" type="button" data-toggle="dropdown">
-												<!-- 	<span class="caret"></span> -->
-												</span>
+                                                <span class="dropdown-toggle" type="button" data-toggle="dropdown">
+                                                <!--    <span class="caret"></span> -->
+                                                </span>
                                         <ul class="dropdown-menu dropdown-menu-right">
                                             <li><a class="x-button" title="Created by <?php echo $charge['user_name']; ?>"><?php echo l('Delete', true); ?></a>
                                             </li>
