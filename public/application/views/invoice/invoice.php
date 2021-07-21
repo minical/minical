@@ -120,12 +120,12 @@
                         </button>
 
                     <?php //} else { ?>
-                        <!-- <button type="button" class="btn btn-success add_payment_button hidden" id="auth_and_capture">
-                            <?php echo l('Charge'); ?>
+                        <button type="button" class="btn btn-success add_payment_button hidden" id="auth_and_capture">
+                            <?php echo l('Add Charge'); ?>
                         </button>
                         <button type="button" class="btn btn-success add_payment_button hidden" id="authorize_only">
                             <?php echo l('Pre-Authorize'); ?>
-                        </button> -->
+                        </button> 
                     <?php //} ?>
                     <button type="button" class="btn btn-success add_payment_button" id="add_payment_normal">
                         <?php echo l('add').' '.l('payment'); ?>
@@ -864,7 +864,7 @@
                                                 <button type="button" class="btn btn-danger capture-payment-button hidden-print not-allowed" disabled>
                                                     <i class="fa fa-credit-card" aria-hidden="true"></i>
                                                 </button>
-                                            <?php } else if($menu_on === true) { ?>
+                                            <?php } else if($menu_on === true && $payment['payment_link_id']) { ?>
                                                 <button type="button" class="btn btn-info hidden-print verify_payment" data-payment_link_id="<?php echo $payment['payment_link_id']; ?>" data-payment_id="<?php echo $payment['payment_id']; ?>">
                                                     Verify
                                                 </button>

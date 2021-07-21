@@ -518,16 +518,22 @@
                                     errorMsg += "\nInvalid Fax Number";
                                 }
 
-                                /* CVC is optional
+                                if (cc_number !== ''){
+                                    var re16digit = /^\d{16}$/;
+                                    var cardno = $.trim($("input[name='cc_number']").val());
+                                    if (!re16digit.test(cardno)) {
+                                        errorMsg += "\nPlease enter valid card number";
+                                    }
+                                }
+
+                                var cvc = $.trim($("input[name='cvc']").val());
                                  if (
                                  cc_number !== ''
-                                 && !is_cc_number_masked
-                                 && cvc === ''
+                                 && cvc == ''
                                  ) {
                                  errorMsg += "\nPlease enter CVC code";
                                  }
-                                 */
-                                console.log(commonCustomerFields);
+                                // console.log(commonCustomerFields);
                                 if (commonCustomerFields && commonCustomerFields.length > 0)
                                 {
                                     for (var key in commonCustomerFields) {
