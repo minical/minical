@@ -783,7 +783,7 @@ class Company extends MY_Controller
                     "tax_type" => $tax['Tax Type'],
                     "tax_rate" => $tax['Tax Rate'],
                     "company_id" => $this->company_id ,
-                    "is_percentage" => $tax['Percentage'] == 'true' ? 1 : 0,
+                    "is_percentage" => $tax['Is Percentage'] == 'true' ? 1 : 0,
                     "is_brackets_active" => $tax['Bracket Active'] == 'true' ? 1 : 0,
                     "is_tax_inclusive" => $tax['Is Tax Inclusive'] == 'true' ? 1 : 0
                 );
