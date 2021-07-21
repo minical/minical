@@ -67,7 +67,8 @@ while ($deadline > time() AND ($line = fgets($fp, 102400))) {
 }
 if (feof($fp)) {
 
-    echo json_encode(array('success' => true), true);
+    $project_url = $_SERVER['PROJECT_URL'];
+    echo json_encode(array('success' => true, 'project_url' => trim($project_url)), true);
     return;
 } 
 

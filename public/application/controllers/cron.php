@@ -150,4 +150,10 @@ class Cron extends CI_Controller
 	    }
 	    return json_encode(array('success' => false, 'resp' => $response['curl_info']));
 	}
+
+	function handle_session_overflow()
+    {
+        $this->load->model('Cron_model');
+        $this->Cron_model->handle_session_overflow();
+    }
 }

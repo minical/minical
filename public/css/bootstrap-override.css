@@ -2995,10 +2995,11 @@ a.btn.disabled,fieldset:disabled a.btn{
 }
 .fixed-sidebar .app-main .app-main__outer{
 
-    padding-left:250px
+    padding-left: 250px
 }
 .fixed-sidebar .app-main .app_outer{
-    padding-left:220px;
+    padding-left: 220px;
+    padding-right: 0px;
     padding-top: 0px;
     background: none;
 }

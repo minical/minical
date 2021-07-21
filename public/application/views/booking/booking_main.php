@@ -478,25 +478,6 @@
   </div><!-- /.modal-dialog -->
 </div>
 
-<div class="modal fade" id="display-cc-details" data-backdrop="static" 
-   data-keyboard="false" style="z-index: 9999;"
-   >
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <?php if ($this->session->userdata('is_registration_page') != '') { ?>
 <div class="modal" id="tutorial-video-modal" tabindex="-1" role="dialog" aria-labelledby="tutorial-video-modal" aria-hidden="true">
     <div class="modal-dialog modal-lg">

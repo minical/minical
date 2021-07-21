@@ -139,7 +139,7 @@
 									</a>
 						    <?php
 								foreach ($rate_plan['images'] as $image):
-					  				$image_url = "https://".$_SERVER["AWS_S3_BUCKET"].".s3.amazonaws.com/".$company_id."/".$image['filename'];
+					  				$image_url = $this->image_url.$company_id."/".$image['filename'];
 							?>
 								   	<img 
 								   		class="thumbnail col-md-3 add-image" 

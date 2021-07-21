@@ -171,7 +171,7 @@ class Invoice extends MY_Controller {
                 $data['booking_customer']['customer_name'] = $booking_customer['customer_name'].", ".implode(", ", $staying_customer_names);
             }
 
-            $customer_id = $data['booking_detail']['booking_customer_id'];
+            // $customer_id = $data['booking_detail']['booking_customer_id'];
         }
         /*Get data from card table*/
       

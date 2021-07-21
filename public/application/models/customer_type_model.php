@@ -109,6 +109,19 @@ class Customer_type_model extends CI_Model {
         
         return $this->create_common_customer_type_setting($data);
     }
+
+      function get_customer_type_by_name($comapny_id, $name)
+    {
+            $this->db->where('name', $name);      
+            $this->db->where('is_deleted', 0);
+            $this->db->order_by("id", "asc");
+
+            $query = $this->db->get('customer_type');
+
+            if ($query->num_rows >= 1) 
+                    return $query->result_array();
+            return NULL;
+    }
 }
 
 /* End of file customer_model.php */

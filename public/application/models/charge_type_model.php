@@ -58,7 +58,17 @@ class Charge_type_model extends CI_Model {
 		$query = $this->db->get('charge_type_tax_list');
 		
 		return $query->result_array();
-	}	
+	}
+
+    function get_charge_tax($charge_type_id,$tax_type_id)
+    {
+        $this->db->where('charge_type_id', $charge_type_id);
+        $this->db->where('tax_type_id', $tax_type_id);
+        $this->db->order_by("tax_type_id", "asc");
+        $query = $this->db->get('charge_type_tax_list');
+
+        return $query->result_array();
+    }
 	
 	function create_charge_type($company_id, $name)
 	{

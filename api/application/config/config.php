@@ -16,7 +16,7 @@
 */
 
 if ($_SERVER['HTTP_HOST'] == "localhost") {
-	$config['base_url']	= "http://localhost/innGrid/api"; // localhost
+	$config['base_url']	= str_replace("public","api",$_SERVER['PROJECT_URL']); // localhost
     $config['app_environment'] = 'development';
 } else {
 	$config['base_url']	= "http://" . $_SERVER['HTTP_HOST']; // production/staging

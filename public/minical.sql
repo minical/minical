@@ -8381,6 +8381,17 @@ CREATE TABLE `image_type` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `import_mapping`
+--
+
+CREATE TABLE `import_mapping` (
+  `id` int(11) NOT NULL,
+  `new_id` bigint(20) NOT NULL,
+  `old_id` bigint(20) NOT NULL,
+  `company_id` int(11) NOT NULL,
+  `type` varchar(230) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+--
 -- Table structure for table `invoice`
 --
 
@@ -22035,6 +22046,11 @@ ALTER TABLE `image_group`
 ALTER TABLE `image_type`
   ADD PRIMARY KEY (`id`);
 
+-- Indexes for table `import_mapping`
+--
+ALTER TABLE `import_mapping`
+  ADD PRIMARY KEY (`id`);  
+
 --
 -- Indexes for table `invoice`
 --
@@ -22369,6 +22385,12 @@ ALTER TABLE `image_group`
 ALTER TABLE `image_type`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+-- 
+ ALTER TABLE `import_mapping`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=453;
+COMMIT;
+  
+
 --
 -- AUTO_INCREMENT for table `invoice`
 --
@@ -22586,6 +22608,7 @@ ALTER TABLE `ota_rate_plans` ADD `company_id` BIGINT(20) NULL AFTER `ota_room_ty
 
 ALTER TABLE `booking_source` CHANGE `id` `id` INT(11) NOT NULL AUTO_INCREMENT, CHANGE `commission_rate` `commission_rate` VARCHAR(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL, CHANGE `is_deleted` `is_deleted` TINYINT(1) NOT NULL DEFAULT '0';
 
+ALTER TABLE `ota_x_company` ADD `rate_update_type` VARCHAR(255) NOT NULL AFTER `ota_id`;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

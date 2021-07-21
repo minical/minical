@@ -138,12 +138,5 @@ $config['db_table_prefix'] = '';
 $config['recaptcha_site_key'] = isset($_SERVER["RECAPTCHA_SITE_KEY"]) ? $_SERVER["RECAPTCHA_SITE_KEY"] : "";//$_SERVER["RECAPTCHA_SITE_KEY"];
 $config['recaptcha_secret_key'] = isset($_SERVER["RECAPTCHA_SECRET_KEY"]) ? $_SERVER["RECAPTCHA_SECRET_KEY"] : "";//$_SERVER["RECAPTCHA_SECRET_KEY"];
 
-/*
-|--------------------------------------------------------------------------
-| Google reCAPTCHA for Roomsy Hompage
-|
-*/
-$config['roomsy_homepage_recaptcha_site_key'] = isset($_SERVER["ROOMSY_HOMEPAGE_RECAPTCHA_SITE_KEY"]) ? $_SERVER["ROOMSY_HOMEPAGE_RECAPTCHA_SITE_KEY"] : "";//$_SERVER["ROOMSY_HOMEPAGE_RECAPTCHA_SITE_KEY"];
-$config['roomsy_homepage_recaptcha_secret_key'] = isset($_SERVER["ROOMSY_HOMEPAGE_RECAPTCHA_SECRET_KEY"]) ? $_SERVER["ROOMSY_HOMEPAGE_RECAPTCHA_SECRET_KEY"] : "";//$_SERVER["ROOMSY_HOMEPAGE_RECAPTCHA_SECRET_KEY"];
 /* End of file tank_auth.php */
 /* Location: ./application/config/tank_auth.php */

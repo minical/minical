@@ -86,12 +86,12 @@
 
 
 	function css(file) {
-		tags.push("<link rel='stylesheet' type='text/css' href='" + prefix + file + "' />");
+		tags.push("<link rel='stylesheet' type='text/css' href='" + file + "' />");
 	}
 
 
 	function js(file) {
-		tags.push("<script type='text/javascript' src='" + prefix + file + "'></script>");
+		tags.push("<script type='text/javascript' src='" + file + "'></script>");
 	}
 
 

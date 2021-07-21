@@ -301,7 +301,7 @@
     <?php
     // show company logo image
     if (isset($company_logos[0]['filename'])) {
-        echo "<img src=\"https://".$_SERVER["AWS_S3_BUCKET"].".s3.amazonaws.com/".$company['company_id']."/".$company_logos[0]['filename']."\" id='company-logo-image'/><br/>";
+        echo "<img src=".$this->image_url.$company['company_id']."/".$company_logos[0]['filename']."\" id='company-logo-image'/><br/>";
     }
     ?>
 
@@ -855,10 +855,10 @@
                                         <?php } ?>
                                         <span class="visible-print-block"><?php echo l('Authorized', true); ?></span>
                                     <?php } else { ?>
-                                        <span><?php echo ($payment['payment_status'] == 'charge') ? 'Captured' : ($payment['payment_status'] == 'payment_link' ? 'Pending' : 'Refunded'); ?></span>
+                                        <span><?php echo ($payment['payment_status'] == 'charge') ? l('Captured', true) : ($payment['payment_status'] == 'payment_link' ? l('Pending', true) : l('Refunded', true)); ?></span>
                                         <div class="payment_status_buttons">
                                             <?php if (!$payment['read_only']){ if($payment['is_captured']){?>
-                                                <button class="btn btn-primary delete-payment" data-toggle="tooltip" title="Refund"  title="Created by <?php echo $payment['user_name']; ?>">
+                                                <button class="btn btn-primary hidden-print delete-payment" data-toggle="tooltip" title="Refund"  title="Created by <?php echo $payment['user_name']; ?>">
                                                     <i class="fa fa-reply" aria-hidden="true"></i>
                                                 </button>
                                                 <button type="button" class="btn btn-danger capture-payment-button hidden-print not-allowed" disabled>
@@ -870,7 +870,7 @@
                                                 </button>
                                             <?php } ?>
                                             <?php } else { ?>
-                                                <button class="btn btn-primary delete-payment not-allowed" data-toggle="tooltip" title="Refund" disabled>
+                                                <button class="btn btn-primary delete-payment hidden-print not-allowed" data-toggle="tooltip" title="Refund" disabled>
                                                     <i class="fa fa-reply" aria-hidden="true"></i>
                                                 </button>
                                                 <button type="button" class="btn btn-danger capture-payment-button hidden-print not-allowed" data-toggle="tooltip" title="Capture" disabled>
@@ -897,6 +897,12 @@
                                                 <li role="presentation">
                                                     <a href="#" class="delete-payment" title="Created by <?php echo $payment['user_name']; ?>">
                                                         <?php if ($payment['payment_gateway_used']): echo l('refund'); ?>  <?php else: echo l('delete'); ?>  <?php endif; ?>
+                                                    </a>
+                                                </li>
+                                            <?php } elseif($payment['is_captured'] == 0 && $payment['payment_link_id']){ ?>
+                                                <li role="presentation">
+                                                    <a href="javascript:" class="delete-payment-link-row" title="Created by <?php echo $payment['user_name']; ?>">
+                                                        <?php echo l('delete', true); ?>
                                                     </a>
                                                 </li>
                                             <?php } ?>
@@ -951,7 +957,7 @@
             </table>
 
         </div> <!-- /.panel -->
-        <div class="container h2 text-muted" style="max-width: 100%; padding: 10px;">
+        <div class="h2 text-muted" style="max-width: 100%; padding: 10px;">
             <div class="amount_due">
                 <div class="text-right smaller_fonts payments_text_spacing">
                     <?php echo l('amount', true).' '.l('due', true); ?>:

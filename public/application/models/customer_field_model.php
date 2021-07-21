@@ -122,6 +122,8 @@ class Customer_field_model extends CI_Model {
         }
         return $response;
     }
+
+   
 }
 
 /* End of file customer_model.php */
