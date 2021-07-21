@@ -81,6 +81,34 @@ class Import_mapping_model extends CI_Model {
 
     }
 
+    function get_booking_extras($booking_id){
+
+        $this->db->where('company_id', $this->company_id);
+        $this->db->where('old_id', $booking_id);
+        $this->db->where('type', 'extra_booking');
+
+        $query = $this->db->get('import_mapping');
+
+        if ($query->num_rows >= 1)
+            return $query->row_array();
+        return NULL;
+
+    }
+
+    function get_extra_mapping($extra_id){
+
+        $this->db->where('company_id', $this->company_id);
+        $this->db->where('old_id', $extra_id);
+        $this->db->where('type', 'extra');
+
+        $query = $this->db->get('import_mapping');
+
+        if ($query->num_rows >= 1)
+            return $query->row_array();
+        return NULL;
+
+    }
+
     function get_mapping_room_type_id($room_type_id){
 
         $this->db->where('company_id', $this->company_id);
@@ -148,9 +176,9 @@ class Import_mapping_model extends CI_Model {
             return $query->row_array();
         return NULL;
 
-    } 
+    }
 
-     function get_rates_mapping_id($rate_id){
+    function get_rates_mapping_id($rate_id){
 
         $this->db->where('company_id', $this->company_id);
         $this->db->where('old_id', $rate_id);
@@ -163,8 +191,6 @@ class Import_mapping_model extends CI_Model {
         return NULL;
 
     }
-
-
 
 
 }

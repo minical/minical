@@ -17,6 +17,7 @@ class Company extends MY_Controller
         $this->load->model('Customer_type_model');
         $this->load->model('Customer_model');
         $this->load->model('Charge_model');
+        $this->load->model('Extra_model');
         $this->load->model('Payment_model');
         $this->load->model('Booking_field_model');
         $this->load->model('Booking_source_model');
@@ -709,6 +710,9 @@ class Company extends MY_Controller
                     if (isset($csv_data['bookings'])) {
                         $this->import_bookings_csv($csv_data['bookings']);
                     }
+                    if (isset($csv_data['extras'])) {
+                        $this->import_extras_csv($csv_data['extras']);
+                    }
                     if (isset($csv_data['payments'])) {
                         $this->import_payments_csv($csv_data['payments']);
                     }
@@ -779,8 +783,7 @@ class Company extends MY_Controller
                     "tax_type" => $tax['Tax Type'],
                     "tax_rate" => $tax['Tax Rate'],
                     "company_id" => $this->company_id ,
-                    "is_deleted" => $tax['Deleted'] == 'true' ? 1 : 0,
-                    "is_percentage" => $tax['Percentage'] == 'true' ? 1 : 0,
+                    "is_percentage" => $tax['Is Percentage'] == 'true' ? 1 : 0,
                     "is_brackets_active" => $tax['Bracket Active'] == 'true' ? 1 : 0,
                     "is_tax_inclusive" => $tax['Is Tax Inclusive'] == 'true' ? 1 : 0
                 );
@@ -872,11 +875,14 @@ class Company extends MY_Controller
                     $taxes = explode(',', $charge['Tax Type']);
 
                     foreach ($taxes as $tax_type) {
-                        $tax_type_id = $this->Tax_model->get_tax_type_by_name($tax_type);
-                        $charge_taxes = $this->Charge_type_model->get_charge_tax($charge_type_id, $tax_type_id);
-                        if(!$charge_taxes){
-                            $this->Charge_type_model->add_charge_type_tax($charge_type_id, $tax_type_id);
+                        if($tax_type){
+                            $tax_type_id = $this->Tax_model->get_tax_type_by_name($tax_type);
+                            $charge_taxes = $this->Charge_type_model->get_charge_tax($charge_type_id, $tax_type_id);
+                            if(!$charge_taxes){
+                                $this->Charge_type_model->add_charge_type_tax($charge_type_id, $tax_type_id);
+                            }
                         }
+
                     }
 
                     $data_import_mapping = Array(
@@ -1175,6 +1181,71 @@ class Company extends MY_Controller
         }
 
     }
+
+    function import_extras_csv($value){
+        // prx($value);
+        foreach ($value as $extra) {
+
+            $extras = $this->Import_mapping_model->get_extra_mapping($extra['Extra Id']);
+            $charge_type_id = $this->Charge_type_model->get_charge_type_by_name($extra['Charge Type'], $this->company_id);
+            if(empty($extras)){
+
+                $data = array (
+                    'extra_name' => $extra['Extra Name'],
+                    'company_id' => $this->company_id,
+                    'extra_type' => $extra['Extra Type'],
+                    'charging_scheme' => $extra['Charging Scheme'],
+                    'show_on_pos' => $extra['Show on POS'],
+                    'charge_type_id' => $charge_type_id['id'] ? $charge_type_id['id'] : 0
+
+                );
+
+                $extra_id = $this->Extra_model->create_all_extras($data);
+
+                $rate_extra_data = array(
+                    'rate' => $extra['Rate'],
+                    'currency_id' => $extra['Curreny'],
+                    'extra_id' => $extra_id
+                );
+                $rate_extra = $this->Rate_model->create_extra_rate($rate_extra_data);
+
+                $data_import_mapping = Array(
+                    "new_id" => $extra_id,
+                    "old_id" => $extra['Extra Id'],
+                    "company_id" => $this->company_id,
+                    "type" => "extra"
+                );
+                $import_data = $this->Import_mapping_model->insert_import_mapping($data_import_mapping);
+
+            }else{
+
+                $extra_id = $extras['new_id'];
+            }
+
+
+            $booking_extra = $this->Import_mapping_model->get_booking_extras($extra['Booking Id']);
+
+            if(empty($booking_extra)){
+
+                $booking_id = $this->Import_mapping_model->get_mapping_booking_id($extra['Booking Id']);
+
+                $booking_extra_id =  $this->Booking_extra_model->create_booking_extra($booking_id['new_id'],$extra_id,$extra['Start Date'],$extra['End Date'],$extra['Quantity'],$extra['Rate']);
+
+                $data_import_mapping = Array(
+                    "new_id" => $booking_extra_id,
+                    "old_id" => $extra['Booking Extra Id'],
+                    "company_id" => $this->company_id,
+                    "type" => "extra_booking"
+                );
+                $import_data = $this->Import_mapping_model->insert_import_mapping($data_import_mapping);
+
+            }
+
+        }
+
+    }
+
+
 
     function import_payments_csv($value){
 
