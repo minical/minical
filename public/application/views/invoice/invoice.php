@@ -899,6 +899,12 @@
                                                         <?php if ($payment['payment_gateway_used']): echo l('refund'); ?>  <?php else: echo l('delete'); ?>  <?php endif; ?>
                                                     </a>
                                                 </li>
+                                            <?php } elseif($payment['is_captured'] == 0 && $payment['payment_link_id']){ ?>
+                                                <li role="presentation">
+                                                    <a href="javascript:" class="delete-payment-link-row" title="Created by <?php echo $payment['user_name']; ?>">
+                                                        <?php echo l('delete', true); ?>
+                                                    </a>
+                                                </li>
                                             <?php } ?>
                                             <li>
                                                 <a class="folios_modal" href="#" data-toggle="modal" data-target="#move-charge-modal" class="update-charge-folio"><?php echo l('Move to another Folio', true); ?></a>
