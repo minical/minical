@@ -1230,7 +1230,7 @@ class Company extends MY_Controller
                 $extra_id = $extras['new_id'];
             }
 
-            if($extra['booking_id']){
+            if($extra['Booking Id']){
                 $booking_extra = $this->Import_mapping_model->get_booking_extras($extra['Booking Id']);
 
                 if(empty($booking_extra)){
