@@ -780,8 +780,8 @@ class Company extends MY_Controller
             if(empty($get_tax_type)){
 
                 $data = array(
-                    "tax_type" => $tax['Tax Type'],
-                    "tax_rate" => $tax['Tax Rate'],
+                    "tax_type" => $tax['Tax Type'] == '' ? null : $tax['Tax Type'],
+                    "tax_rate" => $tax['Tax Rate'] == '' ? null : $tax['Tax Rate'],
                     "company_id" => $this->company_id ,
                     "is_percentage" => $tax['Is Percentage'] == 'true' ? 1 : 0,
                     "is_brackets_active" => $tax['Bracket Active'] == 'true' ? 1 : 0,
@@ -914,7 +914,7 @@ class Company extends MY_Controller
 
             if(empty($get_rate_plan)){
                 $data = array(
-                    "rate_plan_name" => $rate['Name'],
+                    "rate_plan_name" => $rate['Name'] == '' ? null : $rate['Name'],
                     "room_type_id" => $room_type_id,
                     "company_id" => $this->company_id,
                     "is_selectable" => $rate['Read Only'] == 'true' ? 1 : 0
@@ -1095,8 +1095,8 @@ class Company extends MY_Controller
                     "booking_customer_id" => $customer_id['new_id'],
                     "booking_notes" => $booking['Booking Note'] == '' ? null : $booking['Booking Note'] ,
                     "booked_by" => $booking['Booked By'] == '' ? null : $booking['Booked By'],
-                    "balance" => $booking['Balance'],
-                    "balance_without_forecast" => $booking['Balance Without Forecast'],
+                    "balance" => $booking['Balance'] == '' ? null : $booking['Balance'],
+                    "balance_without_forecast" => $booking['Balance Without Forecast'] == '' ? null : $booking['Balance Without Forecast'],
                     "use_rate_plan" => $booking['Use Rate Plan'] == 'true' ? 1 : 0,
                     "rate_plan_id" => $booking['Rate Plan Id'] == '' ? null : $booking['Rate Plan Id'],
                     "charge_type_id" => $charge_type_id['id'],
@@ -1191,10 +1191,10 @@ class Company extends MY_Controller
             if(empty($extras)){
 
                 $data = array (
-                    'extra_name' => $extra['Extra Name'],
+                    'extra_name' => $extra['Extra Name'] != '' ? $extra['Extra Name']  : null ,
                     'company_id' => $this->company_id,
-                    'extra_type' => $extra['Extra Type'],
-                    'charging_scheme' => $extra['Charging Scheme'],
+                    'extra_type' => $extra['Extra Type'] != '' ? $extra['Extra Type'] : null ,
+                    'charging_scheme' => $extra['Charging Scheme'] != '' ? $extra['Charging Scheme'] : null ,
                     'show_on_pos' => $extra['Show on POS'],
                     'charge_type_id' => $charge_type_id['id'] ? $charge_type_id['id'] : 0
 
@@ -1203,8 +1203,8 @@ class Company extends MY_Controller
                 $extra_id = $this->Extra_model->create_all_extras($data);
 
                 $rate_extra_data = array(
-                    'rate' => $extra['Rate'],
-                    'currency_id' => $extra['Curreny'],
+                    'rate' => $extra['Rate'] != '' ? $extra['Rate'] : null ,
+                    'currency_id' => $extra['Curreny'] != '' ? $extra['Curreny'] : null,
                     'extra_id' => $extra_id
                 );
                 $rate_extra = $this->Rate_model->create_extra_rate($rate_extra_data);
@@ -1271,7 +1271,7 @@ class Company extends MY_Controller
                         "payment_type_id" => $payment_id,
                         "amount" => $payment['Amount'] == '' ? null : $payment['Amount'],
                         "credit_card_id" => $payment['Credit Card Id'] == '' ? null : $payment['Credit Card Id'],
-                        "selling_date" => $payment['Selling Date'],
+                        "selling_date" => $payment['Selling Date'] == '' ? null : $payment['Selling Date'],
                         "customer_id" => $customer_id['new_id'],
                         "payment_status" => $payment['Payment Status'] == '' ? null : $payment['Payment Status'],
                         "is_captured" => $payment['Payment Capture'] == 'true' ? 1 : 0
