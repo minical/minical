@@ -912,7 +912,7 @@ class Company extends MY_Controller
     function import_rates_csv($value){
 
         foreach ($value as $rate) {
-            $get_rate_plan = $this->Rate_plan_model->get_rate_plan_by_name($rate['Name']);
+            $get_rate_plan = $this->Rate_plan_model->get_rate_plan_by_name($rate['Name'], $this->company_id);
             $room_type =  $this->Import_mapping_model->get_mapping_room_type_id($rate['Room type Id']);
             $room_type_id = $room_type['new_id'];
             if(empty($room_type_id)){
