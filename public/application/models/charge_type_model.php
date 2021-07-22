@@ -269,24 +269,23 @@ class Charge_type_model extends CI_Model {
 
 
     function create_charge_types($data)
-	{
-		//Add charge_type
-		
-		$this->db->insert('charge_type', $data);
-		
-	    $query = $this->db->query('select LAST_INSERT_ID( ) AS last_id');
-			$result = $query->result_array();
-	    if(isset($result[0]))
-	    {  
-	      $charge_type_id = $result[0]['last_id'];
-	    }
-			else
-	    {  
-	      $charge_type_id = null;
-	    }
-			
-		return $charge_type_id;
-	}
+    {
+        //Add charge_type
+        $this->db->insert('charge_type', $data);
+
+        $query = $this->db->query('select LAST_INSERT_ID( ) AS last_id');
+        $result = $query->result_array();
+        if(isset($result[0]))
+        {
+            $charge_type_id = $result[0]['last_id'];
+        }
+        else
+        {
+            $charge_type_id = null;
+        }
+
+        return $charge_type_id;
+    }
 }
 
 /* End of file - charge_type_model.php */

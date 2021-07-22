@@ -1042,6 +1042,7 @@ class Company extends MY_Controller
             $room_id = $this->Room_model->get_room_by_name($booking['Room'] , $room_type_id[0]['id']);
 
             $customer_id =  $this->Import_mapping_model->get_mapping_customer_id($booking['Booking Customer Id']);
+            $booked_by =  $this->Import_mapping_model->get_mapping_customer_id($booking['Booked By']);
 
             switch ($booking['State']) {
                 case "Reservation" : $state = '0'; break;
@@ -1102,7 +1103,7 @@ class Company extends MY_Controller
                     "children_count" => $booking['Children Count'] == '' ? null : $booking['Children Count'],
                     "booking_customer_id" => $customer_id['new_id'],
                     "booking_notes" => $booking['Booking Note'] == '' ? null : $booking['Booking Note'] ,
-                    "booked_by" => $booking['Booked By'] == '' ? null : $booking['Booked By'],
+                    "booked_by" => $booking['Booked By'] == '' ? null : $booked_by['new_id'],
                     "balance" => $booking['Balance'] == '' ? null : $booking['Balance'],
                     "balance_without_forecast" => $booking['Balance Without Forecast'] == '' ? null : $booking['Balance Without Forecast'],
                     "use_rate_plan" => $booking['Use Rate Plan'] == 'true' ? 1 : 0,
@@ -1211,7 +1212,7 @@ class Company extends MY_Controller
                 $extra_id = $this->Extra_model->create_all_extras($data);
 
                 $rate_extra_data = array(
-                    'rate' => $extra['Rate'] != '' ? $extra['Rate'] : null ,
+                    'rate' => $extra['Rate'] != '' ? $extra['Rate'] : 0 ,
                     'currency_id' => $extra['Curreny'] != '' ? $extra['Curreny'] : null,
                     'extra_id' => $extra_id
                 );
@@ -1237,7 +1238,7 @@ class Company extends MY_Controller
 
                     $booking_id = $this->Import_mapping_model->get_mapping_booking_id($extra['Booking Id']);
 
-                    $booking_extra_id =  $this->Booking_extra_model->create_booking_extra($booking_id['new_id'],$extra_id,$extra['Start Date'],$extra['End Date'],$extra['Quantity'],$extra['Rate']);
+                    $booking_extra_id =  $this->Booking_extra_model->create_booking_extra($booking_id['new_id'],$extra_id,$extra['Start Date'],$extra['End Date'],$extra['Quantity'],$extra['Default Rate']);
 
                     $data_import_mapping = Array(
                         "new_id" => $booking_extra_id,
