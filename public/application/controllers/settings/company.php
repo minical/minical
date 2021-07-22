@@ -1194,7 +1194,7 @@ class Company extends MY_Controller
                     'extra_name' => $extra['Extra Name'] != '' ? $extra['Extra Name']  : null ,
                     'company_id' => $this->company_id,
                     'extra_type' => $extra['Extra Type'] != '' ? $extra['Extra Type'] : null ,
-                    'charging_scheme' => $extra['Charging Scheme'] != '' ? $extra['Extra Type'] : null ,
+                    'charging_scheme' => $extra['Charging Scheme'] != '' ? $extra['Charging Scheme'] : null ,
                     'show_on_pos' => $extra['Show on POS'],
                     'charge_type_id' => $charge_type_id['id'] ? $charge_type_id['id'] : 0
 
