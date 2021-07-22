@@ -682,7 +682,7 @@ class Company extends MY_Controller
                         if(in_array($file_ext[1], $ext_allowed)){
                             $fp = fopen($path.$file, 'r');
                             $setting = fgets($fp);
-                            $result['setting'] = $setting;
+                            $result['settings'] = $setting;
 
                             fclose($fp);
                             unlink($path.'/'.$file);
