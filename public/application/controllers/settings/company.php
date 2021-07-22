@@ -912,15 +912,21 @@ class Company extends MY_Controller
     function import_rates_csv($value){
 
         foreach ($value as $rate) {
+
             $get_rate_plan = $this->Rate_plan_model->get_rate_plan_by_name($rate['Name'], $this->company_id);
+            
+            $get_import_rate_plan = $this->Import_mapping_model->get_rate_plan_mapping_id($rate['Rate Plan Id']);
+
             $room_type =  $this->Import_mapping_model->get_mapping_room_type_id($rate['Room type Id']);
+
             $room_type_id = $room_type['new_id'];
             if(empty($room_type_id)){
                 $room_type= $this->Room_type_model->get_room_type_name($rate['Room Type Name'] , $this->company_id);
                 $room_type_id = $room_type[0]['id'];
             }
 
-            if(empty($get_rate_plan)){
+            if(empty($get_import_rate_plan)){
+
                 $data = array(
                     "rate_plan_name" => $rate['Name'] == '' ? null : $rate['Name'],
                     "room_type_id" => $room_type_id,
@@ -928,8 +934,18 @@ class Company extends MY_Controller
                     "is_selectable" => $rate['Read Only'] == 'true' ? 1 : 0
                 );
                 $rate_plan_id = $this->Rate_plan_model->create_rate_plan($data);
-            }else{
-                $rate_plan_id = $get_rate_plan['rate_plan_id'];
+
+                $data_import_mapping = Array(
+                    "new_id" => $rate_plan_id,
+                    "old_id" => $rate['Rate Plan Id'],
+                    "company_id" => $this->company_id,
+                    "type" => "rate_plan"
+                );
+
+                $import_data = $this->Import_mapping_model->insert_import_mapping($data_import_mapping);
+            }
+            else{
+                $rate_plan_id = $get_import_rate_plan['new_id'];
             }
 
 
