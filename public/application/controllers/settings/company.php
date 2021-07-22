@@ -827,7 +827,15 @@ class Company extends MY_Controller
             $get_the_charge_type = $this->Import_mapping_model->get_mapping_charge_id($charge['Charge Type Id']);
 
             if(empty($get_the_charge_type)){
-                $charge_type_id = $this->Charge_type_model->create_charge_type($this->company_id,$charge['Charge Type']);
+               
+                $data = array (
+                    'name' => $charge['Charge Type'],
+                    'company_id' => $this->company_id,
+                    'is_room_charge_type' => $charge['Room Charge Type'] == 'true' ? 1 : 0,
+                    'is_default_room_charge_type' => $charge['Tax Exempt'] == 'true' ? 1 : 0
+                );
+
+                $charge_type_id = $this->Charge_type_model->create_charge_types($data);
 
                 $data_import_mapping = Array(
                     "new_id" => $charge_type_id,
@@ -1222,24 +1230,27 @@ class Company extends MY_Controller
                 $extra_id = $extras['new_id'];
             }
 
+            if($extra['booking_id']){
+                $booking_extra = $this->Import_mapping_model->get_booking_extras($extra['Booking Id']);
 
-            $booking_extra = $this->Import_mapping_model->get_booking_extras($extra['Booking Id']);
+                if(empty($booking_extra)){
 
-            if(empty($booking_extra)){
+                    $booking_id = $this->Import_mapping_model->get_mapping_booking_id($extra['Booking Id']);
 
-                $booking_id = $this->Import_mapping_model->get_mapping_booking_id($extra['Booking Id']);
+                    $booking_extra_id =  $this->Booking_extra_model->create_booking_extra($booking_id['new_id'],$extra_id,$extra['Start Date'],$extra['End Date'],$extra['Quantity'],$extra['Rate']);
 
-                $booking_extra_id =  $this->Booking_extra_model->create_booking_extra($booking_id['new_id'],$extra_id,$extra['Start Date'],$extra['End Date'],$extra['Quantity'],$extra['Rate']);
+                    $data_import_mapping = Array(
+                        "new_id" => $booking_extra_id,
+                        "old_id" => $extra['Booking Extra Id'],
+                        "company_id" => $this->company_id,
+                        "type" => "extra_booking"
+                    );
+                    $import_data = $this->Import_mapping_model->insert_import_mapping($data_import_mapping);
 
-                $data_import_mapping = Array(
-                    "new_id" => $booking_extra_id,
-                    "old_id" => $extra['Booking Extra Id'],
-                    "company_id" => $this->company_id,
-                    "type" => "extra_booking"
-                );
-                $import_data = $this->Import_mapping_model->insert_import_mapping($data_import_mapping);
-
+                }
             }
+
+          
 
         }
 
