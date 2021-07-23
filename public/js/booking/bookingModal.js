@@ -5173,12 +5173,13 @@ var bookingModalInvoker = function ($) {
                 $.ajax({
                     type: "POST",
                     url: getBaseURL() + "booking/delete_booking_AJAX",
+                    dataType: "json",
                     data: {
                         booking_id: bookingId
                     },
                     success: function (data) {
-                        data = (data == "") ? data : JSON.parse(data);
-                        if (data == "") // if successful, delete_booking_AJAX returns empty page
+                        // data = (data == "") ? data : JSON.parse(data);
+                        if (data.response == "success") // if successful, delete_booking_AJAX returns empty page
                         {
                             var bookingDeletedEvent = new CustomEvent('booking_deleted', { "detail" : {"reservation_id" : that.booking.booking_id, "booking_data" : that.booking} });
                             document.dispatchEvent(bookingDeletedEvent);
