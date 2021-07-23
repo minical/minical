@@ -682,7 +682,7 @@ class Company extends MY_Controller
                         if(in_array($file_ext[1], $ext_allowed)){
                             $fp = fopen($path.$file, 'r');
                             $setting = fgets($fp);
-                            $result['setting'] = $setting;
+                            $result['settings'] = $setting;
 
                             fclose($fp);
                             unlink($path.'/'.$file);
@@ -780,8 +780,8 @@ class Company extends MY_Controller
             if(empty($get_tax_type)){
 
                 $data = array(
-                    "tax_type" => $tax['Tax Type'],
-                    "tax_rate" => $tax['Tax Rate'],
+                    "tax_type" => $tax['Tax Type'] == '' ? null : $tax['Tax Type'],
+                    "tax_rate" => $tax['Tax Rate'] == '' ? null : $tax['Tax Rate'],
                     "company_id" => $this->company_id ,
                     "is_percentage" => $tax['Is Percentage'] == 'true' ? 1 : 0,
                     "is_brackets_active" => $tax['Bracket Active'] == 'true' ? 1 : 0,
@@ -827,7 +827,15 @@ class Company extends MY_Controller
             $get_the_charge_type = $this->Import_mapping_model->get_mapping_charge_id($charge['Charge Type Id']);
 
             if(empty($get_the_charge_type)){
-                $charge_type_id = $this->Charge_type_model->create_charge_type($this->company_id,$charge['Charge Type']);
+               
+                $data = array (
+                    'name' => $charge['Charge Type'],
+                    'company_id' => $this->company_id,
+                    'is_room_charge_type' => $charge['Room Charge Type'] == 'true' ? 1 : 0,
+                    'is_default_room_charge_type' => $charge['Tax Exempt'] == 'true' ? 1 : 0
+                );
+
+                $charge_type_id = $this->Charge_type_model->create_charge_types($data);
 
                 $data_import_mapping = Array(
                     "new_id" => $charge_type_id,
@@ -904,24 +912,40 @@ class Company extends MY_Controller
     function import_rates_csv($value){
 
         foreach ($value as $rate) {
-            $get_rate_plan = $this->Rate_plan_model->get_rate_plan_by_name($rate['Name']);
+
+            $get_rate_plan = $this->Rate_plan_model->get_rate_plan_by_name($rate['Name'], $this->company_id);
+            
+            $get_import_rate_plan = $this->Import_mapping_model->get_rate_plan_mapping_id($rate['Rate Plan Id']);
+
             $room_type =  $this->Import_mapping_model->get_mapping_room_type_id($rate['Room type Id']);
+
             $room_type_id = $room_type['new_id'];
             if(empty($room_type_id)){
                 $room_type= $this->Room_type_model->get_room_type_name($rate['Room Type Name'] , $this->company_id);
                 $room_type_id = $room_type[0]['id'];
             }
 
-            if(empty($get_rate_plan)){
+            if(empty($get_import_rate_plan)){
+
                 $data = array(
-                    "rate_plan_name" => $rate['Name'],
+                    "rate_plan_name" => $rate['Name'] == '' ? null : $rate['Name'],
                     "room_type_id" => $room_type_id,
                     "company_id" => $this->company_id,
                     "is_selectable" => $rate['Read Only'] == 'true' ? 1 : 0
                 );
                 $rate_plan_id = $this->Rate_plan_model->create_rate_plan($data);
-            }else{
-                $rate_plan_id = $get_rate_plan['rate_plan_id'];
+
+                $data_import_mapping = Array(
+                    "new_id" => $rate_plan_id,
+                    "old_id" => $rate['Rate Plan Id'],
+                    "company_id" => $this->company_id,
+                    "type" => "rate_plan"
+                );
+
+                $import_data = $this->Import_mapping_model->insert_import_mapping($data_import_mapping);
+            }
+            else{
+                $rate_plan_id = $get_import_rate_plan['new_id'];
             }
 
 
@@ -1034,6 +1058,7 @@ class Company extends MY_Controller
             $room_id = $this->Room_model->get_room_by_name($booking['Room'] , $room_type_id[0]['id']);
 
             $customer_id =  $this->Import_mapping_model->get_mapping_customer_id($booking['Booking Customer Id']);
+            $booked_by =  $this->Import_mapping_model->get_mapping_customer_id($booking['Booked By']);
 
             switch ($booking['State']) {
                 case "Reservation" : $state = '0'; break;
@@ -1094,9 +1119,9 @@ class Company extends MY_Controller
                     "children_count" => $booking['Children Count'] == '' ? null : $booking['Children Count'],
                     "booking_customer_id" => $customer_id['new_id'],
                     "booking_notes" => $booking['Booking Note'] == '' ? null : $booking['Booking Note'] ,
-                    "booked_by" => $booking['Booked By'] == '' ? null : $booking['Booked By'],
-                    "balance" => $booking['Balance'],
-                    "balance_without_forecast" => $booking['Balance Without Forecast'],
+                    "booked_by" => $booking['Booked By'] == '' ? null : $booked_by['new_id'],
+                    "balance" => $booking['Balance'] == '' ? null : $booking['Balance'],
+                    "balance_without_forecast" => $booking['Balance Without Forecast'] == '' ? null : $booking['Balance Without Forecast'],
                     "use_rate_plan" => $booking['Use Rate Plan'] == 'true' ? 1 : 0,
                     "rate_plan_id" => $booking['Rate Plan Id'] == '' ? null : $booking['Rate Plan Id'],
                     "charge_type_id" => $charge_type_id['id'],
@@ -1191,10 +1216,10 @@ class Company extends MY_Controller
             if(empty($extras)){
 
                 $data = array (
-                    'extra_name' => $extra['Extra Name'],
+                    'extra_name' => $extra['Extra Name'] != '' ? $extra['Extra Name']  : null ,
                     'company_id' => $this->company_id,
-                    'extra_type' => $extra['Extra Type'],
-                    'charging_scheme' => $extra['Charging Scheme'],
+                    'extra_type' => $extra['Extra Type'] != '' ? $extra['Extra Type'] : null ,
+                    'charging_scheme' => $extra['Charging Scheme'] != '' ? $extra['Charging Scheme'] : null ,
                     'show_on_pos' => $extra['Show on POS'],
                     'charge_type_id' => $charge_type_id['id'] ? $charge_type_id['id'] : 0
 
@@ -1203,8 +1228,8 @@ class Company extends MY_Controller
                 $extra_id = $this->Extra_model->create_all_extras($data);
 
                 $rate_extra_data = array(
-                    'rate' => $extra['Rate'],
-                    'currency_id' => $extra['Curreny'],
+                    'rate' => $extra['Rate'] != '' ? $extra['Rate'] : 0 ,
+                    'currency_id' => $extra['Curreny'] != '' ? $extra['Curreny'] : null,
                     'extra_id' => $extra_id
                 );
                 $rate_extra = $this->Rate_model->create_extra_rate($rate_extra_data);
@@ -1222,24 +1247,27 @@ class Company extends MY_Controller
                 $extra_id = $extras['new_id'];
             }
 
+            if($extra['Booking Id']){
+                $booking_extra = $this->Import_mapping_model->get_booking_extras($extra['Booking Id']);
 
-            $booking_extra = $this->Import_mapping_model->get_booking_extras($extra['Booking Id']);
+                if(empty($booking_extra)){
 
-            if(empty($booking_extra)){
+                    $booking_id = $this->Import_mapping_model->get_mapping_booking_id($extra['Booking Id']);
 
-                $booking_id = $this->Import_mapping_model->get_mapping_booking_id($extra['Booking Id']);
+                    $booking_extra_id =  $this->Booking_extra_model->create_booking_extra($booking_id['new_id'],$extra_id,$extra['Start Date'],$extra['End Date'],$extra['Quantity'],$extra['Default Rate']);
 
-                $booking_extra_id =  $this->Booking_extra_model->create_booking_extra($booking_id['new_id'],$extra_id,$extra['Start Date'],$extra['End Date'],$extra['Quantity'],$extra['Rate']);
+                    $data_import_mapping = Array(
+                        "new_id" => $booking_extra_id,
+                        "old_id" => $extra['Booking Extra Id'],
+                        "company_id" => $this->company_id,
+                        "type" => "extra_booking"
+                    );
+                    $import_data = $this->Import_mapping_model->insert_import_mapping($data_import_mapping);
 
-                $data_import_mapping = Array(
-                    "new_id" => $booking_extra_id,
-                    "old_id" => $extra['Booking Extra Id'],
-                    "company_id" => $this->company_id,
-                    "type" => "extra_booking"
-                );
-                $import_data = $this->Import_mapping_model->insert_import_mapping($data_import_mapping);
-
+                }
             }
+
+          
 
         }
 
@@ -1271,7 +1299,7 @@ class Company extends MY_Controller
                         "payment_type_id" => $payment_id,
                         "amount" => $payment['Amount'] == '' ? null : $payment['Amount'],
                         "credit_card_id" => $payment['Credit Card Id'] == '' ? null : $payment['Credit Card Id'],
-                        "selling_date" => $payment['Selling Date'],
+                        "selling_date" => $payment['Selling Date'] == '' ? null : $payment['Selling Date'],
                         "customer_id" => $customer_id['new_id'],
                         "payment_status" => $payment['Payment Status'] == '' ? null : $payment['Payment Status'],
                         "is_captured" => $payment['Payment Capture'] == 'true' ? 1 : 0

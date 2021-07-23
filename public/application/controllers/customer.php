@@ -1183,6 +1183,7 @@ class Customer extends MY_Controller {
 
         echo json_encode($customer);
 	}
+
 	function create_customer_AJAX()
 	{
         $error     = false;
@@ -1223,41 +1224,41 @@ class Customer extends MY_Controller {
                 !strrpos($cvc, '*')
             )
         {
-            if(function_exists('tokenize'))
-            {
-                $card_data_array = array('card' => 
-                                    array(
-                                        'card_number'       => $cc_number,
-                                        'card_type'         => "",
-                                        'cardholder_name'   => (isset($customer_data['customer_name']) ? $customer_data['customer_name'] : ""),
-                                        'service_code'      => $cvc,
-                                        'expiration_month'  => isset($customer_data['cc_expiry_month']) ? $customer_data['cc_expiry_month'] : null,
-                                        'expiration_year'   => isset($customer_data['cc_expiry_year']) ? $customer_data['cc_expiry_year'] : null
-                                    )
-                                );
-                $card_response = array();
+            $card_data_array = array('card' =>
+                array(
+                    'card_number'       => $cc_number,
+                    'card_type'         => "",
+                    'cardholder_name'   => (isset($customer_data['customer_name']) ? $customer_data['customer_name'] : ""),
+                    'service_code'      => $cvc,
+                    'expiration_month'  => isset($customer_data['cc_expiry_month']) ? $customer_data['cc_expiry_month'] : null,
+                    'expiration_year'   => isset($customer_data['cc_expiry_year']) ? $customer_data['cc_expiry_year'] : null
+                )
+            );
+            $card_response = array();
 
-                if($card_data_array && $card_data_array['card']['card_number'])
-                    $card_response = tokenize($card_data_array, 'POST', $customer_data);
-                if(
-                    $card_response &&
-                    isset($card_response["data"]) &&
-                    isset($card_response["data"]["attributes"]) &&
-                    isset($card_response["data"]["attributes"]["card_token"])
-                ){
-                    $card_token = $card_response["data"]["attributes"]["card_token"];
-                    
-                    $cvc_encrypted = get_cc_cvc_encrypted($cvc, $card_token);
+            if($card_data_array && $card_data_array['card']['card_number']) {
 
-                    $card_details['cc_cvc_encrypted'] = ($cvc_encrypted) ? $cvc_encrypted : "";
-                    $card_details['cc_number'] = 'XXXX XXXX XXXX '.substr($cc_number,-4);
+                $card_data_array['customer_data'] = $customer_data;
 
-                    $meta['token'] = $card_token;
-                    $card_details['customer_meta_data'] = json_encode($meta);
-                }
-            } else {
-                $error       = true;
-                $error_msg   = 'Tokenization service is not available.';
+                $card_response = apply_filters('post.add.customer', $card_data_array);
+
+                unset($card_data_array['customer_data']);
+            }
+            if(
+                $card_response &&
+                isset($card_response['tokenization_response']["data"]) &&
+                isset($card_response['tokenization_response']["data"]["attributes"]) &&
+                isset($card_response['tokenization_response']["data"]["attributes"]["card_token"])
+            ){
+                $card_token = $card_response['tokenization_response']["data"]["attributes"]["card_token"];
+
+                $cvc_encrypted = get_cc_cvc_encrypted($cvc, $card_token);
+
+                $card_details['cc_cvc_encrypted'] = ($cvc_encrypted) ? $cvc_encrypted : "";
+                $card_details['cc_number'] = 'XXXX XXXX XXXX '.substr($cc_number,-4);
+
+                $meta['token'] = $card_token;
+                $card_details['customer_meta_data'] = json_encode($meta);
             }
         }
 
@@ -1363,44 +1364,40 @@ class Customer extends MY_Controller {
             is_numeric($cvc) &&
             !strrpos($cvc, '*') 
         ){
-            if(function_exists('tokenize'))
-            {
-                $card_data_array = array('card' => 
-                                    array(
-                                        'card_number'       => $cc_number,
-                                        'card_type'         => "",
-                                        'cardholder_name'   => (isset($customer_data['customer_name']) ? $customer_data['customer_name'] : ""),
-                                        'service_code'      => $cvc,
-                                        'expiration_month'  => isset($customer_data['cc_expiry_month']) ? $customer_data['cc_expiry_month'] : null,
-                                        'expiration_year'   => isset($customer_data['cc_expiry_year']) ? $customer_data['cc_expiry_year'] : null
-                                    )
-                                );
+            
+            $card_data_array = array('card' => 
+                                array(
+                                    'card_number'       => $cc_number,
+                                    'card_type'         => "",
+                                    'cardholder_name'   => (isset($customer_data['customer_name']) ? $customer_data['customer_name'] : ""),
+                                    'service_code'      => $cvc,
+                                    'expiration_month'  => isset($customer_data['cc_expiry_month']) ? $customer_data['cc_expiry_month'] : null,
+                                    'expiration_year'   => isset($customer_data['cc_expiry_year']) ? $customer_data['cc_expiry_year'] : null
+                                )
+                            );
 
-                $card_response = array();
+            $card_response = array();
 
-                if($card_data_array && $card_data_array['card']['card_number'])
-                    $card_response = tokenize($card_data_array, 'POST', $customer_data);
+            if($card_data_array && $card_data_array['card']['card_number'])
+                $card_response = apply_filters('post.add.customer', $card_data_array);
 
-                if(
-                    $card_response &&
-                    isset($card_response["data"]) &&
-                    isset($card_response["data"]["attributes"]) &&
-                    isset($card_response["data"]["attributes"]["card_token"])
-                ){
-                    $card_token = $card_response["data"]["attributes"]["card_token"];
-                    
-                    $cvc_encrypted = get_cc_cvc_encrypted($cvc, $card_token);
+            if(
+                $card_response &&
+                isset($card_response['tokenization_response']["data"]) &&
+                isset($card_response['tokenization_response']["data"]["attributes"]) &&
+                isset($card_response['tokenization_response']["data"]["attributes"]["card_token"])
+            ){
+                $card_token = $card_response['tokenization_response']["data"]["attributes"]["card_token"];
+                
+                $cvc_encrypted = get_cc_cvc_encrypted($cvc, $card_token);
 
-                    $card_details['cc_cvc_encrypted'] = ($cvc_encrypted) ? $cvc_encrypted : "";
-                    $card_details['cc_number'] = 'XXXX XXXX XXXX '.substr($cc_number,-4);
+                $card_details['cc_cvc_encrypted'] = ($cvc_encrypted) ? $cvc_encrypted : "";
+                $card_details['cc_number'] = 'XXXX XXXX XXXX '.substr($cc_number,-4);
 
-                    $meta['token'] = $card_token;
-                    $card_details['customer_meta_data'] = json_encode($meta);
-                }
-            } else {
-                $error       = true;
-                $error_msg   = 'Tokenization service is not available.';
+                $meta['token'] = $card_token;
+                $card_details['customer_meta_data'] = json_encode($meta);
             }
+            
         }
             
         

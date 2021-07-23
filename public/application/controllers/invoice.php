@@ -1290,7 +1290,9 @@ class Invoice extends MY_Controller {
             $invoice_log_data['action_id'] = $company_data['manual_payment_capture'] ? AUTHORIZED_PAYMENT : CAPTURED_PAYMENT;
             $invoice_log_data['charge_or_payment_id'] = $payment_id;
             // $invoice_log_data['new_amount'] = abs($amount) / 100;
-            $invoice_log_data['new_amount'] = abs($amount);
+
+            $invoice_log_data['new_amount'] = abs($amount) ;
+
             $invoice_log_data['log'] = 'Payment Captured';
             $this->Invoice_log_model->insert_log($invoice_log_data);
 

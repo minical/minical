@@ -526,7 +526,6 @@
                                     }
                                 }
 
-                                //  CVC is optional
                                 var cvc = $.trim($("input[name='cvc']").val());
                                  if (
                                  cc_number !== ''
@@ -534,7 +533,7 @@
                                  ) {
                                  errorMsg += "\nPlease enter CVC code";
                                  }
-                                 
+
                                 // console.log(commonCustomerFields);
                                 if (commonCustomerFields && commonCustomerFields.length > 0)
                                 {
