@@ -55,7 +55,7 @@
 							Update
 						</button>
                         <?php } ?>
-						<button type="button" class="btn btn-default" data-dismiss="modal">
+						<button type="button" class="btn btn-light" data-dismiss="modal">
 							Close
 						</button>
 					</div>

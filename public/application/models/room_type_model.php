@@ -39,7 +39,7 @@ class Room_type_model extends CI_Model {
                 'get_closeout_status'		=> $get_closeout_status,
                 'get_inventory'             => $get_inventory,
                 'company_id'                => $company_id,
-                'X-API-KEY'                 => $this->config->item('api_key')
+                'X-API-KEY'                 => $this->company_api_key
             )
         );
         $req = Requests::get($this->config->item('api_url').'/v1/inventory/availability?'.$query);
