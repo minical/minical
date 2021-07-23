@@ -21785,6 +21785,48 @@ CREATE TABLE `hoteli_pay_bank_details` (
   `created_date` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+
+--
+-- Table structure for table `options`
+--
+CREATE TABLE `options` (
+  `option_id` bigint(20) UNSIGNED NOT NULL,
+  `company_id` int(11) NOT NULL,
+  `option_name` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT '',
+  `option_value` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `autoload` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+-- --------------------------------------------------------
+--
+-- Table structure for table `postmeta`
+--
+CREATE TABLE `postmeta` (
+  `meta_id` bigint(20) UNSIGNED NOT NULL,
+  `post_id` bigint(20) UNSIGNED NOT NULL DEFAULT '0',
+  `meta_key` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `meta_value` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+-- --------------------------------------------------------
+--
+-- Table structure for table `posts`
+--
+CREATE TABLE `posts` (
+  `post_id` bigint(20) UNSIGNED NOT NULL,
+  `company_id` int(11) NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL DEFAULT '0',
+  `post_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `post_content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `post_title` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `post_status` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'publish',
+  `post_modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `post_parent` bigint(20) UNSIGNED NOT NULL DEFAULT '0',
+  `guid` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT '',
+  `sort_order` int(11) NOT NULL DEFAULT '0',
+  `post_type` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'post',
+  `post_mime_type` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+
 --
 -- Indexes for dumped tables
 --
@@ -22213,6 +22255,32 @@ ALTER TABLE `ota_bookings`
 
 
 --
+-- Indexes for table `options`
+--
+ALTER TABLE `options`
+  ADD PRIMARY KEY (`option_id`),
+  ADD UNIQUE KEY `option_name` (`option_name`),
+  ADD KEY `autoload` (`autoload`);
+--
+-- Indexes for table `postmeta`
+--
+ALTER TABLE `postmeta`
+  ADD PRIMARY KEY (`meta_id`),
+  ADD KEY `post_id` (`post_id`),
+  ADD KEY `meta_key` (`meta_key`(191));
+--
+-- Indexes for table `posts`
+--
+ALTER TABLE `posts`
+  ADD PRIMARY KEY (`post_id`),
+  ADD UNIQUE KEY `company_id` (`company_id`),
+  ADD KEY `type_status_date` (`post_type`,`post_status`,`post_date`,`post_id`),
+  ADD KEY `post_parent` (`post_parent`),
+  ADD KEY `post_author` (`user_id`);
+
+
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -22577,6 +22645,23 @@ COMMIT;
 
 ALTER TABLE `hoteli_pay_bank_details`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+COMMIT;
+
+--
+-- AUTO_INCREMENT for table `options`
+--
+ALTER TABLE `options`
+  MODIFY `option_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `postmeta`
+--
+ALTER TABLE `postmeta`
+  MODIFY `meta_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `posts`
+--
+ALTER TABLE `posts`
+  MODIFY `post_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 ALTER TABLE `ota_xml_logs` CHANGE `ota_hotel_id` `ota_property_id` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
