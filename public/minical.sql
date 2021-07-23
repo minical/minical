@@ -21188,6 +21188,7 @@ INSERT INTO `menu` (`id`, `name`, `link`, `icon`, `parent_id`, `partner_type_id`
 (5, 'Extensions', 'extensions', 'metismenu-icon pe-7s-keypad', 0, 1),
 (6, 'settings', 'settings', 'metismenu-icon pe-7s-settings', 0, 1),
 (7, 'room status', 'room', '', 3, 1),
+(8, 'Inventory', 'room/inventory', '', 3, 1),
 (14, 'summary', 'reports/ledger/show_ledger_summary_report', '', 4, 1),
 (15, 'charges', 'reports/ledger/show_monthly_charge_report', '', 4, 1),
 (16, 'payments', 'reports/ledger/show_monthly_payment_report', '', 4, 1),
