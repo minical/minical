@@ -114,19 +114,19 @@
                 </div>
                 <div class="modal-footer">
                     <input type="hidden"  id="manual_payment_capture" value="<?=$company['manual_payment_capture'];?>">
-                    <?php //if($company['manual_payment_capture'] != 1){ ?>
+                    <?php if($company['manual_payment_capture'] != 1){ ?>
                         <button type="button" class="btn btn-success add_payment_button hidden" id="add_payment_button">
                             <?php echo l('add').' '.l('payment'); ?>
                         </button>
 
-                    <?php //} else { ?>
+                    <?php } else { ?>
                         <button type="button" class="btn btn-success add_payment_button hidden" id="auth_and_capture">
                             <?php echo l('Add Charge'); ?>
                         </button>
                         <button type="button" class="btn btn-success add_payment_button hidden" id="authorize_only">
                             <?php echo l('Pre-Authorize'); ?>
                         </button> 
-                    <?php //} ?>
+                    <?php } ?>
                     <button type="button" class="btn btn-success add_payment_button" id="add_payment_normal">
                         <?php echo l('add').' '.l('payment'); ?>
                     </button>
