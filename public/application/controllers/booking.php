@@ -2566,6 +2566,8 @@ class Booking extends MY_Controller
         }
         $this->Booking_model->delete_booking($booking_id);
         $this->_create_booking_log($booking_id, "Booking deleted");
+
+        echo json_encode(array('response' => 'success'));
     }
 
     function create_charges($invoice_array, $booking_id, $customer_id) {
