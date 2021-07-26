@@ -823,16 +823,17 @@ class Company extends MY_Controller
 
         foreach ($value as $charge) {
 
-
+            $get_charge_name = $this->Charge_type_model->get_charge_type_by_name($charge['Charge Type'],$this->company_id);
             $get_the_charge_type = $this->Import_mapping_model->get_mapping_charge_id($charge['Charge Type Id']);
+            // /prx($get_the_charge_type);
 
-            if(empty($get_the_charge_type)){
-               
+            if(empty($get_charge_name)){
+
                 $data = array (
                     'name' => $charge['Charge Type'],
                     'company_id' => $this->company_id,
                     'is_room_charge_type' => $charge['Room Charge Type'] == 'true' ? 1 : 0,
-                    'is_default_room_charge_type' => $charge['Tax Exempt'] == 'true' ? 1 : 0
+                    'is_tax_exempt' => $charge['Tax Exempt'] == 'true' ? 1 : 0
                 );
 
                 $charge_type_id = $this->Charge_type_model->create_charge_types($data);
@@ -846,9 +847,26 @@ class Company extends MY_Controller
 
                 $import_data = $this->Import_mapping_model->insert_import_mapping($data_import_mapping);
 
+                $taxes = explode(',', $charge['Tax Type']);
+
+                foreach ($taxes as $tax_type) {
+                    if($tax_type){
+                        $tax_type_id = $this->Tax_model->get_tax_type_by_name($tax_type);
+
+
+                        $charge_taxes = $this->Charge_type_model->get_charge_tax($charge_type_id, $tax_type_id);
+                        if(!$charge_taxes){
+                            $this->Charge_type_model->add_charge_type_tax($charge_type_id, $tax_type_id);
+                        }
+                    }
+
+                }
+
+
             }else{
                 $charge_type_id = isset($get_the_charge_type['new_id']) ? $get_the_charge_type['new_id'] : '';
             }
+
 
             $customer_id =  $this->Import_mapping_model->get_mapping_customer_id($charge['Customer Id']);
 
@@ -880,18 +898,7 @@ class Company extends MY_Controller
                     );
 
                     $charge_id = $this->Charge_model->insert_charge($data);
-                    $taxes = explode(',', $charge['Tax Type']);
 
-                    foreach ($taxes as $tax_type) {
-                        if($tax_type){
-                            $tax_type_id = $this->Tax_model->get_tax_type_by_name($tax_type);
-                            $charge_taxes = $this->Charge_type_model->get_charge_tax($charge_type_id, $tax_type_id);
-                            if(!$charge_taxes){
-                                $this->Charge_type_model->add_charge_type_tax($charge_type_id, $tax_type_id);
-                            }
-                        }
-
-                    }
 
                     $data_import_mapping = Array(
                         "new_id" => $charge_id,
@@ -914,7 +921,7 @@ class Company extends MY_Controller
         foreach ($value as $rate) {
 
             $get_rate_plan = $this->Rate_plan_model->get_rate_plan_by_name($rate['Name'], $this->company_id);
-            
+
             $get_import_rate_plan = $this->Import_mapping_model->get_rate_plan_mapping_id($rate['Rate Plan Id']);
 
             $room_type =  $this->Import_mapping_model->get_mapping_room_type_id($rate['Room type Id']);
@@ -963,8 +970,8 @@ class Company extends MY_Controller
                         'adult_4_rate' => $rate['Adult Rate 4'] ? $rate['Adult Rate 4'] : 0,
                         'additional_adult_rate' => $rate['Additional Adult Rate'] ? $rate['Additional Adult Rate'] : 0,
                         'additional_child_rate' => $rate['Aditional Child Rate'] ? $rate['Aditional Child Rate'] : 0,
-                        'minimum_length_of_stay' => $rate['Min Length of Stay'] ? $rate['Min Length of Stay'] : 0,
-                        'maximum_length_of_stay' => $rate['Max Length of Stay'] ? $rate['Max Length of Stay'] : 0,
+                        'minimum_length_of_stay' => $rate['Min Length of Stay'] ? $rate['Min Length of Stay'] : null,
+                        'maximum_length_of_stay' => $rate['Max Length of Stay'] ? $rate['Max Length of Stay'] : null,
                         'closed_to_departure' => $rate['Close to Departure'] == 'true' ? 1 : 0,
                         'closed_to_arrival' => $rate['Close to Arrival'] == 'true' ? 1 : 0
                     )
@@ -1060,6 +1067,9 @@ class Company extends MY_Controller
             $customer_id =  $this->Import_mapping_model->get_mapping_customer_id($booking['Booking Customer Id']);
             $booked_by =  $this->Import_mapping_model->get_mapping_customer_id($booking['Booked By']);
 
+
+
+
             switch ($booking['State']) {
                 case "Reservation" : $state = '0'; break;
                 case "Checked-in" : $state = '1'; break;
@@ -1079,7 +1089,7 @@ class Company extends MY_Controller
             }
 
             switch ($booking['Source']) {
-                case "walk In" : $source = '0'; break;
+                case "Walk-in / Telephone" : $source = '0'; break;
                 case "Online Widget" : $source = '1'; break;
                 case "Booking Dot Com" : $source = '2'; break;
                 case "Expedia" : $source = '3'; break;
@@ -1099,7 +1109,7 @@ class Company extends MY_Controller
 
             }
 
-            if(empty($source)){
+            if($source == ''){
 
                 $get_source = $this->Booking_source_model->get_booking_source_by_company($this->company_id, $booking['Source']);
                 if(empty($get_source)){
@@ -1267,7 +1277,7 @@ class Company extends MY_Controller
                 }
             }
 
-          
+
 
         }
 
@@ -1355,7 +1365,20 @@ class Company extends MY_Controller
             'hide_room_name' => isset($value['Hide Room Name']) ? $value['Hide Room Name'] : "",
             'restrict_booking_dates_modification' => isset($value['Restrict Booking Dates Modification']) ? $value['Restrict Booking Dates Modification'] : "",
             'restrict_checkout_with_balance' => isset($value['Restrict Checkout With Balance']) ? $value['Restrict Checkout With Balance'] : "",
-            'show_guest_group_invoice' => isset($value['Show Guest Group Invoice']) ? $value['Show Guest Group Invoice'] : ""
+            'show_guest_group_invoice' => isset($value['Show Guest Group Invoice']) ? $value['Show Guest Group Invoice'] : "",
+            'ui_theme' => isset($value['Ui Theme']) ? $value['Ui Theme'] : "",
+            'is_display_tooltip' => isset($value['Display Tooltip']) ? $value['Display Tooltip'] : "",
+            'ask_for_review_in_invoice_email' => isset($value['Ask For Review In Invoice Email']) ? $value['Ask For Review In Invoice Email'] : "",
+            'redirect_to_trip_advisor' => isset($value['Redirect To Trip Advisor']) ? $value['Redirect To Trip Advisor'] : "",
+            // 'email_confirmation_for_ota_reservations' => isset($value['Email Confirmation For Ota Reservations']) ? $value['Email Confirmation For Ota Reservations'] : "",
+            // 'email_cancellation_for_ota_reservations' => isset($value['Email Cancellation For Ota Reservations']) ? $value['Email Cancellation For Ota Reservations'] : "",
+            'allow_non_continuous_bookings' => isset($value['Allow Non Continuous Bookings']) ? $value['Allow Non Continuous Bookings'] : "",
+            'maximum_no_of_blocks' => isset($value['Maximum No Of Blocks']) ? $value['Maximum No Of Blocks'] : "",
+            'force_room_selection' => isset($value['Force Room Selection']) ? $value['Force Room Selection'] : "",
+            'automatic_feedback_email' => isset($value['Automatic Feedback Email']) ? $value['Automatic Feedback Email'] : "",
+            'avoid_dmarc_blocking' => isset($value['Avoid Dmarc Blocking']) ? $value['Avoid Dmarc Blocking'] : "",
+            'allow_free_bookings' => isset($value['Allow Free Bookings']) ? $value['Allow Free Bookings'] : "",
+            'customer_modify_booking' => isset($value['Customer Modify Booking']) ? $value['Customer Modify Booking'] : ""
         );
         $this->Company_model->update_company($this->company_id, $company_data);
 

@@ -452,7 +452,7 @@ class Tax_model extends CI_Model {
     function get_tax_type_by_name($name){
 
         $this->db->from('tax_type as tt');
-        $this->db->where('tt.tax_type = ',$name);
+        $this->db->where('tt.tax_type = ', $name);
         $this->db->where('tt.company_id', $this->company_id);
         $query = $this->db->get();
         $result = $query->result_array();
