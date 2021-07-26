@@ -518,9 +518,10 @@
                                     errorMsg += "\nInvalid Fax Number";
                                 }
 
-                                if (cc_number !== ''){
+                                var cardno = $.trim($("input[name='cc_number']").val());
+                                if (cardno !== ''){
                                     var re16digit = /^\d{16}$/;
-                                    var cardno = $.trim($("input[name='cc_number']").val());
+                                    // var cardno = $.trim($("input[name='cc_number']").val());
                                     if (!re16digit.test(cardno)) {
                                         errorMsg += "\nPlease enter valid card number";
                                     }
@@ -528,7 +529,7 @@
 
                                 var cvc = $.trim($("input[name='cvc']").val());
                                  if (
-                                 cc_number !== ''
+                                 cardno !== ''
                                  && cvc == ''
                                  ) {
                                  errorMsg += "\nPlease enter CVC code";
