@@ -287,7 +287,7 @@ class Charge_type_model extends CI_Model {
         return $charge_type_id;
     }
 
-    function delete_company_charge_types($company_id){
+    function delete_charge_types($company_id){
 
         $data = Array('is_deleted' => 1);
 

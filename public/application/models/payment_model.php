@@ -951,7 +951,7 @@ class Payment_model extends CI_Model {
         return NULL;
     }
 
-    function deleted_payment_type($company_id)
+    function delete_payment_types($company_id)
     {
         $data = Array('is_deleted' => 1);
 
@@ -966,7 +966,7 @@ class Payment_model extends CI_Model {
     }
 
 
-    function delete_company_payments($booking_id){
+    function delete_payments($booking_id){
         $data = Array('is_deleted' => 1);
 
         $this->db->where('booking_id', $booking_id);

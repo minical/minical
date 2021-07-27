@@ -1189,7 +1189,7 @@ class Charge_model extends CI_Model {
 		
 	}
 
-    function delete_company_charges($booking_id){
+    function delete_charges($booking_id){
 
         $data = Array('is_deleted' => 1);
         $this->db->where('booking_id', $booking_id);

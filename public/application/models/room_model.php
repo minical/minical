@@ -859,7 +859,7 @@ class Room_model extends CI_Model {
 
 
 
-    function deleted_company_room($company_id){
+    function delete_rooms($company_id){
 
         $data = Array('is_deleted' => 1);
 

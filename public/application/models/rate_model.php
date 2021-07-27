@@ -557,7 +557,7 @@ class Rate_model extends CI_Model {
 
         }
 
-    function delete_company_rates($company_id){
+    function delete_rates($company_id){
 
         $data = Array('is_deleted' => '1');
 

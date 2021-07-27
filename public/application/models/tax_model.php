@@ -467,7 +467,7 @@ class Tax_model extends CI_Model {
         }
     }
 
-    function delete_company_tax_types($company_id){
+    function delete_tax_types($company_id){
 
         $data = Array('is_deleted' => 1);
 

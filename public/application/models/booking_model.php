@@ -2784,7 +2784,7 @@ class Booking_model extends CI_Model {
         return NULL;
     }
 
-    function deleted_company_bookings($company_id)
+    function delete_bookings($company_id)
     {
         $data = Array('is_deleted' => 1);
 

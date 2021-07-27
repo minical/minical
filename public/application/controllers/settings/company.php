@@ -631,23 +631,23 @@ class Company extends MY_Controller
         if($this->input->post('removd_old_data') == 1){
 
             $get_bookings = $this->Booking_model->get_bookings_company($this->company_id);
-            // prx($get_booking);
+            
             if($get_bookings){
                 foreach ($get_bookings as $key => $booking) {
-                    $this->Charge_model->delete_company_charges($booking['booking_id']);
-                    $this->Payment_model->delete_company_payments($booking['booking_id']);
+                    $this->Charge_model->delete_charges($booking['booking_id']);
+                    $this->Payment_model->delete_payments($booking['booking_id']);
                 }
-                $this->Booking_model->deleted_company_bookings($this->company_id);
+                $this->Booking_model->delete_bookings($this->company_id);
             }
-            $this->Customer_type_model->deleted_customer_type($this->company_id);
-            $this->Customer_model->deleted_company_customers($this->company_id);
-            $this->Payment_model->deleted_payment_type($this->company_id);
-            $this->Charge_type_model->delete_company_charge_types($this->company_id);
-            $this->Room_type_model->deleted_room_types($this->company_id);
-            $this->Room_model->deleted_company_room($this->company_id);
-            $this->Tax_model->delete_company_tax_types($this->company_id);
-            $this->Rate_plan_model->delete_company_rate_plan($this->company_id);
-            // $this->Rate_model->delete_company_rates($this->company_id);
+            $this->Customer_type_model->delete_customer_types($this->company_id);
+            $this->Customer_model->delete_customers($this->company_id);
+            $this->Payment_model->delete_payment_types($this->company_id);
+            $this->Charge_type_model->delete_charge_types($this->company_id);
+            $this->Room_type_model->delete_room_types($this->company_id);
+            $this->Room_model->delete_rooms($this->company_id);
+            $this->Tax_model->delete_tax_types($this->company_id);
+            $this->Rate_plan_model->delete_rate_plans($this->company_id);
+            // $this->Rate_model->delete_rates($this->company_id);
         }
 
         if($_FILES['file']['name'] != '')

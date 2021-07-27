@@ -322,7 +322,7 @@ class Rate_plan_model extends CI_Model {
 		return NULL;
     }
 
-    function delete_company_rate_plan($company_id){
+    function delete_rate_plans($company_id){
 
         $data = Array('is_deleted' => 1);
 

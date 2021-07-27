@@ -450,7 +450,7 @@ class Room_type_model extends CI_Model {
         }
     }
 
-    function deleted_room_types($company_id){
+    function delete_room_types($company_id){
 
         $data = Array('is_deleted' => 1);
 

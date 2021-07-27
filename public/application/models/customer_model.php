@@ -731,7 +731,7 @@ class Customer_model extends CI_Model {
 		
 	}
 
-    function deleted_company_customers($company_id)
+    function delete_customers($company_id)
     {
         $data = Array('is_deleted' => 1);
 
