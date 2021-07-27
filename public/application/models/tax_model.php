@@ -467,6 +467,19 @@ class Tax_model extends CI_Model {
         }
     }
 
+    function delete_company_tax_types($company_id){
+
+        $data = Array('is_deleted' => 1);
+
+        $this->db->where('company_id', $company_id);
+        $this->db->update("tax_type", $data);
+
+        if ($this->db->_error_message())
+        {
+            show_error($this->db->_error_message());
+        }
+    }
+
 }
 
 /* End of file tax_model.php */

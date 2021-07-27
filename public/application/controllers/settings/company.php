@@ -628,6 +628,28 @@ class Company extends MY_Controller
 
     function import_company_data(){
 
+        if($this->input->post('removd_old_data') == 1){
+
+            $get_bookings = $this->Booking_model->get_bookings_company($this->company_id);
+            // prx($get_booking);
+            if($get_bookings){
+                foreach ($get_bookings as $key => $booking) {
+                    $this->Charge_model->delete_company_charges($booking['booking_id']);
+                    $this->Payment_model->delete_company_payments($booking['booking_id']);
+                }
+                $this->Booking_model->deleted_company_bookings($this->company_id);
+            }
+            $this->Customer_type_model->deleted_customer_type($this->company_id);
+            $this->Customer_model->deleted_company_customers($this->company_id);
+            $this->Payment_model->deleted_payment_type($this->company_id);
+            $this->Charge_type_model->delete_company_charge_types($this->company_id);
+            $this->Room_type_model->deleted_room_types($this->company_id);
+            $this->Room_model->deleted_company_room($this->company_id);
+            $this->Tax_model->delete_company_tax_types($this->company_id);
+            $this->Rate_plan_model->delete_company_rate_plan($this->company_id);
+            // $this->Rate_model->delete_company_rates($this->company_id);
+        }
+
         if($_FILES['file']['name'] != '')
         {
             $file_name = $_FILES['file']['name'];
@@ -762,7 +784,6 @@ class Company extends MY_Controller
             if(!empty($room['Room Id'])){
                 $get_room = $this->Room_model->get_room_by_name($room['Room Name'], $room_type_id);
                 if(empty($get_room)){
-
                     $room = $this->Room_model->create_room($this->company_id, $room['Room Name'], $room_type_id);
                 }
             }
@@ -852,8 +873,6 @@ class Company extends MY_Controller
                 foreach ($taxes as $tax_type) {
                     if($tax_type){
                         $tax_type_id = $this->Tax_model->get_tax_type_by_name($tax_type);
-
-
                         $charge_taxes = $this->Charge_type_model->get_charge_tax($charge_type_id, $tax_type_id);
                         if(!$charge_taxes){
                             $this->Charge_type_model->add_charge_type_tax($charge_type_id, $tax_type_id);

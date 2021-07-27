@@ -286,6 +286,19 @@ class Charge_type_model extends CI_Model {
 
         return $charge_type_id;
     }
+
+    function delete_company_charge_types($company_id){
+
+        $data = Array('is_deleted' => 1);
+
+        $this->db->where('company_id', $company_id);
+        $this->db->update("charge_type", $data);
+
+        if ($this->db->_error_message())
+        {
+            show_error($this->db->_error_message());
+        }
+    }
 }
 
 /* End of file - charge_type_model.php */

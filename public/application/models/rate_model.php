@@ -557,5 +557,18 @@ class Rate_model extends CI_Model {
 
         }
 
+    function delete_company_rates($company_id){
+
+        $data = Array('is_deleted' => '1');
+
+        $this->db->where('company_id', $company_id);
+        $this->db->update("rate", $data);
+
+        if ($this->db->_error_message())
+        {
+            show_error($this->db->_error_message());
+        }
+    }
+
 }
 /* End of file - rate_model.php */

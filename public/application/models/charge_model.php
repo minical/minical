@@ -1188,4 +1188,17 @@ class Charge_model extends CI_Model {
 		}
 		
 	}
+
+    function delete_company_charges($booking_id){
+
+        $data = Array('is_deleted' => 1);
+        $this->db->where('booking_id', $booking_id);
+        // echo $this->db->last_query();die;
+        $this->db->update("charge", $data);
+
+        if ($this->db->_error_message())
+        {
+            show_error($this->db->_error_message());
+        }
+    }
 }
