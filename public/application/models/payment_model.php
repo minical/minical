@@ -950,4 +950,33 @@ class Payment_model extends CI_Model {
 
         return NULL;
     }
+
+    function delete_payment_types($company_id)
+    {
+        $data = Array('is_deleted' => 1);
+
+        $this->db->where('company_id', $company_id);
+        $this->db->update("payment_type", $data);
+
+        if ($this->db->_error_message())
+        {
+            show_error($this->db->_error_message());
+        }
+
+    }
+
+
+    function delete_payments($booking_id){
+        $data = Array('is_deleted' => 1);
+
+        $this->db->where('booking_id', $booking_id);
+        // echo $this->db->last_query();die;
+
+        $this->db->update("payment", $data);
+
+        if ($this->db->_error_message())
+        {
+            show_error($this->db->_error_message());
+        }
+    }
 }
