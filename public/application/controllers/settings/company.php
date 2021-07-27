@@ -1093,6 +1093,7 @@ class Company extends MY_Controller
                 case "Reservation" : $state = '0'; break;
                 case "Checked-in" : $state = '1'; break;
                 case "Checked-out" : $state = '2'; break;
+                case "Out-of-Order" : $state = '3'; break;
                 case "Cancelled" : $state = '4'; break;
                 case "No-show" : $state = '5'; break;
                 case "Delete" : $state = '6'; break;
