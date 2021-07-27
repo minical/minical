@@ -294,6 +294,14 @@ innGrid.createRate = function() {
 		saturday: $("input[name ='saturday']").prop('checked')*/
 	};
 
+	if(rateArray.date_end == ''){
+		var myDate = new Date(rateArray.date_start);
+		myDate.setFullYear(myDate.getFullYear() + 10);
+		myDate.setDate(myDate.getDate() - 1);
+
+		rateArray.date_end = moment(myDate).format('YYYY-MM-DD');
+	}
+
 	$(".modifiable").each(function() {
             
 		var fieldname = $(this).prop("name");
