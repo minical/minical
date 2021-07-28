@@ -269,7 +269,7 @@ innGrid.deletePaymentRow = function (item, e) {
             data: "payment_id=" + paymentID,
             success: function( data ) {             
                 // insufficient access
-                if (data !== '') {
+                if (data.trim() !== '') {
                     alert(l("You do not have permission to delete a payment. Contact your administrator if you need access", true));
                     return;
                 }
