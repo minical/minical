@@ -1360,7 +1360,11 @@ $(function() {
         innGrid.deleteChargeRow($(this));       
     });
 
-    $(document).on("click", ".payment_row .x-button, .delete-payment", function (e) {
+    // $(document).on("click", ".payment_row .x-button, .delete-payment", function (e) {
+    //     innGrid.deletePaymentRow($(this), e);
+    // });
+
+    $('.delete-payment').on("click", function (e) {
         innGrid.deletePaymentRow($(this), e);
     });
         
