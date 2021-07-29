@@ -32,6 +32,9 @@ class Extension_model extends CI_Model {
 
 		if($company_id)
 			$this->db->where('company_id', $company_id);
+		else
+			$this->db->where('company_id', 1);
+
 		if($vendor_id)
 			$this->db->where('vendor_id', $vendor_id);
 		else
@@ -56,6 +59,9 @@ class Extension_model extends CI_Model {
 
 		if($company_id)
 			$this->db->where('company_id', $company_id);
+		else
+			$this->db->where('company_id', 1);
+		
 		if($vendor_id)
 			$this->db->where('vendor_id', $vendor_id);
 		else
