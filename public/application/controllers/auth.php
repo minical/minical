@@ -785,7 +785,8 @@ class Auth extends MY_Controller
             'country'                  => isset($data['country'])?$data['country']:'',
             'logo_image_group_id'      => $this->Image_model->create_image_group(LOGO_IMAGE_TYPE_ID),
             'slideshow_image_group_id' => $this->Image_model->create_image_group(SLIDE_IMAGE_TYPE_ID),
-            'gallery_image_group_id'   => $this->Image_model->create_image_group(GALLERY_IMAGE_TYPE_ID)
+            'gallery_image_group_id'   => $this->Image_model->create_image_group(GALLERY_IMAGE_TYPE_ID),
+            'enable_api_access' => 1
 
         );
 
@@ -832,6 +833,9 @@ class Auth extends MY_Controller
         
         // create company in minical
         $company_id = $this->Company_model->create_company($company_data);
+
+        $api_key = md5(uniqid(rand(), true));
+        $this->Company_model->insert_company_api_key($company_id, $api_key);
         
         if(isset($data['email']) && $data['email'] == SUPER_ADMIN){
             $this->User_model->add_user_permission($company_id, $data['user_id'], 'is_admin');

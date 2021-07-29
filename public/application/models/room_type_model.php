@@ -39,7 +39,7 @@ class Room_type_model extends CI_Model {
                 'get_closeout_status'		=> $get_closeout_status,
                 'get_inventory'             => $get_inventory,
                 'company_id'                => $company_id,
-                'X-API-KEY'                 => $this->config->item('api_key')
+                'X-API-KEY'                 => $this->company_api_key
             )
         );
         $req = Requests::get($this->config->item('api_url').'/v1/inventory/availability?'.$query);
@@ -447,6 +447,19 @@ class Room_type_model extends CI_Model {
         else
         {
             return NULL;
+        }
+    }
+
+    function delete_room_types($company_id){
+
+        $data = Array('is_deleted' => 1);
+
+        $this->db->where('company_id', $company_id);
+        $this->db->update("room_type", $data);
+
+        if ($this->db->_error_message())
+        {
+            show_error($this->db->_error_message());
         }
     }
 		

@@ -628,6 +628,28 @@ class Company extends MY_Controller
 
     function import_company_data(){
 
+        if($this->input->post('removd_old_data') == 1){
+
+            $get_bookings = $this->Booking_model->get_bookings_company($this->company_id);
+            
+            if($get_bookings){
+                foreach ($get_bookings as $key => $booking) {
+                    $this->Charge_model->delete_charges($booking['booking_id']);
+                    $this->Payment_model->delete_payments($booking['booking_id']);
+                }
+                $this->Booking_model->delete_bookings($this->company_id);
+            }
+            $this->Customer_type_model->delete_customer_types($this->company_id);
+            $this->Customer_model->delete_customers($this->company_id);
+            $this->Payment_model->delete_payment_types($this->company_id);
+            $this->Charge_type_model->delete_charge_types($this->company_id);
+            $this->Room_type_model->delete_room_types($this->company_id);
+            $this->Room_model->delete_rooms($this->company_id);
+            $this->Tax_model->delete_tax_types($this->company_id);
+            $this->Rate_plan_model->delete_rate_plans($this->company_id);
+            // $this->Rate_model->delete_rates($this->company_id);
+        }
+
         if($_FILES['file']['name'] != '')
         {
             $file_name = $_FILES['file']['name'];
@@ -682,7 +704,7 @@ class Company extends MY_Controller
                         if(in_array($file_ext[1], $ext_allowed)){
                             $fp = fopen($path.$file, 'r');
                             $setting = fgets($fp);
-                            $result['setting'] = $setting;
+                            $result['settings'] = $setting;
 
                             fclose($fp);
                             unlink($path.'/'.$file);
@@ -762,7 +784,6 @@ class Company extends MY_Controller
             if(!empty($room['Room Id'])){
                 $get_room = $this->Room_model->get_room_by_name($room['Room Name'], $room_type_id);
                 if(empty($get_room)){
-
                     $room = $this->Room_model->create_room($this->company_id, $room['Room Name'], $room_type_id);
                 }
             }
@@ -823,11 +844,20 @@ class Company extends MY_Controller
 
         foreach ($value as $charge) {
 
-
+            $get_charge_name = $this->Charge_type_model->get_charge_type_by_name($charge['Charge Type'],$this->company_id);
             $get_the_charge_type = $this->Import_mapping_model->get_mapping_charge_id($charge['Charge Type Id']);
+            // /prx($get_the_charge_type);
 
-            if(empty($get_the_charge_type)){
-                $charge_type_id = $this->Charge_type_model->create_charge_type($this->company_id,$charge['Charge Type']);
+            if(empty($get_charge_name)){
+
+                $data = array (
+                    'name' => $charge['Charge Type'],
+                    'company_id' => $this->company_id,
+                    'is_room_charge_type' => $charge['Room Charge Type'] == 'true' ? 1 : 0,
+                    'is_tax_exempt' => $charge['Tax Exempt'] == 'true' ? 1 : 0
+                );
+
+                $charge_type_id = $this->Charge_type_model->create_charge_types($data);
 
                 $data_import_mapping = Array(
                     "new_id" => $charge_type_id,
@@ -838,9 +868,24 @@ class Company extends MY_Controller
 
                 $import_data = $this->Import_mapping_model->insert_import_mapping($data_import_mapping);
 
+                $taxes = explode(',', $charge['Tax Type']);
+
+                foreach ($taxes as $tax_type) {
+                    if($tax_type){
+                        $tax_type_id = $this->Tax_model->get_tax_type_by_name($tax_type);
+                        $charge_taxes = $this->Charge_type_model->get_charge_tax($charge_type_id, $tax_type_id);
+                        if(!$charge_taxes){
+                            $this->Charge_type_model->add_charge_type_tax($charge_type_id, $tax_type_id);
+                        }
+                    }
+
+                }
+
+
             }else{
                 $charge_type_id = isset($get_the_charge_type['new_id']) ? $get_the_charge_type['new_id'] : '';
             }
+
 
             $customer_id =  $this->Import_mapping_model->get_mapping_customer_id($charge['Customer Id']);
 
@@ -872,18 +917,7 @@ class Company extends MY_Controller
                     );
 
                     $charge_id = $this->Charge_model->insert_charge($data);
-                    $taxes = explode(',', $charge['Tax Type']);
 
-                    foreach ($taxes as $tax_type) {
-                        if($tax_type){
-                            $tax_type_id = $this->Tax_model->get_tax_type_by_name($tax_type);
-                            $charge_taxes = $this->Charge_type_model->get_charge_tax($charge_type_id, $tax_type_id);
-                            if(!$charge_taxes){
-                                $this->Charge_type_model->add_charge_type_tax($charge_type_id, $tax_type_id);
-                            }
-                        }
-
-                    }
 
                     $data_import_mapping = Array(
                         "new_id" => $charge_id,
@@ -904,15 +938,21 @@ class Company extends MY_Controller
     function import_rates_csv($value){
 
         foreach ($value as $rate) {
-            $get_rate_plan = $this->Rate_plan_model->get_rate_plan_by_name($rate['Name']);
+
+            $get_rate_plan = $this->Rate_plan_model->get_rate_plan_by_name($rate['Name'], $this->company_id);
+
+            $get_import_rate_plan = $this->Import_mapping_model->get_rate_plan_mapping_id($rate['Rate Plan Id']);
+
             $room_type =  $this->Import_mapping_model->get_mapping_room_type_id($rate['Room type Id']);
+
             $room_type_id = $room_type['new_id'];
             if(empty($room_type_id)){
                 $room_type= $this->Room_type_model->get_room_type_name($rate['Room Type Name'] , $this->company_id);
                 $room_type_id = $room_type[0]['id'];
             }
 
-            if(empty($get_rate_plan)){
+            if(empty($get_import_rate_plan)){
+
                 $data = array(
                     "rate_plan_name" => $rate['Name'] == '' ? null : $rate['Name'],
                     "room_type_id" => $room_type_id,
@@ -920,8 +960,18 @@ class Company extends MY_Controller
                     "is_selectable" => $rate['Read Only'] == 'true' ? 1 : 0
                 );
                 $rate_plan_id = $this->Rate_plan_model->create_rate_plan($data);
-            }else{
-                $rate_plan_id = $get_rate_plan['rate_plan_id'];
+
+                $data_import_mapping = Array(
+                    "new_id" => $rate_plan_id,
+                    "old_id" => $rate['Rate Plan Id'],
+                    "company_id" => $this->company_id,
+                    "type" => "rate_plan"
+                );
+
+                $import_data = $this->Import_mapping_model->insert_import_mapping($data_import_mapping);
+            }
+            else{
+                $rate_plan_id = $get_import_rate_plan['new_id'];
             }
 
 
@@ -939,8 +989,8 @@ class Company extends MY_Controller
                         'adult_4_rate' => $rate['Adult Rate 4'] ? $rate['Adult Rate 4'] : 0,
                         'additional_adult_rate' => $rate['Additional Adult Rate'] ? $rate['Additional Adult Rate'] : 0,
                         'additional_child_rate' => $rate['Aditional Child Rate'] ? $rate['Aditional Child Rate'] : 0,
-                        'minimum_length_of_stay' => $rate['Min Length of Stay'] ? $rate['Min Length of Stay'] : 0,
-                        'maximum_length_of_stay' => $rate['Max Length of Stay'] ? $rate['Max Length of Stay'] : 0,
+                        'minimum_length_of_stay' => $rate['Min Length of Stay'] ? $rate['Min Length of Stay'] : null,
+                        'maximum_length_of_stay' => $rate['Max Length of Stay'] ? $rate['Max Length of Stay'] : null,
                         'closed_to_departure' => $rate['Close to Departure'] == 'true' ? 1 : 0,
                         'closed_to_arrival' => $rate['Close to Arrival'] == 'true' ? 1 : 0
                     )
@@ -1034,11 +1084,16 @@ class Company extends MY_Controller
             $room_id = $this->Room_model->get_room_by_name($booking['Room'] , $room_type_id[0]['id']);
 
             $customer_id =  $this->Import_mapping_model->get_mapping_customer_id($booking['Booking Customer Id']);
+            $booked_by =  $this->Import_mapping_model->get_mapping_customer_id($booking['Booked By']);
+
+
+
 
             switch ($booking['State']) {
                 case "Reservation" : $state = '0'; break;
                 case "Checked-in" : $state = '1'; break;
                 case "Checked-out" : $state = '2'; break;
+                case "Out-of-Order" : $state = '3'; break;
                 case "Cancelled" : $state = '4'; break;
                 case "No-show" : $state = '5'; break;
                 case "Delete" : $state = '6'; break;
@@ -1054,7 +1109,7 @@ class Company extends MY_Controller
             }
 
             switch ($booking['Source']) {
-                case "walk In" : $source = '0'; break;
+                case "Walk-in / Telephone" : $source = '0'; break;
                 case "Online Widget" : $source = '1'; break;
                 case "Booking Dot Com" : $source = '2'; break;
                 case "Expedia" : $source = '3'; break;
@@ -1074,7 +1129,7 @@ class Company extends MY_Controller
 
             }
 
-            if(empty($source)){
+            if($source == ''){
 
                 $get_source = $this->Booking_source_model->get_booking_source_by_company($this->company_id, $booking['Source']);
                 if(empty($get_source)){
@@ -1094,7 +1149,7 @@ class Company extends MY_Controller
                     "children_count" => $booking['Children Count'] == '' ? null : $booking['Children Count'],
                     "booking_customer_id" => $customer_id['new_id'],
                     "booking_notes" => $booking['Booking Note'] == '' ? null : $booking['Booking Note'] ,
-                    "booked_by" => $booking['Booked By'] == '' ? null : $booking['Booked By'],
+                    "booked_by" => $booking['Booked By'] == '' ? null : $booked_by['new_id'],
                     "balance" => $booking['Balance'] == '' ? null : $booking['Balance'],
                     "balance_without_forecast" => $booking['Balance Without Forecast'] == '' ? null : $booking['Balance Without Forecast'],
                     "use_rate_plan" => $booking['Use Rate Plan'] == 'true' ? 1 : 0,
@@ -1203,7 +1258,7 @@ class Company extends MY_Controller
                 $extra_id = $this->Extra_model->create_all_extras($data);
 
                 $rate_extra_data = array(
-                    'rate' => $extra['Rate'] != '' ? $extra['Rate'] : null ,
+                    'rate' => $extra['Rate'] != '' ? $extra['Rate'] : 0 ,
                     'currency_id' => $extra['Curreny'] != '' ? $extra['Curreny'] : null,
                     'extra_id' => $extra_id
                 );
@@ -1222,24 +1277,27 @@ class Company extends MY_Controller
                 $extra_id = $extras['new_id'];
             }
 
+            if($extra['Booking Id']){
+                $booking_extra = $this->Import_mapping_model->get_booking_extras($extra['Booking Id']);
 
-            $booking_extra = $this->Import_mapping_model->get_booking_extras($extra['Booking Id']);
+                if(empty($booking_extra)){
 
-            if(empty($booking_extra)){
+                    $booking_id = $this->Import_mapping_model->get_mapping_booking_id($extra['Booking Id']);
 
-                $booking_id = $this->Import_mapping_model->get_mapping_booking_id($extra['Booking Id']);
+                    $booking_extra_id =  $this->Booking_extra_model->create_booking_extra($booking_id['new_id'],$extra_id,$extra['Start Date'],$extra['End Date'],$extra['Quantity'],$extra['Default Rate']);
 
-                $booking_extra_id =  $this->Booking_extra_model->create_booking_extra($booking_id['new_id'],$extra_id,$extra['Start Date'],$extra['End Date'],$extra['Quantity'],$extra['Rate']);
+                    $data_import_mapping = Array(
+                        "new_id" => $booking_extra_id,
+                        "old_id" => $extra['Booking Extra Id'],
+                        "company_id" => $this->company_id,
+                        "type" => "extra_booking"
+                    );
+                    $import_data = $this->Import_mapping_model->insert_import_mapping($data_import_mapping);
 
-                $data_import_mapping = Array(
-                    "new_id" => $booking_extra_id,
-                    "old_id" => $extra['Booking Extra Id'],
-                    "company_id" => $this->company_id,
-                    "type" => "extra_booking"
-                );
-                $import_data = $this->Import_mapping_model->insert_import_mapping($data_import_mapping);
-
+                }
             }
+
+
 
         }
 
@@ -1327,7 +1385,20 @@ class Company extends MY_Controller
             'hide_room_name' => isset($value['Hide Room Name']) ? $value['Hide Room Name'] : "",
             'restrict_booking_dates_modification' => isset($value['Restrict Booking Dates Modification']) ? $value['Restrict Booking Dates Modification'] : "",
             'restrict_checkout_with_balance' => isset($value['Restrict Checkout With Balance']) ? $value['Restrict Checkout With Balance'] : "",
-            'show_guest_group_invoice' => isset($value['Show Guest Group Invoice']) ? $value['Show Guest Group Invoice'] : ""
+            'show_guest_group_invoice' => isset($value['Show Guest Group Invoice']) ? $value['Show Guest Group Invoice'] : "",
+            'ui_theme' => isset($value['Ui Theme']) ? $value['Ui Theme'] : "",
+            'is_display_tooltip' => isset($value['Display Tooltip']) ? $value['Display Tooltip'] : "",
+            'ask_for_review_in_invoice_email' => isset($value['Ask For Review In Invoice Email']) ? $value['Ask For Review In Invoice Email'] : "",
+            'redirect_to_trip_advisor' => isset($value['Redirect To Trip Advisor']) ? $value['Redirect To Trip Advisor'] : "",
+            // 'email_confirmation_for_ota_reservations' => isset($value['Email Confirmation For Ota Reservations']) ? $value['Email Confirmation For Ota Reservations'] : "",
+            // 'email_cancellation_for_ota_reservations' => isset($value['Email Cancellation For Ota Reservations']) ? $value['Email Cancellation For Ota Reservations'] : "",
+            'allow_non_continuous_bookings' => isset($value['Allow Non Continuous Bookings']) ? $value['Allow Non Continuous Bookings'] : "",
+            'maximum_no_of_blocks' => isset($value['Maximum No Of Blocks']) ? $value['Maximum No Of Blocks'] : "",
+            'force_room_selection' => isset($value['Force Room Selection']) ? $value['Force Room Selection'] : "",
+            'automatic_feedback_email' => isset($value['Automatic Feedback Email']) ? $value['Automatic Feedback Email'] : "",
+            'avoid_dmarc_blocking' => isset($value['Avoid Dmarc Blocking']) ? $value['Avoid Dmarc Blocking'] : "",
+            'allow_free_bookings' => isset($value['Allow Free Bookings']) ? $value['Allow Free Bookings'] : "",
+            'customer_modify_booking' => isset($value['Customer Modify Booking']) ? $value['Customer Modify Booking'] : ""
         );
         $this->Company_model->update_company($this->company_id, $company_data);
 

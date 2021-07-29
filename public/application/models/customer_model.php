@@ -730,6 +730,21 @@ class Customer_model extends CI_Model {
 		return $query;
 		
 	}
+
+    function delete_customers($company_id)
+    {
+        $data = Array('is_deleted' => 1);
+
+        $this->db->where('company_id', $company_id);
+        $this->db->update("customer", $data);
+
+        if ($this->db->_error_message())
+        {
+            show_error($this->db->_error_message());
+        }
+
+    }
+
         function delete_customer_permanently($customer_id){
             $this->db->where('customer_id',$customer_id);
             $this->db->delete('customer');

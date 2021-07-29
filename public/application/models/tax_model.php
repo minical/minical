@@ -452,7 +452,7 @@ class Tax_model extends CI_Model {
     function get_tax_type_by_name($name){
 
         $this->db->from('tax_type as tt');
-        $this->db->where('tt.tax_type = ',$name);
+        $this->db->where('tt.tax_type = ', $name);
         $this->db->where('tt.company_id', $this->company_id);
         $query = $this->db->get();
         $result = $query->result_array();
@@ -464,6 +464,19 @@ class Tax_model extends CI_Model {
         else
         {
             return null;
+        }
+    }
+
+    function delete_tax_types($company_id){
+
+        $data = Array('is_deleted' => 1);
+
+        $this->db->where('company_id', $company_id);
+        $this->db->update("tax_type", $data);
+
+        if ($this->db->_error_message())
+        {
+            show_error($this->db->_error_message());
         }
     }
 
