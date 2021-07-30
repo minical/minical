@@ -519,7 +519,7 @@
                                 }
 
                                 var cardno = $.trim($("input[name='cc_number']").val());
-                                if (cardno !== ''){
+                                if (cardno.length != 0){
                                     var re16digit = /^\d{16}$/;
                                     // var cardno = $.trim($("input[name='cc_number']").val());
                                     if (!re16digit.test(cardno)) {
