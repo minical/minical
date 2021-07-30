@@ -297,7 +297,7 @@ class MY_Controller extends CI_Controller {
             $whitelabelinfo = $this->ci->session->userdata('white_label_information');
 
             $admin_user_ids = $this->Whitelabel_partner_model->get_partner_detail();
-            $this->is_super_admin = ($user['email'] == SUPER_ADMIN || $this->user_id == $admin_user_ids['admin_user_id']);
+            $this->is_super_admin = (($user && isset($user['email']) && $user['email'] == SUPER_ADMIN) || ($admin_user_ids && isset($admin_user_ids['admin_user_id']) && $this->user_id == $admin_user_ids['admin_user_id']));
 
             if($this->is_super_admin){
                 $get_active_extensions = $this->Extension_model->get_active_extensions($this->company_id, 'reseller_package', false);
