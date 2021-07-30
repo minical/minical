@@ -1378,8 +1378,12 @@ class Customer extends MY_Controller {
 
             $card_response = array();
 
-            if($card_data_array && $card_data_array['card']['card_number'])
+            if($card_data_array && $card_data_array['card']['card_number']){
+                $customer_data['company_id'] = $this->company_id;
+                $card_data_array['customer_data'] = $customer_data;
                 $card_response = apply_filters('post.add.customer', $card_data_array);
+                unset($card_data_array['customer_data']);
+            }
 
             if(
                 $card_response &&
