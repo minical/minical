@@ -21431,7 +21431,7 @@ CREATE TABLE `room` (
   `group_id` bigint(20) UNSIGNED NOT NULL DEFAULT '0',
   `floor_id` int(11) NOT NULL DEFAULT '0',
   `location_id` int(11) NOT NULL DEFAULT '0',
-  `sort_order` varchar(10) DEFAULT NULL,
+  `sort_order` int(11) NOT NULL DEFAULT '0',
   `is_hidden` tinyint(4) NOT NULL DEFAULT '0',
   `score` float NOT NULL DEFAULT '0',
   `instructions` mediumtext
