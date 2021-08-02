@@ -21420,7 +21420,7 @@ CREATE TABLE `review_management` (
 --
 
 CREATE TABLE `room` (
-  `room_name` char(13) NOT NULL,
+  `room_name` varchar(56) NOT NULL DEFAULT '',
   `room_type_id` bigint(20) UNSIGNED DEFAULT NULL COMMENT 'room type id',
   `status` varchar(10) NOT NULL DEFAULT 'Clean' COMMENT 'Room''s status includes:\nClean\nDirty\nOut of Order',
   `notes` mediumtext,
