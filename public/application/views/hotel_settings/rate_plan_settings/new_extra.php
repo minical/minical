@@ -22,7 +22,7 @@
     </td>
 
     <td class="text-center">
-        <input name="default-rate" type="text" class="form-control" value=""/>
+        <input name="default-rate" type="text" class="form-control" value="0"/>
     </td>
     <td class="text-center">
     	<div class="checkbox">
