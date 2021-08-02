@@ -48,6 +48,9 @@
     background-color: #40bf68;
     border-color: #37a45a;
 }
-.calendar[data-channel="2"] .inven_status_div {
+.calendar[data-channel="1"] .inven_status_div {
 	display: none;
+}
+.calendar[data-channel="2"] .inven_status_div {
+    display: none;
 }

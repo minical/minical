@@ -63,7 +63,7 @@
       <span id="loading_img" style="display:none;">
       <img src="<?php echo base_url().'images/loading.gif' ?>"  style='width: 2%;'/>
       </span>
-      <span class="btn btn-primary update-availabilities-button pull-right"><?php echo l('manually_update_availabilities_for_all_channels'); ?></span>
+      <!-- <span class="btn btn-primary update-availabilities-button pull-right"><?php echo l('manually_update_availabilities_for_all_channels'); ?></span> -->
       <div class="calendar" channel_id="0" style="margin-top: 10px;"></div>
    </div>
    <style>

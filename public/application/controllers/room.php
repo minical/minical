@@ -428,4 +428,14 @@ class Room extends MY_Controller
 
 		echo json_encode($response);
 	}
+
+	function set_room_type_ota_threshold(){
+        $room_type_id = $this->input->post('room_type_id');
+        $threshold_val = $this->input->post('threshold_val');
+        $data = array();
+        $room_type_id = isset($room_type_id)? $room_type_id : null;
+        $data['ota_close_out_threshold'] = isset($threshold_val)? $threshold_val : null;
+        $this->Room_type_model->update_room_type($room_type_id, $data);
+        echo json_encode('successfully updated', true);
+    }
 }
