@@ -26,7 +26,7 @@ innGrid.saveAllExtraFields = function () { console.log('here');
             extra_type: extraType,
             extra_charge_type_id: extraChargeTypeID,
 			charging_scheme: chargingScheme,
-			default_rate: defaultRate,
+			default_rate: defaultRate != '' ? defaultRate : 0,
             show_on_pos: (extraFieldTr.find('[name="show_on_pos"]').prop('checked')) ? 1 : 0
         };
     });
