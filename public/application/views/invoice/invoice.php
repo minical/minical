@@ -301,7 +301,7 @@
     <?php
     // show company logo image
     if (isset($company_logos[0]['filename'])) {
-        echo "<img src=".$this->image_url.$company['company_id']."/".$company_logos[0]['filename']."\" id='company-logo-image'/><br/>";
+        echo "<img src='" . $this->image_url . $company['company_id'] . "/" . $company_logos[0]['filename'] . "' id='company-logo-image'/><br/>";
     }
     ?>
 
