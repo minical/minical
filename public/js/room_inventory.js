@@ -121,7 +121,7 @@ innGrid.createTable = function(dateStart, dateEnd) {
 		filter_can_be_sold_online: channel == -1 ? false : true
     };
     var is_ota = true;
-    if(channel == 1 || channel == -1) // online booking engine
+    if(channel == -1) // online booking engine
     { 
         is_ota = false;
     }
@@ -418,14 +418,16 @@ var dateEnd;
        
        var index = $(this).closest('td').index();
        var date = null;
-       if(channel_id == 1)
-       {
-           date = $('.date').eq(index-2).children('.date-value').html();
-       }
-       else
-       {
+       // if(channel_id == 1)
+       // {
+       //     date = $('.date').eq(index-2).children('.date-value').html();
+       //      console.log('if', date);
+       // }
+       // else
+       // {
            date = $('.date').eq(index-3).children('.date-value').html();
-       }
+            console.log('else', date);
+       //}
        var obj = $(this);
        $.ajax({
                 type: 'POST',
@@ -455,14 +457,14 @@ var dateEnd;
                     innGrid.createTable(dateStart, dateEnd);
                     //obj.closest('td').find('.max_avail_val_'+key).html(input_val);
                     $('.max_avail_val_'+key).show();
-                    if(channel_id == 14)
-                    {
+                    // if(channel_id == 14)
+                    // {
                         innGrid.updateAvailabilities(date, date, key, channel_id);
-                    }
-                    else
-                    {
-                        innGrid.updateAvailabilities(date, date, '', '');
-                    }
+                    // }
+                    // else
+                    // {
+                    //     innGrid.updateAvailabilities(date, date, '', '');
+                    // }
                     
                 }
             });

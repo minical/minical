@@ -10,7 +10,7 @@ class Channel_model extends CI_Model {
 	
 	function get_all_channels()
 	{
-        $query = $this->db->get('channel');
+        $query = $this->db->get('otas');
 
 		if ($this->db->_error_message()) // error checking
 			show_error($this->db->_error_message());
