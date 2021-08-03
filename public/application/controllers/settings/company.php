@@ -25,6 +25,8 @@ class Company extends MY_Controller
         $this->load->model('Rate_plan_model');
         $this->load->model('Date_range_model');
         $this->load->model('Booking_linked_group_model');
+        $this->load->model('Tax_price_bracket_model');
+        $this->load->model('Room_location_model');
 
         $this->load->library('email');
         $this->load->library('form_validation');
