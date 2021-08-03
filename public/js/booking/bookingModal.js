@@ -1105,7 +1105,7 @@ var bookingModalInvoker = function ($) {
             this._updatePayPeriodDropdown();
             that._updateModalContent();
             this._bookingSource();
-            // this._bookingFields();
+            this._bookingFields();
             this._showDecimal();
             this._dailyCharge();
 
@@ -2558,25 +2558,25 @@ var bookingModalInvoker = function ($) {
                 that.deferredBookingSource.resolve();
             }
         },
-        // _bookingFields: function () {
-        //     var that = this;
-        //     if (!innGrid.ajaxCache.customBookingFields) {
+        _bookingFields: function () {
+            var that = this;
+            if (!innGrid.ajaxCache.customBookingFields) {
 
-        //         $.ajax({
-        //             type: "POST",
-        //             url: getBaseURL() + "booking/get_booking_fields",
-        //             dataType: "json",
-        //             success: function (data) {
-        //                 that.customBookingFields = data;
-        //                 innGrid.ajaxCache.customBookingFields = data;
-        //                 that.deferredBookingFields.resolve();
-        //             }
-        //         });
-        //     } else {
-        //         that.customBookingFields = innGrid.ajaxCache.customBookingFields;
-        //         that.deferredBookingFields.resolve();
-        //     }
-        // },
+                $.ajax({
+                    type: "POST",
+                    url: getBaseURL() + "booking/get_booking_fields",
+                    dataType: "json",
+                    success: function (data) {
+                        that.customBookingFields = data;
+                        innGrid.ajaxCache.customBookingFields = data;
+                        that.deferredBookingFields.resolve();
+                    }
+                });
+            } else {
+                that.customBookingFields = innGrid.ajaxCache.customBookingFields;
+                that.deferredBookingFields.resolve();
+            }
+        },
         _showDecimal: function () {
             if (innGrid.hideDecimalPlaces) {
                 show_decimal = innGrid.hideDecimalPlaces != 0 ? false : true;
