@@ -1356,7 +1356,7 @@ $(function() {
         }
     });
     
-    $(document).on("click", ".charge_row .x-button", function() { 
+    $(".charge_row .x-button").on("click", function() {
         innGrid.deleteChargeRow($(this));       
     });
 

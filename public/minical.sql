@@ -8266,7 +8266,7 @@ CREATE TABLE `extra` (
 
 CREATE TABLE `extra_rate` (
   `extra_rate_id` bigint(20) UNSIGNED NOT NULL,
-  `rate` decimal(10,2) NOT NULL,
+  `rate` float NOT NULL DEFAULT '0',
   `is_deleted` tinyint(1) DEFAULT '0',
   `currency_id` bigint(20) UNSIGNED DEFAULT NULL,
   `extra_id` bigint(20) UNSIGNED DEFAULT NULL
