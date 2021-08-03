@@ -652,6 +652,12 @@ class Company extends MY_Controller
             // $this->Rate_model->delete_rates($this->company_id);
         }
 
+         $this->import_functionality();
+
+    } 
+
+    function import_functionality(){   
+
         if($_FILES['file']['name'] != '')
         {
             $file_name = $_FILES['file']['name'];
