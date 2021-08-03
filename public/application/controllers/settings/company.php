@@ -681,7 +681,7 @@ class Company extends MY_Controller
                         $allowed_ext = array('csv');
                         $ext_allowed = array('json');
 
-                        if(in_array($file_ext[1], $allowed_ext))
+                        if(isset($file_ext[1]) && in_array($file_ext[1], $allowed_ext))
                         {
 
                             if (!($fp = fopen($path.$file, 'r'))) {
@@ -701,7 +701,7 @@ class Company extends MY_Controller
                             unlink($path.'/'.$file);
                         }
 
-                        if(in_array($file_ext[1], $ext_allowed)){
+                        if(isset($file_ext[1]) && in_array($file_ext[1], $ext_allowed)){
                             $fp = fopen($path.$file, 'r');
                             $setting = fgets($fp);
                             $result['settings'] = $setting;
@@ -788,6 +788,35 @@ class Company extends MY_Controller
                 }
             }
 
+            if(!empty($room['Floor'])){
+                $get_floor = $this->Floor_model->get_floor($this->company_id);
+
+                if(empty($get_floor)){
+                    $data = array(
+                        "floor_name" => $room['Floor'],
+                        "company_id" => $this->company_id
+                    );
+                    $floor = $this->Floor_model->insert($data);
+                }
+
+            }
+
+            if(!empty($room['Location'])){
+
+                $get_location = $this->Room_location_model->get_room_location($this->company_id);
+
+                if(empty($get_location)){
+
+                    $data = array(
+                        "location_name" => $room['Location'],
+                        "company_id" => $this->company_id
+                    );
+                    $floor = $this->Room_location_model->insert($data);
+
+                }
+
+            }
+
         }
     }
 
@@ -796,7 +825,6 @@ class Company extends MY_Controller
         foreach ($value as $tax) {
 
             $get_tax_type = $this->Import_mapping_model->get_mapping_tax_id($tax['Tax Type Id']);
-
 
             if(empty($get_tax_type)){
 
@@ -811,18 +839,20 @@ class Company extends MY_Controller
 
                 $new_taxes = $this->Tax_model->create_new_tax_type($data);
 
-                // if($tax['Bracket Active'] == 'true'){
+                if($tax['Bracket Active'] == 'true'){
+                    $price_bracket = json_decode($tax['Price Bracket'],true);
 
-                //     $price_brackets =array(
-                //     "tax_type_id" => $new_taxes,
-                //     "start_range" => $tax['start Range'],
-                //     "end_range" =>$tax['End Range'],
-                //     "tax_rate" =>$tax['Tax Rate']
-
-                // );
-
-                // $this->Tax_price_bracket_model->add_price_brakets($price_brackets);
-                // }
+                    foreach ($price_bracket as $price) {
+                        $price_brackets = array(
+                            "tax_type_id" => $new_taxes,
+                            "start_range" => $price['start'],
+                            "end_range" =>$price['end'],
+                            "tax_rate" =>$price['rate'],
+                            "is_percentage" =>$price['is_percentage']
+                        );
+                        $this->Tax_price_bracket_model->create_price_bracket($price_brackets);
+                    }
+                }
 
                 $data_import_mapping = Array(
                     "new_id" => $new_taxes,
@@ -1067,6 +1097,18 @@ class Company extends MY_Controller
                 }
             }
 
+            $custom_fields_name = explode(',',$customer['Customer Fields']);
+
+
+            foreach ($custom_fields_name as $customer_names) {
+
+                $existing_customer_fields = $this->Customer_field_model->get_customer_field_by_name($this->company_id, $customer_names);
+                if(empty($existing_customer_fields)){
+                    $customer_fields = $this->Customer_field_model->create_customer_field($this->company_id, $customer_names);
+                }
+
+            }
+
 
         }
 
@@ -1076,8 +1118,6 @@ class Company extends MY_Controller
 
     function import_bookings_csv($value){
 
-        // prx($value);
-
         foreach ($value as $booking) {
             $charge_type_id = $this->Charge_type_model->get_charge_type_by_name($booking['Charge Type'], $this->company_id);
             $room_type_id = $this->Room_type_model->get_room_type_name($booking['Room Type'], $this->company_id);
@@ -1085,9 +1125,6 @@ class Company extends MY_Controller
 
             $customer_id =  $this->Import_mapping_model->get_mapping_customer_id($booking['Booking Customer Id']);
             $booked_by =  $this->Import_mapping_model->get_mapping_customer_id($booking['Booked By']);
-
-
-
 
             switch ($booking['State']) {
                 case "Reservation" : $state = '0'; break;
@@ -1140,6 +1177,7 @@ class Company extends MY_Controller
 
             }
 
+
             $booking_id =  $this->Import_mapping_model->get_mapping_booking_id($booking['Booking Id']);
 
             if(empty($booking_id)){
@@ -1174,6 +1212,43 @@ class Company extends MY_Controller
                 $import_data = $this->Import_mapping_model->insert_import_mapping($data_import_mapping);
 
                 $charge_update = $this->Charge_model->update_charge_booking($booking['Booking Id'],$booking_id,$customer_id['new_id']);
+
+                foreach($booking as $key => $booking_data) {
+
+                    $key_name =  array(
+                        "Booking Id","Rate","Adult Count","Children Count","State","Booking Customer Id","Booked By","Balance","Balance Without Forecast","Use Rate Plan","Rate Plan Id","Charge Type","Check In Date","Check Out Date","Room","Room Type","Group Id","Group Name","Daily Charges","Pay Period","Source","Custom  Booking Source","Booking Note","Booking Room History"
+                    );
+
+
+
+                    if (!in_array($key, $key_name) ) {
+
+
+                        $existing_booking_field = $this->Booking_field_model->get_the_booking_fields_by_name($key , $this->company_id);
+
+
+                        if(empty($existing_booking_field)){
+                            $booking_fields = $this->Booking_field_model->create_booking_field($this->company_id, $key);
+                        }else{
+                            $booking_fields =$existing_booking_field[0]['id'];
+                        }
+
+
+                        if($booking_data){
+
+                            // $booking_id =  $this->Import_mapping_model->get_mapping_booking_id($booking['Booking Id']);
+
+                            $custom_booking_fields = array(
+                                "booking_id" => $booking_id,
+                                "booking_field_id" => $booking_fields,
+                                "value" => $booking_data
+                            );
+
+                            $this->Booking_field_model->booking_field($booking_id, $custom_booking_fields);
+                        }
+
+                    }
+                }
 
                 if(!empty($booking['Group Id'])){
                     $group_id =  $this->Import_mapping_model->get_mapping_group_booking_id($booking['Group Id']);
@@ -1238,7 +1313,7 @@ class Company extends MY_Controller
     }
 
     function import_extras_csv($value){
-        // prx($value);
+
         foreach ($value as $extra) {
 
             $extras = $this->Import_mapping_model->get_extra_mapping($extra['Extra Id']);
@@ -1297,8 +1372,6 @@ class Company extends MY_Controller
                 }
             }
 
-
-
         }
 
     }
@@ -1356,8 +1429,6 @@ class Company extends MY_Controller
     function import_company_setting($values){
 
         $value = json_decode($values,true);
-
-        // prx($value);
 
         $company_data = array(
             'is_total_balance_include_forecast' => isset($value['Feature settings']['Total Balance Include Forecast']) ? $value['Feature settings']['Total Balance Include Forecast'] : ""  ,
@@ -1470,13 +1541,45 @@ class Company extends MY_Controller
                 $this->User_model->add_teams($this->company_id, $user['user_id'],$team['permission']);
             }
 
+            $booking_fields = $value['Booking Fields'];
 
+            foreach ($booking_fields as $key => $fields) {
+                $booking_field_id = $this->Booking_field_model->get_the_booking_fields_by_name($key,$this->company_id);
+
+                $data = array(
+                    'show_on_booking_form' => $fields['show_on_booking_form'],
+                    'show_on_registration_card' => $fields['show_on_registration_card'],
+                    'show_on_in_house_report' => $fields['show_on_in_house_report'],
+                    'show_on_invoice' => $fields['show_on_invoice'],
+                    'is_required' => $fields['is_required']
+                );
+
+                $this->Booking_field_model->update_booking_field($booking_field_id[0]['id'],$data);
+
+            }
+
+            $customer_fields = $value['Customer Fields'];
+
+            foreach ($customer_fields as $key => $customer_field_data) {
+
+                $customer_field_id = $this->Customer_field_model->get_customer_field_by_name($this->company_id, $key);
+
+                $customer_data = array(
+                    'show_on_customer_form' => $customer_field_data['show_on_customer_form'],
+                    'show_on_registration_card' => $customer_field_data['show_on_registration_card'],
+                    'show_on_in_house_report' => $customer_field_data['show_on_in_house_report'],
+                    'show_on_invoice' => $customer_field_data['show_on_invoice'],
+                    'is_required' => $customer_field_data['is_required']
+                );
+
+                $this->Customer_field_model->update_customer_field($customer_field_id[0]['id'],$customer_data);
+
+            }
 
         }
 
 
 
     }
-
 
 }

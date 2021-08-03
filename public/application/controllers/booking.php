@@ -3076,4 +3076,12 @@ class Booking extends MY_Controller
 
         return implode("<br/>", $log_array);
     }
+
+    function get_booking_fields()
+    {
+        $result = $this->Booking_field_model->get_booking_fields($this->company_id, 'show_on_booking_form');
+        echo json_encode($result);
+    }
+
+
 }
