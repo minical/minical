@@ -153,20 +153,6 @@ function ajax_submit(url,form_id,source){
         number_of_rooms: number_of_rooms
     };
 
-    if (window.location.hostname != "minical.core") {
-
-        // trigger zapier webhook
-        $.ajax({
-            type: "POST",
-            url: "https://hooks.zapier.com/hooks/catch/978188/ouj4nnl/silent/",
-            data: $(form_id).serialize(), // serializes the form's elements.
-            dataType: "json",
-            success: function (data) {
-                console.log(data);
-            }
-        });
-    }
-
 
     if(firs_name==''){
         validate = validate+l("First name is required");

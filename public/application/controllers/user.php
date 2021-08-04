@@ -22,18 +22,6 @@ class User extends MY_Controller
         $this->Employee_log_model->insert_log($log_detail);     
     }
 	
-	function set_reminder_as_hidden()
-	{
-		$this->User_model->set_reminder_as_hidden($this->user_id);
-		echo json_encode("");
-	}
-
-	function set_reminder_as_visible()
-	{
-		$this->User_model->set_reminder_as_visible($this->user_id);
-		echo json_encode("");
-	}
-	
 	function agreed_to_tos_AJAX()
 	{
         $this->session->unset_userdata('is_registration_page');
