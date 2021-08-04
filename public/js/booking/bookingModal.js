@@ -7288,8 +7288,6 @@ var bookingModalInvoker = function ($) {
     // advance caching - speedup booking modal to prefetch data
     var preFetchData = function () {
 
-        console.log('prefetching data');
-
         innGrid.ajaxCache.companyBookingSources = innGrid.bookingSources;
 
         // prefetch charge types

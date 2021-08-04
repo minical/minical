@@ -923,7 +923,7 @@ function getCalendarBookings(start, end, callback){
 					bookings = tmp.bookings;
 					//rooms = tmp.rooms;
 					//room_names = tmp.room_names;
-					console.log('bookings', bookings);
+					// console.log('bookings', bookings);
 					if(callback !== undefined && !innGrid.isOverviewCalendar)
 					{
                         callback(bookings);
