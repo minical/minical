@@ -841,7 +841,7 @@ class Company extends MY_Controller
 
                 $data = array(
                     "tax_type" => $tax['Tax Type'] == '' ? null : $tax['Tax Type'],
-                    "tax_rate" => $tax['Tax Rate'] == '' ? null : $tax['Tax Rate'],
+                    "tax_rate" => $tax['Tax Rate'] == '' ? 0 : $tax['Tax Rate'],
                     "company_id" => $this->company_id ,
                     "is_percentage" => $tax['Is Percentage'] == 'true' ? 1 : 0,
                     "is_brackets_active" => $tax['Bracket Active'] == 'true' ? 1 : 0,
