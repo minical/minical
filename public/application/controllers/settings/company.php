@@ -628,7 +628,7 @@ class Company extends MY_Controller
         $this->load->view('includes/bootstrapped_template', $data);
     }
 
-    function import_company_data(){
+     function import_company_data(){
 
         if($this->input->post('removd_old_data') == 1){
 
@@ -649,6 +649,7 @@ class Company extends MY_Controller
             $this->Room_model->delete_rooms($this->company_id);
             $this->Tax_model->delete_tax_types($this->company_id);
             $this->Rate_plan_model->delete_rate_plans($this->company_id);
+            $this->Import_mapping_model->delete_mapping_field($this->company_id);
             // $this->Rate_model->delete_rates($this->company_id);
         }
 
@@ -698,6 +699,8 @@ class Company extends MY_Controller
                             //read csv headers
                             $key = fgetcsv($fp,"1024",",");
                             $zip_name = explode(".",$file);
+
+
                             // parse csv rows into array
                             $json = array();
                             while ($row = fgetcsv($fp,"1024",",")) {
@@ -796,34 +799,34 @@ class Company extends MY_Controller
                 }
             }
 
-            if(!empty($room['Floor'])){
-                $get_floor = $this->Floor_model->get_floor($this->company_id);
+            // if(!empty($room['Floor'])){
+            //     $get_floor = $this->Floor_model->get_floor($this->company_id);
 
-                if(empty($get_floor)){
-                    $data = array(
-                        "floor_name" => $room['Floor'],
-                        "company_id" => $this->company_id
-                    );
-                    $floor = $this->Floor_model->insert($data);
-                }
+            //     if(empty($get_floor)){
+            //         $data = array(
+            //             "floor_name" => $room['Floor'],
+            //             "company_id" => $this->company_id
+            //         );
+            //         $floor = $this->Floor_model->insert($data);
+            //     }
 
-            }
+            // }
 
-            if(!empty($room['Location'])){
+            // if(!empty($room['Location'])){
 
-                $get_location = $this->Room_location_model->get_room_location($this->company_id);
+            //     $get_location = $this->Room_location_model->get_room_location($this->company_id);
 
-                if(empty($get_location)){
+            //     if(empty($get_location)){
 
-                    $data = array(
-                        "location_name" => $room['Location'],
-                        "company_id" => $this->company_id
-                    );
-                    $floor = $this->Room_location_model->insert($data);
+            //         $data = array(
+            //             "location_name" => $room['Location'],
+            //             "company_id" => $this->company_id
+            //         );
+            //         $floor = $this->Room_location_model->insert($data);
 
-                }
+            //     }
 
-            }
+            // }
 
         }
     }
