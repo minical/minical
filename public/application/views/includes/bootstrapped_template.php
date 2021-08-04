@@ -188,27 +188,29 @@
 					<?php }?>
 
 				<?php if(isset($menu_on) && $menu_on){ ?>
-
-                   
-                        <?php if(current_url() != "http://" . $_SERVER['HTTP_HOST'].'/booking'){?> <div class="app-main__outer main" ><div class="app-main__inner"><?php }else{?>
-                           <div class="app_outer main" > <div class="app_inner"><?php }?>
-                                <?php } else { ?>
-                                <div class="main" >
-                                    <div class="">
-                                        <?php }
-                                        $this->load->view($main_content);
-                                        ?>
-                                    </div>
-                                    <div class="push"></div>
-                                    <?php
-                                    //Load footer
-                                    $this->load->view('includes/bootstrapped_footer');
+                    <?php
+                        if(current_url() != "http://" . $_SERVER['HTTP_HOST'].'/booking' && !str_ends_with(current_url(), '/public/booking')){
+                            ?>
+                            <div class="app-main__outer main" ><div class="app-main__inner">
+                        <?php
+                            }else{
+                        ?>
+                        <div class="app_outer main" > <div class="app_inner"><?php }?>
+                            <?php } else { ?>
+                            <div class="main" >
+                                <div class="">
+                                    <?php }
+                                    $this->load->view($main_content);
                                     ?>
                                 </div>
-
+                                <div class="push"></div>
+                                <?php
+                                //Load footer
+                                $this->load->view('includes/bootstrapped_footer');
+                                ?>
                             </div>
-
-<?php } ?>
+                        </div>
+                <?php } ?>
 			</div>
 		</div>
 	</body>
