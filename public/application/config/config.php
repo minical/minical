@@ -29,11 +29,6 @@ switch ($_SERVER['HTTP_HOST']) {
 		$config['base_url']	= getenv('PROJECT_URL'); // localhost
 		$config['api_url']	= str_replace("public","api",getenv('PROJECT_URL')); // production
 		break;
-    case 'minical.core': // local
-        $config['app_environment'] = 'development';
-		$config['base_url']	= "http://" . $_SERVER['HTTP_HOST'];
-		$config['api_url']	= "http://minical.api";
-		break;
 	case 'demo.minical.io': // local
         $config['app_environment'] = 'development';
 		$config['base_url']	= "http://" . $_SERVER['HTTP_HOST'];

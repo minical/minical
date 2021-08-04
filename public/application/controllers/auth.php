@@ -1875,12 +1875,16 @@ class Auth extends MY_Controller
         $this->_initialize_company($company_id);
 
         // update user minical database
-        $user_data = array(
-            'activated'         => 0
-        );
-        $this->User_model->update_user($user_id, $user_data);
-        
-        $this->ci->session->set_userdata('status', STATUS_NOT_ACTIVATED);
+
+        if($this->config->item('app_environment') == "development"){
+            $this->ci->session->set_userdata('status', STATUS_ACTIVATED);
+        } else {
+            $user_data = array(
+                'activated'         => 0
+            );
+            $this->User_model->update_user($user_id, $user_data);
+            $this->ci->session->set_userdata('status', STATUS_NOT_ACTIVATED);
+        }
 
         $explode = explode(',', $data['lang_id']);
         $language_id = $explode[0];

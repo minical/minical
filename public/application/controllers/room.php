@@ -32,7 +32,6 @@ class Room extends MY_Controller
 		$data['js_files'] = array(
 			base_url() . auto_version('js/rooms.js'),
 			base_url() . auto_version('js/booking/booking_main.js'),
-			base_url() . auto_version('js/booking/booking_list.js'),
 			base_url() . auto_version('js/room_status.js')
 		);		
 

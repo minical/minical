@@ -147,8 +147,7 @@ class Booking extends MY_Controller
                 base_url() . auto_version('js/calendar.js'),
                 base_url() . auto_version('js/booking/bookingModal.js'),
                 base_url() . auto_version('js/booking/booking_main.js'),
-                base_url() . auto_version('js/booking/printThis.js'),
-                base_url() . auto_version('js/booking/booking_list.js')
+                base_url() . auto_version('js/booking/printThis.js')
             );
 
         } else {
@@ -174,8 +173,7 @@ class Booking extends MY_Controller
                 base_url() . auto_version('js/fullcalendar/init.js'),
                 base_url() . auto_version('js/booking/bookingModal.js'),
                 base_url() . auto_version('js/booking/booking_main.js'),
-                base_url() . auto_version('js/booking/printThis.js'),
-                base_url() . auto_version('js/booking/booking_list.js')
+                base_url() . auto_version('js/booking/printThis.js')
             );
         }
 
@@ -260,7 +258,6 @@ class Booking extends MY_Controller
             base_url().'js/moment.min.js',
             base_url() . auto_version('js/booking/bookingModal.js'),
             base_url() . auto_version('js/booking/booking_main.js'),
-            base_url() . auto_version('js/booking/booking_list.js')
         );
 
         $data['selected_menu'] = 'bookings';
@@ -374,7 +371,6 @@ class Booking extends MY_Controller
             base_url() . auto_version('js/booking/bookingModal.js'),
             base_url() . auto_version('js/booking/booking_main.js'),
             base_url() . auto_version('js/booking/printThis.js'),
-            base_url() . auto_version('js/booking/booking_list.js')
 
         );
 
@@ -1183,17 +1179,17 @@ class Booking extends MY_Controller
         $this->Booking_log_model->insert_logs($batch);
     }
 
-    function download_csv_export($booking_type) {
-        $booking_types = Array($booking_type);
+    // function download_csv_export($booking_type) {
+    //     $booking_types = Array($booking_type);
 
-        //get user's shift information
-        $query = $this->Booking_model->get_csv($this->company_id, $booking_types, $this->selling_date);
+    //     //get user's shift information
+    //     $query = $this->Booking_model->get_csv($this->company_id, $booking_types, $this->selling_date);
 
-        $this->load->dbutil();
-        $csv = $this->dbutil->csv_from_result($query);
-        $this->load->helper('download');
-        force_download("bookings-" . $this->selling_date . ".csv", $csv);
-    }
+    //     $this->load->dbutil();
+    //     $csv = $this->dbutil->csv_from_result($query);
+    //     $this->load->helper('download');
+    //     force_download("bookings-" . $this->selling_date . ".csv", $csv);
+    // }
 
     /* New shit! 2015-03-09 Jaeyun */
 
