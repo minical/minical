@@ -21770,23 +21770,6 @@ CREATE TABLE `ota_xml_logs` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-CREATE TABLE `hoteli_pay_bank_details` (
-  `id` bigint(20) NOT NULL,
-  `company_id` bigint(20) NOT NULL,
-  `bank_code` varchar(100) DEFAULT NULL,
-  `owner_name` varchar(100) DEFAULT NULL,
-  `cpf_cnpj` varchar(100) DEFAULT NULL,
-  `agency` bigint(20) DEFAULT NULL,
-  `bank_account_number` bigint(20) DEFAULT NULL,
-  `bank_account_digit` bigint(20) DEFAULT NULL,
-  `account_type` varchar(100) DEFAULT NULL,
-  `amount` decimal(10,2) DEFAULT NULL,
-  `transfer_id` varchar(255) DEFAULT NULL,
-  `transfer_status` varchar(100) DEFAULT NULL,
-  `created_date` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-
 --
 -- Table structure for table `options`
 --
@@ -22637,16 +22620,11 @@ CHANGE `customer_id` `customer_id` BIGINT(20) NULL, CHANGE `is_card_deleted` `is
 ALTER TABLE `ota_xml_logs`
   ADD PRIMARY KEY (`xml_log_id`);
 
-ALTER TABLE `hoteli_pay_bank_details`
-  ADD PRIMARY KEY (`id`);
   
 ALTER TABLE `ota_xml_logs`
   MODIFY `xml_log_id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
-ALTER TABLE `hoteli_pay_bank_details`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
-COMMIT;
 
 --
 -- AUTO_INCREMENT for table `options`
@@ -22695,6 +22673,20 @@ ALTER TABLE `ota_rate_plans` ADD `company_id` BIGINT(20) NULL AFTER `ota_room_ty
 ALTER TABLE `booking_source` CHANGE `id` `id` INT(11) NOT NULL AUTO_INCREMENT, CHANGE `commission_rate` `commission_rate` VARCHAR(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL, CHANGE `is_deleted` `is_deleted` TINYINT(1) NOT NULL DEFAULT '0';
 
 ALTER TABLE `ota_x_company` ADD `rate_update_type` VARCHAR(255) NOT NULL AFTER `ota_id`;
+
+RENAME TABLE `channel` TO `otas`;
+ALTER TABLE `otas` ADD `key` VARCHAR(255) NULL AFTER `id`;
+ALTER TABLE `ota_manager` ADD `ota_id` INT NULL AFTER `id`;
+
+ALTER TABLE otas ADD PRIMARY KEY(id);
+ALTER TABLE otas CHANGE id id INT(11) NOT NULL AUTO_INCREMENT;
+
+UPDATE `room` SET`sort_order`=0 WHERE `sort_order` = 'NULL' or `sort_order` IS NULL;
+ALTER TABLE `room` CHANGE `sort_order` `sort_order` INT(10) NOT NULL DEFAULT '0';
+ALTER TABLE `room` CHANGE `room_name` `room_name` VARCHAR(56) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
+
+ALTER TABLE `ota_properties` CHANGE `ota_id` `ota_manager_id` BIGINT(20) NOT NULL;
+ALTER TABLE `ota_x_company` CHANGE `ota_id` `ota_manager_id` BIGINT(20) NOT NULL;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
