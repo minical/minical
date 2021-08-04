@@ -207,9 +207,8 @@ class Import_mapping_model extends CI_Model {
     }
 
     function delete_mapping_field($company_id){
-
         $this->db->where('company_id', $company_id);
-         $this->db->delete("import_mapping");
+        $this->db->delete("import_mapping");
 
     }
 
