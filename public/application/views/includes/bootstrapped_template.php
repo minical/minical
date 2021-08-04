@@ -70,7 +70,7 @@
 		?>
 
         <?php if($_SERVER['HTTP_HOST'] == 'localhost'){ ?>
-			<input type="hidden" name="project_url" id="project_url" value="<?php echo $_SERVER['PROJECT_URL']; ?>">
+			<input type="hidden" name="project_url" id="project_url" value="<?php echo getenv('PROJECT_URL'); ?>">
 		<?php } ?>
 
 		<!-- Google Tag Manager (noscript) -->

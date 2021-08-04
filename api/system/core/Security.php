@@ -269,8 +269,7 @@ class CI_Security {
 		 */
 		if (is_array($str))
 		{
-			while (list($key) = each($str))
-			{
+			foreach ($str as $key => $value) {
 				$str[$key] = $this->xss_clean($str[$key]);
 			}
 

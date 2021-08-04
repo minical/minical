@@ -12,7 +12,7 @@ innGrid.allDaysBetween = function(start, end) {
     
     while (start < end)
     {
-		var start_date = start.getFullYear()+'-'+("0" + (start.getMonth() + 1)).slice(-2)+'-'+("0" + (start.getDate())).slice(-2);
+        var start_date = start.getFullYear()+'-'+("0" + (start.getMonth() + 1)).slice(-2)+'-'+("0" + (start.getDate())).slice(-2);
         if(today_date == start_date)
         {
             color_class = 'current_date_class'; 
@@ -106,19 +106,19 @@ innGrid.createInventoryRow = function(tableStartDate, tableEndDate, rowInventory
 
 innGrid.createTable = function(dateStart, dateEnd) {
     var channel = $('.channels li.active')[0].dataset.id;
-	var dateStart1 = '';
+    var dateStart1 = '';
     // copy dates so we don't alter them
     dateStart = new Date(dateStart);
     
     dateStart1 = new Date(dateStart);
     dateEnd = new Date(dateEnd);
-	var start_date = dateStart.getFullYear()+'-'+("0" + (dateStart.getMonth() + 1)).slice(-2)+'-'+("0" + (dateStart.getDate())).slice(-2);
+    var start_date = dateStart.getFullYear()+'-'+("0" + (dateStart.getMonth() + 1)).slice(-2)+'-'+("0" + (dateStart.getDate())).slice(-2);
     var end_date = dateEnd.getFullYear()+'-'+("0" + (dateEnd.getMonth() + 1)).slice(-2)+'-'+("0" + (dateEnd.getDate())).slice(-2);
     var query = {
         channel: channel,
         start_date: start_date,
         end_date: end_date,
-		filter_can_be_sold_online: channel == -1 ? false : true
+        filter_can_be_sold_online: channel == -1 ? false : true
     };
     var is_ota = true;
     if(channel == -1) // online booking engine
@@ -229,6 +229,7 @@ innGrid.createTable = function(dateStart, dateEnd) {
                 // select threshold dropdown on change
                 $('select[name="ota-treshold"]').on("change", function(){
                     var roomTypeId = $(this).parents('tr').attr('data-id');
+                    var channel_id = $(this).parents('.calendar').attr('data-channel');
                     var thresholdVal = $(this).val();
                     if(thresholdVal == 0){
                        alert("Warning setting this to 0 may result in overbookings.");
@@ -246,7 +247,7 @@ innGrid.createTable = function(dateStart, dateEnd) {
                             console.log(response);
                             innGrid.createTable(query.start_date, query.end_date);
 
-                            innGrid.updateAvailabilities('', '', '', '');
+                            innGrid.updateAvailabilities('', '', roomTypeId, channel_id);
                         }
                     });
                 });
@@ -266,13 +267,13 @@ innGrid.openEditAvailabilities = function() {
 
 
 
-	$('#edit_availabilities_dialog').dialog('close');
-	$('#edit_availabilities_dialog').dialog('open');
-	
+    $('#edit_availabilities_dialog').dialog('close');
+    $('#edit_availabilities_dialog').dialog('open');
+    
     var channel = $('.channels li.active')[0];
-	$("#edit_availabilities_dialog").dialog('option', 'title', channel.textContent);
+    $("#edit_availabilities_dialog").dialog('option', 'title', channel.textContent);
 
-	var roomTypeIds = [];
+    var roomTypeIds = [];
     var roomTypeNames = [];
     
     $('.calendar tbody tr[data-selected="true"]').each(function(el) {
@@ -280,18 +281,18 @@ innGrid.openEditAvailabilities = function() {
         roomTypeNames.push($(this).find('td')[1].innerHTML);
     });
 
-	var baseURL = getBaseURL();
-	var start_date = dateStart.getFullYear()+'-'+("0" + (dateStart.getMonth() + 1)).slice(-2)+'-'+("0" + (dateStart.getDate())).slice(-2);
+    var baseURL = getBaseURL();
+    var start_date = dateStart.getFullYear()+'-'+("0" + (dateStart.getMonth() + 1)).slice(-2)+'-'+("0" + (dateStart.getDate())).slice(-2);
     var query = $.param({
         dateStart: start_date,
         roomTypeIds: roomTypeIds,
         roomTypeNames: roomTypeNames,
         channelId: channel.dataset.id
     });
-	var url = baseURL + 'room/modify_availabilities?' + query;
-	
-	// open the booking dialog once the content is loaded
-	$('#edit-availability-dialog-iframe').attr("src", url);
+    var url = baseURL + 'room/modify_availabilities?' + query;
+    
+    // open the booking dialog once the content is loaded
+    $('#edit-availability-dialog-iframe').attr("src", url);
 };
 
 innGrid.updateModifyButton = function() {
@@ -526,25 +527,25 @@ var dateEnd;
                 }
             });
     });
-	$('#edit_availabilities_dialog').html($('<iframe />', {
-		'id': 'edit-availability-dialog-iframe',
-		'scrolling': 'no',
-		'frameborder': 0,
-		'width': 450,
-		'height': 450
-	}));
-	
-	$("#edit_availabilities_dialog").dialog({
-		autoOpen: false,
-		width: 'auto',
-		height: 'auto',
-		autoResize: true,
-		resizable: false,
-		close : function(){
+    $('#edit_availabilities_dialog').html($('<iframe />', {
+        'id': 'edit-availability-dialog-iframe',
+        'scrolling': 'no',
+        'frameborder': 0,
+        'width': 450,
+        'height': 450
+    }));
+    
+    $("#edit_availabilities_dialog").dialog({
+        autoOpen: false,
+        width: 'auto',
+        height: 'auto',
+        autoResize: true,
+        resizable: false,
+        close : function(){
             $('#edit-availability-dialog-iframe').removeAttr('src');
-			innGrid.createTable(dateStart, dateEnd);
-		}
-	});
+            innGrid.createTable(dateStart, dateEnd);
+        }
+    });
 
     $('.modify-availabilities').click(innGrid.openEditAvailabilities);
 
