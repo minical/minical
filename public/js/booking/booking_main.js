@@ -12,11 +12,6 @@ innGrid.reloadBookings = function () {
 			}
 		}
 	}
-
-	// Reload booking list
-	if (window.parent.jQuery('#booking_list_wrap').is('*')) {
-		window.parent.jQuery('#booking_list_wrap').load(window.parent.getBaseURL() + 'booking/show_booking_list');
-	}
 }
 
 innGrid.reloadCalendar = function () {
@@ -94,20 +89,7 @@ $(function() {
         }
 	});
 
-	$(document).on('click', '#hide-button', function (e) {    
-		var text = $(this).data('text');
-		if(text == 'show')
-		{
-			$('#booking_list_wrap').css('height','auto');
-			$(this).data('text',l('hide', true));
-		}
-		else
-		{
-			$('#booking_list_wrap').css('height','41px');
-			$(this).data('text',l('show', true));
-		}
-	});
-
+	
 	$(document).on('hide.bs.modal', "#booking-modal", function (e) {
 		// hack to prevent closing inner-modal removing modal-open class in body.
 		// when modal-open class is removed from body, scrolling the booking-modal scrolls
@@ -121,25 +103,7 @@ $(function() {
 
 	});
 
-	$("#booking_list_wrap").draggable({
-		handle: "#todays-events-title"
-	});
-
-	setTimeout(function () {
-		window.parent.jQuery('#booking_list_wrap').load(window.parent.getBaseURL() + 'booking/show_booking_list', function() {
-			if(window.location.hash) {
-				var hash = window.location.hash.split('#')[1];
-				$(".booking#"+hash).openBookingModal({
-					id: hash
-				});
-			}
-			$("#booking_list_wrap").resizable({
-				handles: 'e, se',
-				maxWidth: 600,
-				minWidth: 370
-			});
-		});
-	}, 1000);
+	
 
 });
 
