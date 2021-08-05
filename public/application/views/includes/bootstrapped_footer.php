@@ -90,6 +90,7 @@
     innGrid.isCCVisualizationEnabled = parseInt('<?=(($this->is_cc_visualization_enabled) ? 1 : 0)?>');
     innGrid.isAsaasPaymentEnabled = parseInt('<?=(($this->selected_payment_gateway == "asaas") ? 1 : 0)?>');
     innGrid.featureSettings.cuurentLanguage = "<?=$this->session->userdata('language') ? $this->session->userdata('language') : ''?>";
+    innGrid.imageUrl = "<?= $this->image_url; ?>";
 
     // subscription plans
     var STARTER = "<?php echo STARTER; ?>";
