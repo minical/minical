@@ -41,10 +41,10 @@
 $active_group = 'default';
 $active_record = TRUE;
 
-$db['default']['hostname'] = getenv("DATABASE_HOST");
-$db['default']['username'] = getenv("DATABASE_USER");
-$db['default']['password'] = getenv("DATABASE_PASS");
-$db['default']['database'] = getenv("DATABASE_NAME");
+$db['default']['hostname'] = getenv("DATABASE_HOST") ? getenv("DATABASE_HOST") : $_SERVER["DATABASE_HOST"];
+$db['default']['username'] = getenv("DATABASE_USER") ? getenv("DATABASE_USER") : $_SERVER["DATABASE_USER"];
+$db['default']['password'] = getenv("DATABASE_PASS") ? getenv("DATABASE_PASS") : (isset($_SERVER["DATABASE_PASS"]) ? $_SERVER["DATABASE_PASS"] : '');
+$db['default']['database'] = getenv("DATABASE_NAME") ? getenv("DATABASE_NAME") : $_SERVER["DATABASE_NAME"];
 
 
 $db['default']['dbdriver'] = 'mysqli';
