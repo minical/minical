@@ -195,6 +195,7 @@ function ajax_submit(url,form_id,source){
 						Intercom('trackEvent', 'Signup_step_2');
 					}
 
+                    setTimeout(function (){location.reload();}, 200);
                 }
             }
         });
