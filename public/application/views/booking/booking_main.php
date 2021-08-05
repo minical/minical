@@ -425,35 +425,6 @@
   </div><!-- /.modal-dialog -->
 </div>
 
-<!-- calendly modal -->
-<div class="modal fade" id="book_meeting" data-backdrop="static" 
-   data-keyboard="false" style="z-index: 9999;"
-   >
-  <div class="modal-dialog modal-lg" style="width: 1050px;">
-    <div class="modal-content">
-      <div class="modal-header text-center">
-        <h4 class="modal-title">
-            <?php echo l('Please schedule A Demo with our team to activate your 14-Days Free Trial (No Credit Card needed!!!!)', true); ?>
-        </h4>
-      </div>
-      <div class="modal-body">
-          <!-- Calendly inline widget begin -->
-          <?php
-          $calendly = (ENVIRONMENT == 'development') ? 'https://calendly.com/pankaj9296/15min' : 'https://calendly.com/minical/30min';
-          ?>
-          <div class="calendly-inline-widget" data-url="<?=$calendly;?>" style="min-width:320px;height:650px;">
-              <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js"></script>
-          </div>
-          <!-- Calendly inline widget end -->
-      </div>
-        <div class="modal-footer" style="text-align: center">
-            <!-- <a class="btn btn-success confirm-customer" flag="ok" href="">OK</a> -->
-            <a href="javascript:" class="calendly_close text-center" flag="cancel" href=""><?php echo l("I'll do it myself", true); ?>.</a>
-        </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div>
-
 <div class="modal fade" id="reservation-message" data-backdrop="static" 
    data-keyboard="false" style="z-index: 9999;"
    >
@@ -497,8 +468,6 @@
 <input type="hidden" id="registration_session" value="<?php echo $this->session->userdata('is_registration_page'); ?>"/>
 <input type="hidden" id="trial_expiry_date" value="<?php echo $company_data['trial_expiry_date']; ?>"/>
 <input type="hidden" id="subscription_state" value="<?php echo $company_data['subscription_state']; ?>"/>
-<link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
-<script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript"></script>
 
 <style>
 	.group_booking_confirm_dialog{
@@ -523,24 +492,7 @@
             
             var subscription_state = $('#subscription_state').val();
 
-            if(registration_session == '' && !getCookie('calendly_meeting_pending') && getCookie('signup_on_hold') && subscription_state == 'on_hold'){
-                $("#dialog-onhold-message-newsignup").find(".close").hide();
-                $("#dialog-onhold-message-newsignup").modal("show");
-                $('#dialog-onhold-message-newsignup .message').html('' +
-                    '<div class="text-center" style="font-size: larger;">Please watch the following videos before the call.</div>\n' +
-                    '<br/>\n' +
-                    '<iframe style="width: 100%; height: 600px;" src="https://www.youtube.com/embed/Jc3T6TwSRpc?autoplay=0&amp;modestbranding=1&amp;controls=1&amp;showinfo=0&amp;rel=0&amp;hd=1&amp;wmode=transparent" frameborder="0" allowfullscreen="" wmode="opaque"></iframe>\n' +
-                    '<br/><br/><br/>\n' +
-                    '<iframe style="width: 100%; height: 600px;" src="https://www.youtube.com/embed/Hw5Xqez3zZ4?autoplay=0&amp;modestbranding=1&amp;controls=1&amp;showinfo=0&amp;rel=0&amp;hd=1&amp;wmode=transparent" frameborder="0" allowfullscreen="" wmode="opaque"></iframe>\n' +
-                    '<br/><br/><br/>\n' +
-                    '<iframe style="width: 100%; height: 600px;" src="https://www.youtube.com/embed/wOv5ybfo7-k?autoplay=0&amp;modestbranding=1&amp;controls=1&amp;showinfo=0&amp;rel=0&amp;hd=1&amp;wmode=transparent" frameborder="0" allowfullscreen="" wmode="opaque"></iframe>\n' +
-                    '<br/><br/><br/>\n' +
-                    '<iframe style="width: 100%; height: 600px;" src="https://www.youtube.com/embed/qn0ED3hiM04?autoplay=0&amp;modestbranding=1&amp;controls=1&amp;showinfo=0&amp;rel=0&amp;hd=1&amp;wmode=transparent" frameborder="0" allowfullscreen="" wmode="opaque"></iframe>\n' +
-                    '<br/><br/><br/>\n' +
-                    '<iframe style="width: 100%; height: 600px;" src="https://www.youtube.com/embed/c8bU7sqtVc0?autoplay=0&amp;modestbranding=1&amp;controls=1&amp;showinfo=0&amp;rel=0&amp;hd=1&amp;wmode=transparent" frameborder="0" allowfullscreen="" wmode="opaque"></iframe>\n' +
-                    '');
-            }
-            else if(registration_session == '' && !getCookie('calendly_meeting_pending') && subscription_state == 'on_hold'){
+            if(registration_session == '' && subscription_state == 'on_hold'){
                 $("#dialog-onhold-message").find(".close").hide();
                 $("#dialog-onhold-message").modal("show");
                 $('#dialog-onhold-message .message').html('The account is put on hold please contact us at Support@minical.io to reactivate the account.');

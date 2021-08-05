@@ -186,19 +186,6 @@
             alert('The Email field is required.');
             $('.register_submit_form').attr('disabled', false).val('Next Step');
             return false;
-        } 
-
-        if (window.location.hostname != url ) {
-            // trigger zapier webhook
-            $.ajax({
-                url: "https://hooks.zapier.com/hooks/catch/978188/ouj2x53/silent/",
-                type: "POST",
-                data: {email: email},
-                dataType: "json",
-                success: function (resp) {
-                    console.log(resp);
-                }
-            });
         }
 
         $.ajax({

@@ -57,11 +57,6 @@ $(function () {
 
     updateCountryPhoneLang();
 
-    // var registration_session = $('#registration_session').val();
-    // if (registration_session == '' && getCookie('calendly_meeting_pending')) {
-    //     open_calendly();
-    // }
-
 });
 
 function updateCountryPhoneLang()
@@ -195,25 +190,11 @@ function ajax_submit(url,form_id,source){
                     $('.alert-success').html(l('Successfully updated'));
                     $('#update-property-modal').modal('hide');
 
-                    //setCookie('calendly_meeting_pending', 1, 3);
-
-                    open_calendly();
-                    update_closeio(closeiodata);
-                    
                     // user just updated property after signup, fire Intercom event
 					if (typeof Intercom !== "undefined") {
 						Intercom('trackEvent', 'Signup_step_2');
 					}
-                    
-                    // Google analytics Virtual Page view
-					// if (typeof gtag !== "undefined") {
-					// 	gtag('config', 'UA-25824665-5', {'page_path': 'virtual/auth/signupstep2.html'});
-					// }
-                    //
-                    // //Hotjar Virtual Page View trigger.
-					// if (typeof hj !== "undefined") {
-					// 	hj('vpv', '/sign-up-step-2/');
-					// }
+
                 }
             }
         });
@@ -322,23 +303,7 @@ function open_tos(){
                             myModal.modal('hide');
                             // show tutorial video modal
                             $('#tutorial-video-modal').modal('show');
-                            $('#tutorial-video-modal').on('hidden.bs.modal', function () {
-                                
-                                $('#book_meeting').modal('show');
-                                $('#book_meeting').on('hidden.bs.modal', function () {
-                                        document.location.reload();
-                                });
-                            });
 
-                            if(!bindVideoEndEvent()){
-                                setTimeout(function(){
-                                    if(!bindVideoEndEvent()){
-                                        setTimeout(function(){
-                                            bindVideoEndEvent()
-                                        }, 7000);
-                                    }
-                                }, 5000);
-                            }
                         }
                     });
                 });
@@ -379,62 +344,4 @@ function getCookie(cname) {
         }
     }
     return "";
-}
-
-function open_calendly()
-{
-    // window.addEventListener(
-    //     'message',
-    //     function(e) {
-    //         if (e.data && e.data.event && e.data.event === "calendly.event_scheduled") {
-    //             //setCookie('calendly_meeting_pending', '', 1);
-    //             //setCookie('signup_on_hold', '1', 14);
-
-    //             setTimeout(function (){location.reload();}, 2000);
-    //         }
-    //     }
-    // );
-
-    setTimeout(function (){location.reload();}, 200);
-
-    // $('#book_meeting').modal('show');
-    // $('body').addClass('modal-open');
-    // setTimeout(function (){$('body').addClass('modal-open');}, 1000);
-
-    // $('body').on('click','.calendly_close',function(){
-    //     $('#book_meeting').modal('hide');
-        
-    //     $('#tutorial-video-modal').modal('show');
-    //     $('#tutorial-video-modal').on('hidden.bs.modal', function () {
-    //         document.location.reload();
-    //     });
-
-    //     if(!bindVideoEndEvent()){
-    //         setTimeout(function(){
-    //             if(!bindVideoEndEvent()){
-    //                 setTimeout(function(){
-    //                     bindVideoEndEvent()
-    //                 }, 7000);
-    //             }
-    //         }, 5000);
-    //     }
-    // });
-}
-
-function bindVideoEndEvent() {
-    if (typeof Wistia !== "undefined") {
-        var video = Wistia.api("bkn09yxmrp");
-        if (video) {
-            video.on("end", function() {
-                console.log("on - video ended.");
-                $('#tutorial-video-modal').modal('hide');
-            });
-            video.bind("end", function() {
-                console.log("bind - video ended.");
-                $('#tutorial-video-modal').modal('hide');
-            });
-            return true;
-        }
-    }
-    return false;
 }
