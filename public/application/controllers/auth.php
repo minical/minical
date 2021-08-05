@@ -1782,44 +1782,52 @@ class Auth extends MY_Controller
             $feature_setting = json_decode($property_data['setting_json'], true);
             $dependencies = json_decode($property_data['dependences_json'], true);
            
-        }else{
+        } else {
             
-             $fileJson = file_get_contents("../build.json");
-             $file = json_decode($fileJson, true);
+            $fileJson = file_get_contents("../build.json");
+            $file = json_decode($fileJson, true);
            
             $feature_setting = $file['settings'];
             $dependencies= $file['dependencies'];
            
         }
 
+        $extensions = $this->session->userdata('all_active_modules');
+
         $data_build['company_id'] = $this->company_id;
         if(isset($dependencies) && count($dependencies) > 0){
              foreach ($dependencies as $key => $value) {
-                $data_build['extension_name'] = $key;
-                $this->Extension_model->update_extension($data_build);
+                foreach($extensions as $ext => $extension){
+                    if($ext == $key){
+                        $data_build['extension_name'] = $key;
+                        $this->Extension_model->update_extension($data_build);
+                    }
+                }
             }
         }
-         if(isset($feature_setting) && count($feature_setting) > 0){
-         $build_mapping_array = json_decode(BUILD_KEY_MAPPING,true);
-           foreach ($feature_setting as $key => $value) {
-             if(is_array($value)){
-                   foreach ($value as $key1 => $val) {
+         
+        if(isset($feature_setting) && count($feature_setting) > 0) {
+         
+            $build_mapping_array = json_decode(BUILD_KEY_MAPPING,true);
+            foreach ($feature_setting as $key => $value) {
+                if(is_array($value)){
+                    foreach ($value as $key1 => $val) {
                         $keyname= $key."_".$key1;
-                      if(in_array($keyname, array_keys($build_mapping_array)))
-                      {
-                    $map_value = $build_mapping_array[$keyname];
-                    $company_data[$map_value] = $val ? $val : 0;
+                        if(in_array($keyname, array_keys($build_mapping_array)))
+                        {
+                            $map_value = $build_mapping_array[$keyname];
+                            $company_data[$map_value] = $val ? $val : 0;
+                        }
                     }
-                    }
-             }else{
+                } else {
                     if(in_array($key, array_keys($build_mapping_array))){
-                    $map_value = $build_mapping_array[$key];
-                    $company_data[$map_value] = $value ? $value : 0;
-                }
+                        $map_value = $build_mapping_array[$key];
+                        $company_data[$map_value] = $value ? $value : 0;
+                    }
                 }
             }
             $this->Company_model->update_company($this->company_id, $company_data);
-       }
+        }
          ///end
 
         $user_id =  $this->session->userdata('user_id');
