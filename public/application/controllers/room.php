@@ -322,8 +322,13 @@ class Room extends MY_Controller
 		$data['selected_menu'] = 'rooms';			
 		$data['main_content'] = 'room/room_inventory';		
 		$data['selected_submenu'] = 'Inventory';
-		$channels = $this->Channel_model->get_all_channels();
+		
+		$channels_keys = array();
+
+        $channels_keys = apply_filters('get_inventory_channel_keys', $channels_keys);
         
+        $channels = count($channels_keys) ? $this->Channel_model->get_all_channels($channels_keys) : array();
+
         $data['channels'] = array_merge(array(array("id" => -1, "name" => "Overview")), $channels);
         
 		$this->load->view('includes/bootstrapped_template', $data);			
