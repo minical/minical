@@ -123,6 +123,20 @@ class Import_mapping_model extends CI_Model {
 
     }
 
+    function get_mapping_room_id($room_id){
+
+        $this->db->where('company_id', $this->company_id);
+        $this->db->where('old_id', $room_id);
+        $this->db->where('type', 'room');
+
+        $query = $this->db->get('import_mapping');
+
+        if ($query->num_rows >= 1)
+            return $query->row_array();
+        return NULL;
+
+    }
+
     function get_mapping_charge_id($charge_id){
 
         $this->db->where('company_id', $this->company_id);
