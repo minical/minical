@@ -937,7 +937,7 @@ class Company extends MY_Controller
 
 
             }else{
-                $charge_type_id = isset($get_the_charge_type['new_id']) ? $get_the_charge_type['new_id'] : '';
+                $charge_type_id = isset($get_the_charge_type['new_id']) ? $get_the_charge_type['new_id'] : 0 ;
             }
 
 
