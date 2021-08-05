@@ -436,6 +436,7 @@ class Room_type_model extends CI_Model {
         if($company_id){
         	
         	$this->db->where('rt.company_id',$company_id);
+            $this->db->where('rt.is_deleted',0);
         }
         $query = $this->db->get('room_type as rt');
 

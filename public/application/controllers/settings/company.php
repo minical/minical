@@ -628,7 +628,7 @@ class Company extends MY_Controller
         $this->load->view('includes/bootstrapped_template', $data);
     }
 
-     function import_company_data(){
+    function import_company_data(){
 
         if($this->input->post('removd_old_data') == 1){
 
@@ -653,11 +653,11 @@ class Company extends MY_Controller
             // $this->Rate_model->delete_rates($this->company_id);
         }
 
-         $this->import_functionality();
+        $this->import_functionality();
 
-    } 
+    }
 
-    function import_functionality(){   
+    function import_functionality(){
 
         if($_FILES['file']['name'] != '')
         {
@@ -704,6 +704,7 @@ class Company extends MY_Controller
                             // parse csv rows into array
                             $json = array();
                             while ($row = fgetcsv($fp,"1024",",")) {
+
                                 $json[] = array_combine($key, $row);
                             }
                             $result[$zip_name[0]] = $json;
@@ -765,7 +766,8 @@ class Company extends MY_Controller
     function import_rooms_csv($value){
 
         foreach ($value as $room) {
-            $get_room_type = $this->Room_type_model->get_room_type_name($room['Room Type Name'], $this->company_id);
+            // $get_room_type = $this->Room_type_model->get_room_type_name($room['Room Type Name'], $this->company_id);
+            $get_room_type = $this->Import_mapping_model->get_mapping_room_type_id($room['Room Type Id']);
 
             if (empty($get_room_type)) {
                 $data = array(
@@ -789,13 +791,24 @@ class Company extends MY_Controller
 
                 $import_data = $this->Import_mapping_model->insert_import_mapping($data_import_mapping);
             } else {
-                $room_type_id = isset($get_room_type[0]['id']) ? $get_room_type[0]['id'] : '';
+                $room_type_id = isset($get_room_type['new_id']) ? $get_room_type['new_id'] : '';
             }
 
             if(!empty($room['Room Id'])){
-                $get_room = $this->Room_model->get_room_by_name($room['Room Name'], $room_type_id);
+                // $get_room = $this->Room_model->get_room_by_name($room['Room Name'], $room_type_id);
+                $get_room = $this->Import_mapping_model->get_mapping_room_id($room['Room Id']);
                 if(empty($get_room)){
-                    $room = $this->Room_model->create_room($this->company_id, $room['Room Name'], $room_type_id);
+                    $room_id = $this->Room_model->create_room($this->company_id, $room['Room Name'], $room_type_id);
+
+                    $data_import_mapping = Array(
+                        "new_id" => $room_id,
+                        "old_id" => $room['Room Id'],
+                        "company_id" => $this->company_id,
+                        "type" => "room"
+                    );
+
+                    $import_data = $this->Import_mapping_model->insert_import_mapping($data_import_mapping);
+
                 }
             }
 
@@ -1130,6 +1143,7 @@ class Company extends MY_Controller
     function import_bookings_csv($value){
 
         foreach ($value as $booking) {
+
             $charge_type_id = $this->Charge_type_model->get_charge_type_by_name($booking['Charge Type'], $this->company_id);
             $room_type_id = $this->Room_type_model->get_room_type_name($booking['Room Type'], $this->company_id);
             $room_id = $this->Room_model->get_room_by_name($booking['Room'] , $room_type_id[0]['id']);
@@ -1554,38 +1568,48 @@ class Company extends MY_Controller
 
             $booking_fields = $value['Booking Fields'];
 
-            foreach ($booking_fields as $key => $fields) {
-                $booking_field_id = $this->Booking_field_model->get_the_booking_fields_by_name($key,$this->company_id);
 
-                $data = array(
-                    'show_on_booking_form' => $fields['show_on_booking_form'],
-                    'show_on_registration_card' => $fields['show_on_registration_card'],
-                    'show_on_in_house_report' => $fields['show_on_in_house_report'],
-                    'show_on_invoice' => $fields['show_on_invoice'],
-                    'is_required' => $fields['is_required']
-                );
+            if($booking_fields != "" ){
+                foreach ($booking_fields as $key => $fields) {
+                    $booking_field_id = $this->Booking_field_model->get_the_booking_fields_by_name($key,$this->company_id);
 
-                $this->Booking_field_model->update_booking_field($booking_field_id[0]['id'],$data);
+                    $data = array(
+                        'show_on_booking_form' => $fields['show_on_booking_form'],
+                        'show_on_registration_card' => $fields['show_on_registration_card'],
+                        'show_on_in_house_report' => $fields['show_on_in_house_report'],
+                        'show_on_invoice' => $fields['show_on_invoice'],
+                        'is_required' => $fields['is_required']
+                    );
 
+                    $this->Booking_field_model->update_booking_field($booking_field_id[0]['id'],$data);
+
+                }
             }
+
 
             $customer_fields = $value['Customer Fields'];
 
-            foreach ($customer_fields as $key => $customer_field_data) {
+            if($customer_fields != "" ){
 
-                $customer_field_id = $this->Customer_field_model->get_customer_field_by_name($this->company_id, $key);
+                foreach ($customer_fields as $key => $customer_field_data) {
 
-                $customer_data = array(
-                    'show_on_customer_form' => $customer_field_data['show_on_customer_form'],
-                    'show_on_registration_card' => $customer_field_data['show_on_registration_card'],
-                    'show_on_in_house_report' => $customer_field_data['show_on_in_house_report'],
-                    'show_on_invoice' => $customer_field_data['show_on_invoice'],
-                    'is_required' => $customer_field_data['is_required']
-                );
+                    $customer_field_id = $this->Customer_field_model->get_customer_field_by_name($this->company_id, $key);
 
-                $this->Customer_field_model->update_customer_field($customer_field_id[0]['id'],$customer_data);
+                    $customer_data = array(
+                        'show_on_customer_form' => $customer_field_data['show_on_customer_form'],
+                        'show_on_registration_card' => $customer_field_data['show_on_registration_card'],
+                        'show_on_in_house_report' => $customer_field_data['show_on_in_house_report'],
+                        'show_on_invoice' => $customer_field_data['show_on_invoice'],
+                        'is_required' => $customer_field_data['is_required']
+                    );
+
+                    $this->Customer_field_model->update_customer_field($customer_field_id[0]['id'],$customer_data);
+
+                }
 
             }
+
+
 
         }
 
