@@ -638,7 +638,7 @@ class Booking extends MY_Controller
             );
             $bookings = $this->Booking_model->get_bookings($filters, null, null ,true);
             foreach ($bookings as $booking) {
-                if($booking['room_id'])
+                if($booking['room_id'] && $booking['check_out_date'] > $check_in_date && $check_out_date > $booking['check_in_date'])
                 {
                     $_room_type_id = $booking['r_room_type_id'] ? $booking['r_room_type_id'] : $booking['brh_room_type_id'];
                     if(!isset($room_types[$_room_type_id])) {
@@ -651,7 +651,7 @@ class Booking extends MY_Controller
                 }
             }
             foreach ($bookings as $booking) {
-                if(!$booking['room_id'])
+                if(!$booking['room_id'] && $booking['check_out_date'] > $check_in_date && $check_out_date > $booking['check_in_date'])
                 {
                     if (isset($room_types[$booking['brh_room_type_id']]) && $room_types[$booking['brh_room_type_id']]) {
                         $overlapping_with_other_bookings = false;
