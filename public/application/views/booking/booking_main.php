@@ -65,11 +65,7 @@
 
 
 </div>
- <?php if(check_active_extensions('todays_panel', $this->company_id)){?>
-            <div id="booking_list_wrap" class="col-sm-5 col-lg-4 hidden-xs">
-    <?php echo l("Loading today's panel", true); ?>...
-</div>
-<?php }?>
+
 </div>
 
 <div class="modal fade" id="dialog-onhold-message" data-backdrop="static" 
