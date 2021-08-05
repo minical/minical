@@ -99,6 +99,10 @@
 				$this->load->view('includes/bootstrapped_footer');
 			?>
 		</div>
+
+		<?php if($_SERVER['HTTP_HOST'] == 'localhost'){ ?>
+			<input type="text" name="project_url" id="project_url" value="<?php echo getenv('PROJECT_URL'); ?>">
+		<?php } ?>
 		
 	</body>
 
