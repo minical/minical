@@ -913,6 +913,7 @@ class Company extends MY_Controller
 
                 $charge_type_id = $this->Charge_type_model->create_charge_types($data);
 
+
                 $data_import_mapping = Array(
                     "new_id" => $charge_type_id,
                     "old_id" => $charge['Charge Type Id'],
@@ -1566,53 +1567,165 @@ class Company extends MY_Controller
                 $this->User_model->add_teams($this->company_id, $user['user_id'],$team['permission']);
             }
 
-            $booking_fields = $value['Booking Fields'];
+        }
+
+        $booking_fields = $value['Booking Fields'];
 
 
-            if($booking_fields != "" ){
-                foreach ($booking_fields as $key => $fields) {
-                    $booking_field_id = $this->Booking_field_model->get_the_booking_fields_by_name($key,$this->company_id);
+        if($booking_fields != "" ){
+            foreach ($booking_fields as $key => $fields) {
+                $booking_field_id = $this->Booking_field_model->get_the_booking_fields_by_name($key,$this->company_id);
 
-                    $data = array(
-                        'show_on_booking_form' => $fields['show_on_booking_form'],
-                        'show_on_registration_card' => $fields['show_on_registration_card'],
-                        'show_on_in_house_report' => $fields['show_on_in_house_report'],
-                        'show_on_invoice' => $fields['show_on_invoice'],
-                        'is_required' => $fields['is_required']
-                    );
-
-                    $this->Booking_field_model->update_booking_field($booking_field_id[0]['id'],$data);
-
-                }
-            }
-
-
-            $customer_fields = $value['Customer Fields'];
-
-            if($customer_fields != "" ){
-
-                foreach ($customer_fields as $key => $customer_field_data) {
-
-                    $customer_field_id = $this->Customer_field_model->get_customer_field_by_name($this->company_id, $key);
-
-                    $customer_data = array(
-                        'show_on_customer_form' => $customer_field_data['show_on_customer_form'],
-                        'show_on_registration_card' => $customer_field_data['show_on_registration_card'],
-                        'show_on_in_house_report' => $customer_field_data['show_on_in_house_report'],
-                        'show_on_invoice' => $customer_field_data['show_on_invoice'],
-                        'is_required' => $customer_field_data['is_required']
-                    );
-
-                    $this->Customer_field_model->update_customer_field($customer_field_id[0]['id'],$customer_data);
-
+                if($booking_field_id){
+                    $booking_fieldid = $booking_field_id[0]['id'];
+                }else{
+                    $booking_fieldid = $this->Booking_field_model->create_booking_field($this->company_id, $key);
                 }
 
+                $data = array(
+                    'show_on_booking_form' => $fields['show_on_booking_form'],
+                    'show_on_registration_card' => $fields['show_on_registration_card'],
+                    'show_on_in_house_report' => $fields['show_on_in_house_report'],
+                    'show_on_invoice' => $fields['show_on_invoice'],
+                    'is_required' => $fields['is_required']
+                );
+                $this->Booking_field_model->update_booking_field($booking_fieldid,$data);
             }
+        }
 
+        $customer_fields = $value['Customer Fields'];
 
+        if($customer_fields != "" ){
+
+            foreach ($customer_fields as $key => $customer_field_data) {
+
+                $customer_field_id = $this->Customer_field_model->get_customer_field_by_name($this->company_id, $key);
+
+                if($customer_field_id){
+                    $customer_fieldid = $customer_field_id[0]['id'];
+                }else{
+                    $customer_fieldid = $this->Customer_field_model->create_customer_field($this->company_id, $key);
+                }
+
+                $customer_data = array(
+                    'show_on_customer_form' => $customer_field_data['show_on_customer_form'],
+                    'show_on_registration_card' => $customer_field_data['show_on_registration_card'],
+                    'show_on_in_house_report' => $customer_field_data['show_on_in_house_report'],
+                    'show_on_invoice' => $customer_field_data['show_on_invoice'],
+                    'is_required' => $customer_field_data['is_required']
+                );
+
+                $this->Customer_field_model->update_customer_field($customer_fieldid,$customer_data);
+
+            }
 
         }
 
+
+        $payment_types = $value['Payment Types'];
+
+        if($payment_types){
+            foreach ($payment_types as $payment_type) {
+
+                $existing_payment_type = $this->Payment_model->get_payment_types_by_name($payment_type['payment_type']);
+
+                if(empty($existing_payment_type)){
+
+                    $payment_type = $this->Payment_model->create_payment_type($this->company_id,$payment_type['payment_type']);
+                }
+
+            }
+        }
+
+
+
+        $charge_types = $value['Charge Types'];
+
+        if($charge_types){
+
+            foreach ($charge_types as $charge_type) {
+
+                $existing_charge_type = $this->Charge_type_model->get_charge_type_by_name($charge_type['name'], $this->company_id);
+
+                if(empty($existing_charge_type)){
+
+                    $charge_type_id = $this->Charge_type_model->create_charge_type($this->company_id, $charge_type['name']);
+
+                    $taxes = explode(',', $charge_type['taxes']);
+
+                    foreach ($taxes as $tax_type) {
+                        if($tax_type){
+                            $tax_type_id = $this->Tax_model->get_tax_type_by_name($tax_type);
+                            $charge_taxes = $this->Charge_type_model->get_charge_tax($charge_type_id, $tax_type_id);
+                            if(!$charge_taxes){
+                                $this->Charge_type_model->add_charge_type_tax($charge_type_id, $tax_type_id);
+                            }
+
+                        }
+
+                    }
+
+                    $data = array(
+                        "is_default_room_charge_type" => $charge_type['is_default_room_charge_type'],
+                        "is_room_charge_type" => $charge_type['is_room_charge_type']
+                    );
+                    $this->Charge_type_model->update_charge_type($charge_type_id, $data);
+
+                }
+
+            }
+        }
+
+        $room_types = $value['Room Types'];
+
+        if($room_types){
+
+            foreach ($room_types as $room_type) {
+                $existing_room_type = $this->Room_type_model->get_room_type_name($room_type['name'], $this->company_id);
+
+                if(empty($existing_room_type)){
+                    $room_type = $this->Room_type_model->create_room_type($this->company_id, $room_type['name'],$room_type['acronym'],$room_type['max_adults'],$room_type['max_children']);
+                }
+            }
+
+        }
+
+        $customer_types = $value['Customer Types'];
+
+        if($customer_types){
+            foreach ($customer_types as $customer_type) {
+                $existing_customer_type = $this->Customer_type_model->get_customer_type_by_name($this->company_id,$customer_type['name']);
+
+                if(empty($existing_customer_type)){
+
+                    $customer_type = $this->Customer_type_model->create_customer_type($this->company_id, $customer_type['name']);
+                }
+            }
+        }
+
+        $booking_sources = $value['Booking Source'];
+
+        if($booking_sources){
+
+            foreach ($booking_sources as $booking_source) {
+                $existing_booking_source = $this->Booking_source_model->get_booking_source_by_company($this->company_id, $booking_source['name']);
+                if(empty($existing_booking_source)){
+
+                    $booking_source_id = $this->Booking_source_model->create_booking_source($this->company_id, $booking_source['name']);
+                }else{
+                    $booking_source_id = $existing_booking_source;
+
+                }
+
+                $data = array(
+                    'commission_rate' => $booking_source['commission_rate'],
+                    'is_hidden' => $booking_source['is_hidden']
+                );
+
+                $this->Booking_source_model->update_booking_source($booking_source_id,$data);
+
+            }
+        }
 
 
     }

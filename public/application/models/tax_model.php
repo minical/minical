@@ -454,6 +454,7 @@ class Tax_model extends CI_Model {
         $this->db->from('tax_type as tt');
         $this->db->where('tt.tax_type = ', $name);
         $this->db->where('tt.company_id', $this->company_id);
+        $this->db->where('tt.is_deleted', 0);
         $query = $this->db->get();
         $result = $query->result_array();
 
