@@ -48,6 +48,12 @@
 	<?php } ?>
 	<button class='button' id='allocate_availabilities_button'><?php echo l('Allocate Availabilities', true); ?></button>
 	<a href=# id='close_button'><?php echo l('Cancel', true); ?></a>
+
+	<span id="loading_avail_img" style="display:none;">
+      	<img src="<?php echo base_url().'images/loading.gif' ?>"  style='width: 5%;
+    float: left;'/>
+  	</span>
+  	
 </body>
 
 <script type="text/javascript" src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
