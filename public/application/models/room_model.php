@@ -843,6 +843,7 @@ class Room_model extends CI_Model {
             $this->db->where('r.room_type_id',$room_type_id);
         }
         $this->db->where('r.room_name',$name);
+        $this->db->where('r.is_deleted',0);
         $query = $this->db->get('room as r');
 
         if ($query->num_rows() > 0)
@@ -853,6 +854,22 @@ class Room_model extends CI_Model {
         else
         {
             return NULL;
+        }
+
+    }
+
+
+
+    function delete_rooms($company_id){
+
+        $data = Array('is_deleted' => 1);
+
+        $this->db->where('company_id', $company_id);
+        $this->db->update("room", $data);
+
+        if ($this->db->_error_message())
+        {
+            show_error($this->db->_error_message());
         }
 
     }

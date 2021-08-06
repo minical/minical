@@ -120,7 +120,7 @@ class Room_inventory extends MY_Controller {
                 // 'floor_id' => isset($room->floor_id) ? $room->floor_id : '',
                 'can_be_sold_online' => $room->can_be_sold_online,
                 // 'group_id' => $room->group_id,
-                'sort_order' => isset($room->sort_order) ? $room->sort_order : ''
+                'sort_order' => isset($room->sort_order) ? (int) $room->sort_order : 0
             );
             $this->Room_model->update_room($room->room_id, $data);
             $this->_create_room_log("Room updated ({$room->room_name} [ID {$room->room_id}])");

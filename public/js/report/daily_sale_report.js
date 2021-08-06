@@ -6,7 +6,7 @@ $(function () {
     $(".sellingDate").datepicker({dateFormat: 'yy-mm-dd'});
     $(".sellingDate").on('change', function () {
         var date = $(this).val();
-        window.location.href = base_url + "/reports/show_daily_report/" + date;
+        window.location.href = base_url + "/reports/ledger/show_daily_report/" + date;
     });
     $('.show_payment_report').click(function () {
         $('.monthselectpicker').css('display', 'none');

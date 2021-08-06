@@ -84,6 +84,12 @@ class Company extends MY_controller
             
             $mrr = $company_subscription['renewal_cost'] / $renewal_multiple;
             $company_subscription['mrr'] = number_format($mrr, 2, ".", "");  
+
+            $company_key_data = $this->ci->Company_model->get_company_api_permission($company_id);
+            if(isset($company_key_data[0]['key'])){
+                $company['api_key'] = $company_key_data[0]['key'];
+            }
+
 			$company = array_merge($company, $company_subscription );
 			echo json_encode($company);	
 		}

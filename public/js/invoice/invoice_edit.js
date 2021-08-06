@@ -269,7 +269,7 @@ innGrid.deletePaymentRow = function (item, e) {
             data: "payment_id=" + paymentID,
             success: function( data ) {             
                 // insufficient access
-                if (data !== '') {
+                if (data.trim() !== '') {
                     alert(l("You do not have permission to delete a payment. Contact your administrator if you need access", true));
                     return;
                 }
@@ -1356,11 +1356,15 @@ $(function() {
         }
     });
     
-    $(document).on("click", ".charge_row .x-button", function() { 
+    $(".charge_row .x-button").on("click", function() {
         innGrid.deleteChargeRow($(this));       
     });
 
-    $(document).on("click", ".payment_row .x-button, .delete-payment", function (e) {
+    // $(document).on("click", ".payment_row .x-button, .delete-payment", function (e) {
+    //     innGrid.deletePaymentRow($(this), e);
+    // });
+
+    $('.delete-payment').on("click", function (e) {
         innGrid.deletePaymentRow($(this), e);
     });
         

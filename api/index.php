@@ -27,7 +27,7 @@ $dotenv = Dotenv\Dotenv::createImmutable(__DIR__. '/../')->load();
  */
 
 
-if ($_SERVER['HTTP_HOST'] == "localhost" || $_SERVER['HTTP_HOST'] == "roomsy.api") // || $_SERVER['HTTP_HOST'] == "roomsy-api-staging.azurewebsites.net"
+if ($_SERVER['HTTP_HOST'] == "localhost") 
 	define('ENVIRONMENT', 'development');
 else
 	define('ENVIRONMENT', 'production');

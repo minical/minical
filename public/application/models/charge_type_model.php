@@ -58,7 +58,17 @@ class Charge_type_model extends CI_Model {
 		$query = $this->db->get('charge_type_tax_list');
 		
 		return $query->result_array();
-	}	
+	}
+
+    function get_charge_tax($charge_type_id,$tax_type_id)
+    {
+        $this->db->where('charge_type_id', $charge_type_id);
+        $this->db->where('tax_type_id', $tax_type_id);
+        $this->db->order_by("tax_type_id", "asc");
+        $query = $this->db->get('charge_type_tax_list');
+
+        return $query->result_array();
+    }
 	
 	function create_charge_type($company_id, $name)
 	{
@@ -256,6 +266,39 @@ class Charge_type_model extends CI_Model {
 		}
 		return NULL;
 	}
+
+
+    function create_charge_types($data)
+    {
+        //Add charge_type
+        $this->db->insert('charge_type', $data);
+
+        $query = $this->db->query('select LAST_INSERT_ID( ) AS last_id');
+        $result = $query->result_array();
+        if(isset($result[0]))
+        {
+            $charge_type_id = $result[0]['last_id'];
+        }
+        else
+        {
+            $charge_type_id = null;
+        }
+
+        return $charge_type_id;
+    }
+
+    function delete_charge_types($company_id){
+
+        $data = Array('is_deleted' => 1);
+
+        $this->db->where('company_id', $company_id);
+        $this->db->update("charge_type", $data);
+
+        if ($this->db->_error_message())
+        {
+            show_error($this->db->_error_message());
+        }
+    }
 }
 
 /* End of file - charge_type_model.php */

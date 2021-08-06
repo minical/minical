@@ -1105,7 +1105,7 @@ var bookingModalInvoker = function ($) {
             this._updatePayPeriodDropdown();
             that._updateModalContent();
             this._bookingSource();
-            // this._bookingFields();
+            this._bookingFields();
             this._showDecimal();
             this._dailyCharge();
 
@@ -2558,25 +2558,25 @@ var bookingModalInvoker = function ($) {
                 that.deferredBookingSource.resolve();
             }
         },
-        // _bookingFields: function () {
-        //     var that = this;
-        //     if (!innGrid.ajaxCache.customBookingFields) {
+        _bookingFields: function () {
+            var that = this;
+            if (!innGrid.ajaxCache.customBookingFields) {
 
-        //         $.ajax({
-        //             type: "POST",
-        //             url: getBaseURL() + "booking/get_booking_fields",
-        //             dataType: "json",
-        //             success: function (data) {
-        //                 that.customBookingFields = data;
-        //                 innGrid.ajaxCache.customBookingFields = data;
-        //                 that.deferredBookingFields.resolve();
-        //             }
-        //         });
-        //     } else {
-        //         that.customBookingFields = innGrid.ajaxCache.customBookingFields;
-        //         that.deferredBookingFields.resolve();
-        //     }
-        // },
+                $.ajax({
+                    type: "POST",
+                    url: getBaseURL() + "booking/get_booking_fields",
+                    dataType: "json",
+                    success: function (data) {
+                        that.customBookingFields = data;
+                        innGrid.ajaxCache.customBookingFields = data;
+                        that.deferredBookingFields.resolve();
+                    }
+                });
+            } else {
+                that.customBookingFields = innGrid.ajaxCache.customBookingFields;
+                that.deferredBookingFields.resolve();
+            }
+        },
         _showDecimal: function () {
             if (innGrid.hideDecimalPlaces) {
                 show_decimal = innGrid.hideDecimalPlaces != 0 ? false : true;
@@ -5173,12 +5173,13 @@ var bookingModalInvoker = function ($) {
                 $.ajax({
                     type: "POST",
                     url: getBaseURL() + "booking/delete_booking_AJAX",
+                    dataType: "json",
                     data: {
                         booking_id: bookingId
                     },
                     success: function (data) {
-                        data = (data == "") ? data : JSON.parse(data);
-                        if (data == "") // if successful, delete_booking_AJAX returns empty page
+                        // data = (data == "") ? data : JSON.parse(data);
+                        if (data.response == "success") // if successful, delete_booking_AJAX returns empty page
                         {
                             var bookingDeletedEvent = new CustomEvent('booking_deleted', { "detail" : {"reservation_id" : that.booking.booking_id, "booking_data" : that.booking} });
                             document.dispatchEvent(bookingDeletedEvent);
@@ -6141,7 +6142,7 @@ var bookingModalInvoker = function ($) {
                     var staying_customers = data['booking']['staying_customers'];
                     var comapany_logo = '';
                     if (show_logo == 1 && data['company_logo'] != "undefined" && data['company_logo'] != null) {
-                        comapany_logo = '<img class="img" src="https://inngrid.s3.amazonaws.com/' + data['company']['company_id'] + '/' + data['company_logo'] + '" id="company-logo-image"/><br/>';
+                        comapany_logo = '<img class="img" src="https://'+$_SERVER["AWS_S3_BUCKET"]+'.s3.amazonaws.com/' + data['company']['company_id'] + '/' + data['company_logo'] + '" id="company-logo-image"/><br/>';
                     }
 
                     $('#registration_card').html('');
@@ -7286,8 +7287,6 @@ var bookingModalInvoker = function ($) {
 
     // advance caching - speedup booking modal to prefetch data
     var preFetchData = function () {
-
-        console.log('prefetching data');
 
         innGrid.ajaxCache.companyBookingSources = innGrid.bookingSources;
 

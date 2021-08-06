@@ -92,6 +92,33 @@ class User_model extends CI_Model {
         return true;
     }
 
+    function add_teams($company_id, $user_id, $permission){
+
+        if(is_array($permission)){
+            $permission_data = array();
+            foreach ($permission as $key => $value) {
+                $permission_data[] = array(
+                    'company_id' => $company_id,
+                    'user_id' => $user_id,
+                    'permission' => $value
+                );
+            }
+
+            $this->db->insert_batch('user_permissions', $permission_data);
+        }else{
+            $user_permissions_data = array(
+                'company_id' => $company_id,
+                'user_id' => $user_id,
+                'permission' => $permission
+            );
+            $query = $this->db->insert('user_permissions', $user_permissions_data);
+        }
+
+
+        return true;
+
+    }
+
     function get_company_id($user_id){
         $this->db->select()->from('user_permissions')->where('user_id',$user_id);
         return $this->db->get()->row();

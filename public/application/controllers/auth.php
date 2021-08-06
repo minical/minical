@@ -785,7 +785,8 @@ class Auth extends MY_Controller
             'country'                  => isset($data['country'])?$data['country']:'',
             'logo_image_group_id'      => $this->Image_model->create_image_group(LOGO_IMAGE_TYPE_ID),
             'slideshow_image_group_id' => $this->Image_model->create_image_group(SLIDE_IMAGE_TYPE_ID),
-            'gallery_image_group_id'   => $this->Image_model->create_image_group(GALLERY_IMAGE_TYPE_ID)
+            'gallery_image_group_id'   => $this->Image_model->create_image_group(GALLERY_IMAGE_TYPE_ID),
+            'enable_api_access' => 1
 
         );
 
@@ -832,6 +833,9 @@ class Auth extends MY_Controller
         
         // create company in minical
         $company_id = $this->Company_model->create_company($company_data);
+
+        $api_key = md5(uniqid(rand(), true));
+        $this->Company_model->insert_company_api_key($company_id, $api_key);
         
         if(isset($data['email']) && $data['email'] == SUPER_ADMIN){
             $this->User_model->add_user_permission($company_id, $data['user_id'], 'is_admin');
@@ -1778,44 +1782,52 @@ class Auth extends MY_Controller
             $feature_setting = json_decode($property_data['setting_json'], true);
             $dependencies = json_decode($property_data['dependences_json'], true);
            
-        }else{
+        } else {
             
-             $fileJson = file_get_contents("../build.json");
-             $file = json_decode($fileJson, true);
+            $fileJson = file_get_contents("../build.json");
+            $file = json_decode($fileJson, true);
            
             $feature_setting = $file['settings'];
             $dependencies= $file['dependencies'];
            
         }
 
+        $extensions = $this->session->userdata('all_active_modules');
+
         $data_build['company_id'] = $this->company_id;
         if(isset($dependencies) && count($dependencies) > 0){
              foreach ($dependencies as $key => $value) {
-                $data_build['extension_name'] = $key;
-                $this->Extension_model->update_extension($data_build);
+                foreach($extensions as $ext => $extension){
+                    if($ext == $key){
+                        $data_build['extension_name'] = $key;
+                        $this->Extension_model->update_extension($data_build);
+                    }
+                }
             }
         }
-         if(isset($feature_setting) && count($feature_setting) > 0){
-         $build_mapping_array = json_decode(BUILD_KEY_MAPPING,true);
-           foreach ($feature_setting as $key => $value) {
-             if(is_array($value)){
-                   foreach ($value as $key1 => $val) {
+         
+        if(isset($feature_setting) && count($feature_setting) > 0) {
+         
+            $build_mapping_array = json_decode(BUILD_KEY_MAPPING,true);
+            foreach ($feature_setting as $key => $value) {
+                if(is_array($value)){
+                    foreach ($value as $key1 => $val) {
                         $keyname= $key."_".$key1;
-                      if(in_array($keyname, array_keys($build_mapping_array)))
-                      {
-                    $map_value = $build_mapping_array[$keyname];
-                    $company_data[$map_value] = $val ? $val : 0;
+                        if(in_array($keyname, array_keys($build_mapping_array)))
+                        {
+                            $map_value = $build_mapping_array[$keyname];
+                            $company_data[$map_value] = $val ? $val : 0;
+                        }
                     }
-                    }
-             }else{
+                } else {
                     if(in_array($key, array_keys($build_mapping_array))){
-                    $map_value = $build_mapping_array[$key];
-                    $company_data[$map_value] = $value ? $value : 0;
-                }
+                        $map_value = $build_mapping_array[$key];
+                        $company_data[$map_value] = $value ? $value : 0;
+                    }
                 }
             }
             $this->Company_model->update_company($this->company_id, $company_data);
-       }
+        }
          ///end
 
         $user_id =  $this->session->userdata('user_id');
@@ -1871,12 +1883,16 @@ class Auth extends MY_Controller
         $this->_initialize_company($company_id);
 
         // update user minical database
-        $user_data = array(
-            'activated'         => 0
-        );
-        $this->User_model->update_user($user_id, $user_data);
-        
-        $this->ci->session->set_userdata('status', STATUS_NOT_ACTIVATED);
+
+        if($this->config->item('app_environment') == "development"){
+            $this->ci->session->set_userdata('status', STATUS_ACTIVATED);
+        } else {
+            $user_data = array(
+                'activated'         => 0
+            );
+            $this->User_model->update_user($user_id, $user_data);
+            $this->ci->session->set_userdata('status', STATUS_NOT_ACTIVATED);
+        }
 
         $explode = explode(',', $data['lang_id']);
         $language_id = $explode[0];

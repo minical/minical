@@ -147,8 +147,7 @@ class Booking extends MY_Controller
                 base_url() . auto_version('js/calendar.js'),
                 base_url() . auto_version('js/booking/bookingModal.js'),
                 base_url() . auto_version('js/booking/booking_main.js'),
-                base_url() . auto_version('js/booking/printThis.js'),
-                base_url() . auto_version('js/booking/booking_list.js')
+                base_url() . auto_version('js/booking/printThis.js')
             );
 
         } else {
@@ -174,8 +173,7 @@ class Booking extends MY_Controller
                 base_url() . auto_version('js/fullcalendar/init.js'),
                 base_url() . auto_version('js/booking/bookingModal.js'),
                 base_url() . auto_version('js/booking/booking_main.js'),
-                base_url() . auto_version('js/booking/printThis.js'),
-                base_url() . auto_version('js/booking/booking_list.js')
+                base_url() . auto_version('js/booking/printThis.js')
             );
         }
 
@@ -260,7 +258,6 @@ class Booking extends MY_Controller
             base_url().'js/moment.min.js',
             base_url() . auto_version('js/booking/bookingModal.js'),
             base_url() . auto_version('js/booking/booking_main.js'),
-            base_url() . auto_version('js/booking/booking_list.js')
         );
 
         $data['selected_menu'] = 'bookings';
@@ -374,7 +371,6 @@ class Booking extends MY_Controller
             base_url() . auto_version('js/booking/bookingModal.js'),
             base_url() . auto_version('js/booking/booking_main.js'),
             base_url() . auto_version('js/booking/printThis.js'),
-            base_url() . auto_version('js/booking/booking_list.js')
 
         );
 
@@ -642,7 +638,7 @@ class Booking extends MY_Controller
             );
             $bookings = $this->Booking_model->get_bookings($filters, null, null ,true);
             foreach ($bookings as $booking) {
-                if($booking['room_id'])
+                if($booking['room_id'] && $booking['check_out_date'] > $check_in_date && $check_out_date > $booking['check_in_date'])
                 {
                     $_room_type_id = $booking['r_room_type_id'] ? $booking['r_room_type_id'] : $booking['brh_room_type_id'];
                     if(!isset($room_types[$_room_type_id])) {
@@ -655,7 +651,7 @@ class Booking extends MY_Controller
                 }
             }
             foreach ($bookings as $booking) {
-                if(!$booking['room_id'])
+                if(!$booking['room_id'] && $booking['check_out_date'] > $check_in_date && $check_out_date > $booking['check_in_date'])
                 {
                     if (isset($room_types[$booking['brh_room_type_id']]) && $room_types[$booking['brh_room_type_id']]) {
                         $overlapping_with_other_bookings = false;
@@ -1183,17 +1179,17 @@ class Booking extends MY_Controller
         $this->Booking_log_model->insert_logs($batch);
     }
 
-    function download_csv_export($booking_type) {
-        $booking_types = Array($booking_type);
+    // function download_csv_export($booking_type) {
+    //     $booking_types = Array($booking_type);
 
-        //get user's shift information
-        $query = $this->Booking_model->get_csv($this->company_id, $booking_types, $this->selling_date);
+    //     //get user's shift information
+    //     $query = $this->Booking_model->get_csv($this->company_id, $booking_types, $this->selling_date);
 
-        $this->load->dbutil();
-        $csv = $this->dbutil->csv_from_result($query);
-        $this->load->helper('download');
-        force_download("bookings-" . $this->selling_date . ".csv", $csv);
-    }
+    //     $this->load->dbutil();
+    //     $csv = $this->dbutil->csv_from_result($query);
+    //     $this->load->helper('download');
+    //     force_download("bookings-" . $this->selling_date . ".csv", $csv);
+    // }
 
     /* New shit! 2015-03-09 Jaeyun */
 
@@ -2566,6 +2562,8 @@ class Booking extends MY_Controller
         }
         $this->Booking_model->delete_booking($booking_id);
         $this->_create_booking_log($booking_id, "Booking deleted");
+
+        echo json_encode(array('response' => 'success'));
     }
 
     function create_charges($invoice_array, $booking_id, $customer_id) {
@@ -3074,4 +3072,12 @@ class Booking extends MY_Controller
 
         return implode("<br/>", $log_array);
     }
+
+    function get_booking_fields()
+    {
+        $result = $this->Booking_field_model->get_booking_fields($this->company_id, 'show_on_booking_form');
+        echo json_encode($result);
+    }
+
+
 }

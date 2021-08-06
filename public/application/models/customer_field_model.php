@@ -102,19 +102,31 @@ class Customer_field_model extends CI_Model {
         
         return $this->create_common_customer_fields_settings($data);
     }
+
+    function get_customer_field_by_name($company_id, $name){
+        $this->db->where('company_id', $company_id);
+        $this->db->where('name', $name);
+        $this->db->where('is_deleted', 0);
+
+        $query = $this->db->get('customer_field');
+
+        if ($query->num_rows >= 1)
+            return $query->result_array();
+        return NULL;
+    }
     
     function create_common_customer_fields_settings($data){
         $this->db->insert('common_customer_fields_setting', $data);		
 		return $this->db->insert_id();
     }
-    
+
     function get_common_customer_fields_settings($company_id){
-        $this->db->where('company_id', $company_id);		
-        $this->db->order_by('customer_field_id', 'ASC');		
-		$query = $this->db->get('common_customer_fields_setting');
-		$response = array();
-		if ($query->num_rows >= 1) {
-			$result = $query->result_array();
+        $this->db->where('company_id', $company_id);
+        $this->db->order_by('customer_field_id', 'ASC');
+        $query = $this->db->get('common_customer_fields_setting');
+        $response = array();
+        if ($query->num_rows >= 1) {
+            $result = $query->result_array();
             foreach($result as $setting)
             {
                 $response[$setting['customer_field_id']] = $setting;

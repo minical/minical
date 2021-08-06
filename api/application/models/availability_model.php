@@ -381,9 +381,7 @@ class Availability_model extends CI_Model {
                         )
 
                     ) 
-                    - (IF(rt.ota_close_out_threshold AND 
-                        ('$ota_id' = ".SOURCE_BOOKING_DOT_COM." OR '$ota_id' = ".SOURCE_MYALLOCATOR." OR '$ota_id' = ".SOURCE_EXPEDIA." OR '$ota_id' = ".SOURCE_AGODA."  OR '$ota_id' = ".SOURCE_SITEMINDER."), 
-                        rt.ota_close_out_threshold, 0)) as availability
+                    - (IF(rt.ota_close_out_threshold AND '$ota_id', rt.ota_close_out_threshold, 0)) as availability
 					$get_closeout_status_join  
                 FROM
                     date_interval as di,

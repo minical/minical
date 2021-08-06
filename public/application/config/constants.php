@@ -295,7 +295,7 @@ define('SUPPORT_PHONE_NUMBER', 				'1 (403) 879-1166'); // Deleted Out of Order
 |
 */
 
-define('SUPER_ADMIN_USER_ID', 				'88');
+define('SUPER_ADMIN_USER_ID', 				'1');
 
 define('SUPER_ADMIN', 'support@minical.io');
 

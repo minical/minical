@@ -258,7 +258,6 @@ $files = get_asstes_files($this->module_assets_files, $this->router->fetch_modul
     // add non-translated-keys to DB 
     <?php if($this->user_id === SUPER_ADMIN_USER_ID) { ?>
     setInterval(function () {
-        console.log('nonTranslatedKeys', nonTranslatedKeys);
         if (nonTranslatedKeys.length > 0){
 
             $.ajax({
@@ -267,7 +266,7 @@ $files = get_asstes_files($this->module_assets_files, $this->router->fetch_modul
                 data: { non_translated_keys: nonTranslatedKeys},
                 dataType: "json",
                 success: function( data ) {
-                    console.log('data', data);
+                    // console.log('data', data);
                 }
             });
 

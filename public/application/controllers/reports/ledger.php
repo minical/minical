@@ -460,7 +460,6 @@ class Ledger extends MY_Controller {
             base_url().'js/moment.min.js',
             base_url().auto_version('js/booking/bookingModal.js'),
             base_url().auto_version('js/booking/booking_main.js'),
-            base_url().auto_version('js/booking/booking_list.js'),
             base_url().'js/jquery.tablesorter.min.js',
             base_url().auto_version('js/report/action_report.js')
         );

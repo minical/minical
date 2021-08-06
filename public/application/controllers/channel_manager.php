@@ -44,28 +44,23 @@ class Channel_manager extends MY_Controller
         
 		$company_id = $this->input->post('company_id');
 		$company_id = $company_id ? $company_id : $this->company_id;
-        
-        if(!empty($start_date) && $start_date!='' && !empty($end_date) && $end_date!='')
-        {
-            $start_date                = date('Y-m-d', strtotime($start_date));
-            $end_date                  = date('Y-m-d', strtotime($end_date . " + 1 day")); // send one day more availability, just to be safe
 
-            $req = file_get_contents(
-            $this->config->item('cm_url').'/sync/update_availabilities/'.$company_id.'/'.$start_date.'/'.$end_date.'/'.$room_type_id
-				);
-        }
-        else       
-        {
-            $req = file_get_contents(
-			$this->config->item('cm_url').'/sync/update_company/'.$company_id.'/'."update_availabilities_only"
-				);
-        }       
+		$data = array(
+						'start_date' => $start_date,
+						'end_date' => $end_date,
+						'channel_id' => $channel_id,
+						'room_type_id' => $room_type_id,
+						'company_id' => $company_id,
+						'update_from' => 'inventory'
+					);
         
-        echo $req; // debugging    
+        do_action('update_availability', $data);      
         
-        // if response empty aka no availability, ensure actual array is created anyway
+        // echo $req; // debugging    
         
-        echo json_decode($req, true);
+        // // if response empty aka no availability, ensure actual array is created anyway
+        
+        // echo json_decode($req, true);
 	
 	}
 

@@ -1235,7 +1235,8 @@ class Invoice extends MY_Controller {
         $this->ci->load->library('encrypt');
         $payment_id = $this->input->post('payment_id');
         $amount = $this->input->post('amount');
-        $amount = abs($amount) * 100; // in cents, only positive
+        // $amount = abs($amount) * 100; // in cents, only positive
+        $amount = abs($amount);
         $auth_id = $this->input->post('auth_id');
         $booking_id = $this->input->post('booking_id');
         $customer_id = $this->input->post('customer_id');
@@ -1261,7 +1262,10 @@ class Invoice extends MY_Controller {
             $cvc = $this->encrypt->decode($customer['cc_cvc_encrypted'], $customer['cc_tokenex_token']);         
         }  
         
-        $capture_data = $this->tokenex->make_payment($company_data['selected_payment_gateway'], $amount, $currency['currency_code'], $customer_id, $booking_id, $cvc, $auth_id, true, false);
+        // $capture_data = $this->tokenex->make_payment($company_data['selected_payment_gateway'], $amount, $currency['currency_code'], $customer_id, $booking_id, $cvc, $auth_id, true, false);
+        $this->ci->load->library('../extensions/'.$this->current_payment_gateway.'/libraries/ProcessPayment');
+        $capture_data = $this->processpayment->capture_payment($payment_id, $amount);
+
 
         if(isset($capture_data['charge_id']) && $capture_data['charge_id'])
         {           
@@ -1271,7 +1275,9 @@ class Invoice extends MY_Controller {
                     );
             if($is_partial=='partial')
             {
-                $capture_updates['amount'] = abs($amount) / 100;
+                // $capture_updates['amount'] = abs($amount) / 100;
+                $capture_updates['amount'] = abs($amount);
+
             }
             $update = $this->Invoice_model->update_capture_payments($payment_id, $capture_updates);
             
@@ -1281,7 +1287,8 @@ class Invoice extends MY_Controller {
             $invoice_log_data['user_id'] = $this->session->userdata('user_id');
             $invoice_log_data['action_id'] = $company_data['manual_payment_capture'] ? AUTHORIZED_PAYMENT : CAPTURED_PAYMENT;
             $invoice_log_data['charge_or_payment_id'] = $payment_id;
-            $invoice_log_data['new_amount'] = abs($amount) / 100;
+            // $invoice_log_data['new_amount'] = abs($amount) / 100;
+            $invoice_log_data['new_amount'] = abs($amount) ;
             $invoice_log_data['log'] = 'Payment Captured';
             $this->Invoice_log_model->insert_log($invoice_log_data);
 

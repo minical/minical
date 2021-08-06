@@ -434,6 +434,53 @@ class Tax_model extends CI_Model {
 		return $result;
 	}
 
+    function create_new_tax_type($data){
+
+        $this->db->insert('tax_type', $data);
+        $query = $this->db->query('select LAST_INSERT_ID( ) AS last_id');
+        $result = $query->result_array();
+        if(isset($result[0]))
+        {
+            return $result[0]['last_id'];
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    function get_tax_type_by_name($name){
+
+        $this->db->from('tax_type as tt');
+        $this->db->where('tt.tax_type = ', $name);
+        $this->db->where('tt.company_id', $this->company_id);
+        $this->db->where('tt.is_deleted', 0);
+        $query = $this->db->get();
+        $result = $query->result_array();
+
+        if(isset($result[0]))
+        {
+            return $result[0]['tax_type_id'];
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    function delete_tax_types($company_id){
+
+        $data = Array('is_deleted' => 1);
+
+        $this->db->where('company_id', $company_id);
+        $this->db->update("tax_type", $data);
+
+        if ($this->db->_error_message())
+        {
+            show_error($this->db->_error_message());
+        }
+    }
+
 }
 
 /* End of file tax_model.php */

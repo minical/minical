@@ -9,10 +9,10 @@ if (file_exists($file)) {
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__. '/../')->load();
 $filename = "minical.sql";
 
-$dbHost = $_SERVER["DATABASE_HOST"];
-$dbUser = $_SERVER["DATABASE_USER"];
-$dbPass = $_SERVER["DATABASE_PASS"];
-$dbName = $_SERVER["DATABASE_NAME"];
+$dbHost = getenv("DATABASE_HOST");
+$dbUser = getenv("DATABASE_USER");
+$dbPass = getenv("DATABASE_PASS");
+$dbName = getenv("DATABASE_NAME");
 
 
 

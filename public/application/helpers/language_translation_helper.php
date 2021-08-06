@@ -68,10 +68,10 @@ if ( ! function_exists('get_languages'))
 
         $language_name = $CI->session->userdata('language');
         
-        if($language_name == ''){
+        //if($language_name == ''){
             $language_data = $CI->translation_model->get_record_where('language', array('id' => $language_id));
             $language_name = $language_data[0]['flag'];
-        }
+        //}
 
         $modules_path = APPPATH.'extensions/';
         $modules = scandir($modules_path);

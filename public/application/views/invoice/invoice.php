@@ -36,7 +36,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group payment_type_div">
                         <label for="pay_for" class="col-sm-4 control-label"><?php echo l('method'); ?></label>
                         <div class="col-sm-8">
                             <select name="payment_type_id" class="input-field form-control">
@@ -114,19 +114,19 @@
                 </div>
                 <div class="modal-footer">
                     <input type="hidden"  id="manual_payment_capture" value="<?=$company['manual_payment_capture'];?>">
-                    <?php //if($company['manual_payment_capture'] != 1){ ?>
+                    <?php if($company['manual_payment_capture'] != 1){ ?>
                         <button type="button" class="btn btn-success add_payment_button hidden" id="add_payment_button">
                             <?php echo l('add').' '.l('payment'); ?>
                         </button>
 
-                    <?php //} else { ?>
-                        <!-- <button type="button" class="btn btn-success add_payment_button hidden" id="auth_and_capture">
-                            <?php echo l('Charge'); ?>
+                    <?php } else { ?>
+                        <button type="button" class="btn btn-success add_payment_button hidden" id="auth_and_capture">
+                            <?php echo l('Add Charge'); ?>
                         </button>
                         <button type="button" class="btn btn-success add_payment_button hidden" id="authorize_only">
                             <?php echo l('Pre-Authorize'); ?>
-                        </button> -->
-                    <?php //} ?>
+                        </button> 
+                    <?php } ?>
                     <button type="button" class="btn btn-success add_payment_button" id="add_payment_normal">
                         <?php echo l('add').' '.l('payment'); ?>
                     </button>
@@ -301,7 +301,7 @@
     <?php
     // show company logo image
     if (isset($company_logos[0]['filename'])) {
-        echo "<img src=\"https://inngrid.s3.amazonaws.com/".$company['company_id']."/".$company_logos[0]['filename']."\" id='company-logo-image'/><br/>";
+        echo "<img src='" . $this->image_url . $company['company_id'] . "/" . $company_logos[0]['filename'] . "' id='company-logo-image'/><br/>";
     }
     ?>
 
@@ -858,19 +858,19 @@
                                         <span><?php echo ($payment['payment_status'] == 'charge') ? l('Captured', true) : ($payment['payment_status'] == 'payment_link' ? l('Pending', true) : l('Refunded', true)); ?></span>
                                         <div class="payment_status_buttons">
                                             <?php if (!$payment['read_only']){ if($payment['is_captured']){?>
-                                                <button class="btn btn-primary delete-payment" data-toggle="tooltip" title="Refund"  title="Created by <?php echo $payment['user_name']; ?>">
+                                                <button class="btn btn-primary hidden-print delete-payment" data-toggle="tooltip" title="Refund"  title="Created by <?php echo $payment['user_name']; ?>">
                                                     <i class="fa fa-reply" aria-hidden="true"></i>
                                                 </button>
                                                 <button type="button" class="btn btn-danger capture-payment-button hidden-print not-allowed" disabled>
                                                     <i class="fa fa-credit-card" aria-hidden="true"></i>
                                                 </button>
-                                            <?php } else if($menu_on === true) { ?>
-                                                <button type="button" class="btn btn-info verify_payment" data-payment_link_id="<?php echo $payment['payment_link_id']; ?>" data-payment_id="<?php echo $payment['payment_id']; ?>">
+                                            <?php } else if($menu_on === true && $payment['payment_link_id']) { ?>
+                                                <button type="button" class="btn btn-info hidden-print verify_payment" data-payment_link_id="<?php echo $payment['payment_link_id']; ?>" data-payment_id="<?php echo $payment['payment_id']; ?>">
                                                     Verify
                                                 </button>
                                             <?php } ?>
                                             <?php } else { ?>
-                                                <button class="btn btn-primary delete-payment not-allowed" data-toggle="tooltip" title="Refund" disabled>
+                                                <button class="btn btn-primary delete-payment hidden-print not-allowed" data-toggle="tooltip" title="Refund" disabled>
                                                     <i class="fa fa-reply" aria-hidden="true"></i>
                                                 </button>
                                                 <button type="button" class="btn btn-danger capture-payment-button hidden-print not-allowed" data-toggle="tooltip" title="Capture" disabled>
@@ -897,6 +897,12 @@
                                                 <li role="presentation">
                                                     <a href="#" class="delete-payment" title="Created by <?php echo $payment['user_name']; ?>">
                                                         <?php if ($payment['payment_gateway_used']): echo l('refund'); ?>  <?php else: echo l('delete'); ?>  <?php endif; ?>
+                                                    </a>
+                                                </li>
+                                            <?php } elseif($payment['is_captured'] == 0 && $payment['payment_link_id']){ ?>
+                                                <li role="presentation">
+                                                    <a href="javascript:" class="delete-payment-link-row" title="Created by <?php echo $payment['user_name']; ?>">
+                                                        <?php echo l('delete', true); ?>
                                                     </a>
                                                 </li>
                                             <?php } ?>
@@ -951,7 +957,7 @@
             </table>
 
         </div> <!-- /.panel -->
-        <div class="container h2 text-muted" style="max-width: 100%; padding: 10px;">
+        <div class="h2 text-muted" style="max-width: 100%; padding: 10px;">
             <div class="amount_due">
                 <div class="text-right smaller_fonts payments_text_spacing">
                     <?php echo l('amount', true).' '.l('due', true); ?>:

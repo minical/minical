@@ -2783,4 +2783,33 @@ class Booking_model extends CI_Model {
         }
         return NULL;
     }
+
+    function delete_bookings($company_id)
+    {
+        $data = Array('is_deleted' => 1);
+
+        $this->db->where('company_id', $company_id);
+        $this->db->update("booking", $data);
+
+        if ($this->db->_error_message())
+        {
+            show_error($this->db->_error_message());
+        }
+
+    }
+
+    function get_bookings_company($company_id)
+    {
+        $this->db->from('booking as b');
+        $this->db->where('company_id', $company_id);
+
+        $query = $this->db->get();
+
+        if($query->num_rows() >= 1){
+            return $query->result_array();
+        }
+        return NULL;
+
+    }
+
 }

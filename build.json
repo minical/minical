@@ -12,11 +12,11 @@
       "unit_name":{
          "singular": "room", 
          "plural" : "rooms" 
-         },
+      },
       "unit_type_name" :  {
          "singular":"room type",
          "plural": "room types"
-         },
+      },
       "send_invoice_email_automatically" : true,
       "display_tooltip" : true,
       "is_total_balance_include_forecast" : true
