@@ -705,7 +705,15 @@ class Company extends MY_Controller
                             $json = array();
                             while ($row = fgetcsv($fp,"1024",",")) {
 
-                                $json[] = array_combine($key, $row);
+                                if (count($row) === count($key)) {
+                                   $json[] = array_combine($key, $row);
+                                } else {
+                                    $new_result = array();
+                                    foreach ($key as $i => $k) {
+                                        $new_result[$k] = isset($row[$i]) ? $row[$i] : '';
+                                    }
+                                   $json[] = $new_result;
+                                }
                             }
                             $result[$zip_name[0]] = $json;
                             // release file handle
