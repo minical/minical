@@ -66,6 +66,10 @@ $files = get_asstes_files($this->module_assets_files, $this->router->fetch_modul
 	<?php
 		endif;
 	?>
+
+	<?php if($_SERVER['HTTP_HOST'] == 'localhost'){ ?>
+		<input type="hidden" name="project_url" id="project_url" value="<?php echo getenv('PROJECT_URL'); ?>">
+	<?php } ?>
 	
 	<div class="">
         <div class="panel panel-default" style="border: none;padding-top: 20px;">
