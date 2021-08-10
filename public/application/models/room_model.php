@@ -875,7 +875,7 @@ class Room_model extends CI_Model {
 
     }
 
-    function create_rooms($company_id = null, $room_name = null, $room_type_id = '', $sort_order = null, $sold_online)
+    function create_rooms($company_id = null, $room_name = null, $room_type_id = '', $sort_order, $sold_online)
     {
         $data = array(
             'company_id' => $company_id,
