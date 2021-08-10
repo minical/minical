@@ -811,7 +811,7 @@ class Company extends MY_Controller
                 $get_room = $this->Import_mapping_model->get_mapping_room_id($room['Room Id']);
                 if(empty($get_room)){
                     $sold_online = $room['Room Can be Sold online'] == 'true' ? 1 : 0 ;
-                    $sort_order = $room['Sort Order'] ? $room['Sort Order'] : 0 ;
+                    $sort_order = isset($room['Sort Order']) && $room['Sort Order'] != '' && $room['Sort Order'] != null ? $room['Sort Order'] : 0 ;
                     $room_id = $this->Room_model->create_rooms($this->company_id, $room['Room Name'], $room_type_id, $sort_order, $sold_online);
 
                     $data_import_mapping = Array(
