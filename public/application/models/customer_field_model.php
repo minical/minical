@@ -135,7 +135,14 @@ class Customer_field_model extends CI_Model {
         return $response;
     }
 
-   
+
+    function customer_field($data)
+    {
+        $this->db->insert('customer_x_customer_field', $data);
+        //echo $this->db->last_query();
+        return $this->db->insert_id();
+    }
+	
 }
 
 /* End of file customer_model.php */
