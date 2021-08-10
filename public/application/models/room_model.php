@@ -875,5 +875,26 @@ class Room_model extends CI_Model {
 
     }
 
+    function create_rooms($company_id = null, $room_name = null, $room_type_id = '', $sort_order = null)
+    {
+        $data = array(
+            'company_id' => $company_id,
+            'room_name' => $room_name,
+            'room_type_id' => $room_type_id,
+            'sort_order' => $sort_order
+
+        );
+        $this->db->insert('room', $data);
+        //return $this->db->insert_id();
+        $query = $this->db->query('select LAST_INSERT_ID( ) AS last_id');
+        $result = $query->result_array();
+        if(isset($result[0]))
+        {
+            return $result[0]['last_id'];
+        }
+
+        return null;
+    }
+
 
 }

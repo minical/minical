@@ -289,6 +289,21 @@ class Rate_plan_model extends CI_Model {
 		}
 		return true;
 	}
+
+    function update_room_rate_plan($rate_plan_id, $old_id){
+
+        $data = array(
+            'default_room_charge' => $rate_plan_id
+        );
+        $this->db->where('default_room_charge', $old_id);
+        $this->db->update("room_type", $data);
+        if ($this->db->_error_message()) // error checking
+        {
+            show_error($this->db->_error_message());
+            return false;
+        }
+        return true;
+    }
         
     function delete_custom_rate_plan($rate_plan_id)
     {

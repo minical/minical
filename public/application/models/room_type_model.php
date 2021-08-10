@@ -343,6 +343,21 @@ class Room_type_model extends CI_Model {
 		//TO DO: error reporting for update fail.
 		return TRUE;		
 	}
+
+    function update_room_charge_type($room_charge_id, $old_id)
+    {
+        $data = array(
+            'default_room_charge' => $room_charge_id
+        );
+        $this->db->where('default_room_charge', $old_id);
+        $this->db->update('room_type', $data);
+
+        if ($this->db->_error_message())
+            show_error($this->db->_error_message());
+
+        //TO DO: error reporting for update fail.
+        return TRUE;
+    }
 	
 	//Delete currency and all related room rate entries
 	function delete_room_type($room_type_id)

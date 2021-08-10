@@ -650,6 +650,7 @@ class Company extends MY_Controller
             $this->Tax_model->delete_tax_types($this->company_id);
             $this->Rate_plan_model->delete_rate_plans($this->company_id);
             $this->Import_mapping_model->delete_mapping_field($this->company_id);
+            $this->Extra_model->delete_extras($this->company_id);
             // $this->Rate_model->delete_rates($this->company_id);
         }
 
@@ -706,13 +707,13 @@ class Company extends MY_Controller
                             while ($row = fgetcsv($fp,"1024",",")) {
 
                                 if (count($row) === count($key)) {
-                                   $json[] = array_combine($key, $row);
+                                    $json[] = array_combine($key, $row);
                                 } else {
                                     $new_result = array();
                                     foreach ($key as $i => $k) {
                                         $new_result[$k] = isset($row[$i]) ? $row[$i] : '';
                                     }
-                                   $json[] = $new_result;
+                                    $json[] = $new_result;
                                 }
                             }
                             $result[$zip_name[0]] = $json;
@@ -786,7 +787,10 @@ class Company extends MY_Controller
                     'max_children' => $room['Max Children'] == ''  ? 0 : $room['Max Children'] ,
                     'max_occupancy' => $room['Max Occupancy'] == ''  ? 0 : $room['Max Occupancy'] ,
                     'min_occupancy' => $room['Min Occupancy'] == ''  ? 0 : $room['Min Occupancy'] ,
-                    'can_be_sold_online' => $room['Can be Sold online'] == 'true' ? 1 : 0
+                    'can_be_sold_online' => $room['Can be Sold online'] == 'true' ? 1 : 0,
+                    'default_room_charge' => $room['Room Charge'],
+                    'description' => $room['Description']
+
                 );
 
                 $room_type_id = $this->Room_type_model->add_new_room_type($data);
@@ -806,7 +810,7 @@ class Company extends MY_Controller
                 // $get_room = $this->Room_model->get_room_by_name($room['Room Name'], $room_type_id);
                 $get_room = $this->Import_mapping_model->get_mapping_room_id($room['Room Id']);
                 if(empty($get_room)){
-                    $room_id = $this->Room_model->create_room($this->company_id, $room['Room Name'], $room_type_id);
+                    $room_id = $this->Room_model->create_rooms($this->company_id, $room['Room Name'], $room_type_id, $room['Sort Order']);
 
                     $data_import_mapping = Array(
                         "new_id" => $room_id,
@@ -916,7 +920,8 @@ class Company extends MY_Controller
                     'name' => $charge['Charge Type'],
                     'company_id' => $this->company_id,
                     'is_room_charge_type' => $charge['Room Charge Type'] == 'true' ? 1 : 0,
-                    'is_tax_exempt' => $charge['Tax Exempt'] == 'true' ? 1 : 0
+                    'is_tax_exempt' => $charge['Tax Exempt'] == 'true' ? 1 : 0,
+                    'is_default_room_charge_type' => $charge['Default Room Charge'] == 'true' ? 1 : 0,
                 );
 
                 $charge_type_id = $this->Charge_type_model->create_charge_types($data);
@@ -949,6 +954,7 @@ class Company extends MY_Controller
                 $charge_type_id = isset($get_the_charge_type['new_id']) ? $get_the_charge_type['new_id'] : 0 ;
             }
 
+            $room_charge_type = $this->Room_type_model->update_room_charge_type($charge_type_id, $charge['Charge Type Id']);
 
             $customer_id =  $this->Import_mapping_model->get_mapping_customer_id($charge['Customer Id']);
 
@@ -1000,6 +1006,7 @@ class Company extends MY_Controller
 
     function import_rates_csv($value){
 
+
         foreach ($value as $rate) {
 
             $get_rate_plan = $this->Rate_plan_model->get_rate_plan_by_name($rate['Name'], $this->company_id);
@@ -1007,6 +1014,8 @@ class Company extends MY_Controller
             $get_import_rate_plan = $this->Import_mapping_model->get_rate_plan_mapping_id($rate['Rate Plan Id']);
 
             $room_type =  $this->Import_mapping_model->get_mapping_room_type_id($rate['Room type Id']);
+
+            $charge_type_id = $this->Import_mapping_model->get_mapping_charge_id($rate['Charge Type']);
 
             $room_type_id = $room_type['new_id'];
             if(empty($room_type_id)){
@@ -1020,7 +1029,10 @@ class Company extends MY_Controller
                     "rate_plan_name" => $rate['Name'] == '' ? null : $rate['Name'],
                     "room_type_id" => $room_type_id,
                     "company_id" => $this->company_id,
-                    "is_selectable" => $rate['Read Only'] == 'true' ? 1 : 0
+                    "is_selectable" => $rate['Read Only'] == 'true' ? 1 : 0,
+                    "charge_type_id" => $charge_type_id['new_id'],
+                    "description" => $rate['Description'],
+                    "currency_id" => $rate['Currency']
                 );
                 $rate_plan_id = $this->Rate_plan_model->create_rate_plan($data);
 
@@ -1037,6 +1049,7 @@ class Company extends MY_Controller
                 $rate_plan_id = $get_import_rate_plan['new_id'];
             }
 
+            $room_rate_plan = $this->Rate_plan_model->update_room_rate_plan($rate_plan_id, $rate['Rate Plan Id']);
 
             $rates = $this->Import_mapping_model->get_rates_mapping_id($rate['Rate Id']);
 
@@ -1089,7 +1102,22 @@ class Company extends MY_Controller
                 $import_data = $this->Import_mapping_model->insert_import_mapping($data_import_mapping);
             }
 
+            $extra_rate = $rate['Rate Extras'];
+            $extra_ids = explode(',', $extra_rate);
 
+
+            // if($extra_ids){
+            //     foreach ($extra_ids as $extra_id) {
+            //        if($extra_ids != 0){
+            //             $existing_extras = $this->Extra_model->get_rate_plan_extra($rate_plan_id, $extra_id, $room_type['new_id'] ? $room_type['new_id'] : 0);
+
+            //     if(empty($existing_extras)){
+            //        $this->Extra_model->create_rate_plan_extras($rate_plan_id, $extra_id, $room_type['new_id'] ? $room_type['new_id'] : 0 );
+            //     }
+            //        }
+
+            // }
+            // }
 
         }
     }
@@ -1130,16 +1158,40 @@ class Company extends MY_Controller
                 }
             }
 
-            $custom_fields_name = explode(',',$customer['Customer Fields']);
 
 
-            foreach ($custom_fields_name as $customer_names) {
 
-                $existing_customer_fields = $this->Customer_field_model->get_customer_field_by_name($this->company_id, $customer_names);
-                if(empty($existing_customer_fields)){
-                    $customer_fields = $this->Customer_field_model->create_customer_field($this->company_id, $customer_names);
+            foreach($customer as $key => $customer_data) {
+
+                $key_name =  array(
+                    'Customer Id','Customer Name','Customer Type','Address','City','Region' ,'Phone','Fax' ,'Email'
+                );
+
+
+                if (!in_array($key, $key_name) ) {
+
+
+                    $existing_customer_fields = $this->Customer_field_model->get_customer_field_by_name($this->company_id, $key);
+
+                    if(empty($existing_customer_fields)){
+                        $customer_fields = $this->Customer_field_model->create_customer_field($this->company_id, $key);
+                    }else{
+                        $customer_fields =$existing_customer_fields[0]['id'];
+                    }
+
+
+                    if($customer_data){
+
+                        $custom_customer_fields = array(
+                            "customer_id" => $customer_id,
+                            "customer_field_id" => $customer_fields,
+                            "value" => $customer_data
+                        );
+
+                        $this->Customer_field_model->customer_field($custom_customer_fields);
+                    }
+
                 }
-
             }
 
 
@@ -1464,6 +1516,8 @@ class Company extends MY_Controller
 
         $value = json_decode($values,true);
 
+        // $charge_type_id = $this->Import_mapping_model->get_mapping_charge_id($value['room_charge_type_id']);
+
         $company_data = array(
             'is_total_balance_include_forecast' => isset($value['Feature settings']['Total Balance Include Forecast']) ? $value['Feature settings']['Total Balance Include Forecast'] : ""  ,
             'auto_no_show'  => isset($value['Feature settings']['Auto No Show']) ? $value['Feature settings']['Auto No Show'] : "",
@@ -1551,6 +1605,7 @@ class Company extends MY_Controller
             'night_audit_ignore_check_out_date'=> isset($value['Night Audits']['Night audit ignore check out date']) ? $value['Night Audits']['Night audit ignore check out date'] : "",
             'night_audit_charge_in_house_only'=> isset($value['Night Audits']['Night audit charge in house only']) ? $value['Night Audits']['Night audit charge in house only'] : "",
             'night_audit_force_check_out'=> isset($value['Night Audits']['Night audit force check out']) ? $value['Night Audits']['Night audit force check out'] : ""
+            // 'default_charge_name' => $charge_type_id['new_id'] ? $charge_type_id['new_id'] : 0 
 
         );
         $this->Company_model->update_company($this->company_id, $company_data);
