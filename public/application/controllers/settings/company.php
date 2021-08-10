@@ -787,7 +787,7 @@ class Company extends MY_Controller
                     'max_children' => $room['Max Children'] == ''  ? 0 : $room['Max Children'] ,
                     'max_occupancy' => $room['Max Occupancy'] == ''  ? 0 : $room['Max Occupancy'] ,
                     'min_occupancy' => $room['Min Occupancy'] == ''  ? 0 : $room['Min Occupancy'] ,
-                    'can_be_sold_online' => $room['Can be Sold online'] == 'true' ? 1 : 0,
+                    'can_be_sold_online' => $room['Room Type Can be Sold online'] == 'true' ? 1 : 0,
                     'default_room_charge' => $room['Room Charge'],
                     'description' => $room['Description']
 
@@ -810,7 +810,8 @@ class Company extends MY_Controller
                 // $get_room = $this->Room_model->get_room_by_name($room['Room Name'], $room_type_id);
                 $get_room = $this->Import_mapping_model->get_mapping_room_id($room['Room Id']);
                 if(empty($get_room)){
-                    $room_id = $this->Room_model->create_rooms($this->company_id, $room['Room Name'], $room_type_id, $room['Sort Order']);
+                    $sold_online = $room['Room Can be Sold online'] == 'true' ? 1 : 0 ;
+                    $room_id = $this->Room_model->create_rooms($this->company_id, $room['Room Name'], $room_type_id, $room['Sort Order'],$sold_online);
 
                     $data_import_mapping = Array(
                         "new_id" => $room_id,
@@ -1618,7 +1619,8 @@ class Company extends MY_Controller
                 'current_company_id' => $this->company_id,
                 'first_name'         => $team['First Name'],
                 'last_name'          => $team['Last Name'],
-                'password'           => $team['Password'] //random password to prevent login when password hasn't been set yet
+                'password'           => $team['Password'],
+                'activated'          => 1 
             );
 
             $get_user = $this->User_model->get_user_by_email($team['Email']);
@@ -1656,7 +1658,7 @@ class Company extends MY_Controller
             }
         }
 
-        $customer_fields = $value['Customer Fields'];
+         $customer_fields = $value['Customer Fields'];
 
         if($customer_fields != "" ){
 
