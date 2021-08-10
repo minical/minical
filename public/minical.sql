@@ -21812,6 +21812,17 @@ CREATE TABLE `posts` (
 
 
 --
+-- Table structure for table `extensions_x_vendor`
+--
+
+CREATE TABLE `extensions_x_vendor` (
+  `extension_name` varchar(100) NOT NULL,
+  `company_id` bigint(20) NOT NULL,
+  `vendor_id` bigint(20) NOT NULL,
+  `is_installed` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
 -- Indexes for dumped tables
 --
 
