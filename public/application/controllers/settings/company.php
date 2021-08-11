@@ -812,7 +812,7 @@ class Company extends MY_Controller
                 if(empty($get_room)){
                     $sold_online = $room['Room Can be Sold online'] == 'true' ? 1 : 0 ;
                     $sort_order = isset($room['Sort Order']) && $room['Sort Order'] != '' && $room['Sort Order'] != null ? $room['Sort Order'] : 0 ;
-                
+
                     $room_id = $this->Room_model->create_rooms($this->company_id, $room['Room Name'], $room_type_id, $sort_order,$sold_online);
 
                     $data_import_mapping = Array(
@@ -1302,10 +1302,43 @@ class Company extends MY_Controller
 
                 $charge_update = $this->Charge_model->update_charge_booking($booking['Booking Id'],$booking_id,$customer_id['new_id']);
 
+                $stay_in_customers = $booking['Staying Customers'];
+
+                if(isset($stay_in_customers) && $stay_in_customers != '' && $stay_in_customers != null){
+
+                    $customer_ids = explode(',', $booking['Staying Customers']);
+
+                    foreach ($customer_ids as $customer_id) {
+                        $staying_customer_id =  $this->Import_mapping_model->get_mapping_customer_id($customer_id);
+
+                        if($staying_customer_id){
+
+                            $existing_customer = $this->Booking_model->get_booking_staying_customer_by_id($staying_customer_id['new_id'],$this->company_id,$booking_id);
+                            if(!$existing_customer){
+
+                                $data = array(
+                                    'booking_id' => $booking_id,
+                                    'company_id' => $this->company_id,
+                                    'customer_id' => $staying_customer_id['new_id']
+                                );
+
+                                $this->Booking_model->create_booking_staying_customer($data);
+
+                            }
+
+
+
+
+                        }
+
+                    }
+                }
+
+
                 foreach($booking as $key => $booking_data) {
 
                     $key_name =  array(
-                        "Booking Id","Rate","Adult Count","Children Count","State","Booking Customer Id","Booked By","Balance","Balance Without Forecast","Use Rate Plan","Rate Plan Id","Charge Type","Check In Date","Check Out Date","Room","Room Type","Group Id","Group Name","Daily Charges","Pay Period","Source","Custom  Booking Source","Booking Note","Booking Room History"
+                        "Booking Id","Rate","Adult Count","Children Count","State","Booking Customer Id","Booked By","Balance","Balance Without Forecast","Use Rate Plan","Rate Plan Id","Charge Type","Check In Date","Check Out Date","Room","Room Type","Group Id","Group Name","Daily Charges","Pay Period","Source","Custom  Booking Source","Booking Note","Booking Room History","Staying Customers"
                     );
 
 
@@ -1622,7 +1655,7 @@ class Company extends MY_Controller
                 'first_name'         => $team['First Name'],
                 'last_name'          => $team['Last Name'],
                 'password'           => $team['Password'],
-                'activated'          => 1 
+                'activated'          => 1
             );
 
             $get_user = $this->User_model->get_user_by_email($team['Email']);
@@ -1660,7 +1693,7 @@ class Company extends MY_Controller
             }
         }
 
-         $customer_fields = $value['Customer Fields'];
+        $customer_fields = $value['Customer Fields'];
 
         if($customer_fields != "" ){
 
