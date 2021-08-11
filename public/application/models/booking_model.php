@@ -2812,4 +2812,28 @@ class Booking_model extends CI_Model {
 
     }
 
+    function create_booking_staying_customer($data){
+        $this->db->insert('booking_staying_customer_list', $data);
+    }
+
+    function get_booking_staying_customer_by_id($customer_id,$company_id,$booking_id){
+
+        $this->db->where('customer_id',$customer_id);
+        $this->db->where('company_id',$company_id);
+        $this->db->where('booking_id',$booking_id);
+
+        $query = $this->db->get('booking_staying_customer_list');
+
+        if ($query->num_rows() > 0)
+        {
+            $result = $query->result_array(0);
+            return $result;
+        }
+        else
+        {
+            return NULL;
+        }
+
+    }
+
 }
