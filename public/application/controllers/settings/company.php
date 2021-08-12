@@ -1727,7 +1727,7 @@ class Company extends MY_Controller
         if($payment_types){
             foreach ($payment_types as $payment_type) {
 
-                $existing_payment_type = $this->Payment_model->get_payment_types_by_name($payment_type['payment_type']);
+                $existing_payment_type = $this->Payment_model->get_payment_types_by_name($payment_type['payment_type'], $this->company_id);
 
                 if(empty($existing_payment_type)){
 
