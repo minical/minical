@@ -110,9 +110,10 @@ class Customer_type_model extends CI_Model {
         return $this->create_common_customer_type_setting($data);
     }
 
-      function get_customer_type_by_name($comapny_id, $name)
+      function get_customer_type_by_name($company_id, $name)
     {
             $this->db->where('name', $name);      
+            $this->db->where('company_id', $company_id);      
             $this->db->where('is_deleted', 0);
             $this->db->order_by("id", "asc");
 
