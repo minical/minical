@@ -1034,8 +1034,8 @@ class Company extends MY_Controller
                     "company_id" => $this->company_id,
                     "is_selectable" => $rate['Read Only'] == 'true' ? 1 : 0,
                     "charge_type_id" => $charge_type_id['new_id'],
-                    "description" => $rate['Description'],
-                    "currency_id" => $rate['Currency']
+                    "description" => $rate['Description']? $rate['Description'] : "",
+                    "currency_id" => $rate['Currency'] ? $rate['Currency'] : null
                 );
                 $rate_plan_id = $this->Rate_plan_model->create_rate_plan($data);
 
