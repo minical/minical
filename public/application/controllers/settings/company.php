@@ -1234,6 +1234,7 @@ class Company extends MY_Controller
                 case "One time" : $pay_period = '3'; break;
             }
 
+            $source = "";
             switch ($booking['Source']) {
                 case "Walk-in / Telephone" : $source = '0'; break;
                 case "Online Widget" : $source = '1'; break;
@@ -1627,6 +1628,7 @@ class Company extends MY_Controller
             'email'=> isset($value['Company Details']['Email']) ? $value['Company Details']['Email'] : "",
             'time_zone'=> isset($value['Company Details']['Time zone']) ? $value['Company Details']['Time zone'] : "",
             'number_of_rooms'=> isset($value['Company Details']['Rooms']) ? $value['Company Details']['Rooms'] : "",
+            'website' => isset($value['Company Details']['Website']) ? $value['Company Details']['Website'] : "",
 
 
             'invoice_header'=> isset($value['Invoice headers']['Invoice Header']) ? $value['Invoice headers']['Invoice Header'] : "",
@@ -1661,15 +1663,14 @@ class Company extends MY_Controller
                 'current_company_id' => $this->company_id,
                 'first_name'         => $team['First Name'],
                 'last_name'          => $team['Last Name'],
-                'password'           => $team['Password'],
-                'activated'          => 1
+                'password'           => $team['Password']
             );
 
             $get_user = $this->User_model->get_user_by_email($team['Email']);
 
             if(!$get_user){
 
-                $user =  $this->users->create_user($data, false);
+                $user =  $this->users->create_user($data, true);
 
                 $this->User_model->add_teams($this->company_id, $user['user_id'],$team['permission']);
             }
