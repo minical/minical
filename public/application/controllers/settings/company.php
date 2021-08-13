@@ -1508,7 +1508,7 @@ class Company extends MY_Controller
 
             if(empty($get_payment_type)){
 
-                $read_only = $payment['Read Only'] == true ? 1 : 0 ;
+                $read_only = $payment['Read Only'] == 'true' ? 1 : 0 ;
                 $payment_id = $this->Payment_model->create_payment_type($this->company_id, $payment['Payment Type'],$read_only);
             }else{
                 $payment_id = isset($get_payment_type[0]->payment_type_id) ? $get_payment_type[0]->payment_type_id : ' ' ;
