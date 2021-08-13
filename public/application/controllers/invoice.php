@@ -192,7 +192,7 @@ class Invoice extends MY_Controller {
                 $data['customers'][$key]['cc_tokenex_token'] = $card_data['cc_tokenex_token'];
                 $data['customers'][$key]['cc_cvc_encrypted'] = $card_data['cc_cvc_encrypted'];
                 $data['customers'][$key]['evc_card_status'] = $card_data['evc_card_status'];
-                $data['customers'][$key]['customer_meta_token'] = isset(json_decode($card_data['customer_meta_data'], true)['token']);
+                $data['customers'][$key]['customer_meta_token'] = isset($card_data['customer_meta_data']) && $card_data['customer_meta_data'] && isset(json_decode($card_data['customer_meta_data'], true)['token']) ? json_decode($card_data['customer_meta_data'], true)['token'] : null;
             }
         }
         // for company logo
