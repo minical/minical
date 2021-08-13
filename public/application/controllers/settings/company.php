@@ -1502,11 +1502,14 @@ class Company extends MY_Controller
 
     function import_payments_csv($value){
 
+
         foreach ($value as $payment) {
-            $get_payment_type = $this->Payment_model->get_payment_types_by_name($payment['Payment Type']);
+            $get_payment_type = $this->Payment_model->get_payment_types_by_name($payment['Payment Type'],$this->company_id);
 
             if(empty($get_payment_type)){
-                $payment_id = $this->Payment_model->create_payment_type($this->company_id, $payment['Payment Type']);
+
+                $read_only = $payment['Read Only'] == 'true' ? 1 : 0 ;
+                $payment_id = $this->Payment_model->create_payment_type($this->company_id, $payment['Payment Type'],$read_only);
             }else{
                 $payment_id = isset($get_payment_type[0]->payment_type_id) ? $get_payment_type[0]->payment_type_id : ' ' ;
             }
@@ -1527,7 +1530,8 @@ class Company extends MY_Controller
                         "selling_date" => $payment['Selling Date'] == '' ? null : $payment['Selling Date'],
                         "customer_id" => $customer_id['new_id'],
                         "payment_status" => $payment['Payment Status'] == '' ? null : $payment['Payment Status'],
-                        "is_captured" => $payment['Payment Capture'] == 'true' ? 1 : 0
+                        "is_captured" => $payment['Payment Capture'] == 'true' ? 1 : 0,
+                        "read_only" => $payment['Payment Read Only'] == 'true' ? 1 : 0
                     );
 
                     $payment_create_id = $this->Payment_model->insert_payment($data);
@@ -1622,6 +1626,9 @@ class Company extends MY_Controller
             'fax'=> isset($value['Company Details']['Fax']) ? $value['Company Details']['Fax'] : "",
             'email'=> isset($value['Company Details']['Email']) ? $value['Company Details']['Email'] : "",
             'time_zone'=> isset($value['Company Details']['Time zone']) ? $value['Company Details']['Time zone'] : "",
+            'number_of_rooms'=> isset($value['Company Details']['Rooms']) ? $value['Company Details']['Rooms'] : "",
+
+
             'invoice_header'=> isset($value['Invoice headers']['Invoice Header']) ? $value['Invoice headers']['Invoice Header'] : "",
             'statement_number'=> isset($value['Invoice headers']['Statement Number']) ? $value['Invoice headers']['Statement Number'] : "",
 
