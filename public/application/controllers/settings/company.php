@@ -1835,6 +1835,36 @@ class Company extends MY_Controller
             }
         }
 
+        $room_types = $value['Room Types'];
+        if($room_types){
+            foreach($room_types as $room_type){
+                $room_type_id =  $this->Import_mapping_model->get_mapping_room_type_id($room_type['id']);
+                if($room_type_id){
+                    $data = array(
+                        'description' => $room_type['description']
+                    );
+                    $this->Room_type_model->update_room_type($room_type_id['new_id'], $data);
+                }
+
+            }
+        }
+
+        $rate_plans = $value['Rate Plan'];
+        if($rate_plans){
+            foreach($rate_plans as $rate_plan){
+                $rate_plan_id = $this->Import_mapping_model->get_rate_plan_mapping_id($rate_plan['rate_plan_id']);
+                if($rate_plan_id){
+                    $data = array(
+                        'description' => $rate_plan['description']
+                    );
+                    $this->Rate_plan_model->update_rate_plan($data,$rate_plan_id['new_id']);
+
+                }
+
+
+            }
+        }
+
 
     }
 
