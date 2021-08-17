@@ -801,17 +801,45 @@
                                 <?php if ($payment['payment_gateway_used'] && !$read_only): ?>
                                     <?php
                                     if($payment['payment_status'] == 'partial'){
-                                        printf(
-                                            '%s %s',
-                                            'Partial Refund ID:',
-                                            $payment['gateway_charge_id']
-                                        );
+                                        if (strlen($payment['gateway_charge_id'] ) > 30){
+                                            $charge_id = substr($payment['gateway_charge_id'], 0, 20) . '...';
+                                            printf(
+                                                    '%s %s',
+                                                    'Partial Refund ID:',
+                                                    $charge_id
+                                                ); 
+                                        }else{
+                                            printf(
+                                                    '%s %s',
+                                                    'Partial Refund ID:',
+                                                    $payment['gateway_charge_id']
+                                                ); 
+                                        }
+                                        // printf(
+                                        //     '%s %s',
+                                        //     'Partial Refund ID:',
+                                        //     $payment['gateway_charge_id']
+                                        // );
                                     }else{
-                                        printf(
-                                            '%s %s',
-                                            $payment['amount'] > 0 && $payment['gateway_charge_id'] ? 'Charge ID:' : ($payment['gateway_charge_id'] ? 'Refund ID:' : ''),
-                                            $payment['gateway_charge_id']
-                                        );
+                                        if (strlen($payment['gateway_charge_id'] ) > 30){
+                                            $charge_id = substr($payment['gateway_charge_id'], 0, 20) . '...';
+                                            printf(
+                                                '%s %s',
+                                                $payment['amount'] > 0 && $charge_id ? 'Charge ID:' : ($charge_id ? 'Refund ID:' : ''),
+                                                $charge_id
+                                            ); 
+                                        }else{
+                                            printf(
+                                                '%s %s',
+                                                $payment['amount'] > 0 && $payment['gateway_charge_id'] ? 'Charge ID:' : ($payment['gateway_charge_id'] ? 'Refund ID:' : ''),
+                                                $payment['gateway_charge_id']
+                                            ); 
+                                        }
+                                        // printf(
+                                        //     '%s %s',
+                                        //     $payment['amount'] > 0 && $payment['gateway_charge_id'] ? 'Charge ID:' : ($payment['gateway_charge_id'] ? 'Refund ID:' : ''),
+                                        //     $payment['gateway_charge_id']
+                                        // );
                                     }
                                     ?>
                                 <?php endif; ?>
