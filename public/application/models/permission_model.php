@@ -42,6 +42,13 @@ class Permission_model extends CI_Model {
                 (
                     $function_name === 'channex_get_bookings'
                 )
+            ) ||
+
+            (
+                $controller_name === "nexio_integration" && 
+                (
+                    $function_name === 'forward_encrypt_card'
+                )
             )
 
         ) {
