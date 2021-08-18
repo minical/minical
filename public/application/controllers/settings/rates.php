@@ -1305,8 +1305,9 @@ class Rates extends MY_Controller
                 break;
             }
 
+            $extra_rate = $this->security->xss_clean($updated_extra['default_rate']);
 			$rate_data = array(
-				'rate' => $this->security->xss_clean($updated_extra['default_rate']),
+				'rate' => ($extra_rate != '' && $extra_rate >= 0) ? trim($extra_rate) : 0,
 				'currency_id' => $default_currency['currency_id']
 			);
 			$this->Rate_model->update_extra_rate($extra_field_id, $rate_data);

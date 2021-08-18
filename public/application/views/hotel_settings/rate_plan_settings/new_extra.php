@@ -1,6 +1,6 @@
 <tr class="extra-field-tr" id="<?php echo $extra_id; ?>">
 	<td>
-		<input name="name" type="text"  class="form-control" value="<?php echo $extra_name; ?>" maxlength="50" style="width:250px"/>
+		<input name="name" type="text"  class="form-control" value="<?php echo $extra_name; ?>" maxlength="250" style="width:250px"/>
 	</td>
 	<td class="text-center">
 		<select name="charging-scheme" class="form-control">
@@ -22,7 +22,7 @@
     </td>
 
     <td class="text-center">
-        <input name="default-rate" type="text" class="form-control" value="0"/>
+        <input name="default-rate" type="number" min="0" class="form-control" value="0"/>
     </td>
     <td class="text-center">
     	<div class="checkbox">
