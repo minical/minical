@@ -26,7 +26,7 @@ class Permission_model extends CI_Model {
             ($controller_name === "menu") ||
             ($controller_name === "test") ||
             ($controller_name === "help") ||
-			($controller_name === "channel_manager") ||
+            ($controller_name === "channel_manager") ||
             (
                 isset($this->session->userdata['customer_modify_booking']) && $this->session->userdata['customer_modify_booking'] &&
                 $this->session->userdata['customer_modify_booking']['allow'] &&
@@ -72,10 +72,10 @@ class Permission_model extends CI_Model {
 
 
         // If user is able to login to the property, user is given with following permissions
-        $user_permissions = $this->_get_user_permissions($user_id, $company_id, $controller_name, $function_name);	
-		
+        $user_permissions = $this->_get_user_permissions($user_id, $company_id, $controller_name, $function_name);  
+        
         if (sizeof($user_permissions) > 0)
-        {			
+        {           
             if (
                 ($controller_name === "wizard") ||
                 ($controller_name === "menu") ||
@@ -117,7 +117,7 @@ class Permission_model extends CI_Model {
             ) {
                 return true;
             }
-		}
+        }
         
         // Permission-specific access grants
         foreach ($user_permissions as $permission)
@@ -253,14 +253,19 @@ class Permission_model extends CI_Model {
                         $controller_name == 'room' &&  $function_name == 'date_manager'
                     )
                 ) ||
-				($permission == 'is_housekeeping' &&
+                ($permission == 'is_housekeeping' &&
                     (
                         $controller_name == 'room' &&  
-						(
-							$function_name == 'index' || $function_name == 'update_room_status' || $function_name == 'get_notes_AJAX' ||
-							$function_name == 'update_notes_AJAX' || $function_name == 'set_rooms_clean'
-						)
+                        (
+                            $function_name == 'index' || $function_name == 'update_room_status' || $function_name == 'get_notes_AJAX' ||
+                            $function_name == 'update_notes_AJAX' || $function_name == 'set_rooms_clean'
+                        )
                     )
+                ) 
+                ||
+                (
+                    $permission == 'access_to_extensions' && 
+                    ($controller_name == 'extensions' || $this->router->fetch_module() != '')
                 )
             )
             {
@@ -308,10 +313,10 @@ class Permission_model extends CI_Model {
                 GROUP BY up.company_id";
         
         $query = $this->db->query($sql);
-		if($query->num_rows() >= 1)
-		{
+        if($query->num_rows() >= 1)
+        {
             return true;
-		}
+        }
         
         return false;
     }
@@ -345,10 +350,10 @@ class Permission_model extends CI_Model {
                 GROUP BY up.company_id";
         
         $query = $this->db->query($sql);
-		if($query->num_rows() >= 1)
-		{
+        if($query->num_rows() >= 1)
+        {
             return true;
-		}
+        }
         
         return false;
     }
@@ -382,10 +387,10 @@ class Permission_model extends CI_Model {
                 GROUP BY up.company_id";
         
         $query = $this->db->query($sql);
-		if($query->num_rows() >= 1)
-		{
+        if($query->num_rows() >= 1)
+        {
             return true;
-		}
+        }
 
         return false;
     }
@@ -420,10 +425,10 @@ class Permission_model extends CI_Model {
                 GROUP BY up.company_id";
         
         $query = $this->db->query($sql);
-		if($query->num_rows() >= 1)
-		{
+        if($query->num_rows() >= 1)
+        {
             return true;
-		}
+        }
         
         return false;
     }
@@ -461,10 +466,10 @@ class Permission_model extends CI_Model {
                 GROUP BY up.company_id";
         
         $query = $this->db->query($sql);
-		if($query->num_rows() >= 1)
-		{
+        if($query->num_rows() >= 1)
+        {
             return true;
-		}
+        }
         
         return false;
     }
@@ -504,11 +509,11 @@ class Permission_model extends CI_Model {
                 GROUP BY up.company_id";
         
         $query = $this->db->query($sql);
-		if($query->num_rows() >= 1)
-		{
+        if($query->num_rows() >= 1)
+        {
             $result_array = $query->result_array();
             $results[] = $result_array[0]['permission'];
-		}
+        }
 
         return $results;
     }
