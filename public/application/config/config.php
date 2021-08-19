@@ -37,13 +37,13 @@ switch ($_SERVER['HTTP_HOST']) {
         $config['app_environment'] = 'development';
 		$config['base_url']	= $protocol . $_SERVER['HTTP_HOST'];
 		// $config['api_url']	= "https://seasonal.io/minical/opensource/demo/api";
-		$config['api_url']	= "https://demoapi.minical.io/";
+		$config['api_url']	= $protocol . "demoapi.minical.io/";
 		break;
     default: // production // other whitelabel companies
         $config['app_environment'] = 'production';
         // whitelabel partners might not have ssl installed
 		$config['base_url']	= $protocol . $_SERVER['HTTP_HOST'];
-		$config['api_url']	= "https://api.minical.io"; // production/staging
+		$config['api_url']	= $protocol . "api.minical.io"; // production/staging
 		break;
 }
 
