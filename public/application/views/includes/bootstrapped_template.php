@@ -7,7 +7,10 @@
 	<div class="app-container  app-theme-white body-tabs-shadow fixed-header fixed-sidebar">
 
 
-		<?php
+		<?php 
+
+		$protocol = $this->config->item('server_protocol');
+
 		//Generate css and js file arrays if they don't already exist.
 		//This prevents clobbering of the variables caused by multiple loading of this file (ie. iframes).
 		if (!isset($css_files))
@@ -146,7 +149,7 @@
 			$language = $this->session->userdata('language');
 			$this->lang->load('menu', $language);
 			
-			if(current_url() != "http://" . $_SERVER['HTTP_HOST'].'/auth/register' && current_url() != "http://" . $_SERVER['HTTP_HOST'].'/auth/login' && current_url() != "http://" . $_SERVER['HTTP_HOST'].'/auth/forgot_password'){
+			if(current_url() != $protocol . $_SERVER['HTTP_HOST'].'/auth/register' && current_url() != $protocol . $_SERVER['HTTP_HOST'].'/auth/login' && current_url() != $protocol . $_SERVER['HTTP_HOST'].'/auth/forgot_password'){
 				// $this->load->view('includes/bootstrapped_menu', $data);
 				
 			}
@@ -155,7 +158,7 @@
 			<div class="wrapper clearfix">
 
 
-		<?php if(current_url() == "http://" . $_SERVER['HTTP_HOST']."/auth/login"){
+		<?php if(current_url() == $protocol . $_SERVER['HTTP_HOST']."/auth/login"){
 			?>
 			<div class="col-md-12 main" style="padding-top: 100px" >
 			<?php $this->load->view($main_content);?>
@@ -176,7 +179,7 @@
                     	</button>
                 		</div>
             		</div>
-					<?php if(isset($menu_on) && $menu_on && current_url() != "http://" . $_SERVER['HTTP_HOST'].'/auth/register' && current_url() != "http://" . $_SERVER['HTTP_HOST'].'/auth/login' && current_url() != "http://" . $_SERVER['HTTP_HOST'].'/auth/forgot_password'){?>
+					<?php if(isset($menu_on) && $menu_on && current_url() != $protocol . $_SERVER['HTTP_HOST'].'/auth/register' && current_url() != $protocol . $_SERVER['HTTP_HOST'].'/auth/login' && current_url() != $protocol . $_SERVER['HTTP_HOST'].'/auth/forgot_password'){?>
 						<div  >
 
 							<?php 
@@ -189,7 +192,7 @@
 
 				<?php if(isset($menu_on) && $menu_on){ ?>
                     <?php
-                        if(current_url() != "http://" . $_SERVER['HTTP_HOST'].'/booking' && !str_ends_with(current_url(), '/public/booking')){
+                        if(current_url() != $protocol . $_SERVER['HTTP_HOST'].'/booking' && !str_ends_with(current_url(), '/public/booking')){
                             ?>
                             <div class="app-main__outer main" ><div class="app-main__inner">
                         <?php

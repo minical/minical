@@ -337,7 +337,8 @@ class MY_Controller extends CI_Controller {
             }
 
             $host_name = $_SERVER['HTTP_HOST'];
-            if ((!$whitelabelinfo && $this->company_data['partner_id']) || ($whitelabelinfo && ($host_name ==  'http://'. $_SERVER['HTTP_HOST']) && isset($whitelabelinfo['id']) && $whitelabelinfo['id'] != $this->company_data['partner_id'])) {
+            $protocol = $this->config->item('server_protocol');
+            if ((!$whitelabelinfo && $this->company_data['partner_id']) || ($whitelabelinfo && ($host_name ==  $protocol . $_SERVER['HTTP_HOST']) && isset($whitelabelinfo['id']) && $whitelabelinfo['id'] != $this->company_data['partner_id'])) {
                 $white_label_detail = $this->Whitelabel_partner_model->get_partners(array('id' => $this->company_data['partner_id']));
                 if($white_label_detail && isset($white_label_detail[0])) {
                     $this->session->set_userdata('white_label_information', $white_label_detail[0]);
