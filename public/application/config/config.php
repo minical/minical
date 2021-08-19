@@ -23,6 +23,10 @@ if (!isset($_SERVER['HTTP_HOST'])) {
 
 date_default_timezone_set("America/Los_Angeles"); // temporary quick fix
 
+$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+
+$config['server_protocol'] = $protocol;
+
 switch ($_SERVER['HTTP_HOST']) {
 	case 'localhost': // local
         $config['app_environment'] = 'development';
@@ -31,15 +35,15 @@ switch ($_SERVER['HTTP_HOST']) {
 		break;
 	case 'demo.minical.io': // local
         $config['app_environment'] = 'development';
-		$config['base_url']	= "http://" . $_SERVER['HTTP_HOST'];
-		$config['api_url']	= "http://seasonal.io/minical/opensource/demo/api";
+		$config['base_url']	= $protocol . $_SERVER['HTTP_HOST'];
+		// $config['api_url']	= "https://seasonal.io/minical/opensource/demo/api";
+		$config['api_url']	= $protocol . "demoapi.minical.io/";
 		break;
     default: // production // other whitelabel companies
         $config['app_environment'] = 'production';
         // whitelabel partners might not have ssl installed
-        $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
 		$config['base_url']	= $protocol . $_SERVER['HTTP_HOST'];
-		$config['api_url']	= "http://api.minical.io"; // production/staging
+		$config['api_url']	= $protocol . "api.minical.io"; // production/staging
 		break;
 }
 
@@ -424,7 +428,7 @@ $config['quickbooks_gateway_client_secret']	= isset($_SERVER["QUICKBOOK_CLIENT_S
 
 $config['module_location'] = APPPATH.'extensions/';
 
-$config['module_base_path']	= "http://" . $_SERVER['HTTP_HOST'];
+$config['module_base_path']	= $protocol . $_SERVER['HTTP_HOST'];
 
 /* End of file config.php */
 /* Location: ./application/config/config.php */
