@@ -14,12 +14,13 @@
 | path to your installation.
 |
 */
+$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
 
 if ($_SERVER['HTTP_HOST'] == "localhost") {
 	$config['base_url']	= str_replace("public","api",getenv('PROJECT_URL')); // localhost
     $config['app_environment'] = 'development';
 } else {
-	$config['base_url']	= "http://" . $_SERVER['HTTP_HOST']; // production/staging
+	$config['base_url']	= $protocol . $_SERVER['HTTP_HOST']; // production/staging
     if($_SERVER['HTTP_HOST'] == "api.minical.io") {
         $config['app_environment'] = 'production';
     } else {
