@@ -56,14 +56,20 @@ class Cron_model extends CI_Model {
         $SQL = "
             DELETE FROM `sessions` 
             WHERE 
-            (`user_agent` like '%UptimeRobot%' or `ip_address` = '66.42.82.40')
+            (
+            `user_agent` like '%UptimeRobot%' or 
+            `user_agent` like '%Wget%' or 
+            `user_agent` IS NULL or
+            `user_agent` = '' or
+            `ip_address` = '66.42.82.40'
+            )
             AND `session_id` NOT IN (
               SELECT `session_id`
               FROM (
                 SELECT `session_id`
                 FROM `sessions` 
                 ORDER BY `last_activity` DESC
-                LIMIT 100 -- keep this many records
+                LIMIT 200 -- keep this many records
               ) foo
             );
         ";
