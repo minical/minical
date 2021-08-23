@@ -801,9 +801,8 @@ function initializeChargeCaptureModal(paymentID, refundHeading, amountStatus, am
                         if(msg){
                             if (parseFloat(amount) > amountTotal || amount == '')
                             {
-                                alert("if");
                                 $('#charge-capture-payment-btn').attr('disabled', false);
-                                alert(msg)
+                                alert(msg);
                                 return false;
                             }
                         }
