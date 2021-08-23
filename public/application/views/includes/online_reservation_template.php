@@ -80,7 +80,7 @@ $files = get_asstes_files($this->module_assets_files, $this->router->fetch_modul
 							// ensure there's http:// in front of URL
 							$website = $company_data['website'];
 							if (!preg_match("~^(?:f|ht)tps?://~i", $website)) {
-						        $website = "http://" . $website;
+						        $website = "https://" . $website;
 						    }
 						?>
                         <h4 style="margin-top: 4px;"><a href="<?php echo $website; ?>"><?php echo $company_data['name']; ?></a></h4>
@@ -211,9 +211,9 @@ $files = get_asstes_files($this->module_assets_files, $this->router->fetch_modul
 	     $year= date("Y",$time);
 	     echo l('powered by', true);
          if(empty($whitelabelinfo) || (isset($whitelabelinfo['name']) && $whitelabelinfo['name'] == 'Minical')) {
-             echo " <a target='_blank' href='http://www.minical.io'>Minical</a>";
+             echo " <a target='_blank' href='https://www.minical.io'>Minical</a>";
          }else {
-             echo (!empty($whitelabelinfo['domain']) ? " <a target='_blank' href='http://".$whitelabelinfo['domain']."'>" : " <a href='#'>").$partner_name."</a>";
+             echo (!empty($whitelabelinfo['domain']) ? " <a target='_blank' href='https://".$whitelabelinfo['domain']."'>" : " <a href='#'>").$partner_name."</a>";
          }
 		 echo ''; //Don't bother with showing copyright until a dashbar is built.
 	     ?>
