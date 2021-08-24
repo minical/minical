@@ -2,31 +2,31 @@
 
 class Channex_model extends CI_Model {
 
-	function __construct()
+    function __construct()
     {
         parent::__construct();
     }
 
-	function save_token($data)
+    function save_token($data)
     {
         $data = (object)$data;
         $this->db->insert("ota_manager", $data);
 
         if ($this->db->_error_message())
-		{
+        {
             show_error($this->db->_error_message());
-		}
+        }
       
-      	$query = $this->db->query('select LAST_INSERT_ID( ) AS last_id');
-      	$result = $query->result_array();
-      	if(isset($result[0]))
-      	{  
-        	return $result[0]['last_id'];
-      	}
-      	else
-      	{  
-        	return null;
-      	}
+        $query = $this->db->query('select LAST_INSERT_ID( ) AS last_id');
+        $result = $query->result_array();
+        if(isset($result[0]))
+        {  
+            return $result[0]['last_id'];
+        }
+        else
+        {  
+            return null;
+        }
     }
 
     function update_token($data)
@@ -41,30 +41,30 @@ class Channex_model extends CI_Model {
         $this->db->insert("ota_properties", $data);
 
         if ($this->db->_error_message())
-		{
+        {
             show_error($this->db->_error_message());
-		}
+        }
     }
 
     function update_properties($data)
     {
-        $this->db->where('ota_id', $data['channex_id']);
+        $this->db->where('ota_manager_id', $data['channex_id']);
         $this->db->where('company_id', $data['company_id']);
         $this->db->update("ota_properties", $data);
     }
 
     function get_token($channex_id = null, $company_id = null){
-    	$this->db->from('ota_manager');
+        $this->db->from('ota_manager');
 
         if($channex_id)
-    	   $this->db->where('id', $channex_id);
+           $this->db->where('id', $channex_id);
 
         if($company_id)
            $this->db->where('company_id', $company_id);
 
-    	$query = $this->db->get();
+        $query = $this->db->get();
 
-    	$result = $query->row_array();
+        $result = $query->row_array();
         
         if ($this->db->_error_message())
         {
@@ -97,15 +97,15 @@ class Channex_model extends CI_Model {
     }
 
     function get_data_by_email($email, $company_id = null){
-    	$this->db->from('ota_manager');
-    	$this->db->where('email', $email);
+        $this->db->from('ota_manager');
+        $this->db->where('email', $email);
 
         if($company_id)
             $this->db->where('company_id', $company_id);
 
-    	$query = $this->db->get();
+        $query = $this->db->get();
 
-    	$result = $query->row_array();
+        $result = $query->row_array();
         
         if ($this->db->_error_message())
         {
@@ -120,13 +120,13 @@ class Channex_model extends CI_Model {
     }
 
     function get_properties_by_company_id($company_id, $channex_id){
-    	$this->db->from('ota_properties');
-    	$this->db->where('company_id', $company_id);
-    	$this->db->where('ota_id', $channex_id);
+        $this->db->from('ota_properties');
+        $this->db->where('company_id', $company_id);
+        $this->db->where('ota_manager_id', $channex_id);
 
-    	$query = $this->db->get();
+        $query = $this->db->get();
 
-    	$result = $query->row_array();
+        $result = $query->row_array();
         
         if ($this->db->_error_message())
         {
@@ -140,9 +140,16 @@ class Channex_model extends CI_Model {
         return null;
     }
 
-    function get_channex_x_company($property_id = null, $company_id){
+    function get_channex_x_company($property_id = null, $company_id = null, $ota_id = null){
+
         $this->db->from('ota_x_company');
-        $this->db->where('company_id', $company_id);
+
+        if($company_id)
+            $this->db->where('company_id', $company_id);
+
+        // TODO: fix it so ota id is being added to where condition
+//        if($ota_id)
+//            $this->db->where('ota_manager_id', $ota_id);
 
         if($property_id)
             $this->db->where('ota_property_id', $property_id);
@@ -163,28 +170,41 @@ class Channex_model extends CI_Model {
         return null;
     }
 
-    function save_channex_company($data)
+    function save_channex_company($data, $is_update = false)
     {
-        $this->db->insert("ota_x_company", $data);
+        if($is_update){
 
-        if ($this->db->_error_message())
-        {
-            show_error($this->db->_error_message());
-        }
+            $this->db->where('company_id', $data['company_id']);
+            $this->db->where('ota_property_id', $data['ota_property_id']);
+            $this->db->update('ota_x_company', $data);
+            
+            if ($this->db->_error_message())
+                show_error($this->db->_error_message());
+                
+            //TO DO: error reporting for update fail.
+            return TRUE;
+        } else {
+            $this->db->insert("ota_x_company", $data);
 
-        $query = $this->db->query('select LAST_INSERT_ID( ) AS last_id');
-        $result = $query->result_array();
-        if(isset($result[0]))
-        {  
-            return $result[0]['last_id'];
-        }
-        else
-        {  
-            return null;
+            if ($this->db->_error_message())
+            {
+                show_error($this->db->_error_message());
+            }
+
+            $query = $this->db->query('select LAST_INSERT_ID( ) AS last_id');
+            $result = $query->result_array();
+            if(isset($result[0]))
+            {  
+                return $result[0]['last_id'];
+            }
+            else
+            {  
+                return null;
+            }
         }
     }
 
-    function create_or_update_room_type($ota_x_company_id, $ota_room_type_id, $minical_room_type_id)
+    function create_or_update_room_type($ota_x_company_id, $ota_room_type_id, $minical_room_type_id, $company_id)
     {
         if($this->get_room_type($ota_x_company_id, $ota_room_type_id, null)){
             return $this->update_room_type($ota_x_company_id, $ota_room_type_id, $minical_room_type_id);
@@ -192,7 +212,8 @@ class Channex_model extends CI_Model {
         $data = array (
             'ota_x_company_id' => $ota_x_company_id,
             'ota_room_type_id' => $ota_room_type_id,
-            'minical_room_type_id' => $minical_room_type_id
+            'minical_room_type_id' => $minical_room_type_id,
+            'company_id' => $company_id
         );
         
         $this->db->insert('ota_room_types', $data);
@@ -247,31 +268,37 @@ class Channex_model extends CI_Model {
         }
     }
 
-    function create_or_update_rate_plan($ota_x_company_id, $ota_room_type_id, $minical_rate_plan_id, $ota_rate_plan_id)
+    function create_or_update_rate_plan($ota_x_company_id, $ota_room_type_id, $minical_rate_plan_id, $ota_rate_plan_id, $company_id)
     {
         if($this->get_rate_plan($ota_x_company_id, $ota_room_type_id, $minical_rate_plan_id, $ota_rate_plan_id)){
-            return $this->update_rate_plan($ota_x_company_id, $ota_room_type_id, $minical_rate_plan_id, $ota_rate_plan_id);
+            return $this->update_rate_plan($ota_x_company_id, $ota_room_type_id, $minical_rate_plan_id, $ota_rate_plan_id, $company_id);
+        } else {
+            $data = array (
+                'ota_x_company_id' => $ota_x_company_id,
+                'ota_room_type_id' => $ota_room_type_id,
+                'minical_rate_plan_id' => $minical_rate_plan_id,
+                'ota_rate_plan_id' => $ota_rate_plan_id,
+                'company_id' => $company_id
+            );
+
+            $this->db->insert('ota_rate_plans', $data);
+            
+            // if there's an error in query, show error message
+            if ($this->db->_error_message())
+                show_error($this->db->_error_message());
+            else // otherwise, return insert_id;
+                return $this->db->insert_id();
         }
-        $data = array (
-            'ota_x_company_id' => $ota_x_company_id,
-            'ota_room_type_id' => $ota_room_type_id,
-            'minical_rate_plan_id' => $minical_rate_plan_id,
-            'ota_rate_plan_id' => $ota_rate_plan_id
-        );
         
-        $this->db->insert('ota_rate_plans', $data);
-        
-        // if there's an error in query, show error message
-        if ($this->db->_error_message())
-            show_error($this->db->_error_message());
-        else // otherwise, return insert_id;
-            return $this->db->insert_id();
     }
     
-    function update_rate_plan($ota_x_company_id, $ota_room_type_id, $minical_rate_plan_id, $ota_rate_plan_id)
+    function update_rate_plan($ota_x_company_id, $ota_room_type_id, $minical_rate_plan_id, $ota_rate_plan_id, $company_id)
     {
         $this->db->where('ota_x_company_id', $ota_x_company_id);
         $this->db->where('ota_room_type_id', $ota_room_type_id);
+        $this->db->where('ota_rate_plan_id', $ota_rate_plan_id);
+        $this->db->where('company_id', $company_id);
+
         $data = array (
             'ota_x_company_id' => $ota_x_company_id,
             'ota_room_type_id' => $ota_room_type_id,
@@ -306,13 +333,13 @@ class Channex_model extends CI_Model {
         }
     }
 
-    function get_channex_room_types($company_id, $ota_id)
+    function get_channex_room_types($company_id, $ota_manager_id)
     {
-        $this->db->from('ota_room_types as crt, ota_x_company as cxc');      
-        $this->db->where('crt.ota_x_company_id = cxc.ota_x_company_id');
-        $this->db->where('cxc.is_active = 1');
-        $this->db->where('cxc.ota_id', $ota_id);
-        $this->db->where('cxc.company_id', $company_id);
+        $this->db->from('ota_room_types as ort, ota_x_company as oxc');      
+        $this->db->where('ort.ota_x_company_id = oxc.ota_x_company_id');
+        $this->db->where('oxc.is_active = 1');
+        $this->db->where('oxc.ota_manager_id', $ota_manager_id);
+        $this->db->where('oxc.company_id', $company_id);
         
         $query = $this->db->get();
         
@@ -327,13 +354,13 @@ class Channex_model extends CI_Model {
         return NULL;
     }
 
-    function get_channex_rate_plans($company_id, $ota_id)
+    function get_channex_rate_plans($company_id, $ota_manager_id)
     {
-        $this->db->from('ota_rate_plans as crp, ota_x_company as cxc');      
-        $this->db->where('crp.ota_x_company_id = cxc.ota_x_company_id');
-        $this->db->where('cxc.is_active = 1');
-        $this->db->where('cxc.ota_id', $ota_id);
-        $this->db->where('cxc.company_id', $company_id);
+        $this->db->from('ota_rate_plans as orp, ota_x_company as oxc');      
+        $this->db->where('orp.ota_x_company_id = oxc.ota_x_company_id');
+        $this->db->where('oxc.is_active = 1');
+        $this->db->where('oxc.ota_manager_id', $ota_manager_id);
+        $this->db->where('oxc.company_id', $company_id);
         
         $query = $this->db->get();
         
@@ -348,12 +375,15 @@ class Channex_model extends CI_Model {
         return NULL;
     }
 
-    function get_channex_room_types_by_id($room_type_id = null)
+    function get_channex_room_types_by_id($room_type_id = null, $company_id = null)
     {
         $this->db->from('ota_room_types'); 
         
         if($room_type_id)     
-            $this->db->where('minical_room_type_id', $room_type_id);
+            $this->db->where_in('minical_room_type_id', $room_type_id);
+
+        if($company_id)
+            $this->db->where('company_id', $company_id);
         
         $query = $this->db->get();
         
@@ -368,12 +398,15 @@ class Channex_model extends CI_Model {
         return NULL;
     }
 
-    function get_channex_rate_plans_by_id($rate_plan_id = null)
+    function get_channex_rate_plans_by_id($rate_plan_id = null, $company_id = null)
     {
         $this->db->from('ota_rate_plans');  
 
-        if($rate_plan_id)    
+        if($rate_plan_id)
             $this->db->where('minical_rate_plan_id', $rate_plan_id);
+
+        if($company_id)
+            $this->db->where('company_id', $company_id);
         
         $query = $this->db->get();
         
@@ -443,21 +476,21 @@ class Channex_model extends CI_Model {
         }       
     }
 
-    function deconfigure_channex($ota_x_company_id){
+    function deconfigure_channex($company_id){
 
-        $this->db->where('id', $ota_x_company_id);
+        $this->db->where('company_id', $company_id);
         $this->db->delete('ota_manager');
 
-        $this->db->where('ota_id', $ota_x_company_id);
+        $this->db->where('company_id', $company_id);
         $this->db->delete('ota_properties');
 
-        $this->db->where('ota_x_company_id', $ota_x_company_id);
+        $this->db->where('company_id', $company_id);
         $this->db->delete('ota_x_company');
 
-        $this->db->where('ota_x_company_id', $ota_x_company_id);
+        $this->db->where('company_id', $company_id);
         $this->db->delete('ota_room_types');
 
-        $this->db->where('ota_x_company_id', $ota_x_company_id);
+        $this->db->where('company_id', $company_id);
         $this->db->delete('ota_rate_plans');
 
         if ($this->db->_error_message()) 
@@ -872,5 +905,24 @@ class Channex_model extends CI_Model {
         {  
             return null;
         }
+    }
+
+    function get_otas($key = null){
+        $this->db->from('otas');  
+
+        if($key)
+            $this->db->where('key', $key);
+
+        $query = $this->db->get();
+        
+        if ($this->db->_error_message()) // error checking
+            show_error($this->db->_error_message());
+                    
+        if ($query->num_rows >= 1) 
+        {
+            $result =  $query->row_array();
+            return $result;
+        }
+        return NULL;
     }
 }
