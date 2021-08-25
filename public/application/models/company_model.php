@@ -28,7 +28,7 @@ class Company_model extends CI_Model {
     
     function get_all_companies()
 	{
-		$this->db->select('c.company_id');
+		$this->db->select('c.company_id, c.name');
 		$this->db->from('company as c');
 		$this->db->group_by('c.company_id');
         

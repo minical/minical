@@ -158,6 +158,18 @@ class Cron extends CI_Controller
         $this->Cron_model->handle_session_overflow();
     }
 
+    function get_companies() {
+        $this->load->model(array('Company_model'));
+
+        $companies = $this->Company_model->get_all_companies();
+
+        $company_ids = array();
+        foreach ($companies as $company) {
+            $company_ids[] = array('company_id' => $company['company_id'], 'company_name' => $company['name']);
+        }
+        echo json_encode($company_ids);
+    }
+
     function full_sync(){
     	$this->load->model(array('Company_model'));
 
