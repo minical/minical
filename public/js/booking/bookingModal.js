@@ -1281,6 +1281,10 @@ var bookingModalInvoker = function ($) {
                 //$('div.booked-by-block .tokenfield input.token-input').css('display', 'none');
             }
 
+            var event = new CustomEvent('post.open_booking_modal', { "detail" : {"reservation_id" : that.booking.booking_id} });
+            // Dispatch/Trigger/Fire the event
+            document.dispatchEvent(event);
+
         },
         _updateModalContent: function () {
 
@@ -4909,7 +4913,7 @@ var bookingModalInvoker = function ($) {
                             }
 
                             // Create the event
-                            var event = new CustomEvent('open_booking_modal', { "detail" : {"reservation_id" : that.booking.booking_id, "booking_data" : that.booking} });
+                            var event = new CustomEvent('post.open_booking_modal', { "detail" : {"reservation_id" : that.booking.booking_id, "booking_data" : that.booking} });
                             var bookingCreatedEvent = new CustomEvent('booking_created', { "detail" : {"reservation_id" : that.booking.booking_id, "booking_data" : that.booking, "booking_room_data" : data.rooms[0]} });
 
                             // Dispatch/Trigger/Fire the event
@@ -4927,7 +4931,7 @@ var bookingModalInvoker = function ($) {
                             console.log('response',response);
 
                             // Create the event
-                            var event = new CustomEvent('open_booking_modal', { "detail" : {"reservation_id" : that.booking.booking_id, "booking_data" : that.booking} });
+                            var event = new CustomEvent('post.open_booking_modal', { "detail" : {"reservation_id" : that.booking.booking_id, "booking_data" : that.booking} });
                             var bookingCreatedEvent = new CustomEvent('booking_created', { "detail" : {"booking_data" : that.booking, "booking_room_data" : response} });
 
                             // Dispatch/Trigger/Fire the event
@@ -6941,11 +6945,11 @@ var bookingModalInvoker = function ($) {
             $.data(body, 'bookingModal', new BookingModal(options));
         }
 
-        // Create the event
-        var event = new CustomEvent('open_booking_modal', { "detail" : {"reservation_id" : options.id} });
+        // // Create the event
+        // var event = new CustomEvent('open_booking_modal', { "detail" : {"reservation_id" : options.id} });
 
-        // Dispatch/Trigger/Fire the event
-        document.dispatchEvent(event);
+        // // Dispatch/Trigger/Fire the event
+        // document.dispatchEvent(event);
     }
 
     // group manager search
