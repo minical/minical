@@ -27,6 +27,7 @@ class Company extends MY_Controller
         $this->load->model('Booking_linked_group_model');
         $this->load->model('Tax_price_bracket_model');
         $this->load->model('Room_location_model');
+        $this->load->model('Statement_model');
 
         $this->load->library('email');
         $this->load->library('form_validation');
@@ -758,6 +759,9 @@ class Company extends MY_Controller
                     }
                     if (isset($csv_data['payments'])) {
                         $this->import_payments_csv($csv_data['payments']);
+                    }
+                    if (isset($csv_data['statements'])) {
+                        $this->import_statements_csv($csv_data['statements']);
                     }
                     if (isset($csv_data['settings'])) {
                         $this->import_company_setting($csv_data['settings']);
@@ -1553,6 +1557,52 @@ class Company extends MY_Controller
 
     }
 
+    function import_statements_csv($value){
+
+        foreach($value as $statement){
+
+            if($statement['Statment Id']){
+
+                $statements = $this->Import_mapping_model->get_mapping_statement_id($statement['Statment Id']);
+                $booking_id =  $this->Import_mapping_model->get_mapping_booking_id($statement['Booking Id']);
+
+
+                if(empty($statements)){
+
+                    $current_date = date('Y-m-d H:i:s');
+                    $statement_date = date('Y-m-d', strtotime($current_date));
+                    $data = array(
+                        "statement_number" => $statement['Statement Number'] ,
+                        "creation_date" => $statement['Creation Date'] ? $statement['Creation Date'] : date('Y-m-d H:i:s'),
+                        "statement_name" => $statement['Statement Name'] ? $statement['Statement Name'] : "Statement of ".date('M Y', strtotime($statement_date) )
+                    );
+
+                    $statement_id =  $this->Statement_model->create_statement($data);
+
+                    $booking_statement = array(
+                        "booking_id" => $booking_id['new_id'],
+                        "statement_id" => $statement_id
+                    );
+
+                    $this->Statement_model->create_statement_booking($booking_statement);
+
+                    $data_import_mapping = Array(
+                        "new_id" => $statement_id,
+                        "old_id" => $statement['Statment Id'],
+                        "company_id" => $this->company_id,
+                        "type" => "statement"
+                    );
+
+                    $import_data = $this->Import_mapping_model->insert_import_mapping($data_import_mapping);
+
+                }
+
+            }
+
+        }
+
+    }
+
     function import_company_setting($values){
 
         $value = json_decode($values,true);
@@ -1831,6 +1881,36 @@ class Company extends MY_Controller
                 );
 
                 $this->Booking_source_model->update_booking_source($booking_source_id,$data);
+
+            }
+        }
+
+        $room_types = $value['Room Types'];
+        if($room_types){
+            foreach($room_types as $room_type){
+                $room_type_id =  $this->Import_mapping_model->get_mapping_room_type_id($room_type['id']);
+                if($room_type_id){
+                    $data = array(
+                        'description' => $room_type['description']
+                    );
+                    $this->Room_type_model->update_room_type($room_type_id['new_id'], $data);
+                }
+
+            }
+        }
+
+        $rate_plans = $value['Rate Plan'];
+        if($rate_plans){
+            foreach($rate_plans as $rate_plan){
+                $rate_plan_id = $this->Import_mapping_model->get_rate_plan_mapping_id($rate_plan['rate_plan_id']);
+                if($rate_plan_id){
+                    $data = array(
+                        'description' => $rate_plan['description']
+                    );
+                    $this->Rate_plan_model->update_rate_plan($data,$rate_plan_id['new_id']);
+
+                }
+
 
             }
         }

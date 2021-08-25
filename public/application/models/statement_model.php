@@ -211,6 +211,35 @@ class Statement_model extends CI_Model {
         else
             return false;
     }
+
+    function create_statement($data){
+
+        $this->db->insert("Statement", $data);
+
+        $query = $this->db->query('select LAST_INSERT_ID( ) AS last_id');
+        $result = $query->result_array();
+        if(isset($result[0]))
+        {
+            $statement_id = $result[0]['last_id'];
+        }
+        else
+        {
+            $statement_id = null;
+        }
+
+        // if there's an error in query, show error message
+        if ($this->db->_error_message())
+            show_error($this->db->_error_message());
+        else // otherwise, return insert_id;
+            return $statement_id;
+
+    }
+
+     function create_statement_booking($data){
+        
+        $this->db->insert("booking_x_statement", $data);
+     }
+    
 }
 
 /* End of file customer_model.php */

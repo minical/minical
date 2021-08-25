@@ -220,6 +220,20 @@ class Import_mapping_model extends CI_Model {
 
     }
 
+    function get_mapping_statement_id($statement_id){
+
+        $this->db->where('company_id', $this->company_id);
+        $this->db->where('old_id', $statement_id);
+        $this->db->where('type', 'statement');
+
+        $query = $this->db->get('import_mapping');
+
+        if ($query->num_rows >= 1)
+            return $query->row_array();
+        return NULL;
+
+    }
+
     function delete_mapping_field($company_id){
         $this->db->where('company_id', $company_id);
         $this->db->delete("import_mapping");
