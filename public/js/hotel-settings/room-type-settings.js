@@ -374,10 +374,10 @@ function sortRoomTypes(){
             
         var sort = 1;
         var updatedRoomTypes = {};
-        $(".room-type").each(function()
+        $(".room-type-div").each(function()
         {
             var roomType = $(this);
-            var roomTypeId = roomType.attr('room_type_id');
+            var roomTypeId = roomType.attr('id');
             var roomTypeSortOrder = sort;
 
             updatedRoomTypes[roomTypeId] = {
@@ -386,7 +386,7 @@ function sortRoomTypes(){
             };
             sort++;
         });
-        
+        console.log('updatedRoomTypes',updatedRoomTypes);
         $.post(getBaseURL() + 'settings/rates/updated_room_types', {
             updated_room_types: updatedRoomTypes
                 }, function (result) {}, 'json');

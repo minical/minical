@@ -1342,7 +1342,7 @@ class Rates extends MY_Controller
                     );
                     break;
                 }
-				$this->_create_rate_plan_log("Update Room Type ( [ID {$extra_id}])");
+				$this->_create_rate_plan_log("Update Room Type ( [ID {$room_type_id}])");
             }
         }
         echo json_encode($response);
