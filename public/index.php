@@ -32,7 +32,7 @@ $dotenv = Dotenv\Dotenv::createImmutable(__DIR__. '/../')->load();
  *
  */
 
-if ($_SERVER['HTTP_HOST'] == "localhost" || $_SERVER['HTTP_HOST'] == "demo.minical.io") //
+if (substr($_SERVER['HTTP_HOST'], 0,9) == 'localhost' || $_SERVER['HTTP_HOST'] == "demo.minical.io") //
 	define('ENVIRONMENT', 'development');
 else
 	define('ENVIRONMENT', 'production');

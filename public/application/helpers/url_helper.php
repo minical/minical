@@ -603,7 +603,7 @@ if ( ! function_exists('auto_version'))
 	function auto_version($file)
 	{
 		//Define the proper DOCUMENT_ROOT
-		if ($_SERVER['SERVER_NAME'] == 'localhost') {
+		if (substr($_SERVER['HTTP_HOST'], 0,9) == 'localhost') {
 			return $file;
 		} else {
 			$mtime = filemtime($_SERVER['DOCUMENT_ROOT'] . '/'. $file);

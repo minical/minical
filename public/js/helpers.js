@@ -47,7 +47,7 @@ var getBaseURL = function () {
 	protocol = pathArray[0];
 	host = pathArray[2];
 	url = protocol + '//' + host + "/";
-	if (host == "localhost") 
+	if (host.indexOf('localhost') > '-1') 
 	{
         url = $('#project_url').val() + '/'; // for local development
 	}
