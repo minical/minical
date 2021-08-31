@@ -128,7 +128,7 @@ class Company extends MY_Controller
             base_url().auto_version('js/hotel-settings/cropper_jsmin.js'),
             base_url().auto_version('js/company_settings.js'),
             base_url().auto_version('js/hotel-settings/logo-image-settings.js'),
-           "http://ajax.aspnetcdn.com/ajax/jquery.validate/1.7/jquery.validate.min.js",
+           "https://ajax.aspnetcdn.com/ajax/jquery.validate/1.7/jquery.validate.min.js",
         );
 
         $data['company_ID'] = $this->company_id;
