@@ -26,10 +26,15 @@ class Company_model extends CI_Model {
 		}
 	}
     
-    function get_all_companies()
+    function get_all_companies($is_ota_connected = false)
 	{
 		$this->db->select('c.company_id, c.name');
 		$this->db->from('company as c');
+
+		if($is_ota_connected){
+			$this->db->join('ota_manager as om','om.company_id=c.company_id','left');
+			$this->db->where('om.id IS NOT NULL');
+		}
 		$this->db->group_by('c.company_id');
         
 		$query = $this->db->get();
