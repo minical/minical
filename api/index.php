@@ -26,11 +26,14 @@ $dotenv = Dotenv\Dotenv::createImmutable(__DIR__. '/../')->load();
  *
  */
 
+$ENVIRONMENT = getenv('ENVIRONMENT');
+$ENVIRONMENT = $ENVIRONMENT ? $ENVIRONMENT : 'production';
 
-if ($_SERVER['HTTP_HOST'] == "localhost") 
-	define('ENVIRONMENT', 'development');
-else
-	define('ENVIRONMENT', 'production');
+define('ENVIRONMENT', $ENVIRONMENT);
+
+if(isset($_GET['dev_mode']) && $_GET['dev_mode'] == getenv('DEVMODE_PASS')){ // for debugging only
+    define('ENVIRONMENT', 'development');
+}
 
 /*
  *---------------------------------------------------------------

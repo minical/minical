@@ -32,12 +32,12 @@ $dotenv = Dotenv\Dotenv::createImmutable(__DIR__. '/../')->load();
  *
  */
 
-if (substr($_SERVER['HTTP_HOST'], 0,9) == 'localhost' || $_SERVER['HTTP_HOST'] == "demo.minical.io") //
-	define('ENVIRONMENT', 'development');
-else
-	define('ENVIRONMENT', 'production');
+$ENVIRONMENT = getenv('ENVIRONMENT');
+$ENVIRONMENT = $ENVIRONMENT ? $ENVIRONMENT : 'production';
 
-if(isset($_GET['dev_mode']) && $_GET['dev_mode'] == "b1m8V0I5ZT"){ // for debugging only
+define('ENVIRONMENT', $ENVIRONMENT);
+
+if(isset($_GET['dev_mode']) && $_GET['dev_mode'] == getenv('DEVMODE_PASS')){ // for debugging only
     define('ENVIRONMENT', 'development');
 }
 

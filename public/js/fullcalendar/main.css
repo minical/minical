@@ -49,14 +49,9 @@
     display: none !important;
 }
 
-.fc-event-container .fc-event {
-    height: 25px;
-    margin-top: 8px;
-    border-radius: 3px;
-}
 .fc-event-container .fc-event.border-red {
     height: 20px !important;
-     border: 2px solid red !important;
+    border: 2px solid red !important;
 }
 
 .fc-event.border-red{
@@ -124,21 +119,22 @@
 }
 
 .fc-resource-area.fc-widget-content td:first-child {
-    height: 30px;
+    /*height: 30px;*/
     position:relative;
     cursor: pointer;
 }
 
-.fc-time-area .fc-rows td>div {
-    height: 36px;
+.fc-time-area .fc-rows td > div {
+    /*height: 36px;*/
 }
 
 .fc-event-container .fc-event {
     height: 25px;
-     top: -4px;
-   
-    margin-top: 4.4px !important;
+    margin-top: 0px;
     border-radius: 3px;
+}
+.fc-time-area .fc-event-container {
+    top: 4px;
 }
 
 .group-booking .fc-title {

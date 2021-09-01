@@ -15,19 +15,13 @@
 |
 */
 $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+$config['server_protocol'] = $protocol;
 
-if ($_SERVER['HTTP_HOST'] == "localhost") {
-	$config['base_url']	= str_replace("public","api",getenv('PROJECT_URL')); // localhost
-    $config['app_environment'] = 'development';
-} else {
-	$config['base_url']	= $protocol . $_SERVER['HTTP_HOST']; // production/staging
-    if($_SERVER['HTTP_HOST'] == "api.minical.io") {
-        $config['app_environment'] = 'production';
-    } else {
-        $config['app_environment'] = 'development';
-    }
-}
-//$config['base_url'] = 'api-inngrid-staging.gopagoda.io';
+$ENVIRONMENT = getenv('ENVIRONMENT');
+$ENVIRONMENT = $ENVIRONMENT ? $ENVIRONMENT : 'production';
+
+$config['app_environment'] = $ENVIRONMENT;
+$config['base_url']	= getenv('API_URL'); // localhost
 
 
 /*

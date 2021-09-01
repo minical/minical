@@ -26,28 +26,13 @@ date_default_timezone_set("America/Los_Angeles"); // temporary quick fix
 $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
 
 $config['server_protocol'] = $protocol;
-$host = explode(':', $_SERVER['HTTP_HOST']);
-$host = isset($host[0]) && $host[0] ? $host[0] : $_SERVER['HTTP_HOST'];
 
-switch ($_SERVER['HTTP_HOST']) {
-	case $host: // local
-        $config['app_environment'] = 'development';
-		$config['base_url']	= getenv('PROJECT_URL'); // localhost
-		$config['api_url']	= str_replace("public","api",getenv('PROJECT_URL')); // production
-		break;
-	case 'demo.minical.io': // local
-        $config['app_environment'] = 'development';
-		$config['base_url']	= $protocol . $_SERVER['HTTP_HOST'];
-		$config['api_url']	= "http://seasonal.io/minical/opensource/demo/api";
-		// $config['api_url']	= $protocol . "demoapi.minical.io/";
-		break;
-    default: // production // other whitelabel companies
-        $config['app_environment'] = 'production';
-        // whitelabel partners might not have ssl installed
-		$config['base_url']	= $protocol . $_SERVER['HTTP_HOST'];
-		$config['api_url']	= $protocol . "api.minical.io"; // production/staging
-		break;
-}
+$ENVIRONMENT = getenv('ENVIRONMENT');
+$ENVIRONMENT = $ENVIRONMENT ? $ENVIRONMENT : 'production';
+
+$config['app_environment'] = $ENVIRONMENT;
+$config['base_url']	= getenv('PROJECT_URL'); // localhost
+$config['api_url']	= getenv('API_URL'); // localhost
 
 /*
 |--------------------------------------------------------------------------

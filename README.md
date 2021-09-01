@@ -63,7 +63,7 @@ miniCal documentation is available here [minical.doc](https://github.com/minical
 * That's it. You are done! Visit miniCal at `http://localhost/minical/public`
 
 ## Demo
-Visit [miniCal Demo](http://demo.minical.io/).
+Visit [miniCal Demo](https://demo.minical.io/).
 
 
 ## Code of Conduct
