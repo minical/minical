@@ -72,9 +72,7 @@
 		$this->load->view('includes/bootstrapped_header', $data);
 		?>
 
-        <?php if(substr($_SERVER['HTTP_HOST'], 0,9) == 'localhost'){ ?>
-			<input type="hidden" name="project_url" id="project_url" value="<?php echo getenv('PROJECT_URL'); ?>">
-		<?php } ?>
+        <input type="hidden" name="project_url" id="project_url" value="<?php echo getenv('PROJECT_URL'); ?>">
 
 		<!-- Google Tag Manager (noscript) -->
 		<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MLXS7DC"

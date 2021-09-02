@@ -43,9 +43,7 @@
 		</tbody>
 	</table>
 	<br>
-	<?php if(substr($_SERVER['HTTP_HOST'], 0,9) == 'localhost'){ ?>
-		<input type="hidden" name="project_url" id="project_url" value="<?php echo getenv('PROJECT_URL'); ?>">
-	<?php } ?>
+    <input type="hidden" name="project_url" id="project_url" value="<?php echo getenv('PROJECT_URL'); ?>">
 	<button class='button' id='allocate_availabilities_button'><?php echo l('Allocate Availabilities', true); ?></button>
 	<a href=# id='close_button'><?php echo l('Cancel', true); ?></a>
 

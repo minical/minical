@@ -100,10 +100,8 @@
 			?>
 		</div>
 
-		<?php if(substr($_SERVER['HTTP_HOST'], 0,9) == 'localhost'){ ?>
-			<input type="text" name="project_url" id="project_url" value="<?php echo getenv('PROJECT_URL'); ?>">
-		<?php } ?>
-		
+        <input type="text" name="project_url" id="project_url" value="<?php echo getenv('PROJECT_URL'); ?>">
+
 	</body>
 
 </html>
