@@ -603,13 +603,12 @@ if ( ! function_exists('auto_version'))
 	function auto_version($file)
 	{
 		//Define the proper DOCUMENT_ROOT
-		if ($_SERVER['SERVER_NAME'] == 'localhost') {
-			return $file;
+		if ($_SERVER['HTTP_HOST'] === 'app.minical.io' || $_SERVER['HTTP_HOST'] === 'demo.minical.io') {
+            $mtime = filemtime($_SERVER['DOCUMENT_ROOT'] . '/'. $file);
+            return preg_replace('{\\.([^./]+)$}', ".$mtime.\$1", $file);
 		} else {
-			$mtime = filemtime($_SERVER['DOCUMENT_ROOT'] . '/'. $file);
-			return preg_replace('{\\.([^./]+)$}', ".$mtime.\$1", $file);
+            return $file;
 		}
-		
 	}
 }
 
