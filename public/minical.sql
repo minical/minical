@@ -21810,10 +21810,35 @@ CREATE TABLE `posts` (
   `post_mime_type` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
+--
+-- Table structure for table `hoteli_pay_bank_details`
+--
+
+CREATE TABLE `hoteli_pay_bank_details` (
+  `id` bigint(20) NOT NULL,
+  `company_id` bigint(20) NOT NULL,
+  `bank_code` varchar(100) DEFAULT NULL,
+  `owner_name` varchar(100) DEFAULT NULL,
+  `cpf_cnpj` varchar(100) DEFAULT NULL,
+  `agency` bigint(20) DEFAULT NULL,
+  `bank_account_number` bigint(20) DEFAULT NULL,
+  `bank_account_digit` bigint(20) DEFAULT NULL,
+  `account_type` varchar(100) DEFAULT NULL,
+  `amount` decimal(10,2) DEFAULT NULL,
+  `transfer_id` varchar(255) DEFAULT NULL,
+  `transfer_status` varchar(100) DEFAULT NULL,
+  `created_date` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `hoteli_pay_bank_details`
+--
+ALTER TABLE `hoteli_pay_bank_details`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `booking`
@@ -22268,6 +22293,8 @@ ALTER TABLE `posts`
 -- AUTO_INCREMENT for dumped tables
 --
 
+ALTER TABLE `hoteli_pay_bank_details`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `booking`
 --
