@@ -86,7 +86,7 @@ innGrid.renderReport = function(dateStart, dateEnd, groupBy, customerTypeId) {
 
 					if ($("#groupBy").val() === "daily")
 					{
-						var dateLabel = "<a href='"+getBaseURL()+"reports/show_daily_report/"+index+"'>"+index+" "+innGrid.getWeekday(index)+"</a>";
+						var dateLabel = "<a href='"+getBaseURL()+"reports/ledger/show_daily_report/"+index+"'>"+index+" "+innGrid.getWeekday(index)+"</a>";
 					}
 					else if ($("#groupBy").val() === "monthly")
 					{

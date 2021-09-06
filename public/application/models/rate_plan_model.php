@@ -63,12 +63,13 @@ class Rate_plan_model extends CI_Model {
 		}
 		return NULL;
 	}
-    function get_rate_plan_by_name($rate_plan_id)
+    function get_rate_plan_by_name($rate_plan_id, $company_id)
     {
         $this->db->select("rp.*");
         $this->db->from("rate_plan as rp");
         $this->db->where("rp.is_deleted != '1'");
         $this->db->where("rp.rate_plan_name", $rate_plan_id);
+        $this->db->where("rp.company_id", $company_id);
 
         $query = $this->db->get();
 
@@ -288,6 +289,21 @@ class Rate_plan_model extends CI_Model {
 		}
 		return true;
 	}
+
+    function update_room_rate_plan($rate_plan_id, $old_id){
+
+        $data = array(
+            'default_room_charge' => $rate_plan_id
+        );
+        $this->db->where('default_room_charge', $old_id);
+        $this->db->update("room_type", $data);
+        if ($this->db->_error_message()) // error checking
+        {
+            show_error($this->db->_error_message());
+            return false;
+        }
+        return true;
+    }
         
     function delete_custom_rate_plan($rate_plan_id)
     {
@@ -319,6 +335,19 @@ class Rate_plan_model extends CI_Model {
             return $descriptions;
 		}
 		return NULL;
+    }
+
+    function delete_rate_plans($company_id){
+
+        $data = Array('is_deleted' => 1);
+
+        $this->db->where('company_id', $company_id);
+        $this->db->update("rate_plan", $data);
+
+        if ($this->db->_error_message())
+        {
+            show_error($this->db->_error_message());
+        }
     }
 }
 

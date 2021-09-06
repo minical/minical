@@ -8266,7 +8266,7 @@ CREATE TABLE `extra` (
 
 CREATE TABLE `extra_rate` (
   `extra_rate_id` bigint(20) UNSIGNED NOT NULL,
-  `rate` decimal(10,2) NOT NULL,
+  `rate` float NOT NULL DEFAULT '0',
   `is_deleted` tinyint(1) DEFAULT '0',
   `currency_id` bigint(20) UNSIGNED DEFAULT NULL,
   `extra_id` bigint(20) UNSIGNED DEFAULT NULL
@@ -21188,6 +21188,7 @@ INSERT INTO `menu` (`id`, `name`, `link`, `icon`, `parent_id`, `partner_type_id`
 (5, 'Extensions', 'extensions', 'metismenu-icon pe-7s-keypad', 0, 1),
 (6, 'settings', 'settings', 'metismenu-icon pe-7s-settings', 0, 1),
 (7, 'room status', 'room', '', 3, 1),
+(8, 'Inventory', 'room/inventory', '', 3, 1),
 (14, 'summary', 'reports/ledger/show_ledger_summary_report', '', 4, 1),
 (15, 'charges', 'reports/ledger/show_monthly_charge_report', '', 4, 1),
 (16, 'payments', 'reports/ledger/show_monthly_payment_report', '', 4, 1),
@@ -21296,12 +21297,12 @@ CREATE TABLE `property_build` (
 --
 
 INSERT INTO `property_build` (`id`, `property_id`, `property_name`, `setting_json`, `dependences_json`) VALUES
-(1, 1, 'Hotel', '{\r\n      \"unit_name\":{\r\n         \"singular\": \"room\", \r\n         \"plural\" : \"rooms\" \r\n         },\r\n      \"unit_type_name\" :  {\r\n         \"singular\":\"room type\",\r\n         \"plural\": \"room types\"\r\n         },\r\n      \"send_invoice_email_automatically\" : true,\r\n      \"display_tooltip\" : true,\r\n      \"is_total_balance_include_forecast\" : true\r\n   }', '{\r\n      \"todays_panel\" : \"1.0.0\",\r\n      \"online_booking_engine\" : \"1.0.0\",\r\n      \"advance_deposit_report\" : \"1.0.0\",\r\n      \"invoice_email\" : \"1.0.0\",\r\n      \"automated_night_audit\" : \"1.0.0\"\r\n   }'),
-(2, 2, 'Hostel', '{\r\n      \"unit_name\":{ \r\n         \"singular\": \"bed\", \r\n         \"plural\" : \"beds\" \r\n         },\r\n      \"unit_type_name\" : {\r\n         \"singular\":\"room type\",\r\n         \"plural\": \"room types\"\r\n         },\r\n      \"display_tooltip\" : true,\r\n      \"hourly_booking_enabled\" : true,\r\n      \"allow_free_bookings\" : true,\r\n      \"force_room_selection\" : true      \r\n   }', ' {\r\n      \"online_booking_engine\" : \"1.0.0\",\r\n      \"todays_panel\" : \"1.0.0\",\r\n      \"invoice_email\" : \"1.0.0\"      \r\n   }'),
-(3, 3, 'Vacation Rental', '{\r\n      \"unit_name\":{ \r\n         \"singular\": \"room\",\r\n         \"plural\" : \"rooms\" \r\n        },\r\n      \"unit_type_name\" :  {\r\n         \"singular\":\"room type\",\r\n         \"plural\": \"room types\"\r\n      },   \r\n      \"display_tooltip\" : true,\r\n      \"hourly_booking_enabled\" : true,\r\n      \"allow_free_bookings\" : true,\r\n      \"force_room_selection\" : true      \r\n   }', '{\r\n      \"online_booking_engine\" : \"1.0.0\",\r\n      \"todays_panel\" : \"1.0.0\",\r\n      \"invoice_email\" : \"1.0.0\"      \r\n   }'),
+(1, 1, 'Hotel', '{\r\n      \"unit_name\":{\r\n         \"singular\": \"room\", \r\n         \"plural\" : \"rooms\" \r\n         },\r\n      \"unit_type_name\" :  {\r\n         \"singular\":\"room type\",\r\n         \"plural\": \"room types\"\r\n         },\r\n      \"send_invoice_email_automatically\" : true,\r\n      \"display_tooltip\" : true,\r\n      \"is_total_balance_include_forecast\" : true\r\n   }', '{\r\n      \"todays_panel\" : \"1.0.0\",\r\n      \"online-booking-engine\" : \"1.0.0\",\r\n      \"advance_deposit_report\" : \"1.0.0\",\r\n      \"invoice_email\" : \"1.0.0\",\r\n      \"automated_night_audit\" : \"1.0.0\"\r\n   }'),
+(2, 2, 'Hostel', '{\r\n      \"unit_name\":{ \r\n         \"singular\": \"bed\", \r\n         \"plural\" : \"beds\" \r\n         },\r\n      \"unit_type_name\" : {\r\n         \"singular\":\"room type\",\r\n         \"plural\": \"room types\"\r\n         },\r\n      \"display_tooltip\" : true,\r\n      \"hourly_booking_enabled\" : true,\r\n      \"allow_free_bookings\" : true,\r\n      \"force_room_selection\" : true      \r\n   }', ' {\r\n      \"online-booking-engine\" : \"1.0.0\",\r\n      \"todays_panel\" : \"1.0.0\",\r\n      \"invoice_email\" : \"1.0.0\"      \r\n   }'),
+(3, 3, 'Vacation Rental', '{\r\n      \"unit_name\":{ \r\n         \"singular\": \"room\",\r\n         \"plural\" : \"rooms\" \r\n        },\r\n      \"unit_type_name\" :  {\r\n         \"singular\":\"room type\",\r\n         \"plural\": \"room types\"\r\n      },   \r\n      \"display_tooltip\" : true,\r\n      \"hourly_booking_enabled\" : true,\r\n      \"allow_free_bookings\" : true,\r\n      \"force_room_selection\" : true      \r\n   }', '{\r\n      \"online-booking-engine\" : \"1.0.0\",\r\n      \"todays_panel\" : \"1.0.0\",\r\n      \"invoice_email\" : \"1.0.0\"      \r\n   }'),
 (4, 4, 'Apartment', '{\r\n      \"unit_name\":{ \r\n         \"singular\": \"unit\", \r\n         \"plural\" : \"units\" \r\n         },\r\n      \"unit_type_name\" :  {\r\n         \"singular\":\"unit type\",\r\n         \"plural\": \"unit types\"\r\n      },\r\n      \"send_invoice_email_automatically\" : true,\r\n      \"display_tooltip\" : true,\r\n      \"is_total_balance_include_forecast\" : true\r\n   }', '{\r\n      \"todays_panel\" : \"1.0.0\",\r\n      \"advance_deposit_report\" : \"1.0.0\",\r\n      \"invoice_email\" : \"1.0.0\"\r\n   }'),
-(5, 5, 'Car Rental', '{\r\n      \"unit_name\":{ \r\n         \"singular\": \"vehicle\", \r\n         \"plural\" : \"vehicles\" \r\n         },\r\n      \"unit_type_name\" :  {\r\n         \"singular\":\"vehicle type\",\r\n         \"plural\": \"vehicle types\"\r\n         },\r\n      \"allow_free_bookings\" : false,\r\n      \"force_room_selection\" : true,\r\n      \"is_total_balance_include_forecast\" : true,\r\n      \"hourly_booking_enabled\" : true   }', '{\r\n     \"online_booking_engine\" : \"1.0.0\"\r\n   }'),
-(6, 6, 'Office Space', '{\r\n      \"unit_name\":{\r\n         \"singular\": \"room\", \r\n         \"plural\" : \"rooms\" \r\n         },\r\n      \"unit_type_name\" :  {\r\n         \"singular\":\"room type\",\r\n         \"plural\": \"room types\"\r\n         },\r\n         \"hourly_booking_enabled\" : true,\r\n         \"display_tooltip\" : true\r\n   }', '{\r\n      \"online_booking_engine\" : \"1.0.0\",\r\n      \"advance_deposit_report\" : \"1.0.0\",\r\n      \"automated_night_audit\" : \"1.0.0\"\r\n   }');
+(5, 5, 'Car Rental', '{\r\n      \"unit_name\":{ \r\n         \"singular\": \"vehicle\", \r\n         \"plural\" : \"vehicles\" \r\n         },\r\n      \"unit_type_name\" :  {\r\n         \"singular\":\"vehicle type\",\r\n         \"plural\": \"vehicle types\"\r\n         },\r\n      \"allow_free_bookings\" : false,\r\n      \"force_room_selection\" : true,\r\n      \"is_total_balance_include_forecast\" : true,\r\n      \"hourly_booking_enabled\" : true   }', '{\r\n     \"online-booking-engine\" : \"1.0.0\"\r\n   }'),
+(6, 6, 'Office Space', '{\r\n      \"unit_name\":{\r\n         \"singular\": \"room\", \r\n         \"plural\" : \"rooms\" \r\n         },\r\n      \"unit_type_name\" :  {\r\n         \"singular\":\"room type\",\r\n         \"plural\": \"room types\"\r\n         },\r\n         \"hourly_booking_enabled\" : true,\r\n         \"display_tooltip\" : true\r\n   }', '{\r\n      \"online-booking-engine\" : \"1.0.0\",\r\n      \"advance_deposit_report\" : \"1.0.0\",\r\n      \"automated_night_audit\" : \"1.0.0\"\r\n   }');
 
 -- Indexes for dumped tables
 --
@@ -21419,7 +21420,7 @@ CREATE TABLE `review_management` (
 --
 
 CREATE TABLE `room` (
-  `room_name` char(13) NOT NULL,
+  `room_name` varchar(56) NOT NULL DEFAULT '',
   `room_type_id` bigint(20) UNSIGNED DEFAULT NULL COMMENT 'room type id',
   `status` varchar(10) NOT NULL DEFAULT 'Clean' COMMENT 'Room''s status includes:\nClean\nDirty\nOut of Order',
   `notes` mediumtext,
@@ -21430,7 +21431,7 @@ CREATE TABLE `room` (
   `group_id` bigint(20) UNSIGNED NOT NULL DEFAULT '0',
   `floor_id` int(11) NOT NULL DEFAULT '0',
   `location_id` int(11) NOT NULL DEFAULT '0',
-  `sort_order` varchar(10) DEFAULT NULL,
+  `sort_order` int(11) NOT NULL DEFAULT '0',
   `is_hidden` tinyint(4) NOT NULL DEFAULT '0',
   `score` float NOT NULL DEFAULT '0',
   `instructions` mediumtext
@@ -21769,6 +21770,50 @@ CREATE TABLE `ota_xml_logs` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
+--
+-- Table structure for table `options`
+--
+CREATE TABLE `options` (
+  `option_id` bigint(20) UNSIGNED NOT NULL,
+  `company_id` int(11) NOT NULL,
+  `option_name` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT '',
+  `option_value` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `autoload` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+-- --------------------------------------------------------
+--
+-- Table structure for table `postmeta`
+--
+CREATE TABLE `postmeta` (
+  `meta_id` bigint(20) UNSIGNED NOT NULL,
+  `post_id` bigint(20) UNSIGNED NOT NULL DEFAULT '0',
+  `meta_key` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `meta_value` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+-- --------------------------------------------------------
+--
+-- Table structure for table `posts`
+--
+CREATE TABLE `posts` (
+  `post_id` bigint(20) UNSIGNED NOT NULL,
+  `company_id` int(11) NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL DEFAULT '0',
+  `post_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `post_content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `post_title` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `post_status` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'publish',
+  `post_modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `post_parent` bigint(20) UNSIGNED NOT NULL DEFAULT '0',
+  `guid` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT '',
+  `sort_order` int(11) NOT NULL DEFAULT '0',
+  `post_type` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'post',
+  `post_mime_type` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+--
+-- Table structure for table `hoteli_pay_bank_details`
+--
+
 CREATE TABLE `hoteli_pay_bank_details` (
   `id` bigint(20) NOT NULL,
   `company_id` bigint(20) NOT NULL,
@@ -21788,6 +21833,12 @@ CREATE TABLE `hoteli_pay_bank_details` (
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `hoteli_pay_bank_details`
+--
+ALTER TABLE `hoteli_pay_bank_details`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `booking`
@@ -22213,9 +22264,37 @@ ALTER TABLE `ota_bookings`
 
 
 --
+-- Indexes for table `options`
+--
+ALTER TABLE `options`
+  ADD PRIMARY KEY (`option_id`),
+  ADD UNIQUE KEY `option_name` (`option_name`),
+  ADD KEY `autoload` (`autoload`);
+--
+-- Indexes for table `postmeta`
+--
+ALTER TABLE `postmeta`
+  ADD PRIMARY KEY (`meta_id`),
+  ADD KEY `post_id` (`post_id`),
+  ADD KEY `meta_key` (`meta_key`(191));
+--
+-- Indexes for table `posts`
+--
+ALTER TABLE `posts`
+  ADD PRIMARY KEY (`post_id`),
+  ADD UNIQUE KEY `company_id` (`company_id`),
+  ADD KEY `type_status_date` (`post_type`,`post_status`,`post_date`,`post_id`),
+  ADD KEY `post_parent` (`post_parent`),
+  ADD KEY `post_author` (`user_id`);
+
+
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
+ALTER TABLE `hoteli_pay_bank_details`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `booking`
 --
@@ -22568,15 +22647,27 @@ CHANGE `customer_id` `customer_id` BIGINT(20) NULL, CHANGE `is_card_deleted` `is
 ALTER TABLE `ota_xml_logs`
   ADD PRIMARY KEY (`xml_log_id`);
 
-ALTER TABLE `hoteli_pay_bank_details`
-  ADD PRIMARY KEY (`id`);
   
 ALTER TABLE `ota_xml_logs`
   MODIFY `xml_log_id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
-ALTER TABLE `hoteli_pay_bank_details`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `options`
+--
+ALTER TABLE `options`
+  MODIFY `option_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `postmeta`
+--
+ALTER TABLE `postmeta`
+  MODIFY `meta_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `posts`
+--
+ALTER TABLE `posts`
+  MODIFY `post_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 ALTER TABLE `ota_xml_logs` CHANGE `ota_hotel_id` `ota_property_id` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
@@ -22609,6 +22700,22 @@ ALTER TABLE `ota_rate_plans` ADD `company_id` BIGINT(20) NULL AFTER `ota_room_ty
 ALTER TABLE `booking_source` CHANGE `id` `id` INT(11) NOT NULL AUTO_INCREMENT, CHANGE `commission_rate` `commission_rate` VARCHAR(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL, CHANGE `is_deleted` `is_deleted` TINYINT(1) NOT NULL DEFAULT '0';
 
 ALTER TABLE `ota_x_company` ADD `rate_update_type` VARCHAR(255) NOT NULL AFTER `ota_id`;
+
+RENAME TABLE `channel` TO `otas`;
+ALTER TABLE `otas` ADD `key` VARCHAR(255) NULL AFTER `id`;
+ALTER TABLE `ota_manager` ADD `ota_id` INT NULL AFTER `id`;
+
+ALTER TABLE otas ADD PRIMARY KEY(id);
+ALTER TABLE otas CHANGE id id INT(11) NOT NULL AUTO_INCREMENT;
+
+UPDATE `room` SET`sort_order`=0 WHERE `sort_order` = 'NULL' or `sort_order` IS NULL;
+ALTER TABLE `room` CHANGE `sort_order` `sort_order` INT(10) NOT NULL DEFAULT '0';
+ALTER TABLE `room` CHANGE `room_name` `room_name` VARCHAR(56) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
+
+ALTER TABLE `ota_properties` CHANGE `ota_id` `ota_manager_id` BIGINT(20) NOT NULL;
+ALTER TABLE `ota_x_company` CHANGE `ota_id` `ota_manager_id` BIGINT(20) NOT NULL;
+
+ALTER TABLE `extra` CHANGE `extra_name` `extra_name` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

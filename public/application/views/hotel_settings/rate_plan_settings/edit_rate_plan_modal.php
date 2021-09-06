@@ -131,22 +131,18 @@
 								<span class="image-group" id="<?php echo $rate_plan['image_group_id']; ?>">
 									<a href=#
 										class="add-image btn btn-primary"
-										data-toggle="modal" 
-										data-target="#image_edit_modal"
 										style="float:left;"
 									>
 										<?php echo l('Add Image', true); ?> 
 									</a>
 						    <?php
 								foreach ($rate_plan['images'] as $image):
-					  				$image_url = "https://inngrid.s3.amazonaws.com/".$company_id."/".$image['filename'];
+					  				$image_url = $this->image_url.$company_id."/".$image['filename'];
 							?>
 								   	<img 
 								   		class="thumbnail col-md-3 add-image" 
 								   		src="<?php echo $image_url; ?>" 
-								   		title="<?php echo $image['filename']; ?>" 
-								   		data-toggle="modal" 
-								   		data-target="#image_edit_modal" 
+								   		title="<?php echo $image['filename']; ?>"
 								   	/>
 									
 						    <?php

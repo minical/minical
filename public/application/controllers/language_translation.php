@@ -17,7 +17,6 @@ class Language_translation extends MY_Controller
         
         $this->load->library('form_validation');
         $this->load->library('pagination');
-        $this->load->library('Chargify_wrapper');
 
         $this->load->helper('language_translation');
     }

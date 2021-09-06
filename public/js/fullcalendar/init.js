@@ -49,6 +49,8 @@ innGrid.getRooms = function (callback) {
             rooms[index].id = roomObject.room_id;
             rooms[index].room_type_id = roomObject.room_type_id;
 
+            rooms[index].sort_order = roomObject.sort_order ? parseInt(roomObject.sort_order) : 0;
+
         });
 
         innGrid.ajaxCache = innGrid.ajaxCache || {};
@@ -157,6 +159,7 @@ innGrid.buildCalendar = function (rooms) {
             }
         ],
         resources: innGrid.roomsResources,
+        resourceOrder: 'sort_order, name',
 
         selectable: true,
         selectHelper: true,

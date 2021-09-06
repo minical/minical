@@ -42,10 +42,10 @@ $active_group = 'default';
 $active_record = TRUE;
 
 
-$db['default']['hostname'] = $_SERVER["DATABASE_HOST"];
-$db['default']['username'] = $_SERVER["DATABASE_USER"];
-$db['default']['password'] = $_SERVER["DATABASE_PASS"];
-$db['default']['database'] = $_SERVER["DATABASE_NAME"];
+$db['default']['hostname'] = getenv("DATABASE_HOST");
+$db['default']['username'] = getenv("DATABASE_USER");
+$db['default']['password'] = getenv("DATABASE_PASS");
+$db['default']['database'] = getenv("DATABASE_NAME");
 
 	
 $db['default']['dbdriver'] = 'mysqli';

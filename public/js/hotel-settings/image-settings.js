@@ -38,7 +38,8 @@ $(function (){
 
 	$(document).on('click', '.add-image', function() {
 
-		
+		$('#image_edit_modal').modal('hide');
+
 		// A modal frame that will be used to crop & resize the uploaded image
 		// This is a bit of a hack job. 
 		var thumbnail = $(this); // thumbnail can also be the "Add Image" Button
@@ -54,6 +55,7 @@ $(function (){
 			},
 			dataType: "json",
 			success: function( data ) {
+
 				//console.log(data);
 				jQuery('<div/>', {
 				    id: "croppic_div",
@@ -125,7 +127,7 @@ $(function (){
 						var r = confirm("Are you use you want to delete this Image?");
 						if (r == true) {
 						    innGrid.deleteImage(thumbnail);
-							$('#image_edit_modal').modal('toggle'); // close bootstrap modal
+							$('#image_edit_modal').modal('hide'); // close bootstrap modal
 							$('#image_edit_modal').on('hidden.bs.modal', function () {
 	                            $('body').addClass('modal-open');
 	                        });
@@ -139,7 +141,7 @@ $(function (){
 					croppicOptions.onAfterImgCrop = function(data) {
 						innGrid.insertImage(imageGroupID);
 						innGrid.deleteImage(thumbnail);
-						$('#image_edit_modal').modal('toggle'); // close bootstrap modal
+						$('#image_edit_modal').modal('hide'); // close bootstrap modal
 						
 						$('#image_edit_modal').on('hidden.bs.modal', function () {
                             $('body').addClass('modal-open');
@@ -171,7 +173,7 @@ $(function (){
 						// croppic hack to fetch cropped image's filename
 						innGrid.insertImage(imageGroupID);
 
-						$('#image_edit_modal').modal('toggle'); // close bootstrap modal
+						$('#image_edit_modal').modal('hide'); // close bootstrap modal
 						$('#image_edit_modal').on('hidden.bs.modal', function () {
                             $('body').addClass('modal-open');
                         });
@@ -186,7 +188,9 @@ $(function (){
 
 
 				var temp = new Croppic("croppic_div", croppicOptions);
-				
+
+				$('.modal-backdrop').remove();
+				$('#image_edit_modal').modal('show');
 			}
 		});
 	});	

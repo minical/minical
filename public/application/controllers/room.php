@@ -32,7 +32,6 @@ class Room extends MY_Controller
 		$data['js_files'] = array(
 			base_url() . auto_version('js/rooms.js'),
 			base_url() . auto_version('js/booking/booking_main.js'),
-			base_url() . auto_version('js/booking/booking_list.js'),
 			base_url() . auto_version('js/room_status.js')
 		);		
 
@@ -308,5 +307,139 @@ class Room extends MY_Controller
         );
 
         echo json_encode($response);
+    }
+
+    function inventory()
+	{
+		$data['js_files'] = array(
+			base_url() . auto_version('js/mustache.min.js'),
+			base_url() . auto_version('js/channel_manager/channel_manager.js'),
+			base_url() . auto_version('js/room_inventory.js')
+		);
+		$data['css_files'] = array(
+			base_url() . auto_version('css/room_inventory.css')
+		);
+		$data['selected_menu'] = 'rooms';			
+		$data['main_content'] = 'room/room_inventory';		
+		$data['selected_submenu'] = 'Inventory';
+		
+		$channels_keys = array();
+
+        $channels_keys = apply_filters('get_inventory_channel_keys', $channels_keys);
+        
+        $channels = count($channels_keys) ? $this->Channel_model->get_all_channels($channels_keys) : array();
+
+        $data['channels'] = array_merge(array(array("id" => -1, "name" => "Overview")), $channels);
+        
+		$this->load->view('includes/bootstrapped_template', $data);			
+	}
+
+	function modify_availabilities() 
+	{
+		$view_data['date_start'] = sqli_clean($this->security->xss_clean($this->input->get('dateStart')));
+		$view_data['room_type_ids'] = implode(',', $this->input->get('roomTypeIds'));
+		$view_data['room_type_names'] = $this->input->get('roomTypeNames');
+		$view_data['channel_id'] = sqli_clean($this->security->xss_clean($this->input->get('channelId')));
+		//$view_data['room_type_ids'] = explode(',', $this->input->get('roomTypeIds'));
+
+		$this->load->view('room/modify_availabilities', $view_data);
+	}
+    
+	function modify_availabilities_POST()
+	{
+		$update_status_only = $this->input->post("update_status_only");
+        
+		$date_start = sqli_clean($this->security->xss_clean($this->input->post("date_start")));
+		$date_end = sqli_clean($this->security->xss_clean($this->input->post("date_end")));
+		$monday = ($this->input->post("monday") == 'true')?'1':'0';
+		$tuesday = ($this->input->post("tuesday") == 'true')?'1':'0';
+		$wednesday = ($this->input->post("wednesday") == 'true')?'1':'0';
+		$thursday = ($this->input->post("thursday") == 'true')?'1':'0';
+		$friday = ($this->input->post("friday") == 'true')?'1':'0';
+		$saturday = ($this->input->post("saturday") == 'true')?'1':'0';
+		$sunday = ($this->input->post("sunday") == 'true')?'1':'0';
+
+		$channel_id = sqli_clean($this->security->xss_clean($this->input->post('channel_id')));
+		$room_type_ids = explode(',', $this->input->post("room_type_ids"));
+        
+        if($update_status_only){
+            $status = $this->input->post("status");
+        }else{
+            $availability = $this->input->post("availability");
+        }
+		$this->load->library('form_validation');			
+		
+		$this->form_validation->set_rules('date_start', 'Start Date', 'required|trim|callback_date_format_check');	
+		$this->form_validation->set_rules('date_end', 'End Date', 'required|trim|callback_date_format_check');
+		if(!$update_status_only){
+            $this->form_validation->set_rules('availability', 'Availability for OTAs', 'trim|required|numeric');
+        }
+		$response = array();
+
+		foreach($room_type_ids as $i => $room_type)
+		{
+            $response[$i] = array();
+
+			if ($this->form_validation->run() == TRUE)
+			{
+				$response[$i]['status'] = "success";
+
+				$date_range_id = $this->Date_range_model->create_date_range(
+					Array(
+						'date_start' => $date_start,
+						'date_end' => $date_end,
+						'monday' => $monday,
+						'tuesday' => $tuesday,
+						'wednesday' => $wednesday,
+						'thursday' => $thursday,
+						'friday' => $friday,
+						'saturday' => $saturday,
+						'sunday' => $sunday
+						)
+					);
+
+				$date_range_x_room_type_id = $this->Date_range_model->create_date_range_x_room_type(
+					Array(
+						'room_type_id' => $room_type, 
+						'date_range_id' => $date_range_id
+						)
+					);
+                
+                if ($update_status_only) {
+                    $this->Date_range_model->create_date_range_x_room_type_x_status(
+                        Array(
+                            'date_range_x_room_type_id' => $date_range_x_room_type_id,
+                            'channel_id' => $channel_id,
+                            'can_be_sold_online' => $status
+                        )
+                    );
+                } else {
+                    $this->Date_range_model->create_date_range_x_room_type_x_channels(
+                        Array(
+                            'date_range_x_room_type_id' => $date_range_x_room_type_id,
+                            'channel_id' => $channel_id,
+                            'availability' => $availability
+                        )
+                    );
+                }
+			}
+			else
+			{
+				$response[$i]['status'] = "error";
+				$response[$i]['message'] = validation_errors();
+			}
+		}
+
+		echo json_encode($response);
+	}
+
+	function set_room_type_ota_threshold(){
+        $room_type_id = $this->input->post('room_type_id');
+        $threshold_val = $this->input->post('threshold_val');
+        $data = array();
+        $room_type_id = isset($room_type_id)? $room_type_id : null;
+        $data['ota_close_out_threshold'] = isset($threshold_val)? $threshold_val : null;
+        $this->Room_type_model->update_room_type($room_type_id, $data);
+        echo json_encode('successfully updated', true);
     }
 }

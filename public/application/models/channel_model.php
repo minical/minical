@@ -8,9 +8,12 @@ class Channel_model extends CI_Model {
         parent::__construct();
     }
 	
-	function get_all_channels()
+	function get_all_channels($keys = null)
 	{
-        $query = $this->db->get('channel');
+		if ($keys) {
+			$this->db->where_in('key', $keys);
+		}
+        $query = $this->db->get('otas');
 
 		if ($this->db->_error_message()) // error checking
 			show_error($this->db->_error_message());

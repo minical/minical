@@ -28,9 +28,9 @@
 						$month_before_today = date ( 'Y-m-d' , strtotime ( '-1 month' , $today ) );
 						$month_after_today = date ( 'Y-m-d' , strtotime ( '+1 month' , $today ) );
 						
-						echo "<a href='".base_url()."reports/show_monthly_tax_report/".$month_before_today."'> << </a>";
+						echo "<a href='".base_url()."reports/ledger/show_monthly_tax_report/".$month_before_today."'> << </a>";
 						echo date("F, Y",strtotime($date)); 
-						echo "<a href='".base_url()."reports/show_monthly_tax_report/".$month_after_today."'> >> </a>";			
+						echo "<a href='".base_url()."reports/ledger/show_monthly_tax_report/".$month_after_today."'> >> </a>";			
 					?>	  		
 	
 				</div> <!-- /.form-group -->
@@ -105,7 +105,7 @@
 								$tax_exempt_charge = 0;
 							}
 							echo "<tr>";
-							echo "<td class='date_td'><a href='".base_url()."reports/show_daily_report/".$date."'>".$date."</a></td>";
+							echo "<td class='date_td'><a href='".base_url()."reports/ledger/show_daily_report/".$date."'>".$date."</a></td>";
 							echo "<td class='text-right'>".number_format(($charge), 2, ".", ",")."</td>";
 							
 							$ci = 0; // keep track of column index. To prevent making date/shift_type_name into currency format

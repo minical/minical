@@ -12,6 +12,7 @@ innGrid.updateAvailabilities = function(start_date, end_date, room_type_id, chan
 	    dataType: "json",
 	    success: function (data) {
 	        console.log(data);
+            $("#loading_avail_img").hide();
 	    }
 	});
 }

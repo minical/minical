@@ -2783,4 +2783,57 @@ class Booking_model extends CI_Model {
         }
         return NULL;
     }
+
+    function delete_bookings($company_id)
+    {
+        $data = Array('is_deleted' => 1);
+
+        $this->db->where('company_id', $company_id);
+        $this->db->update("booking", $data);
+
+        if ($this->db->_error_message())
+        {
+            show_error($this->db->_error_message());
+        }
+
+    }
+
+    function get_bookings_company($company_id)
+    {
+        $this->db->from('booking as b');
+        $this->db->where('company_id', $company_id);
+
+        $query = $this->db->get();
+
+        if($query->num_rows() >= 1){
+            return $query->result_array();
+        }
+        return NULL;
+
+    }
+
+    function create_booking_staying_customer($data){
+        $this->db->insert('booking_staying_customer_list', $data);
+    }
+
+    function get_booking_staying_customer_by_id($customer_id,$company_id,$booking_id){
+
+        $this->db->where('customer_id',$customer_id);
+        $this->db->where('company_id',$company_id);
+        $this->db->where('booking_id',$booking_id);
+
+        $query = $this->db->get('booking_staying_customer_list');
+
+        if ($query->num_rows() > 0)
+        {
+            $result = $query->result_array(0);
+            return $result;
+        }
+        else
+        {
+            return NULL;
+        }
+
+    }
+
 }

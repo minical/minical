@@ -90,6 +90,7 @@
     innGrid.isCCVisualizationEnabled = parseInt('<?=(($this->is_cc_visualization_enabled) ? 1 : 0)?>');
     innGrid.isAsaasPaymentEnabled = parseInt('<?=(($this->selected_payment_gateway == "asaas") ? 1 : 0)?>');
     innGrid.featureSettings.cuurentLanguage = "<?=$this->session->userdata('language') ? $this->session->userdata('language') : ''?>";
+    innGrid.imageUrl = "<?= $this->image_url; ?>";
 
     // subscription plans
     var STARTER = "<?php echo STARTER; ?>";
@@ -146,7 +147,7 @@
     // add non-translated-keys to DB 
     <?php if($this->user_id === SUPER_ADMIN_USER_ID) { ?>
     setInterval(function () {
-        console.log('nonTranslatedKeys', nonTranslatedKeys);
+        // console.log('nonTranslatedKeys', nonTranslatedKeys);
         if (nonTranslatedKeys.length > 0){
 
             $.ajax({
@@ -223,7 +224,7 @@ mixpanel.init("3bc910ef237696a92d7ca663bafa883c");</script><!-- end Mixpanel -->
 <script type="text/javascript" src="<?php echo base_url() . auto_version('js/underscore-min.js'); ?>"></script>
 <script type="text/javascript" src="<?php echo base_url() . auto_version('js/wizard.js');?>"></script>
 <script type="text/javascript" src="<?php echo base_url() . auto_version('js/language_translation.js');?>"></script>
-<script type="text/javascript" src="<?php echo base_url() . ('js/main.js');?>"></script>
+<script type="text/javascript" src="<?php echo base_url() . ('js/main.js?v=1');?>"></script>
 
 <?php if (isset($js_files)) : foreach ($js_files as $path) : ?>
 	<script type="text/javascript" src="<?php echo $path; ?>"></script>

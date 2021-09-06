@@ -77,13 +77,7 @@
                 dataType: "JSON",
                 success: function(resp){
                     if(resp.success){
-                        var host_name = "<?php echo $_SERVER['HTTP_HOST']; ?>";
-                        if(host_name == 'localhost'){
-
-                            window.location.href = resp.project_url + "/auth/register ";
-                        } else {
-                            window.location.href = "<?php echo 'http://' . $_SERVER['HTTP_HOST'] . '/auth/register' ?>";
-                        }
+                        window.location.href = resp.project_url + "/auth/register ";
                     }
 
                     filePosition = resp.file_position;

@@ -112,5 +112,19 @@ class Booking_linked_group_model extends CI_Model {
             return $result;
         else
             return null;
-    }   
+    }
+
+    function create_booking_linked_groups($group_name){
+
+        $data = array(
+            'name' => $group_name
+        );
+
+        $this->db->insert('booking_linked_group', $data);
+        $insert_id = $this->db->insert_id();
+        // echo $this->db->last_query();die;
+        if(isset($insert_id))
+            return $insert_id;
+        return null ;
+    }  
 }

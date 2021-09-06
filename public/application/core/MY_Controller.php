@@ -176,6 +176,8 @@ class MY_Controller extends CI_Controller {
         }
 
         $autoload_helpers = array();
+        $autoload_packages = array();
+
         if($active_modules && count($active_modules) > 0){
             foreach($active_modules as $module)
             {
@@ -183,6 +185,14 @@ class MY_Controller extends CI_Controller {
                 if($module === '.' || $module === '..') continue;
                 if(is_dir($modules_path) . '/' . $module)
                 {
+
+                    if(file_exists('application/extensions/'.$module . '/hooks/actions.php')) {
+                        $autoload_packages[$module.'-actions'] = '../extensions/'.$module . '/hooks/actions';
+                    }
+                    if(file_exists('application/extensions/'.$module . '/hooks/filters.php')) {
+                        $autoload_packages[$module.'-filters'] = '../extensions/'.$module . '/hooks/filters';
+                    }
+
                     $helpers_path = $modules_path . $module . '/config/autoload.php';
                     if(file_exists($helpers_path))
                     {
@@ -190,7 +200,9 @@ class MY_Controller extends CI_Controller {
 
                         if($extension_helper && is_array($extension_helper)){
                             foreach($extension_helper as $key => $extension_helper_item) {
-                                $autoload_helpers[$extension_helper_item] = '../extensions/'.$module . '/helpers/' . $extension_helper_item;
+                                if ($extension_helper_item) {
+                                    $autoload_helpers[$extension_helper_item] = '../extensions/'.$module . '/helpers/' . $extension_helper_item;
+                                }
                             }
                         }
                     }
@@ -201,9 +213,11 @@ class MY_Controller extends CI_Controller {
                 }
             }
         }
-        // prx($autoload_helpers);
+
         if($autoload_helpers && count($autoload_helpers) > 0)
             $this->load->helper($autoload_helpers);
+        if($autoload_packages && count($autoload_packages) > 0)
+            $this->load->helper($autoload_packages, true);
 
     }
 
@@ -275,13 +289,15 @@ class MY_Controller extends CI_Controller {
             $this->enable_new_calendar = $company['enable_new_calendar'];
             $this->enable_hourly_booking = $this->enable_new_calendar ? $company['enable_hourly_booking'] : false;
 
+            $this->image_url = "https://".getenv("AWS_S3_BUCKET").".s3.amazonaws.com/";
+
             $this->first_name = $user['first_name'];
             $this->last_name = $user['last_name'];
 
             $whitelabelinfo = $this->ci->session->userdata('white_label_information');
 
             $admin_user_ids = $this->Whitelabel_partner_model->get_partner_detail();
-            $this->is_super_admin = ($user['email'] == SUPER_ADMIN || $this->user_id == $admin_user_ids['admin_user_id']);
+            $this->is_super_admin = (($user && isset($user['email']) && $user['email'] == SUPER_ADMIN) || ($admin_user_ids && isset($admin_user_ids['admin_user_id']) && $this->user_id == $admin_user_ids['admin_user_id']));
 
             if($this->is_super_admin){
                 $get_active_extensions = $this->Extension_model->get_active_extensions($this->company_id, 'reseller_package', false);
@@ -321,7 +337,8 @@ class MY_Controller extends CI_Controller {
             }
 
             $host_name = $_SERVER['HTTP_HOST'];
-            if ((!$whitelabelinfo && $this->company_data['partner_id']) || ($whitelabelinfo && ($host_name ==  'http://'. $_SERVER['HTTP_HOST']) && isset($whitelabelinfo['id']) && $whitelabelinfo['id'] != $this->company_data['partner_id'])) {
+            $protocol = $this->config->item('server_protocol');
+            if ((!$whitelabelinfo && $this->company_data['partner_id']) || ($whitelabelinfo && ($host_name ==  $protocol . $_SERVER['HTTP_HOST']) && isset($whitelabelinfo['id']) && $whitelabelinfo['id'] != $this->company_data['partner_id'])) {
                 $white_label_detail = $this->Whitelabel_partner_model->get_partners(array('id' => $this->company_data['partner_id']));
                 if($white_label_detail && isset($white_label_detail[0])) {
                     $this->session->set_userdata('white_label_information', $white_label_detail[0]);

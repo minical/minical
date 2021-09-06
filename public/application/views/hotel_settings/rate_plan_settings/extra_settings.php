@@ -82,7 +82,7 @@
         <?php 	foreach($extras as $extra) : ?>
             <tr class="extra-field-tr" id="<?php echo $extra['extra_id']; ?>">
                 <td>
-                    <input name="name" class="form-control" type="text" value="<?php echo $extra['extra_name']; ?>" />
+                    <input name="name" class="form-control" type="text" value="<?php echo $extra['extra_name']; ?>" maxlength="250" />
                 </td>
                 <td class="text-center">
                     <select name="charging-scheme" class="form-control">
@@ -109,7 +109,7 @@
 					</select>
                 </td>
                 <td class="text-center">
-                    <input name="default-rate" type="text" class="form-control"
+                    <input name="default-rate" type="number" min="0" class="form-control"
 					value="<?php
 								if (isset($extra['default_extra_rate']['rate'])) {	
 									echo $extra['default_extra_rate']['rate'];

@@ -23,30 +23,16 @@ if (!isset($_SERVER['HTTP_HOST'])) {
 
 date_default_timezone_set("America/Los_Angeles"); // temporary quick fix
 
-switch ($_SERVER['HTTP_HOST']) {
-	case 'localhost': // local
-        $config['app_environment'] = 'development';
-		$config['base_url']	= $_SERVER['PROJECT_URL']; // localhost
-		$config['api_url']	= str_replace("public","api",$_SERVER['PROJECT_URL']); // production
-		break;
-    case 'minical.core': // local
-        $config['app_environment'] = 'development';
-		$config['base_url']	= "http://" . $_SERVER['HTTP_HOST'];
-		$config['api_url']	= "http://minical.api";
-		break;
-	case 'demo.minical.io': // local
-        $config['app_environment'] = 'development';
-		$config['base_url']	= "http://" . $_SERVER['HTTP_HOST'];
-		$config['api_url']	= "http://seasonal.io/minical/opensource/demo/api";
-		break;
-    default: // production // other whitelabel companies
-        $config['app_environment'] = 'production';
-        // whitelabel partners might not have ssl installed
-        $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
-		$config['base_url']	= $protocol . $_SERVER['HTTP_HOST'];
-		$config['api_url']	= "http://api.minical.io"; // production/staging
-		break;
-}
+$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+
+$config['server_protocol'] = $protocol;
+
+$ENVIRONMENT = getenv('ENVIRONMENT');
+$ENVIRONMENT = $ENVIRONMENT ? $ENVIRONMENT : 'production';
+
+$config['app_environment'] = $ENVIRONMENT;
+$config['base_url']	= getenv('PROJECT_URL'); // localhost
+$config['api_url']	= getenv('API_URL'); // localhost
 
 /*
 |--------------------------------------------------------------------------
@@ -429,7 +415,7 @@ $config['quickbooks_gateway_client_secret']	= isset($_SERVER["QUICKBOOK_CLIENT_S
 
 $config['module_location'] = APPPATH.'extensions/';
 
-$config['module_base_path']	= "http://" . $_SERVER['HTTP_HOST'];
+$config['module_base_path']	= $protocol . $_SERVER['HTTP_HOST'];
 
 /* End of file config.php */
 /* Location: ./application/config/config.php */

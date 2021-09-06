@@ -57,4 +57,24 @@ class Booking_field_model extends CI_Model {
             return null;
         }
     }
+
+    function booking_field($booking_id,$booking_fields)
+    {
+        $this->db->insert('booking_x_booking_field', $booking_fields);
+       
+    }
+
+    function get_the_booking_fields_by_name($name,$company_id){
+
+        $this->db->where('company_id', $company_id);
+        $this->db->where('name', $name);
+        $query = $this->db->get('booking_field');
+
+        if ($query->num_rows >= 1)
+            return $query->result_array();
+        return NULL;
+
+    }
+
+   
 }

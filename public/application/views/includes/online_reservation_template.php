@@ -66,7 +66,9 @@ $files = get_asstes_files($this->module_assets_files, $this->router->fetch_modul
 	<?php
 		endif;
 	?>
-	
+
+    <input type="hidden" name="project_url" id="project_url" value="<?php echo getenv('PROJECT_URL'); ?>">
+
 	<div class="">
         <div class="panel panel-default" style="border: none;padding-top: 20px;">
 			<div class="panel-body">
@@ -76,7 +78,7 @@ $files = get_asstes_files($this->module_assets_files, $this->router->fetch_modul
 							// ensure there's http:// in front of URL
 							$website = $company_data['website'];
 							if (!preg_match("~^(?:f|ht)tps?://~i", $website)) {
-						        $website = "http://" . $website;
+						        $website = "https://" . $website;
 						    }
 						?>
                         <h4 style="margin-top: 4px;"><a href="<?php echo $website; ?>"><?php echo $company_data['name']; ?></a></h4>
@@ -207,9 +209,9 @@ $files = get_asstes_files($this->module_assets_files, $this->router->fetch_modul
 	     $year= date("Y",$time);
 	     echo l('powered by', true);
          if(empty($whitelabelinfo) || (isset($whitelabelinfo['name']) && $whitelabelinfo['name'] == 'Minical')) {
-             echo " <a target='_blank' href='http://www.minical.io'>Minical</a>";
+             echo " <a target='_blank' href='https://www.minical.io'>Minical</a>";
          }else {
-             echo (!empty($whitelabelinfo['domain']) ? " <a target='_blank' href='http://".$whitelabelinfo['domain']."'>" : " <a href='#'>").$partner_name."</a>";
+             echo (!empty($whitelabelinfo['domain']) ? " <a target='_blank' href='https://".$whitelabelinfo['domain']."'>" : " <a href='#'>").$partner_name."</a>";
          }
 		 echo ''; //Don't bother with showing copyright until a dashbar is built.
 	     ?>
@@ -258,7 +260,6 @@ $files = get_asstes_files($this->module_assets_files, $this->router->fetch_modul
     // add non-translated-keys to DB 
     <?php if($this->user_id === SUPER_ADMIN_USER_ID) { ?>
     setInterval(function () {
-        console.log('nonTranslatedKeys', nonTranslatedKeys);
         if (nonTranslatedKeys.length > 0){
 
             $.ajax({
@@ -267,7 +268,7 @@ $files = get_asstes_files($this->module_assets_files, $this->router->fetch_modul
                 data: { non_translated_keys: nonTranslatedKeys},
                 dataType: "json",
                 success: function( data ) {
-                    console.log('data', data);
+                    // console.log('data', data);
                 }
             });
 

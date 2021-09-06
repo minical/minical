@@ -561,7 +561,7 @@ class Rates extends MY_Controller
 		$date_start = $this->input->post("date_start");
 		$date_end = $this->input->post("date_end");
         // Update the end date if it's empty
-		$date_end = ($date_end) ? $date_end : date('Y-m-d', strtotime('+10 years'));
+		$date_end = trim($date_end) != '' ? $date_end : date('Y-m-d', strtotime('+10 years'));
 		// Fetch rate POST variables
 		$rate_data_variables = array(
 									"rate_plan_id",
@@ -1086,7 +1086,8 @@ class Rates extends MY_Controller
         );
 		$data['js_files'] = array(
 				base_url() . auto_version('js/channel_manager/channel_manager.js'),
-				base_url() . auto_version('js/hotel-settings/rate-settings.js')
+				base_url() . auto_version('js/hotel-settings/rate-settings.js'),
+                base_url().'js/moment.min.js'
 		);
 				
 		$data['main_content'] = 'hotel_settings/rate_plan_settings/edit_rates';
@@ -1304,10 +1305,12 @@ class Rates extends MY_Controller
                 break;
             }
 
+            $extra_rate = $this->security->xss_clean($updated_extra['default_rate']);
 			$rate_data = array(
-				'rate' => $this->security->xss_clean($updated_extra['default_rate']),
+				'rate' => ($extra_rate != '' && $extra_rate >= 0) ? trim(number_format($extra_rate, 2, ".", ",")) : 0,
 				'currency_id' => $default_currency['currency_id']
 			);
+
 			$this->Rate_model->update_extra_rate($extra_field_id, $rate_data);
 
         }
@@ -1339,7 +1342,7 @@ class Rates extends MY_Controller
                     );
                     break;
                 }
-				$this->_create_rate_plan_log("Update Room Type ( [ID {$extra_id}])");
+				$this->_create_rate_plan_log("Update Room Type ( [ID {$room_type_id}])");
             }
         }
         echo json_encode($response);

@@ -121,23 +121,25 @@
 					<td>
 						<?php echo $r->phone; ?>
 					</td>
-                                        <td>
-                                            <?php                                             
-                                                if($r->customer_type_id == '2')
-                                                {
-                                                    echo l('VIP', true);
-                                                }
-                                                else if($r->customer_type_id == '1')
-                                                {
-                                                    echo l('Blacklist', true);
-                                                }
-                                                else
-                                                {
-                                                    echo "";
-                                                }
-                                            ?>
-
-                                            
+                    <td>
+                        <?php                                             
+                            if($r->customer_type_id == VIP)
+                            {
+                                echo l('VIP', true);
+                            }
+                            else if($r->customer_type_id == BLACKLIST)
+                            {
+                                echo l('Blacklist', true);
+                            }
+                            else
+                            {
+								foreach ($customer_types as $customer_type):
+									if($customer_type['id'] == $r->customer_type_id){
+										echo $customer_type['name'];
+									}
+								endforeach;
+                            }
+                        ?>
 					</td>
 					<td class='text-right' onclick="">
 						<?php echo ($this->enable_hourly_booking == 1 ? ($r->last_check_out_date ? date('Y-m-d h:i A', strtotime($r->last_check_out_date)) : '') : ($r->last_check_out_date ? date('Y-m-d', strtotime($r->last_check_out_date)) : ''));  ?>

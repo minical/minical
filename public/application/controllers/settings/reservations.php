@@ -138,8 +138,6 @@ class Reservations extends MY_Controller
            );
             $data['selected_sidebar_link'] = 'Booking Source';
 
-        $files = get_asstes_files($this->module_assets_files, $this->module_name, $this->controller_name, $this->function_name);
-
         $data['main_content'] = 'hotel_settings/booking/booking_source_settings';
 
         $this->template->load('bootstrapped_template', null , $data['main_content'], $data);
@@ -255,8 +253,6 @@ class Reservations extends MY_Controller
         $data['js_files'] = array(
             base_url() . auto_version('js/hotel-settings/booking-fields.js')
        );
-
-        $files = get_asstes_files($this->module_assets_files, $this->module_name, $this->controller_name, $this->function_name);
 
         $data['main_content'] = 'hotel_settings/booking/custom_booking_field_setting';
 
@@ -430,8 +426,6 @@ class Reservations extends MY_Controller
    
         $data['selected_sidebar_link'] = 'Customer Types';
 
-        $files = get_asstes_files($this->module_assets_files, $this->module_name, $this->controller_name, $this->function_name);
-
         $data['main_content'] = 'hotel_settings/customer/customer_type_settings';
 
         $this->template->load('bootstrapped_template', null , $data['main_content'], $data);
@@ -566,7 +560,7 @@ class Reservations extends MY_Controller
         $data['js_files'] = array(
              base_url() . auto_version('js/hotel-settings/customer-fields.js')
         );
-        $files = get_asstes_files($this->module_assets_files, $this->module_name, $this->controller_name, $this->function_name);
+        
         $data['selected_sidebar_link'] = 'Customer Fields';
         $data['main_content'] = 'hotel_settings/customer/customer_field_settings';
         $this->template->load('bootstrapped_template', null , $data['main_content'], $data);

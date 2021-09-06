@@ -42,6 +42,6 @@
 	<br/>
 	<br/>
 	<h3>
-		<a href="http://www.minical.io">Return to <?php if($whitelabelinfo){ echo ucfirst($whitelabelinfo['name']); }else{ echo 'Minical';} ?> homepage</a>
+		<a href="https://www.minical.io">Return to <?php if($whitelabelinfo){ echo ucfirst($whitelabelinfo['name']); }else{ echo 'Minical';} ?> homepage</a>
 	</h3>
 </center>

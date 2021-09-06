@@ -101,17 +101,17 @@ class Extra_model extends CI_Model {
 		}
 		else
 		{
-			//return $this->db->insert_id();
-      $query = $this->db->query('select LAST_INSERT_ID( ) AS last_id');
-      $result = $query->result_array();
-      if(isset($result[0]))
-      {  
-        return $result[0]['last_id'];
-      }
-      else
-      {  
-        return null;
-      }
+            //return $this->db->insert_id();
+            $query = $this->db->query('select LAST_INSERT_ID( ) AS last_id');
+            $result = $query->result_array();
+            if(isset($result[0]))
+            {
+                return $result[0]['last_id'];
+            }
+            else
+            {
+                return null;
+            }
 		}
 	}
 	
@@ -139,6 +139,19 @@ class Extra_model extends CI_Model {
 		$this->db->where('extra_id', $extra_id);
         $this->db->delete('rate_plan_x_extra');
 	}
+
+    function delete_extras($company_id){
+
+        $data = Array('is_deleted' => 1);
+        $this->db->where('company_id', $company_id);
+        $this->db->update("extra", $data);
+
+        if ($this->db->_error_message())
+        {
+            show_error($this->db->_error_message());
+        }
+
+    }
 
 	function create_rate_plan_extras($rate_plan_id, $extra_id, $room_type_id)
 	{
@@ -200,6 +213,47 @@ class Extra_model extends CI_Model {
 		}
 		return NULL;
 	}
+
+    function create_all_extras($data)
+    {
+
+        $this->db->insert('extra', $data);
+
+        if ($this->db->_error_message())
+        {
+            show_error($this->db->_error_message());
+        }
+        else
+        {
+            //return $this->db->insert_id();
+            $query = $this->db->query('select LAST_INSERT_ID( ) AS last_id');
+            $result = $query->result_array();
+            if(isset($result[0]))
+            {
+                return $result[0]['last_id'];
+            }
+            else
+            {
+                return null;
+            }
+        }
+    }
+
+    function get_rate_plan_extra($rate_plan_id, $extra_id, $room_type_id){
+
+        $this->db->from('rate_plan_x_extra');
+        $this->db->where('rate_plan_id', $rate_plan_id);
+        $this->db->where('room_type_id', $room_type_id);
+        $this->db->where('extra_id', $extra_id);
+        $query = $this->db->get();
+
+        if ($query->num_rows >= 1)
+        {
+            return $result = $query->result_array();
+        }
+
+        return NULL;
+    }
 	
 }
 

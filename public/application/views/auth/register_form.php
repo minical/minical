@@ -110,9 +110,9 @@
 		</div>
         
 		<?php echo "By creating an account you agree to our "; ?> 
-        <a href="http://demo.minical.io/terms-of-service/">Terms Of Service</a>
+        <a href="https://demo.minical.io/terms-of-service/">Terms Of Service</a>
         <?php echo ", and " ?>
-        <a href="http://demo.minical.io/privacy">Privacy Policy</a>
+        <a href="https://demo.minical.io/privacy">Privacy Policy</a>
 	</div>
 
 	<div class="col-md-3 text-center" >

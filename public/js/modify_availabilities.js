@@ -55,6 +55,7 @@ innGrid.setAvailabilities = function() {
 			var value = $(this).val();
 		}
 		otaAvailabilityArray[fieldname] = value;
+		$("#loading_avail_img").show();
 	});
 	
 	
@@ -63,11 +64,11 @@ innGrid.setAvailabilities = function() {
 		function(data){
 			if (data.status === 'error')
 			{
-                            alert(data.message.replace(/<p>/g,'').replace(/<\/p>/g,''));
+                alert(data.message.replace(/<p>/g,'').replace(/<\/p>/g,''));
 			}
 			else
 			{
-                            innGrid.updateAvailabilities($("#date_start").val(), $("#date_end").val(), otaAvailabilityArray['room_type_ids'], otaAvailabilityArray['channel_id']);
+                innGrid.updateAvailabilities($("#date_start").val(), $("#date_end").val(), otaAvailabilityArray['room_type_ids'], otaAvailabilityArray['channel_id']);
 			}
 		}, 'json'
 	);

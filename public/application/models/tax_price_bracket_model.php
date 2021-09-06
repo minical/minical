@@ -34,5 +34,9 @@ class Tax_price_bracket_model extends CI_Model {
     	$query = $this->db->get('tax_price_bracket');
     	return $query->result();	
     }
+
+    function create_price_bracket($data){
+        $this->db->insert('tax_price_bracket', $data);
+    }
 	
 }

@@ -15,7 +15,7 @@ class="text-center"
 		<?php $email = '';
             $password = '';
 
-            if(auto_fill_credentials() && current_url() == 'http://demo.minical.io/auth/login'){
+            if(auto_fill_credentials() && current_url() == 'https://demo.minical.io/auth/login'){
 	            $email = 'demo@minical.io';
 	            $password = '12345';
         	} 

@@ -843,6 +843,8 @@ class Room_model extends CI_Model {
             $this->db->where('r.room_type_id',$room_type_id);
         }
         $this->db->where('r.room_name',$name);
+        $this->db->where('r.company_id', $this->company_id);
+        $this->db->where('r.is_deleted',0);
         $query = $this->db->get('room as r');
 
         if ($query->num_rows() > 0)
@@ -855,6 +857,45 @@ class Room_model extends CI_Model {
             return NULL;
         }
 
+    }
+
+
+
+    function delete_rooms($company_id){
+
+        $data = Array('is_deleted' => 1);
+
+        $this->db->where('company_id', $company_id);
+        $this->db->update("room", $data);
+
+        if ($this->db->_error_message())
+        {
+            show_error($this->db->_error_message());
+        }
+
+    }
+
+    function create_rooms($company_id = null, $room_name = null, $room_type_id = '', $sort_order = 0 , $sold_online)
+    {
+        $data = array(
+            'company_id' => $company_id,
+            'room_name' => $room_name,
+            'room_type_id' => $room_type_id,
+            'sort_order' => $sort_order,
+            'can_be_sold_online' => $sold_online
+
+        );
+        
+        $this->db->insert('room', $data);
+        //return $this->db->insert_id();
+        $query = $this->db->query('select LAST_INSERT_ID( ) AS last_id');
+        $result = $query->result_array();
+        if(isset($result[0]))
+        {
+            return $result[0]['last_id'];
+        }
+
+        return null;
     }
 
 
