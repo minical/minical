@@ -21795,19 +21795,20 @@ CREATE TABLE `postmeta` (
 -- Table structure for table `posts`
 --
 CREATE TABLE `posts` (
-  `post_id` bigint(20) UNSIGNED NOT NULL,
+  `post_id` bigint(20) NOT NULL,
   `company_id` int(11) NOT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL DEFAULT '0',
-  `post_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `post_content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci NOT NULL,
-  `post_title` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci NOT NULL,
-  `post_status` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'publish',
-  `post_modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `post_parent` bigint(20) UNSIGNED NOT NULL DEFAULT '0',
-  `guid` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT '',
-  `sort_order` int(11) NOT NULL DEFAULT '0',
-  `post_type` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'post',
-  `post_mime_type` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT ''
+  `user_id` bigint(20) UNSIGNED NOT NULL DEFAULT 0,
+  `post_content` longtext COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `post_title` text COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `post_status` varchar(20) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'publish',
+  `post_parent` bigint(20) UNSIGNED NOT NULL DEFAULT 0,
+  `guid` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT '',
+  `sort_order` int(11) NOT NULL DEFAULT 0,
+  `post_type` varchar(20) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'post',
+  `post_mime_type` varchar(100) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT '',
+  `post_modified` datetime DEFAULT NULL,
+  `post_date` datetime DEFAULT NULL,
+  `is_deleted` tinyint(4) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
@@ -22276,13 +22277,12 @@ ALTER TABLE `options`
 ALTER TABLE `postmeta`
   ADD PRIMARY KEY (`meta_id`),
   ADD KEY `post_id` (`post_id`),
-  ADD KEY `meta_key` (`meta_key`(191));
+  ADD KEY `meta_key` (`meta_key`);
 --
 -- Indexes for table `posts`
 --
 ALTER TABLE `posts`
   ADD PRIMARY KEY (`post_id`),
-  ADD UNIQUE KEY `company_id` (`company_id`),
   ADD KEY `type_status_date` (`post_type`,`post_status`,`post_date`,`post_id`),
   ADD KEY `post_parent` (`post_parent`),
   ADD KEY `post_author` (`user_id`);
