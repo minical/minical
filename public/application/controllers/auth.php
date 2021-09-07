@@ -160,13 +160,13 @@ class Auth extends MY_Controller
             }
 
             $data['use_recaptcha'] = $this->config->item('use_recaptcha', 'tank_auth');
-            if ($this->tank_auth->is_max_login_attempts_exceeded($login)) {
-                if ($data['use_recaptcha']) {
-                    $this->form_validation->set_rules('recaptcha_response_field', 'Confirmation Code', 'trim|xss_clean|required|callback__check_recaptcha');
-                } else {
-                    $this->form_validation->set_rules('captcha', 'Confirmation Code', 'trim|xss_clean|required|callback__check_captcha');
-                }
-            }
+//            if ($this->tank_auth->is_max_login_attempts_exceeded($login)) {
+//                if ($data['use_recaptcha']) {
+//                    $this->form_validation->set_rules('recaptcha_response_field', 'Confirmation Code', 'trim|xss_clean|required|callback__check_recaptcha');
+//                } else {
+//                    $this->form_validation->set_rules('captcha', 'Confirmation Code', 'trim|xss_clean|required|callback__check_captcha');
+//                }
+//            }
             $data['errors'] = array();
 
             $this->form_validation->set_value('login');
@@ -231,14 +231,14 @@ class Auth extends MY_Controller
             }
 
             $data['show_captcha'] = false;
-            if ($this->tank_auth->is_max_login_attempts_exceeded($login)) {
-                $data['show_captcha'] = true;
-                if ($data['use_recaptcha']) {
-                    $data['recaptcha_html'] = $this->_create_recaptcha();
-                } else {
-                    $data['captcha_html'] = $this->_create_captcha();
-                }
-            }
+//            if ($this->tank_auth->is_max_login_attempts_exceeded($login)) {
+//                $data['show_captcha'] = true;
+//                if ($data['use_recaptcha']) {
+//                    $data['recaptcha_html'] = $this->_create_recaptcha();
+//                } else {
+//                    $data['captcha_html'] = $this->_create_captcha();
+//                }
+//            }
 
             $data['main_content'] = 'auth/login_form';
 

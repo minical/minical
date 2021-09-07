@@ -194,8 +194,8 @@
             data: {
                     email: email,
                     password: password,
-                    accept_tnc: accept_tnc,
-                    'g-recaptcha-response': $('#g-recaptcha-response').val()
+                    accept_tnc: accept_tnc
+                    // 'g-recaptcha-response': $('#g-recaptcha-response').val()
                 },
             success: function (data) {
                 if (data == 'success')
@@ -211,7 +211,7 @@
                 {
                     alert(data);
                     $('.register_submit_form').attr('disabled', false).val('Next Step');
-                    grecaptcha.reset()
+                    // grecaptcha.reset()
                 }
             },
             error: function (err) {
