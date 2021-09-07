@@ -22287,6 +22287,8 @@ ALTER TABLE `posts`
   ADD KEY `post_parent` (`post_parent`),
   ADD KEY `post_author` (`user_id`);
 
+ALTER TABLE `posts` CHANGE `post_content` `post_content` LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci NULL DEFAULT NULL, CHANGE `post_title` `post_title` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci NULL DEFAULT NULL;
+ALTER TABLE `posts` CHANGE `post_type` `post_type` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'post';
 
 
 --
