@@ -778,6 +778,7 @@ class Invoice extends MY_Controller {
 
     function save_invoice()
     {
+
         $user_id = $this->session->userdata('user_id');
         $booking_id = $this->input->post('booking_id');
         $folio_id = $this->input->post('folio_id');
@@ -789,8 +790,11 @@ class Invoice extends MY_Controller {
         $charges = $this->input->post('charges');
 
         $is_extra_pos = $this->input->post('is_extra_pos');
+
+
         if($charges && count($charges) > 0)
         {
+
             foreach ($charges as $key => $charge) {
                 
                 $charge['user_id'] = $user_id;
@@ -810,7 +814,10 @@ class Invoice extends MY_Controller {
                 }
 
                 $charge_id = $this->Charge_model->insert_charge($charge);
-                
+
+                $charge_action_data = array('charge_id' => $charge_id, 'charge' => $charge, 'company_id'=> $this->company_id);
+                do_action('post.add.charge', $charge_action_data);
+
                 if(isset($card_data['evc_card_status']) && $card_data['evc_card_status'] && $isRoomChargeType && false){
                     // check folio is exist or not
                     $evc_folio_id = $this->check_EVC_folio('Expedia EVC', $booking_id, $customer_id, true);

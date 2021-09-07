@@ -12,4 +12,5 @@ class Post_model extends CI_Model {
         $this->db->insert('postmeta', $data);
         return $this->db->insert_id();
     }
+
 }
