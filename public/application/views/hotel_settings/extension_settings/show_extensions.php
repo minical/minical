@@ -25,13 +25,14 @@ $bootstrapColWidth = 12 / $numOfCols;
 ?>
 <div class="row">
 <?php if(isset($extensions) && $extensions) :
-    foreach ($extensions as $extension){ ?>  
+    foreach ($extensions as $extension){
+        ?>
         <div class="col-md-<?php echo $bootstrapColWidth; ?>" style="padding-right: 0px">
              <div class="extension_block">
      <div class="main-extension">
              <div class="icon">
 
-            <img src="<?php echo (isset($extension['image_name']) && $extension['image_name']) ?  base_url().'/images/'.$extension['image_name'] : '';?>" style="width: 30px;height: 30px">
+            <img src="<?php echo (isset($extension['image_name']) && $extension['image_name']) ?  base_url().'/images/'.$extension['image_name'] : ''?>" onerror="this.src='<?php echo base_url().'application/extensions/'.$extension['extension_folder_name'].'/'.$extension['image_name'];?>'" style="width: 30px;height: 30px">
             </div>
             <div class="extension-content">
                 <b style="font-size: 12px;"><?php
