@@ -28,14 +28,14 @@ function add_post ($data) {
     do_action('post.add.post', $post_id, $data, $CI->input->post());
 }
 
-function get_post(){
+// function get_post(){
 
-    $CI = & get_instance();
+//     $CI = & get_instance();
 
-    $CI->load->model('Post_model');
+//     $CI->load->model('Post_model');
 
-    $data = $CI->Post_model->get_post();
+//     $data = $CI->Post_model->get_post();
 
-    return $data;
+//     return $data;
 
-}
+// }
