@@ -1,6 +1,7 @@
 /*  Plugin for Booking Modals
  *   It takes the element's id attr, and use it as bookingID
  */
+var customerId;
 (function ($) {
     "use strict";
 	
@@ -186,6 +187,12 @@
             {
                 $('input[name=check_out_date]').datepicker('hide');
             }
+
+            setTimeout(function () {
+                var event = new CustomEvent('post.open_customer_model', { "detail" : {"customer_id" : options.customer_id }});
+                document.dispatchEvent(event);
+            }, 300);       
+         
         },
         _populateCustomerModal: function (customer, options) {
             var that = this;
@@ -222,7 +229,10 @@
             var $modal_content = $("#customer-modal").find(".modal-content")
 
                 var $customer_form = $("<form/>", {
-					class: "modal-body form-horizontal"
+					class: "modal-body form-horizontal",
+                    id: "custom_form",
+                    onsubmit : "return false",
+
 				})
                     .append(this._getHorizontalInput(l("Name", true), 'customer_name', customer.customer_name, (commonCustomerFields && commonCustomerFields[0] && commonCustomerFields[0]['show_on_customer_form'] == 0 ? "hidden customer_field_1" : "customer_field_1"), 1))
                     .append(
@@ -301,9 +311,9 @@
 					style: "opacity: 0; width: 1px; height: 1px; margin: 0px; padding: 0px;",
 					type: 'text',
 				})
-			);
-
-
+			); 
+            
+            
             if(isTokenizationEnabled == true)
             {
                 console.log(innGrid.isAsaasPaymentEnabled);
@@ -522,8 +532,11 @@
 
                                 if (cardno.length != 0){
 
-                                    var re16digit = /^\d{16}$/;
-                                    if (!re16digit.test(cardno)) {
+                                    var check_card = /^X.*.{1,15}$/;
+                                    var re16digit = /^(?:4[0-9]{12}(?:[0-9]{3})?|[25][1-7][0-9]{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\d{3})\d{11})$/;
+                                    if(check_card.test(cardno)){
+
+                                    }else if (!re16digit.test(cardno)) {
                                         errorMsg += "\nPlease enter valid card number";
                                     }
                                 }
@@ -580,7 +593,7 @@
                                         customerData.cc_number = "XXXX XXXX XXXX "+data.lastFour;
                                         cc_tokenex_token = data.token;
                                         cc_cvc_encrypted = data.cc_cvc_encrypted;
-                                    }
+                                    } 
 
                                     if (customer.customer_id) // new customer
                                     {
@@ -630,6 +643,10 @@
                                                             newCustomerToken.attr("id", data.customer_id);
                                                         }
                                                     });
+                                                    customerId = data.customer_id;
+                                                    var event = new CustomEvent('post.create_user');
+                                                    document.dispatchEvent(event);
+                                           
                                                     // a token that doesn't have id assigned yet
                                                     $("#customer-modal").modal('hide');
                                                 }
@@ -708,8 +725,8 @@
                             text: l("History")
                         })
                         );
-            }
-
+            }  
+            
             // update field
             if (customer.customer_type_id !== undefined)
                 $("[name='customer_type_id']").val(customer.customer_type_id)
@@ -766,7 +783,7 @@
                 $('#button-update-customer').attr('disabled', true);    // disable create or update customer button utill iframe loads
             }
 			$("#customer-modal").find("form.modal-body").attr('autocomplete', 'none');
-			$("#customer-modal").find(".modal-content").find('input.form-control').attr('autocomplete', 'none');
+			$("#customer-modal").find(".modal-content").find('input.form-control').attr('autocomplete', 'none');      
         },
         _iframe_listener: function(event){
             if (event.origin === 'https://htp.tokenex.com' || event.origin === 'https://test-htp.tokenex.com') {
@@ -889,7 +906,7 @@
                 customer_fields[id] = $.trim($(this).val());
             });
             customerData['customer_fields'] = customer_fields;
-            //console.log(customerData);
+            //console.log(customerData);    
             return customerData;
         },
         _getSelect: function (name, options, customer_form) {
@@ -958,9 +975,9 @@
 
         $.data(body, 'customerModal',
             new CustomerModal(options)
-        );
+        );     
     } 
-    
+  
     $('body').on('click', '.show_cc', function(){
 
         var customer_pci_token = $(this).data('customer_pci_token');
