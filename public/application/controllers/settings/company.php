@@ -1286,6 +1286,7 @@ class Company extends MY_Controller
                     "balance_without_forecast" => $booking['Balance Without Forecast'] == '' ? null : $booking['Balance Without Forecast'],
                     "use_rate_plan" => $booking['Use Rate Plan'] == 'true' ? 1 : 0,
                     "rate_plan_id" => $booking['Rate Plan Id'] == '' ? null : $booking['Rate Plan Id'],
+                    "color" => $booking['Color'] != '' ? $booking['Color'] : '',
                     "charge_type_id" => $charge_type_id['id'],
                     "pay_period" => isset($pay_period) ? $pay_period : 0,
                     "source" => isset($source) ? $source : 0 ,
@@ -1343,7 +1344,7 @@ class Company extends MY_Controller
                 foreach($booking as $key => $booking_data) {
 
                     $key_name =  array(
-                        "Booking Id","Rate","Adult Count","Children Count","State","Booking Customer Id","Booked By","Balance","Balance Without Forecast","Use Rate Plan","Rate Plan Id","Charge Type","Check In Date","Check Out Date","Room","Room Type","Group Id","Group Name","Daily Charges","Pay Period","Source","Custom  Booking Source","Booking Note","Booking Room History","Staying Customers"
+                        "Booking Id","Rate","Adult Count","Children Count","State","Booking Customer Id","Booked By","Balance","Balance Without Forecast","Use Rate Plan","Rate Plan Id","Color","Charge Type","Check In Date","Check Out Date","Room","Room Type","Group Id","Group Name","Daily Charges","Pay Period","Source","Custom  Booking Source","Booking Note","Booking Room History","Staying Customers"
                     );
 
 
@@ -1705,27 +1706,27 @@ class Company extends MY_Controller
         );
         $this->Company_model->update_company($this->company_id, $company_data);
 
-        $teams = $value['Teams'];
+        // $teams = $value['Teams'];
 
-        foreach ($teams as $key => $team) {
-            $data = array(
-                'email'              => $team['Email'],
-                'current_company_id' => $this->company_id,
-                'first_name'         => $team['First Name'],
-                'last_name'          => $team['Last Name'],
-                'password'           => $team['Password']
-            );
+        // foreach ($teams as $key => $team) {
+        //     $data = array(
+        //         'email'              => $team['Email'],
+        //         'current_company_id' => $this->company_id,
+        //         'first_name'         => $team['First Name'],
+        //         'last_name'          => $team['Last Name'],
+        //         'password'           => $team['Password']
+        //     );
 
-            $get_user = $this->User_model->get_user_by_email($team['Email']);
+        //     $get_user = $this->User_model->get_user_by_email($team['Email']);
 
-            if(!$get_user){
+        //     if(!$get_user){
 
-                $user =  $this->users->create_user($data, true);
+        //         $user =  $this->users->create_user($data, true);
 
-                $this->User_model->add_teams($this->company_id, $user['user_id'],$team['permission']);
-            }
+        //         $this->User_model->add_teams($this->company_id, $user['user_id'],$team['permission']);
+        //     }
 
-        }
+        // }
 
         $booking_fields = $value['Booking Fields'];
 
