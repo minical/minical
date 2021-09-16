@@ -742,15 +742,16 @@ class Company extends MY_Controller
                     if (isset($csv_data['taxes'])) {
                         $this->import_taxes_csv($csv_data['taxes']);
                     }
+                     if (isset($csv_data['customers'])) {
+                        $this->import_customers_csv($csv_data['customers']);
+                    }
                     if (isset($csv_data['charges'])) {
                         $this->import_charges_csv($csv_data['charges']);
                     }
                     if (isset($csv_data['rates'])) {
                         $this->import_rates_csv($csv_data['rates']);
                     }
-                    if (isset($csv_data['customers'])) {
-                        $this->import_customers_csv($csv_data['customers']);
-                    }
+                   
                     if (isset($csv_data['bookings'])) {
                         $this->import_bookings_csv($csv_data['bookings']);
                     }
@@ -921,7 +922,7 @@ class Company extends MY_Controller
             $get_the_charge_type = $this->Import_mapping_model->get_mapping_charge_id($charge['Charge Type Id']);
             // /prx($get_the_charge_type);
 
-            if(empty($get_charge_name)){
+            if(empty($get_the_charge_type)){
 
                 $data = array (
                     'name' => $charge['Charge Type'],
@@ -1146,6 +1147,12 @@ class Company extends MY_Controller
                 "email" => $customer['Email'] == ''? null : $customer['Email'],
                 "city" => $customer['City'] == ''? null : $customer['City'],
                 "region" => $customer['Region'] == ''? null : $customer['Region'],
+                "phone" => $customer['Phone'] == ''? null : $customer['Phone'],
+                "country" => $customer['Country'] == ''? null : $customer['Country'],
+                "postal_code" => $customer['Postal Code'] == ''? null : $customer['Postal Code'],
+                "customer_notes" => $customer['Customer Notes'] == ''? null : $customer['Customer Notes'],
+                "address2" => $customer['Address2'] == ''? null : $customer['Address2'],
+                "phone2" => $customer['Phone2'] == ''? null : $customer['Phone2'],
                 "customer_type_id" => $customer_type_id,
                 "company_id" => $this->company_id
             );
@@ -1216,6 +1223,8 @@ class Company extends MY_Controller
             $room_type_id = $this->Room_type_model->get_room_type_name($booking['Room Type'], $this->company_id);
             $room_id = $this->Room_model->get_room_by_name($booking['Room'] , $room_type_id[0]['id']);
 
+            $rate_plan_id = $this->Import_mapping_model->get_rate_plan_mapping_id($booking['Rate Plan Id']);
+
             $customer_id =  $this->Import_mapping_model->get_mapping_customer_id($booking['Booking Customer Id']);
             $booked_by =  $this->Import_mapping_model->get_mapping_customer_id($booking['Booked By']);
 
@@ -1285,7 +1294,7 @@ class Company extends MY_Controller
                     "balance" => $booking['Balance'] == '' ? null : $booking['Balance'],
                     "balance_without_forecast" => $booking['Balance Without Forecast'] == '' ? null : $booking['Balance Without Forecast'],
                     "use_rate_plan" => $booking['Use Rate Plan'] == 'true' ? 1 : 0,
-                    "rate_plan_id" => $booking['Rate Plan Id'] == '' ? null : $booking['Rate Plan Id'],
+                    "rate_plan_id" => $rate_plan_id['new_id'] == '' ? null : $rate_plan_id['new_id'],
                     "color" => $booking['Color'] != '' ? $booking['Color'] : '',
                     "charge_type_id" => $charge_type_id['id'],
                     "pay_period" => isset($pay_period) ? $pay_period : 0,
