@@ -106,20 +106,6 @@
     }
 </script>
 
-<div style="display: none">
-    <?php
-    echo "<br/>";
-    print_r($this->all_translations_data);
-    echo "<br/>";
-    print_r(isset($this->all_translations_data) ? $this->all_translations_data : array());
-    echo "<br/>";
-    print_r(json_encode(isset($this->all_translations_data) ? $this->all_translations_data : array()));
-    echo "<br/>";
-    print_r(addslashes(json_encode(isset($this->all_translations_data) ? $this->all_translations_data : array())));
-    echo "<br/>";
-    ?>
-</div>
-
 <script>
     <!-- Below script used for language translation  -->
     <?php

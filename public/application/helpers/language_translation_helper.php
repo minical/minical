@@ -158,14 +158,6 @@ if ( ! function_exists('get_languages'))
 
         if(!empty($result))
         {
-            $insert_data = array();
-            if((isset($CI->user_id) && $CI->user_id == SUPER_ADMIN_USER_ID) || (!(isset($result[strtolower($phrase_key)]) || $CI->lang->line($phrase_key)))) {
-                if(is_null($CI->translation_model->check_phrase_keyword_with_language($phrase_key, null, true))) {
-                    $insert_data = array('phrase_keyword' => $phrase_key, 'created_at' => date('Y-m-d H:i:s'));
-                    $CI->translation_model->insert_records('language_phrase', $insert_data);
-                }
-            }
-
             if(isset($result[strtolower($phrase_key)]))
             {
                 if($return_plain_text)
@@ -180,6 +172,13 @@ if ( ! function_exists('get_languages'))
             }
             else
             {
+                if((isset($CI->user_id) && $CI->user_id == SUPER_ADMIN_USER_ID) || (!(isset($result[strtolower($phrase_key)]) || $CI->lang->line($phrase_key)))) {
+                    if(is_null($CI->translation_model->check_phrase_keyword_with_language($phrase_key, null, true))) {
+                        $insert_data = array('phrase_keyword' => $phrase_key, 'created_at' => date('Y-m-d H:i:s'));
+                        $CI->translation_model->insert_records('language_phrase', $insert_data);
+                    }
+                }
+
                 if($return_plain_text)
                 {
                     $line = ($CI->lang->line($phrase_key)) ? $CI->lang->line($phrase_key) : $phrase_key;
