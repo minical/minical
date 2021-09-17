@@ -1159,6 +1159,9 @@ class Invoice extends MY_Controller {
             $this->Charge_model->delete_charge($charge_id, $company_id);
         }
         $this->Booking_model->update_booking_balance($booking_id);
+
+        $charge_action_data = array('charge_id' => $charge_id);
+        do_action('post.delete.charge', $charge_action_data);
             
         $invoice_log_data = array();
         $invoice_log_data['date_time'] = gmdate('Y-m-d h:i:s');

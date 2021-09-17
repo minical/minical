@@ -132,5 +132,12 @@ class Menu extends MY_Controller
 		$data['main_content'] = 'includes/feature_unavailable';
 		$this->load->view('includes/bootstrapped_template', $data);
 	}
+
+	function automatic_alert() {
+    // do_action('post.repeated_transaction.cron');
+        $data = array();
+    	do_action('post.set_automatic_reminder',$data);
+    	do_action('post.repeated_transaction_cron',$data);
+	}
 	
 }
