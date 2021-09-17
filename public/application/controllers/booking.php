@@ -2440,6 +2440,21 @@ class Booking extends MY_Controller
     function _validate_booking_data($new_data, $old_data = '', $booking_id = '', $company_detail = array()) {
         $errors = array();
 
+        if(isset($new_data['custom_booking_fields']) && $new_data['custom_booking_fields']) {
+            $booking_fields = $this->Booking_field_model->get_booking_fields($this->company_id);
+
+            foreach ($booking_fields as $key => $value) {
+                foreach ($new_data['custom_booking_fields'] as $key1 => $value1) {
+                    if($value1['id'] == $value['id'] && $value['is_required'] == '1') {
+                        if($value1['value'] == '')
+                        {
+                            $errors[] = $value['name'].' field is required';
+                        }
+                    }
+                }
+            }
+        }
+
         if (isset($new_data['rooms'][0]['check_in_date'])) {
             if (!$this->_is_valid_date($new_data['rooms'][0]['check_in_date'])) {
                 $errors[] = l('check-in date must be in a valid format', true)." (YYYY-MM-DD)";
