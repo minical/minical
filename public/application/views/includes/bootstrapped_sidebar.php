@@ -16,12 +16,15 @@ $my_companies = $this->Company_model->get_companies($this->user_id);
     <div class="scrollbar-sidebar ps ps--active-y">
         <div class="sidebar__logo ">
          
-            <ul class="multi-properties hide_properties <?=$this->session->userdata('user_role') == "is_housekeeping" ? "hidden" : "";?>">
+            <ul style="padding-left: 10px;" class="multi-properties hide_properties <?=$this->session->userdata('user_role') == "is_housekeeping" ? "hidden" : "";?>">
+                
                 <?php if(count($my_companies) > 1){ ?>
                     <a href='#' id="myPropertyMenu"  data-toggle="dropdown" aria-expanded="true" tabindex="-1">
                     <?php } else { ?>
                         <a href='#'  id="myPropertyMenu">
                         <?php } ?>
+                        
+                        
 
                         <b style="font-size: large;"><?php echo substr($this->company_name, 0, 30).((strlen($this->company_name)>30)?'...':''); ?></b>
                         
@@ -50,7 +53,8 @@ $my_companies = $this->Company_model->get_companies($this->user_id);
                         </ul>
                     <?php } ?>
                 </ul>
-                
+                <div class="alert_dropdown" style="left: 145px;position: fixed;z-index: 9999999;">
+                        </div>
             </div>
             <div class="app-sidebar__inner">
                 <ul class="vertical-nav-menu metismenu">
