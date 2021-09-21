@@ -987,26 +987,26 @@ var bookingModalInvoker = function ($) {
                                     })
                                 )
                             )
-                            .append(
-                                $("<li/>").append(
-                                    $("<a/>", {
-                                        'href': '#extras',
-                                        'data-toggle': "tab",
-                                        'text': l('extras')
-                                    })
-                                        .append(
-                                            $("<span/>", {
-                                                'class': 'extras_count',
-                                                'text': " ( " + that.booking.extras_count + " )"
-                                            })
-                                        )
-                                        .on('click', function (e) {
-                                            setTimeout(function () {
-                                                that._setHeight('extras');
-                                            }, 1000);
-                                        })
-                                )
-                            )
+                            // .append(
+                            //     $("<li/>").append(
+                            //         $("<a/>", {
+                            //             'href': '#extras',
+                            //             'data-toggle': "tab",
+                            //             'text': l('extras')
+                            //         })
+                            //             .append(
+                            //                 $("<span/>", {
+                            //                     'class': 'extras_count',
+                            //                     'text': " ( " + that.booking.extras_count + " )"
+                            //                 })
+                            //             )
+                            //             .on('click', function (e) {
+                            //                 setTimeout(function () {
+                            //                     that._setHeight('extras');
+                            //                 }, 1000);
+                            //             })
+                            //     )
+                            // )
                     )
                 );
 
@@ -1088,26 +1088,26 @@ var bookingModalInvoker = function ($) {
                                     })
                                 )
                             )
-                            .append(
-                                $("<li/>").append(
-                                    $("<a/>", {
-                                        'href': '#extras',
-                                        'data-toggle': "tab",
-                                        'text': l('extras')
-                                    })
-                                        .append(
-                                            $("<span/>", {
-                                                'class': 'extras_count',
-                                                'text': " ( " + that.booking.extras_count + " )"
-                                            })
-                                        )
-                                        .on('click', function (e) {
-                                            setTimeout(function () {
-                                                that._setHeight('extras');
-                                            }, 1000);
-                                        })
-                                )
-                            )
+                            // .append(
+                            //     $("<li/>").append(
+                            //         $("<a/>", {
+                            //             'href': '#extras',
+                            //             'data-toggle': "tab",
+                            //             'text': l('extras')
+                            //         })
+                            //             .append(
+                            //                 $("<span/>", {
+                            //                     'class': 'extras_count',
+                            //                     'text': " ( " + that.booking.extras_count + " )"
+                            //                 })
+                            //             )
+                            //             .on('click', function (e) {
+                            //                 setTimeout(function () {
+                            //                     that._setHeight('extras');
+                            //                 }, 1000);
+                            //             })
+                            //     )
+                            // )
                     )
                 );
             }
@@ -2457,79 +2457,79 @@ var bookingModalInvoker = function ($) {
                                 })
                             )
                         )
-                        .append(
-                            $("<div/>", {
-                                'id': 'extras',
-                                'class': "tab-pane"
-                            })
-                                .append(
-                                    $("<div/>", {
-                                        style: 'text-align:right;'
-                                    })
-                                        .append(
-                                            $('<button/>', {
-                                                class: 'btn btn-primary btn-sm',
-                                                text: l('add_extra'),
-                                                style: 'margin: 0px 0px 10px 0px;'
-                                            }).on('click', function (e) {
-                                                e.preventDefault(); // prevent # scrolling to the top
+                        // .append(
+                        //     $("<div/>", {
+                        //         'id': 'extras',
+                        //         'class': "tab-pane"
+                        //     })
+                        //         .append(
+                        //             $("<div/>", {
+                        //                 style: 'text-align:right;'
+                        //             })
+                        //                 .append(
+                        //                     $('<button/>', {
+                        //                         class: 'btn btn-primary btn-sm',
+                        //                         text: l('add_extra'),
+                        //                         style: 'margin: 0px 0px 10px 0px;'
+                        //                     }).on('click', function (e) {
+                        //                         e.preventDefault(); // prevent # scrolling to the top
 
-                                                if (!that.extras || !that.extras[0]) {
-                                                    alert(l('Please add the extras first under Settings')+ " > "+l('Rates')+" > "+l('Products'));
-                                                    return;
-                                                }
+                        //                         if (!that.extras || !that.extras[0]) {
+                        //                             alert(l('Please add the extras first under Settings')+ " > "+l('Rates')+" > "+l('Products'));
+                        //                             return;
+                        //                         }
 
-                                                that._initializeInnerModal();
+                        //                         that._initializeInnerModal();
 
-                                                var extraData = {
-                                                    extra_id: that.extras && that.extras[0] ? that.extras[0].extra_id : null,
-                                                    extra_name: that.extras && that.extras[0] ? that.extras[0].extra_name : null,
-                                                    start_date: that.booking.check_in_date,
-                                                    end_date: that.booking.check_out_date,
-                                                    quantity: 1,
-                                                    rate: that.extras && that.extras[0] ? that.extras[0].rate : null
-                                                };
+                        //                         var extraData = {
+                        //                             extra_id: that.extras && that.extras[0] ? that.extras[0].extra_id : null,
+                        //                             extra_name: that.extras && that.extras[0] ? that.extras[0].extra_name : null,
+                        //                             start_date: that.booking.check_in_date,
+                        //                             end_date: that.booking.check_out_date,
+                        //                             quantity: 1,
+                        //                             rate: that.extras && that.extras[0] ? that.extras[0].rate : null
+                        //                         };
 
-                                                $.ajax({
-                                                    type: "POST",
-                                                    url: getBaseURL() + "extra/create_booking_extra_AJAX",
-                                                    data: {
-                                                        booking_id: that.booking.booking_id,
-                                                        extra_data: extraData
-                                                    },
-                                                    dataType: "json",
-                                                    success: function (response) {
-                                                        that._editBookingExtra(response.booking_extra_id);
+                        //                         $.ajax({
+                        //                             type: "POST",
+                        //                             url: getBaseURL() + "extra/create_booking_extra_AJAX",
+                        //                             data: {
+                        //                                 booking_id: that.booking.booking_id,
+                        //                                 extra_data: extraData
+                        //                             },
+                        //                             dataType: "json",
+                        //                             success: function (response) {
+                        //                                 that._editBookingExtra(response.booking_extra_id);
 
-                                                        // update booking balance
-                                                        if (response && $.isNumeric(response.balance)) {
-                                                            $('.booking_balance').html(number_format(response.balance, 2, ".", ""));
-                                                        }
+                        //                                 // update booking balance
+                        //                                 if (response && $.isNumeric(response.balance)) {
+                        //                                     $('.booking_balance').html(number_format(response.balance, 2, ".", ""));
+                        //                                 }
 
-                                                        var current_count = $('.left-sidebar').find('.extras_count').text().split(' ');
-                                                        var new_count = (parseInt(current_count[2])) + 1;
-                                                        $('.left-sidebar').find('.extras_count').html(" ( " + new_count + " )");
-                                                        // if this is the first extra to this booking,
-                                                        // create extra container (panel). otherwise, append extra to existing
-                                                        extraData.booking_extra_id = response.booking_extra_id;
-                                                        if ($("#extra-container").length) {
-                                                            extraData.charging_scheme = $("#inner-modal").find("[name='extra_id'] option:selected").attr('data-charging-scheme');
-                                                            $("#extra-container").append(that._getBookingExtraDiv(extraData));
-                                                        } else {
-                                                            if (!that.booking.extras) {
-                                                                that.booking.extras = [];
-                                                            }
-                                                            that.booking.extras.push(extraData);
-                                                            var extraPanel = that._getExtraPanel();
-                                                            $("#booking-modal").find(".modal-body").find(".panel-body").find("#extras").append(extraPanel);
-                                                        }
-                                                    }
-                                                })
-                                            })
-                                        )
-                                )
-                                .append(this._getExtraPanel())
-                        )
+                        //                                 var current_count = $('.left-sidebar').find('.extras_count').text().split(' ');
+                        //                                 var new_count = (parseInt(current_count[2])) + 1;
+                        //                                 $('.left-sidebar').find('.extras_count').html(" ( " + new_count + " )");
+                        //                                 // if this is the first extra to this booking,
+                        //                                 // create extra container (panel). otherwise, append extra to existing
+                        //                                 extraData.booking_extra_id = response.booking_extra_id;
+                        //                                 if ($("#extra-container").length) {
+                        //                                     extraData.charging_scheme = $("#inner-modal").find("[name='extra_id'] option:selected").attr('data-charging-scheme');
+                        //                                     $("#extra-container").append(that._getBookingExtraDiv(extraData));
+                        //                                 } else {
+                        //                                     if (!that.booking.extras) {
+                        //                                         that.booking.extras = [];
+                        //                                     }
+                        //                                     that.booking.extras.push(extraData);
+                        //                                     var extraPanel = that._getExtraPanel();
+                        //                                     $("#booking-modal").find(".modal-body").find(".panel-body").find("#extras").append(extraPanel);
+                        //                                 }
+                        //                             }
+                        //                         })
+                        //                     })
+                        //                 )
+                        //         )
+                        //         .append(this._getExtraPanel())
+                        // )
                 )
 
 
@@ -4008,40 +4008,40 @@ var bookingModalInvoker = function ($) {
             $("#room-type-list").html(roomTypeList);
 
         },
-        _getExtraPanel: function () {
-            var that = this;
+        // _getExtraPanel: function () {
+        //     var that = this;
 
-            var extras = this.booking.extras;
+        //     var extras = this.booking.extras;
 
-            if (extras === undefined)
-                return '';
+        //     if (extras === undefined)
+        //         return '';
 
-            if (extras.length === 0)
-                return '';
+        //     if (extras.length === 0)
+        //         return '';
 
-            // prepare block template
-            var block = $('<div/>', {
-                class: 'panel panel-default extra-block'
-            })
-                .append(
-                    $('<div/>', {
-                        class: 'panel-body'
-                    })
-                );
+        //     // prepare block template
+        //     var block = $('<div/>', {
+        //         class: 'panel panel-default extra-block'
+        //     })
+        //         .append(
+        //             $('<div/>', {
+        //                 class: 'panel-body'
+        //             })
+        //         );
 
-            var extraContainer = $('<div/>', {
-                class: 'col-sm-12',
-                id: 'extra-container'
-            });
+        //     var extraContainer = $('<div/>', {
+        //         class: 'col-sm-12',
+        //         id: 'extra-container'
+        //     });
 
-            extras.forEach(function (bookingExtra) {
-                extraContainer.append(that._getBookingExtraDiv(bookingExtra));
-            });
+        //     extras.forEach(function (bookingExtra) {
+        //         extraContainer.append(that._getBookingExtraDiv(bookingExtra));
+        //     });
 
-            block.find(".panel-body").append(extraContainer);
+        //     block.find(".panel-body").append(extraContainer);
 
-            return block;
-        },
+        //     return block;
+        // },
         _getBookingExtraDiv: function (bookingExtra) {
 
             var that = this;
@@ -6761,41 +6761,41 @@ var bookingModalInvoker = function ($) {
             return select;
 
         },
-        _getExtraSelect: function (label, name, options, selectedOptionID) {
+        // _getExtraSelect: function (label, name, options, selectedOptionID) {
 
-            var select = $("<select/>", {
-                class: 'form-control',
-                name: name
-            })
+        //     var select = $("<select/>", {
+        //         class: 'form-control',
+        //         name: name
+        //     })
 
-            options.forEach(function (data) {
-                var option = $('<option/>', {
-                    value: data.extra_id,
-                    text: data.extra_name,
-                    "data-charging-scheme": data.charging_scheme
-                });
+        //     options.forEach(function (data) {
+        //         var option = $('<option/>', {
+        //             value: data.extra_id,
+        //             text: data.extra_name,
+        //             "data-charging-scheme": data.charging_scheme
+        //         });
 
-                if (data.extra_id == selectedOptionID) {
-                    option.prop('selected', true);
-                }
+        //         if (data.extra_id == selectedOptionID) {
+        //             option.prop('selected', true);
+        //         }
 
-                option.appendTo(select);
-            });
+        //         option.appendTo(select);
+        //     });
 
-            return $("<div/>", {
-                class: "form-group form-group-sm charging-scheme-block"
-            }).append(
-                $("<label/>", {
-                    for: name,
-                    class: "col-sm-3 control-label",
-                    text: label
-                })
-            ).append(
-                $("<div/>", {
-                    class: "col-sm-9"
-                }).append(select)
-            )
-        },
+        //     return $("<div/>", {
+        //         class: "form-group form-group-sm charging-scheme-block"
+        //     }).append(
+        //         $("<label/>", {
+        //             for: name,
+        //             class: "col-sm-3 control-label",
+        //             text: label
+        //         })
+        //     ).append(
+        //         $("<div/>", {
+        //             class: "col-sm-9"
+        //         }).append(select)
+        //     )
+        // },
         _getHorizontalInput: function (label, name, value) {
             return $("<div/>", {
                 class: "form-group form-group-sm block_" + name
