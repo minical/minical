@@ -100,17 +100,30 @@ class MY_Controller extends CI_Controller {
             $company_id = $this->company_id;
         }
 
+        $all_modules = $get_active_modules = array();
+
         foreach($modules as $module)
         {
             if($module === '.' || $module === '..') continue;
             if(is_dir($modules_path) . '/' . $module)
             {
+                $all_modules[] = $module;
+            }
+        }
+
+        if($all_modules){
+            $get_active_modules = $this->permission->is_extension_active($all_modules, $company_id, true);
+        }
+
+        if($get_active_modules){
+            foreach ($get_active_modules as $key => $value) {
+
                 $config = array();
-                $files_path = $modules_path . $module . '/config/autoload.php';
-                if(file_exists($files_path) && $this->permission->is_extension_active($module, $company_id))
+                $files_path = $modules_path . $value['extension_name'] . '/config/autoload.php';
+                if(file_exists($files_path))
                 {
                     require($files_path);
-                    $this->module_assets_files[$module] = $config;
+                    $this->module_assets_files[$value['extension_name']] = $config;
                 }
                 else
                 {
@@ -120,20 +133,16 @@ class MY_Controller extends CI_Controller {
         }
 
         $this->module_menus = array();
-        $modules_path = $this->config->item('module_location');     
-        $modules = scandir($modules_path);
 
-        foreach($modules as $module)
-        {
-            if($module === '.' || $module === '..') continue;
-            if(is_dir($modules_path) . '/' . $module)
-            {
+        if($get_active_modules){
+            foreach ($get_active_modules as $key => $value) {
+
                 $module_menu = array();
-                $module_file = $modules_path . $module . '/config/menu.php';
-                if(file_exists($module_file) && $this->permission->is_extension_active($module, $this->company_id))
+                $module_file = $modules_path . $value['extension_name'] . '/config/menu.php';
+                if(file_exists($module_file))
                 {
                     require($module_file);
-                    $this->module_menus[$module] = $module_menu;
+                    $this->module_menus[$value['extension_name']] = $module_menu;
                 }
                 else
                 {

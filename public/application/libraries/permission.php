@@ -74,12 +74,22 @@ class Permission {
 			return false;
 	}
 
-	public function is_extension_active($extension_name, $company_id)
+	public function is_extension_active($extension_name, $company_id, $is_array = false)
 	{
-		if ($this->ci->Permission_model->is_extension_active($extension_name, $company_id))
-			return true;
-		else
-			return false;
+		if ($modules = $this->ci->Permission_model->is_extension_active($extension_name, $company_id, $is_array)) {
+			if($is_array) {
+				return $modules;
+			} else {
+				return true;
+			}
+		}
+		else {
+			if($is_array){
+	            return null;
+	        } else {
+	            return false;
+	        }
+		}
 	}
 		
 }
