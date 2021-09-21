@@ -798,11 +798,14 @@ class Invoice extends MY_Controller {
             foreach ($charges as $key => $charge) {
                 
                 $charge['user_id'] = $user_id;
+
+                $is_pos = false;
                 
                 if(!$is_extra_pos){
                     $isRoomChargeType = $charge['isRoomChargeType'];
                     unset($charge['isRoomChargeType']);
                     $charge['selling_date'] = date('Y-m-d', strtotime($charge['selling_date']));
+                    $is_pos = false;
                 } else {
                     $charge['selling_date'] = date('Y-m-d', strtotime($this->selling_date));
                     $charge['booking_id'] = $booking_id;
@@ -811,11 +814,12 @@ class Invoice extends MY_Controller {
                     unset($charge['extra_id']);
                     unset($charge['extra_qty']);
                     unset($charge['qty']);
+                    $is_pos = true;
                 }
 
                 $charge_id = $this->Charge_model->insert_charge($charge);
 
-                $charge_action_data = array('charge_id' => $charge_id, 'charge' => $charge, 'company_id'=> $this->company_id);
+                $charge_action_data = array('charge_id' => $charge_id, 'charge' => $charge, 'company_id'=> $this->company_id, 'is_pos' => $is_pos);
                 do_action('post.add.charge', $charge_action_data);
 
                 if(isset($card_data['evc_card_status']) && $card_data['evc_card_status'] && $isRoomChargeType && false){
