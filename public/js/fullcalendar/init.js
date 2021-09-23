@@ -360,7 +360,7 @@ innGrid.buildCalendar = function (rooms) {
             var sourceVal = info.event.extendedProps.data.booking_source;
             var sourceText = '';
             $.each(sources, function (i, source) {
-                if (source.id == sourceVal)
+                if (source.id == sourceVal || source.name == sourceVal)
                 {
                     sourceText = source.name;
                 }
