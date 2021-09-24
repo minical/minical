@@ -642,7 +642,10 @@ class Company extends MY_Controller
                 }
                 $this->Booking_model->delete_bookings($this->company_id);
             }
+            $this->Booking_source_model->delete_booking_sources($this->company_id);
+            $this->Booking_field_model->delete_booking_fields($this->company_id);
             $this->Customer_type_model->delete_customer_types($this->company_id);
+            $this->Customer_field_model->delete_customer_fields($this->company_id);
             $this->Customer_model->delete_customers($this->company_id);
             $this->Payment_model->delete_payment_types($this->company_id);
             $this->Charge_type_model->delete_charge_types($this->company_id);
@@ -1178,7 +1181,7 @@ class Company extends MY_Controller
             foreach($customer as $key => $customer_data) {
 
                 $key_name =  array(
-                    'Customer Id','Customer Name','Customer Type','Address','City','Region' ,'Phone','Fax' ,'Email'
+                    'Customer Id','Customer Name','Customer Type','Address','City','Region' ,'Country','Postal Code','Phone','Fax' ,'Email','Customer Notes','Address2','Phone2'
                 );
 
 

@@ -76,5 +76,18 @@ class Booking_field_model extends CI_Model {
 
     }
 
+    function delete_booking_fields($company_id)
+    {
+        $data = Array('is_deleted' => 1);
+
+        $this->db->where('company_id', $company_id);
+        $this->db->update("booking_field", $data);
+
+        if ($this->db->_error_message())
+        {
+            show_error($this->db->_error_message());
+        }
+    }
+
    
 }

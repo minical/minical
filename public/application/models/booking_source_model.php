@@ -131,4 +131,17 @@ class Booking_source_model extends CI_Model {
         
         return $this->create_common_booking_source_setting($data);
     }
+
+    function delete_booking_sources($company_id)
+    {
+        $data = Array('is_deleted' => 1);
+
+        $this->db->where('company_id', $company_id);
+        $this->db->update("booking_source", $data);
+
+        if ($this->db->_error_message())
+        {
+            show_error($this->db->_error_message());
+        }
+    }
 }
