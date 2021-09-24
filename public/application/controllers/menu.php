@@ -134,10 +134,7 @@ class Menu extends MY_Controller
 	}
 
 	function automatic_alert() {
-    // do_action('post.repeated_transaction.cron');
         $data = array();
     	do_action('post.set_automatic_reminder',$data);
-    	do_action('post.repeated_transaction_cron',$data);
 	}
-	
 }
