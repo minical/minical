@@ -72,6 +72,10 @@ class Extensions extends MY_Controller
         	}
 	    }
 
+        $keys = array_column($final_modules, 'extension_name');
+
+        array_multisort($keys, SORT_ASC, $final_modules);
+    
         $data['extensions'] = $final_modules ? $final_modules : array();
 
         $activated_modules = array();
