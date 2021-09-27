@@ -136,5 +136,48 @@ class Menu extends MY_Controller
 	function automatic_alert() {
         $data = array();
     	do_action('post.set_automatic_reminder',$data);
+
+    	$limit = 1000;
+        $this->delete_ota_xml_logs($limit);
 	}
+
+	function delete_ota_xml_logs($limit = 1000){
+        $this->load->model('Channex_model');
+
+        $ota_xml_logs = $this->Channex_model->get_ota_xml_logs($limit);
+
+        $xml_log_ids = array();
+
+        if($ota_xml_logs){
+            foreach($ota_xml_logs as $log){
+
+                $timestamp = strtotime($log['datetime']); //1373673600
+
+                // getting current date 
+                $cDate = strtotime(date('Y-m-d H:i:s'));
+
+                // Getting the value of old date + 15 days
+                $old_booking_retrieval_log_date = $timestamp + (86400 * 15);
+
+                // Getting the value of old date + 3 days
+                $old_other_log_date = $timestamp + (86400 * 3); // 86400 seconds in 24 hrs 
+
+                // for delete booking retrieval logs
+                if($old_booking_retrieval_log_date < $cDate && $log['request_type'] == 2)
+                {
+                    $xml_log_ids[] = $log['xml_log_id'];
+                }
+
+                // for delete other logs
+                if($old_other_log_date < $cDate && $log['request_type'] != 2)
+                {
+                    $xml_log_ids[] = $log['xml_log_id'];
+                }
+            }
+
+            // prx($xml_log_ids);
+
+            $this->Channex_model->delete_old_xml_logs($xml_log_ids);
+        }
+    }
 }

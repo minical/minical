@@ -925,4 +925,29 @@ class Channex_model extends CI_Model {
         }
         return NULL;
     }
+
+    function get_ota_xml_logs($limit){
+        $this->db->from('ota_xml_logs');
+        $this->db->limit($limit);
+
+        $query = $this->db->get();
+        $result = $query->result_array();
+        
+        if ($this->db->_error_message())
+        {
+            show_error($this->db->_error_message());
+        }
+        
+        if ($query->num_rows >= 1)
+        {
+            return $result;
+        }
+
+        return NULL;
+    }
+
+    function delete_old_xml_logs($xml_log_ids){
+        $this->db->where_in('xml_log_id', $xml_log_ids);
+        $this->db->delete('ota_xml_logs');
+    }
 }
