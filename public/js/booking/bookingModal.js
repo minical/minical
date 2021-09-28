@@ -3127,6 +3127,8 @@ var bookingModalInvoker = function ($) {
                             rateValue = value['adult_' + adultCount + '_rate'];
                         else if (value.base_rate != null) // set custom rate value
                             rateValue = value.base_rate;
+                        else
+                            rateValue = 0;
 
                         editRateRowTh.append(
                             $("<th/>", {
