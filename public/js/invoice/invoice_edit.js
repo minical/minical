@@ -282,7 +282,7 @@ innGrid.voidPaymentRow = function(item, e) {
         refundHeading = l('Remaining Refund', true);
     }
 
-    var message = l('Are you sure that you want to cancel this payment.', true);
+    var message = l('Are you sure that you want to void this payment?', true);
     $.ajax({
         beforeSend: function(request) {
             if (!confirm(message)) {
@@ -631,6 +631,7 @@ function initializeRefundModal(paymentID, refundHeading, amountStatus, amountTot
                                     // alert(error_html);
                                 } else if (data.message) {
                                     alert(data.message);
+                                    location.reload();
                                 } else {
                                     alert(l("insufficient access", true));
                                 }
@@ -1767,6 +1768,7 @@ $(function() {
                                 // alert(error_html);
                             } else {
                                 alert(data.message ? data.message : data);
+                                location.reload();
                             }
 
 
