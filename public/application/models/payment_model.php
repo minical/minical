@@ -732,6 +732,74 @@ class Payment_model extends CI_Model {
         return $refund;
     }
 
+
+    public function voidPayment($payment_id)
+    {
+        $folio_id = 0;
+        $payment = $this->get_payment($payment_id);
+        $amount = null;
+        $void = array("success" => false, "message" => "some error occured!");
+        if ($payment['payment_gateway_used'] and $payment['gateway_charge_id']) {
+            $void_payment = $payment;
+            $payments_gateways = json_decode(PAYMENT_GATEWAYS, true);
+            $new_payment_gateway = false;
+
+            if(!in_array($this->selected_payment_gateway, $payments_gateways)){
+                $new_payment_gateway = true;
+            }
+
+            if($new_payment_gateway){
+                $this->ci->load->library('../extensions/'.$this->current_payment_gateway.'/libraries/ProcessPayment');
+                $void = $this->ci->processpayment->voidBookingPayment($payment['gateway_charge_id']);
+                
+            } else {
+           
+            //     $this->ci->load->library('PaymentGateway');
+            //     $void = $this->ci->paymentgateway->voidBookingPayment($payment_id, $amount, $payment_type, $booking_id);
+            }
+
+             if(isset($void['success']) && $void['success']){
+                $payment_data = array(
+                    'booking_id' => $payment['booking_id'],
+                    'date_time' => gmdate("Y-m-d H:i:s"),
+                    'description' => '',
+                    'amount' => -$payment['amount'], 
+                    'payment_type_id' => $payment['payment_type_id'], 
+                    'credit_card_id' => $payment['credit_card_id'],
+                    'selling_date' => $payment['selling_date'],
+                    'is_deleted' => $payment['is_deleted'],
+                    'user_id' => $payment['user_id'],
+                    'customer_id' => $payment['customer_id'],
+                    'payment_gateway_used' => $payment['payment_gateway_used'],
+                    'gateway_charge_id' => $void['void_id'],
+                    'read_only' => 1,
+                    'payment_status' => 'void', 
+                    'parent_charge_id' => $payment['gateway_charge_id'],
+                    'is_captured' => 0,
+                    'logs' => null,
+                    'payment_link_id' => null
+                );
+                $this->db->set('read_only', 1);
+                $this->db->where('payment_id', $payment['payment_id']);
+                $this->db->update('payment');
+
+                $this->db->insert('payment', $payment_data);
+                $query = $this->db->query('select LAST_INSERT_ID( ) AS last_id');
+	            $result = $query->result_array();
+	            if(isset($result[0]))
+	            {
+	                $payment_id = $result[0]['last_id'];
+					if($payment_id && $folio_id)
+					{
+						$this->insert_payment_folio(array('payment_id'=>$payment_id, 'folio_id'=>$folio_id));
+					}
+	            }
+            }
+        }
+        return $void;
+        
+    }
+
     function get_partial_refunds_by_charge_id($charge_id)
     {
         $this->db->where('parent_charge_id', $charge_id);
