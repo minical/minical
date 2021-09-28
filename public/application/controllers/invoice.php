@@ -1323,7 +1323,7 @@ class Invoice extends MY_Controller {
      {
         $payment_id = $this->input->post('payment_id');
         $payment = $this->Payment_model->get_payment($payment_id);
-        $void = $this->Payment_model->voidPayment($payment_id);     
+        $void = $this->Payment_model->void_payment($payment_id);     
         if (isset($void['success']) && !$void['success']) {
             echo json_encode($void);
             return;

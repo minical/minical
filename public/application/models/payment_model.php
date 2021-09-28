@@ -733,7 +733,7 @@ class Payment_model extends CI_Model {
     }
 
 
-    public function voidPayment($payment_id)
+    public function void_payment($payment_id)
     {
         $folio_id = 0;
         $payment = $this->get_payment($payment_id);
@@ -750,7 +750,7 @@ class Payment_model extends CI_Model {
 
             if($new_payment_gateway){
                 $this->ci->load->library('../extensions/'.$this->current_payment_gateway.'/libraries/ProcessPayment');
-                $void = $this->ci->processpayment->voidBookingPayment($payment['gateway_charge_id']);
+                $void = $this->ci->processpayment->void_booking_payment($payment['gateway_charge_id']);
                 
             } else {
            
