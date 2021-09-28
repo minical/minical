@@ -820,7 +820,22 @@
                                         //     'Partial Refund ID:',
                                         //     $payment['gateway_charge_id']
                                         // );
-                                    }else{
+                                    } elseif($payment['payment_status'] == 'void'){
+                                        if (strlen($payment['gateway_charge_id'] ) > 30){
+                                            $charge_id = substr($payment['gateway_charge_id'], 0, 20) . '...';
+                                            printf(
+                                                '%s %s',
+                                                $payment['amount'] > 0 && $charge_id ? 'Void ID:' : ($charge_id ? 'Void ID:' : ''),
+                                                $charge_id
+                                            ); 
+                                        }else{
+                                            printf(
+                                                '%s %s',
+                                                $payment['amount'] > 0 && $payment['gateway_charge_id'] ? 'Void ID:' : ($payment['gateway_charge_id'] ? 'Void ID:' : ''),
+                                                $payment['gateway_charge_id']
+                                            ); 
+                                        }
+                                    } else{
                                         if (strlen($payment['gateway_charge_id'] ) > 30){
                                             $charge_id = substr($payment['gateway_charge_id'], 0, 20) . '...';
                                             printf(
@@ -865,7 +880,18 @@
                             <td class="capture-td">
                                 <?php if(isset($payment['payment_gateway_used'])) { ?>
                                     <?php if($payment['is_captured']==0 && $company['manual_payment_capture']==1){ ?>
-                                        <span><?= ($payment['payment_status'] == 'refund' && $payment['is_captured'] == 0) ? 'Canceled' : 'Authorized' ?></span>
+                                        <span><?php 
+                                         if($payment['payment_status'] == 'refund' && $payment['is_captured'] == 0){
+                                             echo 'Canceled';
+                                         }
+                                        elseif($payment['payment_status'] == 'void' && $payment['is_captured'] == 0){
+                                           echo 'Voided';
+                                        }else{
+                                            echo 'Authorized';
+                                        }
+                                        ?>
+                                    
+                                    </span>
                                         <?php if($payment['is_captured']==0 && $payment['read_only']==1) { ?>
                                             <div class="payment_status_buttons">
                                                 <button class="btn btn-primary delete-payment not-allowed" data-toggle="tooltip" title="Refund" disabled><i class="fa fa-reply" aria-hidden="true"></i></button>
@@ -875,12 +901,20 @@
                                             </div>
                                         <?php } else { ?>
                                             <div class="payment_status_buttons">
-                                                <button class="btn btn-primary delete-payment" data-toggle="tooltip" title="Refund"><i class="fa fa-reply" aria-hidden="true"></i></button>
+                                                <?php 
+                                                if($payment['payment_type'] == 'nexio'){ ?>
+                                                    <button class="btn btn-primary void-payment" data-toggle="tooltip" title="void">
+                                                        <i class="fa fa-ban" aria-hidden="true"></i></button>
+
+                                                <?php }else{ ?>
+                                                    <button class="btn btn-primary delete-payment" data-toggle="tooltip" title="Refund"><i class="fa fa-reply" aria-hidden="true"></i></button>
+
+                                               <?php }  ?>
                                                 <button class="btn btn-danger  capture-payment-modal hidden-print" data-toggle="tooltip" title="Capture"  data-capture-payment-type="<?= $payment['payment_type'] ?>" data-capture-authorize-id="<?= $payment['gateway_charge_id'] ?>"  data-customer-id="<?= $booking_customer['customer_id'] ?>" data-booking-id="<?= $this->uri->segment(3) ?>">
                                                     <i class="fa fa-credit-card" aria-hidden="true"></i>
                                                 </button>
                                             </div>
-                                        <?php } ?>
+                                        <?php }?>
                                         <span class="visible-print-block"><?php echo l('Authorized', true); ?></span>
                                     <?php } else { ?>
                                         <span><?php echo ($payment['payment_status'] == 'charge') ? l('Captured', true) : ($payment['payment_status'] == 'payment_link' ? l('Pending', true) : l('Refunded', true)); ?></span>

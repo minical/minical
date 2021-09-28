@@ -1318,6 +1318,31 @@ class Invoice extends MY_Controller {
         }
     }
 
+     // when user clicks on x-button beside payment
+     function void_payment()
+     {
+        $payment_id = $this->input->post('payment_id');
+        $payment = $this->Payment_model->get_payment($payment_id);
+        $void = $this->Payment_model->void_payment($payment_id);     
+        if (isset($void['success']) && !$void['success']) {
+            echo json_encode($void);
+            return;
+        }
+    
+        $this->Booking_model->update_booking_balance($payment['booking_id']);
+        $invoice_log_data = array();
+        $invoice_log_data['date_time'] = gmdate('Y-m-d h:i:s');
+        $invoice_log_data['booking_id'] = $payment['booking_id'];
+        $invoice_log_data['user_id'] = $this->session->userdata('user_id');
+        $invoice_log_data['action_id'] = VOID_PAYMENT;
+        $invoice_log_data['charge_or_payment_id'] = $payment_id;
+        $invoice_log_data['new_amount'] =  -$payment['amount'];
+        $invoice_log_data['log'] = 'Payment voided';
+        $this->Invoice_log_model->insert_log($invoice_log_data);
+        
+        echo json_encode($void);   
+    
+    }
    
 
     

@@ -179,6 +179,7 @@ define('CAPTURED_PAYMENT', '9');
 define('ADD_FOLIO', '10');
 define('UPDATE_FOLIO', '11');
 define('DELETE_FOLIO', '12');
+define('VOID_PAYMENT', '13');
 
 /*
 |--------------------------------------------------------------------------
