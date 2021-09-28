@@ -47,7 +47,7 @@
       <h1><?php echo l('room_inventory'); ?></h1>
       <ul class="nav nav-tabs channels">
          <?php foreach($channels as $channel): ?>
-         <li class="channel <?php if($channel['id'] == -1) { echo 'active'; } ?> " data-id="<?php echo $channel['id'];?>">
+         <li class="channel <?php if($channel['id'] == -1) { echo 'active'; } ?> " data-id="<?php echo $channel['id'];?>" data-key="<?php echo isset($channel['key']) && $channel['key'] ? $channel['key'] : '' ;?>">
             <a href="#" ><?php echo $channel['name'];?></a>
          </li>
          <?php endforeach; ?>

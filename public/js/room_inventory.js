@@ -106,6 +106,7 @@ innGrid.createInventoryRow = function(tableStartDate, tableEndDate, rowInventory
 
 innGrid.createTable = function(dateStart, dateEnd) {
     var channel = $('.channels li.active')[0].dataset.id;
+    var channel_key = $('.channels li.active')[0].dataset.key;
     var dateStart1 = '';
     // copy dates so we don't alter them
     dateStart = new Date(dateStart);
@@ -116,11 +117,12 @@ innGrid.createTable = function(dateStart, dateEnd) {
     var end_date = dateEnd.getFullYear()+'-'+("0" + (dateEnd.getMonth() + 1)).slice(-2)+'-'+("0" + (dateEnd.getDate())).slice(-2);
     var query = {
         channel: channel,
+        channel_key: channel_key,
         start_date: start_date,
         end_date: end_date,
         filter_can_be_sold_online: channel == -1 ? false : true
     };
-    var is_ota = true;
+    is_ota = true;
     if(channel == -1) // online booking engine
     { 
         is_ota = false;
@@ -138,7 +140,7 @@ innGrid.createTable = function(dateStart, dateEnd) {
                 $("#loading_img").show();
             },
             success: function(res) {
-               res = JSON.parse(res);
+                res = JSON.parse(res);
                $("#loading_img").hide();
 
                 var otaThresholdVal = 0;
@@ -152,6 +154,15 @@ innGrid.createTable = function(dateStart, dateEnd) {
                 { 
                     if(res[room_type_id].ota_close_out_threshold != null)
                         otaThresholdVal = res[room_type_id].ota_close_out_threshold;
+
+                    if(channel == -1){
+                        is_ota = false;
+                    }
+                    else if(res[room_type_id].is_threshold_enabled){
+                        is_ota = true;
+                    } else {
+                        is_ota = false;
+                    }
                      
                     inventoryInfo = innGrid.createInventoryRow(dateStart, dateEnd, res[room_type_id]);
 
@@ -419,16 +430,18 @@ var dateEnd;
        
        var index = $(this).closest('td').index();
        var date = null;
-       // if(channel_id == 1)
-       // {
-       //     date = $('.date').eq(index-2).children('.date-value').html();
-       //      console.log('if', date);
-       // }
-       // else
-       // {
+       if(!is_ota)
+       {
+           date = $('.date').eq(index-2).children('.date-value').html();
+            console.log('if', date);
+       }
+       else
+       {
            date = $('.date').eq(index-3).children('.date-value').html();
             console.log('else', date);
-       //}
+            console.log('index', index);
+            console.log('is_ota', is_ota);
+       }
        var obj = $(this);
        $.ajax({
                 type: 'POST',

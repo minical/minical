@@ -205,15 +205,22 @@ class Room extends MY_Controller
 	function get_room_type_availability_AJAX()
 	{
         $channel = sqli_clean($this->security->xss_clean($this->input->get('channel')));
+        $channel_key = sqli_clean($this->security->xss_clean($this->input->get('channel_key')));
         $start_date = sqli_clean($this->security->xss_clean($this->input->get('start_date')));
         $end_date = sqli_clean($this->security->xss_clean($this->input->get('end_date')));
 		$filter_can_be_sold_online = $this->input->get('filter_can_be_sold_online') == 'true' ? true : false;
 		$res = $this->Room_type_model->get_room_type_availability($this->company_id, $channel, $start_date, $end_date, null, null, $filter_can_be_sold_online);
         $data_ar = array();
+
+
+        $isThresholdEnabled = true;
+		$isThresholdEnabled = apply_filters('is_threshold_enabled', array('ota_key' => $channel_key, 'isThresholdEnabled' => $isThresholdEnabled));
+
         if(!empty($res)){
             foreach($res as $key => $r){
                 $result = $this->Room_model->get_room_count_by_room_type_id($r['id']); //  get rooms in particular room type
                 $res[$key]['room_count'] = $result['room_count'];
+                $res[$key]['is_threshold_enabled'] = $isThresholdEnabled;
             }
         }
 		echo json_encode($res, true);
