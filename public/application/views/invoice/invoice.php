@@ -895,7 +895,7 @@
                                         <?php if($payment['is_captured']==0 && $payment['read_only']==1) { ?>
                                             <div class="payment_status_buttons">
                                                 <button class="btn btn-primary delete-payment not-allowed" data-toggle="tooltip" title="Refund" disabled><i class="fa fa-reply" aria-hidden="true"></i></button>
-                                                <button class="btn btn-danger capture-payment-button hidden-print not-allowed" disabled>
+                                                <button class="btn btn-success capture-payment-button hidden-print not-allowed" disabled>
                                                     <i class="fa fa-credit-card" aria-hidden="true"></i>
                                                 </button>
                                             </div>
@@ -903,14 +903,14 @@
                                             <div class="payment_status_buttons">
                                                 <?php 
                                                 if($payment['payment_type'] == 'nexio'){ ?>
-                                                    <button class="btn btn-primary void-payment" data-toggle="tooltip" title="void">
+                                                    <button class="btn btn-danger void-payment" data-toggle="tooltip" title="void">
                                                         <i class="fa fa-ban" aria-hidden="true"></i></button>
 
                                                 <?php }else{ ?>
                                                     <button class="btn btn-primary delete-payment" data-toggle="tooltip" title="Refund"><i class="fa fa-reply" aria-hidden="true"></i></button>
 
                                                <?php }  ?>
-                                                <button class="btn btn-danger  capture-payment-modal hidden-print" data-toggle="tooltip" title="Capture"  data-capture-payment-type="<?= $payment['payment_type'] ?>" data-capture-authorize-id="<?= $payment['gateway_charge_id'] ?>"  data-customer-id="<?= $booking_customer['customer_id'] ?>" data-booking-id="<?= $this->uri->segment(3) ?>">
+                                                <button class="btn btn-success  capture-payment-modal hidden-print" data-toggle="tooltip" title="Capture"  data-capture-payment-type="<?= $payment['payment_type'] ?>" data-capture-authorize-id="<?= $payment['gateway_charge_id'] ?>"  data-customer-id="<?= $booking_customer['customer_id'] ?>" data-booking-id="<?= $this->uri->segment(3) ?>">
                                                     <i class="fa fa-credit-card" aria-hidden="true"></i>
                                                 </button>
                                             </div>
@@ -923,7 +923,7 @@
                                                 <button class="btn btn-primary hidden-print delete-payment" data-toggle="tooltip" title="Refund"  title="Created by <?php echo $payment['user_name']; ?>">
                                                     <i class="fa fa-reply" aria-hidden="true"></i>
                                                 </button>
-                                                <button type="button" class="btn btn-danger capture-payment-button hidden-print not-allowed" disabled>
+                                                <button type="button" class="btn btn-success capture-payment-button hidden-print not-allowed" disabled>
                                                     <i class="fa fa-credit-card" aria-hidden="true"></i>
                                                 </button>
                                             <?php } else if($menu_on === true && $payment['payment_link_id']) { ?>
@@ -935,7 +935,7 @@
                                                 <button class="btn btn-primary delete-payment hidden-print not-allowed" data-toggle="tooltip" title="Refund" disabled>
                                                     <i class="fa fa-reply" aria-hidden="true"></i>
                                                 </button>
-                                                <button type="button" class="btn btn-danger capture-payment-button hidden-print not-allowed" data-toggle="tooltip" title="Capture" disabled>
+                                                <button type="button" class="btn btn-success capture-payment-button hidden-print not-allowed" data-toggle="tooltip" title="Capture" disabled>
                                                     <i class="fa fa-credit-card" aria-hidden="true"></i>
                                                 </button>
                                             <?php } ?>
