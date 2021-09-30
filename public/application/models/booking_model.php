@@ -7,6 +7,15 @@ class Booking_model extends CI_Model {
         parent::__construct();
         $this->load->library("Forecast_charges");   
     }
+
+    function insert_ota_booking($booking)
+    {     
+        $this->db->insert('ota_bookings', $booking);
+        if ($this->db->_error_message())
+        {
+            show_error($this->db->_error_message());
+        }
+    }
     
     
     function get_latest_bookings($company_id = null)
