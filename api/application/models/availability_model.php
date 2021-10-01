@@ -114,7 +114,7 @@ class Availability_model extends CI_Model {
     }
 
 	// net availability
-    function get_availability($start_date, $end_date, $room_types, $ota_id, $filter_can_be_sold_online=FALSE, $adult_count = null, $children_count = null, $get_inventory = false, $get_max_availability = true, $get_inventorysold = true, $get_closeout_status = true, $is_overbooking = false, $company_id = null)
+    function get_availability($start_date, $end_date, $room_types, $ota_id, $filter_can_be_sold_online=FALSE, $adult_count = null, $children_count = null, $get_inventory = false, $get_max_availability = true, $get_inventorysold = true, $get_closeout_status = true, $is_overbooking = false, $company_id = null, $ota_key = null)
     {
     	$room_types_string = implode(', ', $room_types);
 		$can_be_sold_online_filter = $filter_can_be_sold_online ? 'AND r.can_be_sold_online = 1' : '';
@@ -381,7 +381,7 @@ class Availability_model extends CI_Model {
                         )
 
                     ) 
-                    - (IF(rt.ota_close_out_threshold AND '$ota_id', rt.ota_close_out_threshold, 0)) as availability
+                    - (IF(rt.ota_close_out_threshold AND '$ota_id' > 0 AND '$ota_key' != 'obe', rt.ota_close_out_threshold, 0)) as availability
 					$get_closeout_status_join  
                 FROM
                     date_interval as di,

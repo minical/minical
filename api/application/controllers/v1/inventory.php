@@ -70,6 +70,7 @@ class Inventory extends REST_Controller
 		$get_closeout_status = $this->get('get_closeout_status');
         $get_inventory = empty($get_inventory) ? false : $get_inventory;
         $company_id = $this->get('company_id');
+        $ota_key = $this->get('ota_key');
         $availability = $this->Availability_model->get_availability(
 																$start_date, 
 																$end_date, 
@@ -83,7 +84,8 @@ class Inventory extends REST_Controller
                                                                 $get_inventorysold,
                                                                 $get_closeout_status,
                                                                 false,
-                                                                $company_id
+                                                                $company_id,
+                                                                $ota_key
         );
         
         $this->response($availability, 200); // 200 being the HTTP response code
