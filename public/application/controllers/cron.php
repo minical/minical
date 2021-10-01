@@ -278,4 +278,16 @@ class Cron extends CI_Controller
         do_action('update_rates', $data);
 		// }
 	}
+
+	function hourly(){
+
+		$data = array();
+		do_action('hourly-cron', $data);
+	}
+
+	function daily(){
+
+		$data = array();
+		do_action('daily-cron', $data);
+	}
 }

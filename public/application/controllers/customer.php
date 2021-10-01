@@ -431,6 +431,11 @@ class Customer extends MY_Controller {
 		} else {
             $customer_id = $this->Customer_model->create_customer($customer_data);
 
+            $post_customer_data = $customer_data;
+            $post_customer_data['customer_id'] = $customer_id;
+
+            do_action('post.create.customer', $post_customer_data);
+
             $data = array(
                 'status' => true,
                 'data'   => array(
@@ -511,6 +516,12 @@ class Customer extends MY_Controller {
             $this->load->view('includes/bootstrapped_template', $view_data + $customer_data);
         } else {
             $customer_id = $this->Customer_model->create_customer($customer_POST_data);
+
+            $post_customer_data = $customer_POST_data;
+            $post_customer_data['customer_id'] = $customer_id;
+
+            do_action('post.create.customer', $post_customer_data);
+
             echo "<script type='text/javascript'>alert('Saved Successfully');</script>";
             redirect('/customer/history/'.$customer_id);
         }
@@ -556,6 +567,12 @@ class Customer extends MY_Controller {
             $this->load->view('includes/bootstrapped_template', $view_data + $customer_data);
         } else {
             $this->Customer_model->update_customer($customer_id, $customer_POST_data);
+
+            $post_customer_data = $customer_POST_data;
+            $post_customer_data['customer_id'] = $customer_id;
+
+            do_action('post.update.customer', $post_customer_data);
+
             echo "<script type='text/javascript'>alert('Saved Successfully');</script>";
             redirect('/customer/history/'.$customer_id);
         }
@@ -595,6 +612,11 @@ class Customer extends MY_Controller {
             echo json_encode($data);
         } else {
             $customer_id = $this->Customer_model->update_customer($customer_data['customer_id'], $customer_data);
+
+            $post_customer_data = $customer_data;
+            $post_customer_data['customer_id'] = $customer_data['customer_id'];
+
+            do_action('post.update.customer', $post_customer_data);
 
             $data = array(
                 'status' => true,
@@ -716,8 +738,16 @@ class Customer extends MY_Controller {
         } else {
             if($showdelete == 'checked'){
                 $this->Customer_model->delete_customer_permanently($customer_id);
+
+                $post_customer_data['customer_id'] = $customer_id;
+                do_action('post.delete.customer', $post_customer_data);
             }else{
                 $this->Customer_model->delete_customer($customer_id, $this->company_id);
+
+                $post_customer_data['company_id'] = $this->company_id;
+                $post_customer_data['customer_id'] = $customer_id;
+
+                do_action('post.delete.customer', $post_customer_data);
             }
             $result['status'] = "success";
         }
@@ -1117,6 +1147,12 @@ class Customer extends MY_Controller {
             }
             elseif($response['success'])
             {
+
+                $post_payment_data = $response;
+                $post_payment_data['payment_id'] = $response['payment_id'];
+
+                do_action('post.create.payment', $post_payment_data);
+
                 $invoice_log_data = array();
                 $invoice_log_data['date_time'] = gmdate('Y-m-d h:i:s');
                 $invoice_log_data['booking_id'] = $booking['booking_id'];
@@ -1203,6 +1239,11 @@ class Customer extends MY_Controller {
 
         $customer_id                 = $this->Customer_model->create_customer($customer_data);
         
+        $post_customer_data = $customer_data;
+        $post_customer_data['customer_id'] = $customer_id;
+
+        do_action('post.create.customer', $post_customer_data);
+
         $customer_data['customer_id'] = $customer_id;
         $card_details = array(
            'is_primary' => 1,
@@ -1272,6 +1313,12 @@ class Customer extends MY_Controller {
         
         if(empty($check_data)){
             $this->Customer_model->update_customer($customer_id, $customer_data);
+
+            $post_customer_data = $customer_data;
+            $post_customer_data['customer_id'] = $customer_id;
+
+            do_action('post.update.customer', $post_customer_data);
+
             if(isset($cc_number)){
                 $this->Card_model->create_customer_card_info($card_details);
             }
