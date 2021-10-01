@@ -819,6 +819,11 @@ class Invoice extends MY_Controller {
 
                 $charge_id = $this->Charge_model->insert_charge($charge);
 
+                $post_charge_data = $charge;
+                $post_charge_data['charge_id'] = $charge_id;
+
+                do_action('post.create.charge', $post_charge_data);
+
                 $charge_action_data = array('charge_id' => $charge_id, 'charge' => $charge, 'company_id'=> $this->company_id, 'is_pos' => $is_pos);
                 do_action('post.add.charge', $charge_action_data);
 
@@ -873,6 +878,9 @@ class Invoice extends MY_Controller {
             }
         }
         $this->Invoice_model->update_charges($charge_changes);
+
+        $post_charge_data = $charge_changes;
+        do_action('post.update.charge', $post_charge_data);
         
         $this->Booking_model->update_booking_balance($booking_id);
         echo $charge_id;
@@ -996,6 +1004,12 @@ class Invoice extends MY_Controller {
                 }
                 elseif($response['success'])
                 {
+
+                    $post_payment_data = $response;
+                    $post_payment_data['payment_id'] = $response['payment_id'];
+
+                    do_action('post.create.payment', $post_payment_data);
+
                     $invoice_log_data = array();
                     $invoice_log_data['date_time'] = gmdate('Y-m-d h:i:s');
                     $invoice_log_data['booking_id'] = $booking['booking_id'];
@@ -1048,6 +1062,11 @@ class Invoice extends MY_Controller {
             $cvc = $this->input->post('cvc');
             unset($data['capture_payment_type']);
             $response = $this->Payment_model->insert_payment($data, $cvc, $capture_payment_type);
+
+            $post_payment_data = $response;
+            $post_payment_data['payment_id'] = $response['payment_id'];
+
+            do_action('post.create.payment', $post_payment_data);
 
             if (isset($card_data['evc_card_status']) && $card_data['evc_card_status'] && false) {
                 // check folio is exist or not
@@ -1161,6 +1180,9 @@ class Invoice extends MY_Controller {
         
         if ($this->Booking_model->get_booking_detail($booking_id)) {                
             $this->Charge_model->delete_charge($charge_id, $company_id);
+            
+            $post_charge_data['charge_id'] = $charge_id;
+            do_action('post.delete.charge', $post_charge_data);
         }
         $this->Booking_model->update_booking_balance($booking_id);
 
@@ -1191,6 +1213,11 @@ class Invoice extends MY_Controller {
             echo json_encode($refund);
             return;
         }
+
+        $post_payment_data = $refund;
+        $post_payment_data['payment_id'] = $refund['payment_id'];
+
+        do_action('post.create.payment', $post_payment_data);
         
         $this->Booking_model->update_booking_balance($payment['booking_id']);
         
@@ -1233,6 +1260,10 @@ class Invoice extends MY_Controller {
         $payment = $this->Payment_model->get_payment($payment_id);
         // if the user permission level above employee, and the booking belongs to the company
         $this->Payment_model->delete_payment($payment_id);
+
+        $post_payment_data['payment_id'] = $payment_id;
+        do_action('post.delete.payment', $post_payment_data);
+
         $this->Booking_model->update_booking_balance($payment['booking_id']);        
         $invoice_log_data = array();
         $invoice_log_data['date_time'] = gmdate('Y-m-d h:i:s');
@@ -1323,7 +1354,13 @@ class Invoice extends MY_Controller {
      {
         $payment_id = $this->input->post('payment_id');
         $payment = $this->Payment_model->get_payment($payment_id);
-        $void = $this->Payment_model->void_payment($payment_id);     
+        $void = $this->Payment_model->void_payment($payment_id); 
+
+        $post_payment_data = $payment;
+        $post_payment_data['payment_id'] = $payment_id;
+
+        do_action('post.update.payment', $post_payment_data);
+
         if (isset($void['success']) && !$void['success']) {
             echo json_encode($void);
             return;

@@ -521,6 +521,11 @@ class Night_audit {
         
 		// insert all charges in one transaction
 		$response = $this->ci->Charge_model->insert_charges($company_id, $charge_data);
+
+        $post_charge_data = $charge_data;
+        $post_charge_data['company_id'] = $company_id;
+
+        do_action('post.create.charge', $post_charge_data);
         //$this->ci->Charge_model->insert_charges($company_id, $charge_data);
         //invoice log
         foreach ($charge_data as $key => $charge) {
