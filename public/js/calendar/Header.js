@@ -26,6 +26,41 @@ function Header(calendar, options) {
 							// style:"margin-bottom: 1.0rem;",
 						})
 						.append(
+								$("<div/>", {
+									class: 'btn-group btn-group-toggle btn-calendar-view',
+									style: "float: left; margin-top:10px;margin-right: 10px;",
+									data_toggle: "buttons"										
+
+								})
+								.append(
+									$("<label/>", {
+										class: 'btn btn-primary btn_calendar_view btn_calendar_view_overview '+(innGrid.isOverviewCalendar ? 'active' : ''),
+										'data-view': 'overview', 
+										'data-content':'<strong>'+l("Room Type availability view", true)+'</strong>',
+										'rel':'popover',
+										'data-placement':'bottom',
+										style: "padding: 3px 10px;"
+            						}).append($("<img/>", {
+										src: getBaseURL()+"images/overview.png",
+										style: "width: 29px;"
+									}))
+								)	
+							.append(
+									$(innGrid.enableNewCalendar ? "<a/>" : "<label/>", {
+										href: innGrid.enableNewCalendar ? getBaseURL()+'/booking' : null,
+										class: 'btn btn-primary btn_calendar_view '+(innGrid.enableNewCalendar ? '' : ' btn_calendar_view_bookings ')+(innGrid.isOverviewCalendar ? '' : 'active'),
+										'data-view': 'bookings', 						
+										'data-content':'<strong>'+l("Booking calendar view", true)+'</strong>',
+										'rel':'popover',
+										'data-placement':'bottom',
+										style: "padding: 3px 10px;"
+            						}).append($("<img/>", {
+										src: getBaseURL()+"images/calendar.png",
+										style: "width: 29px;"
+									}))
+							)
+						)
+						.append(
 							$("<div/>", {
 								class: "form-group",
 								// style: 'margin: 10px;'
