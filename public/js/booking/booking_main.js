@@ -131,7 +131,7 @@ $('body').on('click', '.btn_calendar_view_bookings', function () {
 	$('.btn_calendar_view').removeClass('active');
 	$('.btn_calendar_view.btn_calendar_view_bookings').addClass('active');
 
-	window.history.pushState({calendar: 'booking-calendar-state'}, "", '/booking')
+	window.history.pushState({calendar: 'booking-calendar-state'}, "", getBaseURL()+'booking')
 });
 
 $('body').on('click', '.btn_calendar_view_overview', function () {
@@ -142,7 +142,7 @@ $('body').on('click', '.btn_calendar_view_overview', function () {
 	$('.btn_calendar_view').removeClass('active');
 	$('.btn_calendar_view.btn_calendar_view_overview').addClass('active');
 
-	window.history.pushState({calendar: 'booking-calendar-state'},"",'/booking/overview')
+	window.history.pushState({calendar: 'booking-calendar-state'},"",getBaseURL()+'booking/overview')
 });
 
 window.onpopstate = function(e){

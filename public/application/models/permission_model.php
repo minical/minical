@@ -113,6 +113,12 @@ class Permission_model extends CI_Model {
                 ) ||
                 // channel manager update
                 $controller_name === "channel_manager"
+                ||
+                ($controller_name === "settings" &&
+                    (
+                        $function_name == "show_booking_list"
+                    )
+                )
 
             ) {
                 return true;
