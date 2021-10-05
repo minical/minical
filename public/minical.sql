@@ -22718,6 +22718,8 @@ ALTER TABLE `ota_properties` CHANGE `ota_id` `ota_manager_id` BIGINT(20) NOT NUL
 ALTER TABLE `ota_x_company` CHANGE `ota_id` `ota_manager_id` BIGINT(20) NOT NULL;
 
 ALTER TABLE `extra` CHANGE `extra_name` `extra_name` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
+
+ALTER TABLE `company` ADD `email_cancellation_for_ota_reservations` TINYINT(1) NOT NULL DEFAULT '0' AFTER `booking_engine_tracking_code`;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

@@ -17,6 +17,7 @@ class MY_Controller extends CI_Controller {
     public $module_menus;
     public $current_payment_gateway;
     public $is_super_admin;
+    public $all_active_modules;
 
 
     public function __construct()
@@ -53,7 +54,7 @@ class MY_Controller extends CI_Controller {
         $modules_path = $this->config->item('module_location'); 
         $modules = scandir($modules_path);
 
-        $extensions = $this->session->userdata('all_active_modules');
+        // $extensions = $this->session->userdata('all_active_modules');
         
         foreach($modules as $module)
         {
@@ -88,7 +89,9 @@ class MY_Controller extends CI_Controller {
             }
         }
 
-        $this->session->set_userdata('all_active_modules', $all_active_modules);
+        $this->all_active_modules = $all_active_modules;
+
+        // $this->session->set_userdata('all_active_modules', $all_active_modules);
 
         $this->module_assets_files = array();
         $modules_path = $this->config->item('module_location');     

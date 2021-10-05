@@ -79,6 +79,28 @@
             <div class="form-group features-div-padding ">
                 <div class="checkbox checbox-switch switch-primary">
                     <label>
+                        <input type="checkbox" name="email_confirmation_for_ota_reservations"
+                               <?= $company_data['email_confirmation_for_ota_reservations'] == 1 ? 'checked=checked' : ''; ?>/>
+                        <span></span>
+                    </label>
+                    <label for="email_confirmation_for_ota_reservations"><b><?= l("Do not send email confirmation for OTA reservations", true); ?></b></label>
+                </div>
+            </div>
+
+            <div class="form-group features-div-padding ">
+                <div class="checkbox checbox-switch switch-primary">
+                    <label>
+                        <input type="checkbox" name="email_cancellation_for_ota_reservations"
+                               <?= $company_data['email_cancellation_for_ota_reservations'] == 1 ? 'checked=checked' : ''; ?>/>
+                        <span></span>
+                    </label>
+                    <label for="email_cancellation_for_ota_reservations"><b><?= l("Do not send email cancellation for OTA reservations", true); ?></b></label>
+                </div>
+            </div>
+
+            <div class="form-group features-div-padding ">
+                <div class="checkbox checbox-switch switch-primary">
+                    <label>
                         <input type="checkbox" name="send_invoice_email_automatically"
                                <?= $company_data['send_invoice_email_automatically'] == 1 ? 'checked=checked' : ''; ?>/>
                         <span></span>

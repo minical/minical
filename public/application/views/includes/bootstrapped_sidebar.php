@@ -1,10 +1,16 @@
 <?php
 $module_menus = $this->module_menus;
+$side_menus = $sub_menus = $sidebar_menus = array(); 
 
-$this->session->set_userdata('menus', []);
+$menus = $this->session->userdata('menus');
 
-$primary_menus = $this->Menu_model->get_menus(array('parent_id' => 0, 'partner_type_id' => 1));
-$side_menus = $sub_menus = $sidebar_menus = array();
+if ($menus && isset($menus['primary_menus']) && $menus['primary_menus']) {
+    $primary_menus = $menus['primary_menus'];
+} else {
+    $primary_menus = $this->Menu_model->get_menus(array('parent_id' => 0, 'partner_type_id' => 1));
+    $menus['primary_menus'] = $primary_menus;
+    $this->session->set_userdata('menus', $menus);
+}
 
 $first_segment= $this->uri->segment(1);
 $second_segment= $this->uri->segment(2);
@@ -62,8 +68,15 @@ $my_companies = $this->Company_model->get_companies($this->user_id);
             <ul class="vertical-nav-menu metismenu">
                 <?php foreach($primary_menus as $m_menu){ ?>
 
-                    <?php $sub_menus = $this->Menu_model->get_menus(array('parent_id' => $m_menu['id'], 'partner_type_id' => 1)); ?>
-                    <?php
+                    <?php  
+
+                    if ($menus && isset($menus['sub_menus'][$m_menu['id']])) {
+                        $sub_menus = $menus['sub_menus'][$m_menu['id']];
+                    } else {
+                        $sub_menus = $this->Menu_model->get_menus(array('parent_id' => $m_menu['id'], 'partner_type_id' => 1));
+                        $menus['sub_menus'][$m_menu['id']] = $sub_menus;
+                        $this->session->set_userdata('menus', $menus);
+                    }
 
                     $sub_menu_max_key = count($sub_menus) > 0 ? max(array_keys($sub_menus)) : 1;
                     $sub_menu_max_key = $sub_menu_max_key + 1;
@@ -97,9 +110,16 @@ $my_companies = $this->Company_model->get_companies($this->user_id);
                                 $unique_submenu = array_unique($sub_menus,SORT_REGULAR);
 
                                 foreach($unique_submenu as $m_menu_one) {
-                                    if(isset($m_menu_one['id']) && $m_menu_one['id'])
-                                        $sidebar_menus = $this->Menu_model->get_menus(array('parent_id' => $m_menu_one['id'], 'partner_type_id' => 1));
-
+                                    if(isset($m_menu_one['id']) && $m_menu_one['id']){
+                                        
+                                        if ($menus && isset($menus['sidebar_menus'][$m_menu_one['id']])) {
+                                            $sidebar_menus = $menus['sidebar_menus'][$m_menu_one['id']];
+                                        } else {
+                                            $sidebar_menus = $this->Menu_model->get_menus(array('parent_id' => $m_menu_one['id'], 'partner_type_id' => 1));
+                                            $menus['sidebar_menus'][$m_menu_one['id']] = $sidebar_menus;
+                                            $this->session->set_userdata('menus', $menus);
+                                        }
+                                    }
 
                                     $sidebar_menu_max_key = count($sidebar_menus) > 0 ? max(array_keys($sidebar_menus)) : 1;
                                     $sidebar_menu_max_key = $sidebar_menu_max_key + 1;
@@ -224,8 +244,17 @@ $my_companies = $this->Company_model->get_companies($this->user_id);
                 <!-- Only for extensions and settings menus -->
                 <?php foreach($primary_menus as $m_menu){ ?>
 
-                    <?php $sub_menus = $this->Menu_model->get_menus(array('parent_id' => $m_menu['id'], 'partner_type_id' => 1)); ?>
-                    <?php
+                    <?php  
+
+                    if ($menus && isset($menus['sub_menus'][$m_menu['id']])) {
+                        $sub_menus = $menus['sub_menus'][$m_menu['id']];
+                        
+                    } else {
+                        $sub_menus = $this->Menu_model->get_menus(array('parent_id' => $m_menu['id'], 'partner_type_id' => 1));
+
+                        $menus['sub_menus'][$m_menu['id']] = $sub_menus;
+                        $this->session->set_userdata('menus', $menus);
+                    }
 
                     $sub_menu_max_key = count($sub_menus) > 0 ? max(array_keys($sub_menus)) : 1;
                     $sub_menu_max_key = $sub_menu_max_key + 1;
@@ -259,8 +288,16 @@ $my_companies = $this->Company_model->get_companies($this->user_id);
                                 $unique_submenu = array_unique($sub_menus,SORT_REGULAR);
 
                                 foreach($unique_submenu as $m_menu_one) {
-                                    if(isset($m_menu_one['id']) && $m_menu_one['id'])
-                                        $sidebar_menus = $this->Menu_model->get_menus(array('parent_id' => $m_menu_one['id'], 'partner_type_id' => 1));
+                                    if(isset($m_menu_one['id']) && $m_menu_one['id']){
+                                            
+                                        if ($menus && isset($menus['sidebar_menus'][$m_menu_one['id']])) {
+                                            $sidebar_menus = $menus['sidebar_menus'][$m_menu_one['id']];
+                                        } else {
+                                            $sidebar_menus = $this->Menu_model->get_menus(array('parent_id' => $m_menu_one['id'], 'partner_type_id' => 1));
+                                            $menus['sidebar_menus'][$m_menu_one['id']] = $sidebar_menus;
+                                            $this->session->set_userdata('menus', $menus);
+                                        }
+                                    }
 
 
                                     $sidebar_menu_max_key = count($sidebar_menus) > 0 ? max(array_keys($sidebar_menus)) : 1;

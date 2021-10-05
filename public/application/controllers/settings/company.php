@@ -549,6 +549,7 @@ class Company extends MY_Controller
                 'automatic_email_cancellation' => $this->input->post('automatic_email_cancellation'),
                 'send_booking_notes' => $this->input->post('send_booking_notes'),
                 'email_confirmation_for_ota_reservations' => $this->input->post('email_confirmation_for_ota_reservations'),
+                'email_cancellation_for_ota_reservations' => $this->input->post('email_cancellation_for_ota_reservations'),
                 'allow_non_continuous_bookings' => $this->input->post('allow_non_continuous_bookings'),
                 'maximum_no_of_blocks' => $this->input->post('maximum_no_of_blocks'),
                 'make_guest_field_mandatory' => $this->input->post('make_guest_field_mandatory'),

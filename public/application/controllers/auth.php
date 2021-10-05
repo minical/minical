@@ -1792,7 +1792,7 @@ class Auth extends MY_Controller
            
         }
 
-        $extensions = $this->session->userdata('all_active_modules');
+        $extensions = $this->all_active_modules;
 
         $data_build['company_id'] = $this->company_id;
         if(isset($dependencies) && count($dependencies) > 0){
