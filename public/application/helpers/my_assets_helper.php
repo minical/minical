@@ -221,8 +221,9 @@ function get_array_with_range_of_dates_iso8601($changes, $end_date_inclusive)
         return $changes_indexed_by_date;    
     }
 
-    function timeAgo($time_ago)
+function timeAgo($time_ago)
 {
+
     $time_ago = strtotime($time_ago);
     $cur_time   = time();
     $time_elapsed   = $cur_time - $time_ago;
@@ -260,16 +261,8 @@ function get_array_with_range_of_dates_iso8601($changes, $end_date_inclusive)
         if($days==1){
             return "yesterday";
         }else{
-            $date = strtotime($time_ago);
-            $year = date("Y", $date); 
-            $month = date("M", $date); 
-            $day = date("d", $date);
-            $CI =& get_instance();
-            if ($CI->enable_hourly_booking) {
-                $time = date("h:i A", $date);
-                return "$month $day, $time";
-            }
-            return "$month $day";
+           $date = date("d M Y H:i:s",$time_ago);
+            return "$date";
         }
     }
     
