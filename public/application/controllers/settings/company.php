@@ -1293,7 +1293,7 @@ class Company extends MY_Controller
                     "adult_count" => $booking['Adult Count'] == '' ? null : $booking['Adult Count'],
                     "children_count" => $booking['Children Count'] == '' ? null : $booking['Children Count'],
                     "booking_customer_id" => $customer_id['new_id'],
-                    "booking_notes" => $booking['Booking Note'] == '' ? null : $booking['Booking Note'] ,
+                    "booking_notes" => $booking['Booking Note'] == '' ? '' : $booking['Booking Note'] ,
                     "booked_by" => $booking['Booked By'] == '' ? null : $booked_by['new_id'],
                     "balance" => $booking['Balance'] == '' ? null : $booking['Balance'],
                     "balance_without_forecast" => $booking['Balance Without Forecast'] == '' ? null : $booking['Balance Without Forecast'],
