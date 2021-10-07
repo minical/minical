@@ -78,7 +78,7 @@
 	<div class="visible-print-block">
 			<?php echo l('showing_data_between'); ?> <span id="dateStartPrint"><?php echo $start_date; ?></span> and <span id="dateEndPrint"><?php echo $end_date; ?></span>
 	</div>
-
+	<div class="table-responsive">
 	<table class="table table-hover">
 		<thead>
 			<tr>
@@ -118,6 +118,6 @@
 			</tr>
 		</tfoot>
 	</table>
-
+	</div>
 	<!--<a href="<?php echo base_url()."report/download_monthly_report_csv_export/$date.csv"; ?>">Download CSV Export</a>-->
 </div></div></div>

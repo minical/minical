@@ -46,7 +46,7 @@
 	<?php
 		if (isset($taxes)):
 	?>
-
+<div class="table-responsive">
 		<table class='table table-hover table-condensed'>
 			<thead>
 				<tr>
@@ -162,6 +162,7 @@
 				</tr>
 			</tfoot>
 		</table>
+</div>		
 	<?php
 		else:
 			echo l("There's no tax set for this property. To Set your taxes, please click")." <a href='".base_url()."settings/accounting/tax_types'>".l('here')."</a>";

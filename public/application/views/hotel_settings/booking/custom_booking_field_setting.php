@@ -15,7 +15,7 @@
 
 <div class="main-card card">
     <div class="card-body">
-
+<div class="table-responsive">
 <table id="booking-fields" class="table">
     <tr>
         <th><?php echo l('booking_field_name'); ?></th>
@@ -115,7 +115,7 @@
         <h3><?php echo l('No custom booking fields found.', true); ?></h3>
     <?php endif; ?>
 </table>
-
+</div>
 <br />
 <button id="add_booking_field" class="btn btn-light"><?php echo l('add_booking_field'); ?></button>
 <button id="save-all-booking-fields-button" class="btn btn-primary"><?php echo l('save_all'); ?></button>

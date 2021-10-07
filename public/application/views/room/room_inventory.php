@@ -73,6 +73,7 @@
    </style>
    <div id="edit_availabilities_dialog"></div>
    <script id="calendar-temp" type="x-tmpl-mustache">
+   <div class="table-responsive">
       <table class="table" >
           <thead>
               <tr>
@@ -157,5 +158,6 @@
               </tr>
           </tbody>
       </table>
+    </div>  
    </script>
 </div>

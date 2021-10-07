@@ -19,7 +19,7 @@
 <div class="main-card card">
     <div class="card-body">
 
-
+<div class="table-responsive">
 <table id="customer-types" class="table">
 	<tr>
 		<th><?php echo l('customer_type_name'); ?></th>
@@ -47,6 +47,7 @@
 	<h3><?php echo l('No customer_types have been found.', true); ?></h3>
 	<?php endif; ?>
 </table>
+</div>
 <br />
 <button id="add-customer-type" class="btn btn-light"><?php echo l('add_customer_type'); ?></button>
 <button id="save-all-customer-types-button" class="btn btn-primary"><?php echo l('save_all'); ?></button>

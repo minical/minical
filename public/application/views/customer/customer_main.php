@@ -80,6 +80,7 @@
 		</div><!-- /.form-inline -->
 	</div>
 </div>
+<div class="table-responsive">
 
 <table class="table table-hover">
 	<tr>
@@ -209,6 +210,7 @@
                     <td class="text-right"><?php echo number_format($balance_total, 2, ".", ",") ?></td>
                 </tr>
 </table>
+</div>
 
 <div class="panel panel-default">
 	<div class="panel-body text-center">

@@ -20,7 +20,7 @@
     <div class="card-body">
 
 
-
+    <div class="table-responsive">
 <table id="booking-source" class="table booking_source">
     <thead>
         <tr>
@@ -61,6 +61,7 @@
 	<h3><?php echo l('No Booking Source(s) have been found.', true); ?></h3>
 	<?php endif; ?>
 </table>
+    </div>
 <br />
 <button id="add-booking-source-button" class="btn btn-light"><?php echo l('Add Booking Source', true); ?></button>
 <button id="save-all-booking-source-button" class="btn btn-primary"><?php echo l('save_all', true); ?></button>

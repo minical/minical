@@ -61,7 +61,7 @@
 	echo '<div class="payment_report_table">';
 	//Construct table
 	if (isset($result[0])) {
-		echo "<table class='table table-hover table-condensed'>";
+		echo "<div class='table-responsive'><table class='table table-hover table-condensed'>";
 		// table head
 		echo '<thead><tr>';			
 		$pi = 0; // keep track of column index. To prevent making date/shift_type_name into currency format
@@ -128,7 +128,7 @@
 		echo '</tr></tfoot>';
 		echo '</table>'; 
 	}
-        echo '</div>';
+        echo '</div></div>';
 	?>
 
 	<!--Google Graph-->

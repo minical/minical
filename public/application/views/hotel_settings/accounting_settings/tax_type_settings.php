@@ -23,7 +23,7 @@
 
 
 
-
+	<div class="table-responsive">
 
 <table id="tax-types" class="table">
 	<tr>
@@ -73,6 +73,7 @@
 	<h3><?php echo l('No tax records have been found.', true); ?></h3>
 	<?php endif; ?>
 </table>
+	</div>
 <br />
 <button id="add-tax-type" class="btn btn-primary"><?php echo l('add_tax_type'); ?></button>
 <button id="save-all-tax-types-button" class="btn btn-success"><?php echo l('save_all'); ?></button>

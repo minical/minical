@@ -10,6 +10,7 @@
 
 
 <body>
+<div class="table-responsive">
 	<table class='rate-data'>
 		<thead>
 			<th colspan=3>
@@ -189,6 +190,7 @@
 			</tr>
 		</tbody>
 	</table>
+	</div>
 	<br/><br/>
 	<button class='button' id='modify_rates_button'><?php echo l('Modify Rates', true); ?></button>
 	<a href=# id='close_button'><?php echo l('Cancel', true); ?></a>

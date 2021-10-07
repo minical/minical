@@ -70,7 +70,7 @@
 	<h3><?php echo l('Modify existing users', true); ?></h3>
 	<p><?php echo l("Only the 'owner' can change permissions.", true); ?></p>
 	<br />
-
+	<div class="table-responsive">
 	<table class="table table-striped table-bordered">
 		<tr>
 			<th><?php echo l('Name', true); ?></th>
@@ -261,6 +261,7 @@
 		<h3><?php echo l('No employees have been recorded', true); ?></h3>
 		<?php endif; ?>
 	</table>
+	</div>
 </div>
 
 <input type="hidden" name="subscription_level" class="subscription_level" value="<?php echo $this->company_subscription_level; ?>">

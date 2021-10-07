@@ -68,8 +68,8 @@
 </div>
 
 <div id="confirm_delete_dialog"></div>	
-
-<table id="extras-fields" class="table">
+<div class="table-responsive"> 
+<table id="extras-fields" class="table ">
     <tr>
         <th><?php echo l('Product Name'); ?></th>
         <th class="text-center"><?php echo l('charging_scheme'); ?></th>
@@ -142,6 +142,7 @@
         <h3><?php echo l('No products found.', true); ?></h3>
     <?php endif; ?>
 </table>
+    </div>
 
 <br />
 <button id="add_extra" class="btn btn-light"><?php echo l('Add Product'); ?></button>

@@ -84,7 +84,7 @@
 
 <div class="main-card mb-3 card">
 	<div class="card-body">
-
+	<div class="table-responsive">
 		<table class="table table-hover table-rating">
 			<tr>
 				<th class="td-room-name text-center"><?php echo l('rooms'); ?></th>
@@ -162,5 +162,6 @@
 			<h1><?php echo l('No room types have been recorded.', true); ?></h1>
 		<?php endif; ?>
 	</table>
+		</div>
 </div></div>
 

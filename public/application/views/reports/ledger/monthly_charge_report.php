@@ -63,7 +63,7 @@
 	
 	//Construct table
 	if (isset($result[0])) {
-		echo "<table class='table table-condensed table-hover'>";
+		echo "<div class='table-responsive'><table class='table table-condensed table-hover'>";
 		// table head
 		echo '<thead><tr>';			
 		$ci = 0; // keep track of column index. To prevent making date/shift_type_name into currency format
@@ -128,7 +128,7 @@
 		}
 		echo '<td class="text-right">'.number_format($column_total, 2, ".", ",").'</td>';
 		echo '</tr></tfoot>';
-		echo '</table>'; 
+		echo '</table></div>'; 
 	}
 	?>
 

@@ -22,7 +22,7 @@
 <div class="main-card mb-3 card">
     <div class="card-body">
 
-
+<div class="table-responsive">
 
 <table id="other-charge-types-table" class="table">
 	<?php //if(isset($other_charge_types)) : ?>
@@ -103,5 +103,6 @@
 	<?php endif; ?>
 </table>
 
+</div>
 <button id="add-charge-type" class="btn btn-primary"><?php echo l('add_charge_type'); ?></button>
 </div></div>
