@@ -1731,35 +1731,35 @@ class Company extends MY_Controller
         );
         $this->Company_model->update_company($this->company_id, $company_data);
 
-        $teams = $value['Teams'];
+        // $teams = $value['Teams'];
 
-        foreach ($teams as $key => $team) {
-            $data = array(
-                'email'              => $team['Email'],
-                'current_company_id' => $this->company_id,
-                'first_name'         => $team['First Name'],
-                'last_name'          => $team['Last Name'],
-                'password'           => ''
-            );
+        // foreach ($teams as $key => $team) {
+        //     $data = array(
+        //         'email'              => $team['Email'],
+        //         'current_company_id' => $this->company_id,
+        //         'first_name'         => $team['First Name'],
+        //         'last_name'          => $team['Last Name'],
+        //         'password'           => ''
+        //     );
 
-            $get_user = $this->User_model->get_user_by_email($team['Email']);
+        //     $get_user = $this->User_model->get_user_by_email($team['Email']);
 
-            if(!$get_user){
+        //     if(!$get_user){
 
-                $user =  $this->users->create_user($data, true);
+        //         $user =  $this->users->create_user($data, true);
 
-                $this->User_model->add_teams($this->company_id, $user['user_id'],$team['permission']);
+        //         $this->User_model->add_teams($this->company_id, $user['user_id'],$team['permission']);
                 
-                $data_import_mapping = Array(
-                    "new_id" => $user['user_id'],
-                    "old_id" => $team['User Id'],
-                    "company_id" => $this->company_id,
-                    "type" => "team_user"
-                );
+        //         $data_import_mapping = Array(
+        //             "new_id" => $user['user_id'],
+        //             "old_id" => $team['User Id'],
+        //             "company_id" => $this->company_id,
+        //             "type" => "team_user"
+        //         );
 
-                $import_data = $this->Import_mapping_model->insert_import_mapping($data_import_mapping);
-            }
-        }
+        //         $import_data = $this->Import_mapping_model->insert_import_mapping($data_import_mapping);
+        //     }
+        // }
 
         $booking_fields = $value['Booking Fields'];
 
