@@ -1738,7 +1738,8 @@ class Company extends MY_Controller
                 'email'              => $team['Email'],
                 'current_company_id' => $this->company_id,
                 'first_name'         => $team['First Name'],
-                'last_name'          => $team['Last Name']
+                'last_name'          => $team['Last Name'],
+                'password'           => ''
             );
 
             $get_user = $this->User_model->get_user_by_email($team['Email']);
