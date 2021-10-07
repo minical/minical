@@ -991,7 +991,7 @@ class Company extends MY_Controller
                         "amount" => $charge['Amount'] == '' ? 0 : $charge['Amount'],
                         "charge_type_id" => $charge_type_id,
                         "selling_date" => $charge['Selling Date'],
-                        "customer_id" => $customer_id['new_id'],
+                        "customer_id" => isset($customer_id['new_id']) && $customer_id['new_id'] ? $customer_id['new_id'] : null,
                         "pay_period" => $pay_period,
                         "is_night_audit_charge" => $charge['Night Audit Charge'] == 'true' ? 1 : 0
 
