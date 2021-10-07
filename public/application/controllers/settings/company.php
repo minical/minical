@@ -822,7 +822,14 @@ class Company extends MY_Controller
                     $sold_online = $room['Room Can be Sold online'] == 'true' ? 1 : 0 ;
                     $sort_order = isset($room['Sort Order']) && $room['Sort Order'] != '' && $room['Sort Order'] != null ? $room['Sort Order'] : 0 ;
 
-                    $room_id = $this->Room_model->create_rooms($this->company_id, $room['Room Name'], $room_type_id, $sort_order,$sold_online);
+                    $room_id = $this->Room_model->create_rooms(
+                                            $this->company_id, 
+                                            $room['Room Name'],
+                                            $room_type_id, 
+                                            $sort_order,
+                                            $sold_online,
+                                            $room['Status']
+                                        );
 
                     $data_import_mapping = Array(
                         "new_id" => $room_id,
@@ -1258,6 +1265,16 @@ class Company extends MY_Controller
             }
 
             $source = "";
+
+            if(isset($booking['Custom Booking Source']) && $booking['Custom Booking Source'] != ''){
+
+                $get_source = $this->Booking_source_model->get_booking_source_by_company($this->company_id, $booking['Custom Booking Source']);
+                if(empty($get_source)){
+                    $source = $this->Booking_source_model->create_booking_source($this->company_id, $booking['Custom Booking Source']);
+                }else{
+                    $source = $get_source ? $get_source : 0 ;
+                }
+            } else {
             switch ($booking['Source']) {
                 case "Walk-in / Telephone" : $source = '0'; break;
                 case "Online Widget" : $source = '-1'; break;
@@ -1276,18 +1293,7 @@ class Company extends MY_Controller
                 case "sitminder" : $source = '-14'; break;
                 case "Seasonal" : $source = '-15'; break;
                 case "Other taravel agency" : $source = '-20'; break;
-
             }
-
-            if($source == ''){
-
-                $get_source = $this->Booking_source_model->get_booking_source_by_company($this->company_id, $booking['Source']);
-                if(empty($get_source)){
-                    $source = $this->Booking_source_model->create_booking_source($this->company_id, $booking['Source']);
-                }else{
-                    $source = isset($get_source['id']) ? $get_source['id'] : 0 ;
-                }
-
             }
 
 
@@ -1308,7 +1314,7 @@ class Company extends MY_Controller
                     "color" => $booking['Color'] != '' ? $booking['Color'] : '',
                     "charge_type_id" => $charge_type_id['new_id'],
                     "pay_period" => isset($pay_period) ? $pay_period : 0,
-                    "source" => isset($source) ? $source : 0 ,
+                    "source" => $source ? $source : 0 ,
                     "company_id" => $this->company_id,
                     "state" => isset($state) ? $state : 0
 
@@ -1473,7 +1479,7 @@ class Company extends MY_Controller
                     'extra_type' => $extra['Extra Type'] != '' ? $extra['Extra Type'] : null ,
                     'charging_scheme' => $extra['Charging Scheme'] != '' ? $extra['Charging Scheme'] : null ,
                     'show_on_pos' => $extra['Show on POS'],
-                    'charge_type_id' => $charge_type_id['id'] ? $charge_type_id['id'] : 0
+                    'charge_type_id' => $charge_type_id['new_id'] ? $charge_type_id['new_id'] : 0
 
                 );
 
@@ -1725,27 +1731,34 @@ class Company extends MY_Controller
         );
         $this->Company_model->update_company($this->company_id, $company_data);
 
-        // $teams = $value['Teams'];
+        $teams = $value['Teams'];
 
-        // foreach ($teams as $key => $team) {
-        //     $data = array(
-        //         'email'              => $team['Email'],
-        //         'current_company_id' => $this->company_id,
-        //         'first_name'         => $team['First Name'],
-        //         'last_name'          => $team['Last Name'],
-        //         'password'           => $team['Password']
-        //     );
+        foreach ($teams as $key => $team) {
+            $data = array(
+                'email'              => $team['Email'],
+                'current_company_id' => $this->company_id,
+                'first_name'         => $team['First Name'],
+                'last_name'          => $team['Last Name']
+            );
 
-        //     $get_user = $this->User_model->get_user_by_email($team['Email']);
+            $get_user = $this->User_model->get_user_by_email($team['Email']);
 
-        //     if(!$get_user){
+            if(!$get_user){
 
-        //         $user =  $this->users->create_user($data, true);
+                $user =  $this->users->create_user($data, true);
 
-        //         $this->User_model->add_teams($this->company_id, $user['user_id'],$team['permission']);
-        //     }
+                $this->User_model->add_teams($this->company_id, $user['user_id'],$team['permission']);
+                
+                $data_import_mapping = Array(
+                    "new_id" => $user['user_id'],
+                    "old_id" => $team['User Id'],
+                    "company_id" => $this->company_id,
+                    "type" => "team_user"
+                );
 
-        // }
+                $import_data = $this->Import_mapping_model->insert_import_mapping($data_import_mapping);
+            }
+        }
 
         $booking_fields = $value['Booking Fields'];
 
