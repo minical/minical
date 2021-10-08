@@ -3030,6 +3030,75 @@ a.btn.disabled,fieldset:disabled a.btn{
     .tab-gap-wep{
         margin-top: 19px !important;
     }
+
+    .head-fix-wep{
+        display: inherit !important; 
+    }
+    #search_submit{
+        width:100% !important;
+    }
+    .pull-right-wep{
+        width: 100% !important;
+    }
+    .form-wep{
+        margin-left: -16px !important;
+    }
+    .h-fix-wep{
+        margin-left: 11px !important;
+    }
+    .span-fix-wep{
+        margin-left: 4px;
+    }
+    .m-001{
+        float: left!important;
+        width: 100%;	
+    }
+    .colors-wep{
+        width: 100%!important;
+        margin-top: 10px;
+    }
+    .bttn-gapp{
+        margin-left: 4px;
+        font-size: 8px;
+    
+    }
+    .mt-004{
+        display: flex!important;
+    }
+    .m-008{
+        width: 24%;
+        position: absolute;
+        left: 32%;
+        top: 82%;
+        z-index: 9;
+    }
+    .mb-3{
+        margin-top: 5px;
+    }
+    .m-010{
+        display: flex;
+        position: absolute;
+        top: 96%;
+        left: 1%;
+    }
+    .btn-height{
+        height:36px;margin-right:6px;
+    }
+    .m-011{
+        width: 100%;
+        font-size: 11px;
+    }
+    .m-012{
+        width: 100% !important;
+    }
+
+    .form-001{
+        margin-bottom:20px;
+    }
+    #download-btn{
+        float: left!important;
+        margin-top: 20px;
+    }
     }
 .app-sidebar.sidebar-text-light{
     border-right:0 !important
@@ -4069,6 +4138,36 @@ input.error {
     .tab-gap-wep{
         margin-top: 19px !important;
     }
+    .head-fix-wep{
+        display: flex !important; 
+    }
+    #search_submit{
+        width: 100%!important;
+    }
+    .form-inline .form-control #search_submit{
+        width: 100%!important;
+    } 
+    .search_submit-wep
+    {
+        width: 100% !important;
+    }
+    .pull-right-wep{
+        width: 100%!important;
+    }
+    .mt-004 {
+        display: flex!important;
+        float: left!important;
+    }
+    .m-008{
+        position: inherit;
+        left: 0;
+        top: 0;
+        /* z-index: 9; */
+    }
+    #m-012{
+        margin-left: -59px;
+        float: left;
+    }
 }
 /* ----------- iPad Pro ----------- */
 /* Portrait */
@@ -4077,6 +4176,12 @@ input.error {
   and (max-height: 1366px) 
   and (orientation: portrait) 
   and (-webkit-min-device-pixel-ratio: 1.5) {
+    .pull-right-wep{
+        width: 100%!important;
+    }
+    .search_submit-wep{
+        width: 67%!important;
+    }
     .left-sidebar-fix-wep {
         height: 100px!important;
     }
@@ -4086,4 +4191,12 @@ input.error {
     .tab-gap-wep{
         margin-top: 19px !important;
     }
+    .h-fix-wep{
+        margin-left: 11px!important;
+    }
+    #m-012 {
+        margin-left: -57px!important;
+        margin-top: 20px!important;
+    }
+    
   }

@@ -11,7 +11,7 @@
 </div>
 <div class="main-card card">
 <div class="card-body">
-   <div class="modal fade"  id="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+   <div class="modal fade m-012"  id="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg">
          <div class="modal-content">
             <div class="modal-header">
@@ -57,7 +57,7 @@
          </li>
       </ul>
       <br>
-      <span disabled class="btn btn-primary modify-availabilities"><?php echo l('modify_maximum_availabilities'); ?></span>
+      <span disabled class="btn btn-primary modify-availabilities m-011"><?php echo l('modify_maximum_availabilities'); ?></span>
       <span class="btn btn-default change-dates" data-date-diff="-7"><?php echo l('previous_week'); ?></span>
       <span class="btn btn-default change-dates" data-date-diff="7"><?php echo l('next_week'); ?></span>
       <span id="loading_img" style="display:none;">

@@ -73,7 +73,7 @@
 	</span>
 </div>
 </div>
-<div class="page-title-actions">
+<div class="page-title-actions m-008">
 	<a href="<?php echo base_url() . 'settings/room_inventory/rooms';?>" class="btn-shadow  btn btn-dark">
 		<?php echo l('edit_rooms'); ?>
 	</a>

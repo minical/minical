@@ -3,7 +3,7 @@
 
 
 <div class="app-page-title">
-    <div class="page-title-wrapper">
+    <div class="page-title-wrapper head-fix-wep">
         <div class="page-title-heading">
             <div class="page-title-icon">
                 <i class="pe-7s-users text-success"></i>
@@ -32,7 +32,7 @@
 		<div class="form-inline hidden-print">
 			<form method="get" action="<?php 
 					echo base_url()."customer/show_customers/";
-				?>" autocomplete="off" class="form-group">
+				?>" autocomplete="off" class="form-group form-wep">
 				
 				<input class="form-control m-2" name='search_query' type='text' size='15' value="<?php echo isset($search_query)?$search_query:''; ?>" placeholder="<?=l('Search Keywords', true);?>"/>
 				
@@ -62,16 +62,17 @@
 				
                 
                 
-                <div class="pull-right ">
-                   <?=l("Display");?>  <?=l("Results");?> 
-                    <select  class="form-control per_page m-2" name="per_page">
+                <div class="pull-right  pull-right-wep">
+                   <span class="h-fix-wep"><?=l("Display");?>  <?=l("Results");?></span>
+                    <select  class="form-control per_page m-2" id="search_submit" name="per_page">
                         <option value='30' <?php echo (isset($_GET['per_page']) && $_GET['per_page'] == 30) ? 'selected' : ''; ?>>30</option>
                         <option value='50' <?php echo (isset($_GET['per_page']) && $_GET['per_page'] == 50) ? 'selected' : ''; ?>>50</option>
                         <option value='100' <?php echo (isset($_GET['per_page']) && $_GET['per_page'] == 100) ? 'selected' : ''; ?>>100</option>
                     </select>
                    
                 </div>
-				</label><?=l("Selling Date");?>:</label> <input class="form-control m-2" id="search_date" name='date' type='text' size='10' value="<?=$selling_date;?>" placeholder="<?=l('Selling Date', true);?>"/>
+				<span class="h-fix-wep"><?=l("Selling Date");?>:</span> 
+				<input class="form-control m-2 search_submit-wep" id="search_date" name='date' type='text' size='10' value="<?=$selling_date;?>" placeholder="<?=l('Selling Date', true);?>"/>
 			</form>
 			
 		  		
