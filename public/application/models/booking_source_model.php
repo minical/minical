@@ -93,6 +93,7 @@ class Booking_source_model extends CI_Model {
 	{
 		$this->db->where('company_id', $company_id);
         $this->db->where('name', $name);
+        $this->db->where('is_deleted', 0);
 		
 		$query = $this->db->get('booking_source');
 		

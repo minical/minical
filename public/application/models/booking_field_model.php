@@ -68,6 +68,7 @@ class Booking_field_model extends CI_Model {
 
         $this->db->where('company_id', $company_id);
         $this->db->where('name', $name);
+        $this->db->where('is_deleted', 0);
         $query = $this->db->get('booking_field');
 
         if ($query->num_rows >= 1)
