@@ -1275,25 +1275,25 @@ class Company extends MY_Controller
                     $source = $get_source ? $get_source : 0 ;
                 }
             } else {
-            switch ($booking['Source']) {
-                case "Walk-in / Telephone" : $source = '0'; break;
-                case "Online Widget" : $source = '-1'; break;
-                case "Booking Dot Com" : $source = '-2'; break;
-                case "Expedia" : $source = '-3'; break;
-                case "Agoda" : $source = '-4'; break;
-                case "Trip Connect" : $source = '-5'; break;
-                case "Air BNB" : $source = '-6'; break;
-                case "Hotel World" : $source = '-7'; break;
-                case "Myallocator" : $source = '-8'; break;
-                case "Company" : $source = '-9'; break;
-                case "Guest Member" : $source = '-10'; break;
-                case "Owner" : $source = '-11'; break;
-                case "Returning Guest" : $source = '-12'; break;
-                case "Apartment" : $source = '-13'; break;
-                case "sitminder" : $source = '-14'; break;
-                case "Seasonal" : $source = '-15'; break;
-                case "Other taravel agency" : $source = '-20'; break;
-            }
+                switch ($booking['Source']) {
+                    case "Walk-in / Telephone" : $source = '0'; break;
+                    case "Online Widget" : $source = '-1'; break;
+                    case "Booking Dot Com" : $source = '-2'; break;
+                    case "Expedia" : $source = '-3'; break;
+                    case "Agoda" : $source = '-4'; break;
+                    case "Trip Connect" : $source = '-5'; break;
+                    case "Air BNB" : $source = '-6'; break;
+                    case "Hotel World" : $source = '-7'; break;
+                    case "Myallocator" : $source = '-8'; break;
+                    case "Company" : $source = '-9'; break;
+                    case "Guest Member" : $source = '-10'; break;
+                    case "Owner" : $source = '-11'; break;
+                    case "Returning Guest" : $source = '-12'; break;
+                    case "Apartment" : $source = '-13'; break;
+                    case "sitminder" : $source = '-14'; break;
+                    case "Seasonal" : $source = '-15'; break;
+                    case "Other taravel agency" : $source = '-20'; break;
+                }
             }
 
 
@@ -1356,26 +1356,17 @@ class Company extends MY_Controller
                                 $this->Booking_model->create_booking_staying_customer($data);
 
                             }
-
-
-
-
                         }
 
                     }
                 }
 
-
                 foreach($booking as $key => $booking_data) {
-
-                    $key_name =  array(
-                        "Booking Id","Rate","Adult Count","Children Count","State","Booking Customer Id","Booked By","Balance","Balance Without Forecast","Use Rate Plan","Rate Plan Id","Color","Charge Type","Check In Date","Check Out Date","Room","Room Type","Group Id","Group Name","Daily Charges","Pay Period","Source","Custom  Booking Source","Booking Note","Booking Room History","Staying Customers"
+                    $key_name = array(
+                        "Booking Id","Rate","Adult Count","Children Count","State","Booking Customer Id","Booked By","Balance","Balance Without Forecast","Use Rate Plan","Rate Plan Id","Color","Charge Type","Check In Date","Check Out Date","Room","Room Type","Group Id","Group Name", "Daily Charges", "Pay Period", "Source", "Custom Booking Source","Booking Note","Booking Room History","Staying Customers"
                     );
 
-
-
                     if (!in_array($key, $key_name) ) {
-
 
                         $existing_booking_field = $this->Booking_field_model->get_the_booking_fields_by_name($key , $this->company_id);
 
