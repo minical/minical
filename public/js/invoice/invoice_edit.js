@@ -1339,7 +1339,11 @@ $(function() {
         }
     });
 
-    $(document).on("click", ".charge_row .x-button", function() {
+    // $(document).on("click", ".charge_row .x-button", function() {
+    //     innGrid.deleteChargeRow($(this));
+    // });
+
+    $('.delete_charge').on("click", function() {
         innGrid.deleteChargeRow($(this));
     });
 

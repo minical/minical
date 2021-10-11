@@ -636,7 +636,7 @@
 												<!-- 	<span class="caret"></span> -->
 												</span>
                                         <ul class="dropdown-menu dropdown-menu-right">
-                                            <li><a class="x-button" title="Created by <?php echo $charge['user_name']; ?>"><?php echo l('Delete', true); ?></a>
+                                            <li><a class="x-button delete_charge" title="Created by <?php echo $charge['user_name']; ?>"><?php echo l('Delete', true); ?></a>
                                             </li>
                                             <li>
                                                 <a class="folios_modal" href="#" data-toggle="modal" data-target="#move-charge-modal" class="update-charge-folio"><?php echo l('Move to another Folio', true); ?></a>
