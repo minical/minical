@@ -28,13 +28,13 @@
 			<div class="clearfix range_occupancy">
                 <div class="col-md-1"></div>
                 <div class="col-md-3">
-                	<input type="number" name="min-occupancy" class="ranged_slider_value min_occupancy" value="1" size="1" min="1" max="30" style="float: right; margin-top: -6px;">
+                	<input type="number" name="min-occupancy " class="ranged_slider_value min_occupancy min-wep" value="1" size="1" min="1" max="30" style="float: right; margin-top: -6px;">
                 </div>
             	<div class="col-md-5 min-max-occupancy-range">
                     <div class="slider-range" data-min="1" data-max="8"></div>
 				</div>
 				<div class="col-md-1 rt-occupancy">
-                	<input type="number" name="max-occupancy" class="ranged_slider_value max_occupancy" value="8" size="1" min="1" max="30" style="float: right; margin-top: -6px;">
+                	<input type="number" name="max-occupancy" class="ranged_slider_value max_occupancy max-wep" value="8" size="1" min="1" max="30" style="float: right; margin-top: -6px;">
                 </div>
             </div>                                    
         </div>
@@ -42,25 +42,25 @@
         <div class="form-group">
             <div class="clearfix" style="margin-bottom: 10px;">
                 <div class="col-md-3"></div>
-            	<label class="col-md-4 control-label" style="text-align: left;"><?php echo l('maximum_adults'); ?></label>
+            	<label class="col-md-4 control-label label-adults" style="text-align: left;"><?php echo l('maximum_adults'); ?></label>
                 <div class="col-md-1"></div>
-                <label class="col-md-4 control-label" style="text-align: left;"><?php echo l('maximum_children'); ?></label>
+                <label class="col-md-4 control-label label-child" style="text-align: left;"><?php echo l('maximum_children'); ?></label>
             </div>
             
 			<div class="clearfix">
                 <div class="col-md-3"></div>
             	<div class="col-md-3 occupancy-range" style="padding-right: 0;">
-                    <input type="range" name="max-adults" min="1" max="30" value="4" class="rt-occupancy-slider" id="max-adults-range">
+                    <input type="range" name="max-adults" min="1" max="30" value="4" class="rt-occupancy-slider range-wep" id="max-adults-range">
 				</div>
 				<div class="col-md-1 rt-occupancy">
-                	<input type="number" class="slider_value" value="4" size="1" min="1" max="30" style="float: right; margin-top: -6px;">
+                	<input type="number" class="slider_value input-first" value="4" size="1" min="1" max="30" style="float: right; margin-top: -6px;">
                 </div>
                 <div class="col-md-1"></div>
 				<div class="col-md-3 occupancy-range" style="padding-right: 0;">
-					<input type="range" name="max-children" min="0" max="30" value="4" class="rt-occupancy-slider" id="max-children-range">
+					<input type="range" name="max-children" min="0" max="30" value="4" class="rt-occupancy-slider label-child" id="max-children-range">
 				</div>
 				<div class="col-md-1 rt-occupancy">
-                	<input type="number" class="slider_value" value="4" size="1" min="1" max="30" style="float: right; margin-top: -6px;">
+                	<input type="number" class="slider_value input-second" value="4" size="1" min="1" max="30" style="float: right; margin-top: -6px;">
                 </div>
             </div>                                    
         </div>	

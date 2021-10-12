@@ -241,7 +241,7 @@
                     </div>
                         <div id="day_specific_rates" class="tab-pane fade">
                             <div class="modal-body" id="image_edit_modal_body2">
-                                <div class='form-horizontal'>
+                                <div class='form-horizontal m-120'>
                                     <label style="padding-top: 30px;" for="" class="col-sm-3">
 
                                     </label>
@@ -762,7 +762,7 @@
             </div>
 
             <div class="modal-body" id="image_edit_modal_body1">
-                <div class='form-horizontal'>
+                <div class='form-horizontal m-121'>
                     <label style="padding-top: 30px;" for="" class="col-sm-3">
 
                     </label>
@@ -1023,6 +1023,8 @@
     </div>
 </div>
 
+<div class="main-card mb-3 card m-014">
+    <div class="card-body">
 <input name="today" type='hidden' value="<?php echo $today; ?>" />	
 <button id='modify-rates'
         class="btn btn-primary">
@@ -1039,7 +1041,7 @@ if ($this->session->userdata('user_role') == "is_admin") {
 }
 ?>    
 
-<div class="pull-right">
+<div class="pull-right btn-fix-001">
     <span class='btn btn-light' id='show-previous-month'>
         <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
         <?php echo l('Previous 4 weeks', true); ?>
@@ -1050,5 +1052,9 @@ if ($this->session->userdata('user_role') == "is_admin") {
     </span>
 </div>
 <br/><br/>
+<div class="table-responsive">
 <table id='rate-detail-table' class="table table-bordered text-right">
-</table>    
+</table> 
+</div> 
+</div>
+</div>  

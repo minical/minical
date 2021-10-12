@@ -23,7 +23,7 @@
 
 <!-- Hidden delete dialog-->		
 <div id="confirm_delete_dialog" ></div>
-
+<div class="table-responsive">
 <table class="table">
 	<tr>
 		<th><?php echo l('payment_type'); ?></th>
@@ -43,6 +43,8 @@
 	<h3><?php echo l('No payment types have been recorded.', true); ?></h3>
 	<?php endif; ?>
 </table>
+</div>
+
 
 <button id="add-payment-type" class="btn btn-primary"><?php echo l('add_payment_type'); ?></button>
 </div></div>

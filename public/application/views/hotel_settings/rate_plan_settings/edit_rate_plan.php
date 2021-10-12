@@ -1,6 +1,6 @@
 
 
-
+<div class="table-responsive">
 <table class="table table-hover rooms rate-plans-table">
     <thead>
         <tr>
@@ -106,7 +106,7 @@ foreach ($rate_plans as $rate_plan): ?>
 			<?php endforeach; ?>
 	</tbody>
 </table>
-
+</div>
 <input type="hidden" name="subscription_level" class="subscription_level" value="<?php echo $this->company_subscription_level; ?>">
 <input type="hidden" name="subscription_state" class="subscription_state" value="<?php echo $this->company_subscription_state; ?>">
 <input type="hidden" name="limit_feature" class="limit_feature" value="<?php echo $this->company_feature_limit; ?>">

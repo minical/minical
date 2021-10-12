@@ -14,7 +14,7 @@
 
 
 <div class="main-card card">
-	<div class="card-body">
+	<div class="card-body font-wep">
 
 <form method="post" action="<?php echo base_url();?>settings/company/night_audit" autocomplete="off">		
 	<div class="form-group position-relative ml-3 mb-5">

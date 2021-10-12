@@ -3099,7 +3099,67 @@ a.btn.disabled,fieldset:disabled a.btn{
         float: left!important;
         margin-top: 20px;
     }
+    #run-night-audit-button{
+        margin-top: 13px;
+        width: 100%;
     }
+    .font-wep{
+        font-size: 17px;
+    }
+    .m-014{
+        margin-top: 66px !important;
+    }
+    .btn-fix-001{
+        float: left !important;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    .m-115{
+        margin-left: -33px;
+        margin-top: 3px;
+    }
+    .m-116{
+        width: 80px;
+    }
+    .m-117{
+        width: 90px;
+    }
+    .min-wep{
+        margin-top: -68px !important;
+    }
+    .max-wep{
+        margin-top: -47px !important;
+    }
+    .label-adults{
+        margin-top:35px !important;
+    }
+    .range-wep{
+        margin-top:-77px !important;
+    }
+    .input-first{
+        margin-top: -67px !important;
+    }
+    .label-child{
+            margin-top: 70px !important;
+    }
+    .input-second{
+        margin-top: -50px !important;
+    }  
+    #image_edit_modal_body2{
+        overflow-y: scroll !important;
+    } 
+    .m-120{
+        margin-left: 5px;
+        width: max-content !important;
+    } 
+    #image_edit_modal_body1{
+        overflow-y: scroll !important;
+    }
+    .m-121{
+        margin-left: -111px;
+        width: max-content !important;
+    } 
+}
 .app-sidebar.sidebar-text-light{
     border-right:0 !important
 }
@@ -4168,6 +4228,28 @@ input.error {
         margin-left: -59px;
         float: left;
     }
+    .btn-fix-001{
+        float: right !important;
+        margin-top: 0px;
+        margin-bottom: 0px;
+    }
+    .m-116{
+        width: 75px!important;
+    }
+    #image_edit_modal_body2{
+        overflow-y: scroll !important;
+    } 
+    .m-120{
+        margin-left: 5px;
+        width: max-content !important;
+    } 
+    #image_edit_modal_body1{
+        overflow-y: scroll !important;
+    }
+    .m-121{
+        margin-left: -111px;
+        width: max-content !important;
+    }
 }
 /* ----------- iPad Pro ----------- */
 /* Portrait */
@@ -4178,6 +4260,9 @@ input.error {
   and (-webkit-min-device-pixel-ratio: 1.5) {
     .pull-right-wep{
         width: 100%!important;
+    }
+    .m-116{
+        width: 75px!important;
     }
     .search_submit-wep{
         width: 67%!important;

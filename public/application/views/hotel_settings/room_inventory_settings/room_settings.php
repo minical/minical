@@ -31,7 +31,7 @@
 
 
 
-<div class="main-card mb-3 card">
+<div class="main-card mb-3 card m-014">
     <div class="card-body">
 
         <!-- Hidden delete dialog-->
