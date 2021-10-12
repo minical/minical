@@ -129,14 +129,14 @@ if ($permissions && in_array('bookings_view_only', $permissions) && !(in_array('
 
     <div class="panel panel-default hidden-print ">
         <div class="panel-body">
-            <div id="search-filter-container" class="form-inline customer-booking-history m-1">
+            <div id="search-filter-container" class="form-inline customer-booking-history m-1 ">
                 <form method="get" action="
                 <?php
                 echo base_url() . "customer/history/" . $customer_detail['customer_id'];
                 ?>
-                      " autocomplete="off">				
+                      " autocomplete="off" class="form-wep">				
 
-                    <?php echo l('show'); ?> 
+                    <span class="span-fix-wep"><?php echo l('show'); ?></span>
                     <select class="form-control m-1" name="status">
                         <option value="all" <?php if ($status == 'all') echo "selected"; ?> ><?php echo l('all', true); ?></option>							
                         <option value="reservation" <?php if ($status == 'reservation') echo "selected"; ?> ><?php echo l('reservations', true); ?></option>								
@@ -145,8 +145,9 @@ if ($permissions && in_array('bookings_view_only', $permissions) && !(in_array('
                         <option value="cancelled" <?php if ($status == 'cancelled') echo "selected"; ?> ><?php echo l('cancelled', true); ?></option>								
                     </select>
 
-                    <?php echo l('bookings_between'); ?>
-                    <input type="text" name="start-date" size="12" class="form-control m-1" value="<?php echo isset($start_date) ? $start_date : ''; ?>" placeholder="<?php echo l('from date', true); ?>"/> <?php echo l('and'); ?>
+                    <span class="span-fix-wep"><?php echo l('bookings_between'); ?></span>
+                    <input type="text" name="start-date" size="12" class="form-control m-1" value="<?php echo isset($start_date) ? $start_date : ''; ?>" placeholder="<?php echo l('from date', true); ?>"/>
+                    <span class="span-fix-wep"> <?php echo l('and'); ?></span>
                     <input type="text" name="end-date" size="13" class="form-control m-1" value="<?php echo isset($end_date) ? $end_date : ''; ?>" 
                            placeholder="<?php echo l('to date', true); ?>" 
                            onchange="if (this.value && $('input[name=\'start-date\']').val() && new Date(this.value) < new Date($('input[name=\'start-date\']').val())) {
@@ -154,13 +155,13 @@ if ($permissions && in_array('bookings_view_only', $permissions) && !(in_array('
                                        this.value = $('input[name=\'start-date\']').val();
                                    }"/>
 
-                    <?php echo l('that_are'); ?>
+                    <span class="span-fix-wep"><?php echo l('that_are'); ?></span>
                     <select class="form-control m-1"  name="show_paid">
                         <option value="all"><?php echo l('paid or unpaid', true); ?></option>
                         <option value="paid_only" <?php if ($show_paid == 'paid_only') echo "selected"; ?> ><?php echo l('paid', true); ?></option>
                         <option value="unpaid_only" <?php if ($show_paid == 'unpaid_only') echo "selected"; ?> ><?php echo l('unpaid', true); ?></option>								
                     </select>
-                    <?php echo l('in_group'); ?>
+                    <span class="span-fix-wep"><?php echo l('in_group'); ?></span>
                     <select class="form-control m-1" name="groups">
                         <option value="all"><?php echo l('all', true); ?></option>
                         <option value="unassigned" <?php if ($group == 'unassigned') {
@@ -172,13 +173,13 @@ if ($permissions && in_array('bookings_view_only', $permissions) && !(in_array('
                         } ?> ><?php echo $groups[$k]['group_name']; ?></option>
 <?php } ?>
                     </select>
-                    <?php echo l('in_statement'); ?>
+                    <span class="span-fix-wep"><?php echo l('in_statement'); ?></span>
                     <select class="form-control m-1" name="in_statement">
                         <option value="either"><?php echo l('either', true); ?></option>
                         <option value="no" <?php if ($in_statement == 'no') echo "selected"; ?>><?php echo l('no', true); ?></option>
                         <option value="yes" <?php if ($in_statement == 'yes') echo "selected"; ?>><?php echo l('yes', true); ?></option>
                     </select>
-                    <?php echo l('with_group_id'); ?> 
+                    <span class="span-fix-wep"><?php echo l('with_group_id'); ?></span>
                     <input type="text" name="linked_group_id" size="12" class="form-control m-1" value="<?php echo isset($linked_group_id) ? $linked_group_id : ''; ?>" /> 
                     <input type="hidden" name="staying_guest_name" size="12" class="form-control m-1" placeholder="<?php echo l('search customer', true); ?>" value="<?php echo $staying_guest_name; ?>" /> 
                     <button type='submit' name='submit' value='search' class="btn btn-light m-1" id="click-statement">
@@ -186,7 +187,7 @@ if ($permissions && in_array('bookings_view_only', $permissions) && !(in_array('
                         <?php echo l('filter'); ?>
                     </button>
                     <button type='reset' name='reset' value='<?php echo l('clear_filter'); ?>' class="btn btn-light m-1" id="clear-filter-btn"><?php echo l('clear_filter'); ?></button>
-                    <div class="pull-right m-1">
+                    <div class="pull-right m-1 m-001">
                         <?php echo l('statement_date'); ?> <input type="text" name="statement_date" size="10" class="form-control" value="<?php if ($statement_date) {
     echo $statement_date;
 } ?>" onchange="filterStatementDate()" placeholder="<?php echo l('Select Date', true); ?>"/>
@@ -240,33 +241,33 @@ if ($permissions && in_array('bookings_view_only', $permissions) && !(in_array('
     <div class="panel panel-default hidden-print">
         <div class="panel-body">
             <div class="pull-left">
-            <button id='<?php echo $customer_detail['customer_id']; ?>' class="customer-profile btn btn-light btn-sm">
+            <button id='<?php echo $customer_detail['customer_id']; ?>' class="customer-profile btn btn-light btn-sm colors-wep">
                 <?php echo l('edit_profile'); ?>
             </button>
-            <button class="btn btn-success btn-sm" id="openPaymentModal" ><?php echo l('add_payments'); ?></button>
-            <button class="btn btn-primary btn-sm" id="print-statement-button"><?php echo l('print_statement'); ?></button>
+            <button class="btn btn-success btn-sm colors-wep" id="openPaymentModal" ><?php echo l('add_payments'); ?></button>
+            <button class="btn btn-primary btn-sm colors-wep" id="print-statement-button"><?php echo l('print_statement'); ?></button>
             
             <?php if(check_active_extensions('customer_statements', $this->company_id)){
             ?>
-                <button class="btn btn-primary btn-sm" id="create-invoice-button" class="create-invoice"><?php echo l('create_statement'); ?></button>
+                <button class="btn btn-primary btn-sm colors-wep" id="create-invoice-button" class="create-invoice"><?php echo l('create_statement'); ?></button>
             <?php } ?>
             
-            <button class="btn btn-danger btn-sm" onclick="clearAllGroups()" class="clear-all-groups"><?php echo l('clear_all_groups'); ?></button>
+            <button class="btn btn-danger btn-sm colors-wep" onclick="clearAllGroups()" class="clear-all-groups"><?php echo l('clear_all_groups'); ?></button>
             <span id="guest-name-filter">
-                <input type="text" style="width:auto;display: inline-block;height:30px" id="search-guest-name" size="18" class="form-control" placeholder="<?php echo l('Search Keywords', true); ?>" value="<?php echo $staying_guest_name; ?>" />
-                <button class="btn btn-light btn-sm" id="search-customer-btn" ><?php echo l('search_customers'); ?></button>
+                <input type="text" style="width:auto;display: inline-block;height:30px" id="search-guest-name" size="18" class="form-control colors-wep" placeholder="<?php echo l('Search Keywords', true); ?>" value="<?php echo $staying_guest_name; ?>" />
+                <button class="btn btn-light btn-sm colors-wep" id="search-customer-btn" ><?php echo l('search_customers'); ?></button>
             </span>
         </div>
-            <div class="pull-right mt-2">
-                <?php echo l('legend'); ?>: 
-                <span class='legend-color state0'><?php echo l('Reservation', true); ?></span>
-                <span class='legend-color state1'><?php echo l('Checked in', true); ?></span>
-                <span class='legend-color state2'><?php echo l('Checked out', true); ?></span>
-                <span class='legend-color state3'><?php echo l('Cancelled', true); ?></span>
+            <div class="pull-right mt-2 mt-004">
+                <span class="bttn-gapp"><?php echo l('legend'); ?>:</span>
+                <span class='legend-color state0 bttn-gapp'><?php echo l('Reservation', true); ?></span>
+                <span class='legend-color state1 bttn-gapp'><?php echo l('Checked in', true); ?></span>
+                <span class='legend-color state2 bttn-gapp'><?php echo l('Checked out', true); ?></span>
+                <span class='legend-color state3 bttn-gapp'><?php echo l('Cancelled', true); ?></span>
             </div>
         </div>
     </div>
-
+    <div class="table-responsive">
     <table class="table table-hover room-invoice">
         <tr>
             <th class="hidden-print">
@@ -447,6 +448,7 @@ if ($permissions && in_array('bookings_view_only', $permissions) && !(in_array('
             </tr>	
         </tfoot>
     </table>
+                </div>
 
 </div>
 
@@ -460,6 +462,7 @@ if ($permissions && in_array('bookings_view_only', $permissions) && !(in_array('
 
 <div class="hidden-print" style="padding:30px">
     <span class="bold"><?php echo l('booking_that_customer_not_reserve'); ?></span>
+    <div class="table-responsive">
     <table class="table table-hover">
         <tr>
             <th><?php echo l('id'); ?></th>
@@ -485,7 +488,7 @@ if ($permissions && in_array('bookings_view_only', $permissions) && !(in_array('
         endif;
     endforeach;
 ?>
-   </table></div></div></div>
+   </table></div></div></div></div>
 <div class="modal fade" id="addPaymentsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">

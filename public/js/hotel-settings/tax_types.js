@@ -105,7 +105,7 @@ function addPriceBracket (data) {
 			.append($('<td/>')
 				.append($('<input/>', {
 					name: 'start-range[]',
-					class: 'start-range form-control required',
+					class: 'start-range form-control required m-117',
 					type: 'text',
 					required: true,
 					value: data && data.from ? data.from : ''
@@ -114,7 +114,7 @@ function addPriceBracket (data) {
 			.append($('<td/>')
 				.append($('<input/>', {
 					name: 'end-range[]',
-					class: 'end-range form-control required',
+					class: 'end-range form-control required m-117',
 					type: 'text',
 					required: true,
 					value: data && data.to ? data.to : ''
@@ -123,7 +123,7 @@ function addPriceBracket (data) {
 			.append($('<td/>')
 				.append($('<input/>', {
 					name: 'tax-rate[]',
-					class: 'tax-rate form-control required',
+					class: 'tax-rate form-control required m-117',
 					type: 'text',
 					required: true
 				}))
@@ -131,7 +131,7 @@ function addPriceBracket (data) {
 			.append($('<td/>')
 				.append($('<select/>', {
 					name: 'is-percentage[]',
-					class: 'is-percentage form-control required',
+					class: 'is-percentage form-control required m-117',
 					style: 'min-width: 80px',
 					required: true
 				})

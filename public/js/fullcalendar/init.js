@@ -163,6 +163,7 @@ innGrid.buildCalendar = function (rooms) {
 
         selectable: true,
         selectHelper: true,
+        handleWindowResize: true,
 
         resourceAreaWidth: calResourceAreaWidth ? calResourceAreaWidth + 'px' : '15%',
         scrollTime: '00:00',

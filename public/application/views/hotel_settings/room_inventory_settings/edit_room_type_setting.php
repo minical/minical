@@ -35,13 +35,13 @@
 									<div class="clearfix range_occupancy">
                                         <div class="col-md-3"></div>
                                         <div class="col-md-1 ">
-	                                    	<input type="number" name="min-occupancy" class="ranged_slider_value min_occupancy" value="<?php echo $room_type['min_occupancy']; ?>" size="1" min="1" max="30" style="float: right; margin-top: -6px;">
+	                                    	<input type="number" name="min-occupancy " class="ranged_slider_value min_occupancy min-wep" value="<?php echo $room_type['min_occupancy']; ?>" size="1" min="1" max="30" style="float: right; margin-top: -6px;">
 	                                    </div>
                                     	<div class="col-md-7 min-max-occupancy-range">
   											<div class="slider-range" data-min="<?php echo $room_type['min_occupancy']; ?>" data-max="<?php echo $room_type['max_occupancy']; ?>"></div>
 										</div>
 										<div class="col-md-1 rt-occupancy">
-	                                    	<input type="number" name="max-occupancy" class="ranged_slider_value max_occupancy" value="<?php echo $room_type['max_occupancy']; ?>" size="1" min="1" max="30" style="float: right; margin-top: -6px;">
+	                                    	<input type="number" name="max-occupancy" class="ranged_slider_value max_occupancy max-wep" value="<?php echo $room_type['max_occupancy']; ?>" size="1" min="1" max="30" style="float: right; margin-top: -6px;">
 	                                    </div>
                                     </div>                                    
                                 </div>
@@ -49,25 +49,25 @@
                                 <div class="form-group">
                                     <div class="clearfix" style="margin-bottom: 10px;">
                                         <div class="col-md-3"></div>
-                                    	<label class="col-md-4 control-label" style="text-align: left;"><?php echo l('maximum_adults'); ?></label>
+                                    	<label class="col-md-4 control-label label-adults" style="text-align: left;"><?php echo l('maximum_adults'); ?></label>
                                         <div class="col-md-1"></div>
-	                                    <label class="col-md-4 control-label" style="text-align: left;"><?php echo l('maximum_children'); ?></label>
+	                                    <label class="col-md-4 control-label label-child" style="text-align: left;"><?php echo l('maximum_children'); ?></label>
                                     </div>
                                     
 									<div class="clearfix">
                                         <div class="col-md-3"></div>
                                     	<div class="col-md-3 occupancy-range" style="padding-right: 0;">
-  											<input type="range" name="max-adults" min="1" max="30" value="<?php echo $room_type['max_adults']; ?>" class="rt-occupancy-slider" id="max-adults-range">
+  											<input type="range" name="max-adults" min="1" max="30" value="<?php echo $room_type['max_adults']; ?>" class="rt-occupancy-slider range-wep" id="max-adults-range">
 										</div>
 										<div class="col-md-1 rt-occupancy">
-	                                    	<input type="number" class="slider_value" value="<?php echo $room_type['max_adults']; ?>" size="1" min="1" max="30" style="float: right; margin-top: -6px;">
+	                                    	<input type="number" class="slider_value input-first" value="<?php echo $room_type['max_adults']; ?>" size="1" min="1" max="30" style="float: right; margin-top: -6px;">
 	                                    </div>
                                         <div class="col-md-1"></div>
 										<div class="col-md-3 occupancy-range" style="padding-right: 0;">
-											<input type="range" name="max-children" min="0" max="30" value="<?php echo $room_type['max_children']; ?>" class="rt-occupancy-slider" id="max-children-range">
+											<input type="range" name="max-children" min="0" max="30" value="<?php echo $room_type['max_children']; ?>" class="rt-occupancy-slider label-child" id="max-children-range">
 										</div>
 										<div class="col-md-1 rt-occupancy">
-	                                    	<input type="number" class="slider_value" value="<?php echo $room_type['max_children']; ?>" size="1" min="1" max="30" style="float: right; margin-top: -6px;">
+	                                    	<input type="number" class="slider_value input-second" value="<?php echo $room_type['max_children']; ?>" size="1" min="1" max="30" style="float: right; margin-top: -6px;">
 	                                    </div>
                                     </div>                                    
                                 </div>

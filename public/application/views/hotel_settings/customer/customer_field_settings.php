@@ -15,6 +15,7 @@
 
 <div class="main-card card">
     <div class="card-body">
+        <div class="table-responsive">
         <table id="customer-fields" class="table">
             <tr>
                 <th><?php echo l('customer_field_name'); ?></th>
@@ -119,6 +120,7 @@
             <h3><?php echo l('No customer field have been found.', true); ?></h3>
             <?php endif; ?>
         </table>
+        </div>
         <br />
         <button id="add-customer-field" class="btn btn-light"><?php echo l('add_customer_field'); ?></button>
         <button id="save-all-customer-fields-button" class="btn btn-primary"><?php echo l('save_all'); ?></button>

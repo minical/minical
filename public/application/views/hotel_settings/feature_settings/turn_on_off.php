@@ -70,7 +70,7 @@
                         <span></span>
                     </label>
                     <label for="additional_company_emails"><b><?= l("Send copy of confirmation email and invoice email to this address", true); ?></b></label>
-                    <input type="text" name="additional_company_emails"
+                    <input type="text" class="form-control" name="additional_company_emails"
                            value="<?php echo $company_data['additional_company_emails']; ?>" size=50
                            placeholder="<?php echo l('comma separated email addresses', true) ?>"/>
                 </div>
@@ -751,7 +751,7 @@
 
                 <label for="default_charge_name"><?= l("Default charge name", true); ?></label>
 
-                <input type="text" name="default_charge_name"
+                <input type="text" name="default_charge_name" class="form-control"
                        value="<?php echo $company_data['default_charge_name']; ?>" size=50
                        placeholder="<?php echo l('Default charge name', true); ?>"/>
             </div>
@@ -759,17 +759,17 @@
             <div class="form-group features-div-padding  form-inline">
                 <label for="default_room_singular"><?= l("Default room label", true); ?></label>
                 <span>: (<?php echo l('singular', true); ?>)</span>
-                <input type="text" name="default_room_singular"
+                <input type="text" name="default_room_singular" class="form-control"
                        value="<?php echo $company_data['default_room_singular']; ?>" size=15
                        placeholder="<?php echo l('Room', true); ?>"/>
                 <span>, (<?php echo l('plural', true); ?>)</span>
-                <input type="text" name="default_room_plural"
+                <input type="text" name="default_room_plural" class="form-control"
                        value="<?php echo $company_data['default_room_plural']; ?>" size=15
                        placeholder="<?php echo l('Rooms', true); ?>"/>
             </div>
             <div class="form-group features-div-padding  form-inline">
                 <label for="default_room_type"><?= l("Default room type label", true); ?></label>
-                <input type="text" name="default_room_type" value="<?php echo $company_data['default_room_type']; ?>"
+                <input type="text" name="default_room_type" class="form-control" value="<?php echo $company_data['default_room_type']; ?>"
                        size=50 placeholder="<?php echo l('Room type', true); ?>"/>
             </div>
 

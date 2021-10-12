@@ -530,7 +530,7 @@ var bookingModalInvoker = function ($) {
 
                 .append(
                     $('<div/>', {
-                        class: 'form-group col-sm-3'
+                        class: 'form-group col-sm-3 width-fix-wep'
                     })
                         .append(
                             $('<label/>')
@@ -1017,7 +1017,7 @@ var bookingModalInvoker = function ($) {
                         style: "padding: 0px 15px 0px 0px;"
                     }).append(
                         $("<ul/>", {
-                            class: "nav nav-tabs tabs-left left-sidebar",
+                            class: "nav nav-tabs tabs-left left-sidebar left-sidebar-fix-wep",
                         }).append(
                             $("<li/>", {
                                 class: 'active'
@@ -1196,7 +1196,7 @@ var bookingModalInvoker = function ($) {
                 if (that.groupInfo == null) {
                     $("#booking-modal .modal-header").append(
                         $("<div/>", {
-                            class: "btn-group pull-right",
+                            class: "btn-group pull-right btn-fix-wep",
                             'data-toggle': "buttons",
                             style: "margin-right: 20px;"
                         })
@@ -1400,7 +1400,7 @@ var bookingModalInvoker = function ($) {
                         })
                             .append(
                                 $("<div/>", {
-                                    class: "col-sm-6",
+                                    class: "col-sm-6 width-fix-wep",
                                     //style: "padding-left: 0px;"
                                 }).append(
                                     $("<label/>", {
@@ -1423,7 +1423,7 @@ var bookingModalInvoker = function ($) {
                             )
                             .append(
                                 $("<div/>", {
-                                    class: "col-sm-6",
+                                    class: "col-sm-6 per-txt-fix",
                                     style: "padding: 0;"
                                 }).append(
                                     $("<label/>", {
@@ -1634,7 +1634,7 @@ var bookingModalInvoker = function ($) {
             var panel = this.$panel.clone();
 
             var sourceSelectDiv = $("<select/>", {
-                class: "form-control",
+                class: "form-control select-fix-wep",
                 name: "source"
             });
 
@@ -1678,7 +1678,7 @@ var bookingModalInvoker = function ($) {
             panel.find(".panel-body")
                 .append(
                     $("<div/>", {
-                        class: "tab-content",
+                        class: "tab-content tab-gap-wep",
                         //style: "padding: 0px 15px 0px 0px;"
                     })
                         .append(
@@ -2449,7 +2449,7 @@ var bookingModalInvoker = function ($) {
                         )
                         .append(
                             $("<div/>", {
-                                'id': 'history',
+                                'id': 'history tab-gap-wep',
                                 'class': "tab-pane"
                             }).append(
                                 $("<div/>", {
@@ -3693,12 +3693,12 @@ var bookingModalInvoker = function ($) {
                         .append(
                             $("<div/>", {
                                 class: "form-group input-group" + (innGrid.enableHourlyBooking ? ' hourly-booking-enabled' : ''),
-                                style: "display: -webkit-inline-box;"
+                                style: "display: -webkit-inline-box;width: 100% ;"
                             })
                                 .append(
                                     $("<input/>", {
                                         name: 'check_out_date',
-                                        class: 'form-control check-out-date-wrapper',
+                                        class: 'form-control check-out-date-wrapper fix-wep',
                                         placeholder: l("Check-out Date"),
                                         style: "border-bottom-left-radius: 4px;border-top-left-radius: 4px;",
                                         value: checkOutDt
@@ -3941,7 +3941,7 @@ var bookingModalInvoker = function ($) {
                                                     })
                                                         .append(
                                                             $("<div/>", {
-                                                                class: "col-sm-6 form-group"
+                                                                class: "col-sm-6 form-group width-fix-wep"
                                                             })
                                                                 .append(
                                                                     $('<label/>', {
@@ -4259,7 +4259,7 @@ var bookingModalInvoker = function ($) {
             } else {
                 modalHeader.prepend(
                     $("<span/>", {
-                        class: "h4",
+                        class: "h4 heading-fix-wep",
                         html: l("Create new booking")
                     })
                 );
@@ -7058,7 +7058,7 @@ var bookingModalInvoker = function ($) {
                             class: "col-sm-2",
                         }).append(
                             $("<div/>", {
-                                class: "btn btn-light",
+                                class: "btn btn-light close-wep",
                                 'data-dismiss': "modal",
                                 type: "button",
                                 text: l('Close')

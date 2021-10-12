@@ -33,7 +33,7 @@
                 </div>
                 <div class="form-group features-div-padding  form-inline api-key">
                     <label for="api_key"><?= l("API Key", true); ?></label>
-                    <input type="text" name="api_key" id="api_key" value="<?php echo $company_data['api_key']; ?>" size=50 readonly/>
+                    <input type="text" class="form-control" name="api_key" id="api_key" value="<?php echo $company_data['api_key']; ?>" size=50 readonly/>
                 </div>
             </div>
         </div>

@@ -1,6 +1,18 @@
-<div class="page-header">
-	<h2><?php echo l('rate_plan')." ".l('settings'); ?></h2>
+
+<div class="app-page-title">
+    <div class="page-title-wrapper">
+        <div class="page-title-heading">
+            <div class="page-title-icon">
+                <i class="pe-7s-cash text-success"></i>
+            </div>
+            <?php  echo l('rate_plan')." ".l('settings'); ?>
+        </div>
+    </div>
 </div>
+
+<!-- <div class="page-header">
+	<h2><?php echo l('rate_plan')." ".l('settings'); ?></h2>
+</div> -->
 
 <!-- Image Edit Modal -->
 <div class="modal fade" id="image_edit_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -19,6 +31,8 @@
   </div>
 </div>
 
+<div class="main-card mb-3 card m-014">
+    <div class="card-body">
 <div class="col-sm-12">
 	<div class="col-sm-3">
 		<strong><?php echo l('room_types'); ?></strong>
@@ -31,6 +45,8 @@
 		<div class="rate-plans row">
 		</div>
 	</div>
+</div>
+</div>
 </div>
 
 <input type="hidden" name="subscription_level" class="subscription_level" value="<?php echo $this->company_subscription_level; ?>">

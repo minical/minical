@@ -44,7 +44,7 @@
 
 	<div class="">
 		<div>
-
+		<div class="table-responsive">
 			<table class="table table-hover rooms rate-plans-table">
 				<thead>
 					<tr>
@@ -136,7 +136,7 @@
 
 				</tbody>
 			</table>
-
+					</div>
 
 		<div class="modal fade" id="room_type_model" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog modal-lg">

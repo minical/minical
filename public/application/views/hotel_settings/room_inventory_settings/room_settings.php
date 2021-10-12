@@ -8,9 +8,9 @@
             </div>
             <?php echo l('room')." ".l('settings'); ?>
         </div>
-        <div class="page-title-actions">
-          <button id="add-room-button" class="btn btn-primary"><?php echo l('add_room'); ?></button>
-          <button id="save-all-rooms-button" class="btn btn-success"><?php echo l('save_all'); ?></button>
+        <div class="page-title-actions m-010">
+          <button id="add-room-button" class="btn btn-primary btn-height"><?php echo l('add_room'); ?></button>
+          <button id="save-all-rooms-button" class="btn btn-success btn-height"><?php echo l('save_all'); ?></button>
 
           <div class="custom-checkbox custom-control custom-control-inline">
               <input style="margin-left: 12px;" id="show-hidden-rooms" type="checkbox">
@@ -31,10 +31,11 @@
 
 
 
-<div class="main-card mb-3 card">
+<div class="main-card mb-3 card m-014">
     <div class="card-body">
 
         <!-- Hidden delete dialog-->
+        <div class="table-responsive">
         <table class="table table-hover rooms">
             <thead>
                 <tr>
@@ -181,6 +182,7 @@
 <?php endif; ?>
 </tbody>
 </table>
+</div>
 </div></div>
 
 <div class="modal fade" id="add-multiple-rooms" tabindex="-1" role="dialog" 

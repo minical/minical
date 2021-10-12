@@ -23,7 +23,7 @@
 
 
 
-
+	<div class="table-responsive">
 
 <table id="tax-types" class="table">
 	<tr>
@@ -43,15 +43,15 @@
 					<td>
                         <?php if($tax_type->is_brackets_active == '1'){ ?>
                             <input disabled name="tax-rate" class="form-control " type="text" value="<?php echo $tax_type->tax_rate; ?>" maxlength="50" style="width:150px;float: left;"/>	
-							<i class="fa fa-sliders fa-2x open-price-brackets active" data-toggle="modal" data-target="#price-brackets-modal"></i>
+							<i class="fa fa-sliders fa-2x open-price-brackets active m-115" data-toggle="modal" data-target="#price-brackets-modal"></i>
                         <?php }  
                         else { ?> 
                             <input name="tax-rate" class="form-control " type="text" value="<?php echo $tax_type->tax_rate; ?>" maxlength="50" style="width:150px;float: left;"/>   
-							<i class="fa fa-sliders fa-2x open-price-brackets" data-toggle="modal" data-target="#price-brackets-modal"></i>
+							<i class="fa fa-sliders fa-2x open-price-brackets m-115" data-toggle="modal" data-target="#price-brackets-modal"></i>
                         <?php }?>
                     </td>
 					<td>
-						<select name="is-percentage" class="form-control">
+						<select name="is-percentage" class="form-control m-116">
 							<option <?php if ($tax_type->is_percentage == 1) echo "SELECTED = SELECTED"; ?> value="1">
 								%
 							</option>
@@ -73,6 +73,7 @@
 	<h3><?php echo l('No tax records have been found.', true); ?></h3>
 	<?php endif; ?>
 </table>
+	</div>
 <br />
 <button id="add-tax-type" class="btn btn-primary"><?php echo l('add_tax_type'); ?></button>
 <button id="save-all-tax-types-button" class="btn btn-success"><?php echo l('save_all'); ?></button>

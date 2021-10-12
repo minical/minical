@@ -47,6 +47,7 @@
     z-index: 2999 !important;
   }
 
+  
   #inner-modal {
     z-index: 2999 !important;
   }
@@ -2876,9 +2877,290 @@ a.btn.disabled,fieldset:disabled a.btn{
     .app-sidebar .app-header__logo{
         display:none
     }
+    .fixed-sidebar .app-main .app_outer{
+        padding-left: 0px !important;
+        padding-right: 0px;
+        padding-top: 0px;
+        background: none;
+    }
+    .form-row{
+        flex-direction: column;
+    }
+    .form-control.datepicker.hasDatepicker{
+        width: -webkit-fill-available !important;
+    }
+    #depositType{
+        width: -webkit-fill-available !important;
+    }
+    .selling_date{
+        width: -webkit-fill-available !important;    
+    }
+    .form-control.hasDatepicker{
+        width: -webkit-fill-available !important;   
+    }
+    #emp_name{
+        display: flex;
+        margin-left: -29px;
+    }
+    #from_res{
+        text-align: left !important;
+    }
+    #printReportButton{
+        float: left !important;
+        margin-top: 20px;
+        margin-left: 20px;
+    }
+    #sec-wep{
+        float: left!important;
+        margin-top: 20px;
+        margin-left: 20px; 
+    }
+    #new-wep{
+        text-align: left!important;
+    }
+    .green-wep{
+        float: left!important;
+        margin-top: 20px;
+    }
+    #user-wep{
+        margin-top: 16px;
+        margin-bottom: 16px;
+    }
+    #wep {
+        float: left !important;
+        margin-top: 20px;
+        margin-left: 3px;
+    }
+    .extension_block {
+        margin-right: 14px;
+    }
+    .fc-button-group{
+        margin-left: 3.5px !important;
+    }
+    .fc-customStartDatePicker-button{
+        margin-bottom: 20px !important;
+        margin-top: 9px !important;
+        margin-left: 16px !important;
+    }
+    .fc-toolbar {
+        display: inherit !important;
+    }
+    #new-select{
+        margin-bottom: 19px;
+    }
+    .fc-new-button{
+        margin-left: 14px;
+        margin-right: 29px;
+    }
+    .fc-new-wep{
+        margin-left: 14px!important;
+        margin-bottom: 20px;
+    }
+    .fc-customCreateBooking-button{
+        margin-left: 16px !important;
+        margin-right: 28px !important;
+    }
+    .filter-booking{
+        margin-left: 18px !important;
+    }
+   /* .booking-modal-body{
+         margin-top: -92em !important; 
+    } */
+    #filter-sapce{
+        margin-bottom: 9px !important;
+    }
+    .modal-dialog{
+        width: 94% !important;
+    }
+    .close-wep {
+        margin-top: 25px !important;
+        float: left !important;
+    }
+    .btn-colorselector {
+        width: 43% !important;
+    }
+    .form-group.input-group > .check-out-date-wrapper{
+        width: 71%!important;
+        margin-left: 2px;
+    }
+    .fix-wep {
+        /* width: 73% !important; */
+        width: 46% !important;
+        border-radius: 3px;
+        border-right: 1px solid #ccc;
+        margin-left: -20px;
+        z-index: 2;
+    }
+    .booked-by-block{
+        width: 95% !important;
+        margin-left: 16px;
+    }
+    .width-fix-wep{
+        width: 115%;
+        margin-left: -15px;
+
+    }
+    .btn-fix-wep{
+        margin-right: 20px;
+        margin-top: 48px;
+        float: left!important;
+        margin-left: -165px;
+    }
+    .token-input{
+        min-width: 0px!important;
+    }
+    .heading-fix-wep{
+        float: left !important;
+    }
+    .rate-block{
+        /* padding-right: 0px;
+        margin-left: -15px !important;
+        margin-top: -17px !important; */
+    }
+    .per-txt-fix{
+        margin-left: -17px !important;
+        margin-top: 14px !important;
+    }
+    .left-sidebar-fix-wep {
+        height: 100px!important;
+    }
+    #booking-modal .left-sidebar{
+        min-height: 100px!important;
+    }
+    .tab-gap-wep{
+        margin-top: 19px !important;
+    }
+
+    .head-fix-wep{
+        display: inherit !important; 
+    }
+    #search_submit{
+        width:100% !important;
+    }
+    .pull-right-wep{
+        width: 100% !important;
+    }
+    .form-wep{
+        margin-left: -16px !important;
+    }
+    .h-fix-wep{
+        margin-left: 11px !important;
+    }
+    .span-fix-wep{
+        margin-left: 4px;
+    }
+    .m-001{
+        float: left!important;
+        width: 100%;	
+    }
+    .colors-wep{
+        width: 100%!important;
+        margin-top: 10px;
+    }
+    .bttn-gapp{
+        margin-left: 4px;
+        font-size: 8px;
     
     }
- .app-sidebar.sidebar-text-light{
+    .mt-004{
+        display: flex!important;
+    }
+    .m-008{
+        width: 24%;
+        position: absolute;
+        left: 32%;
+        top: 82%;
+        z-index: 9;
+    }
+    .mb-3{
+        margin-top: 5px;
+    }
+    .m-010{
+        display: flex;
+        position: absolute;
+        top: 96%;
+        left: 1%;
+    }
+    .btn-height{
+        height:36px;margin-right:6px;
+    }
+    .m-011{
+        width: 100%;
+        font-size: 11px;
+    }
+    .m-012{
+        width: 100% !important;
+    }
+
+    .form-001{
+        margin-bottom:20px;
+    }
+    #download-btn{
+        float: left!important;
+        margin-top: 20px;
+    }
+    #run-night-audit-button{
+        margin-top: 13px;
+        width: 100%;
+    }
+    .font-wep{
+        font-size: 17px;
+    }
+    .m-014{
+        margin-top: 66px !important;
+    }
+    .btn-fix-001{
+        float: left !important;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    .m-115{
+        margin-left: -33px;
+        margin-top: 3px;
+    }
+    .m-116{
+        width: 80px;
+    }
+    .m-117{
+        width: 90px;
+    }
+    .min-wep{
+        margin-top: -68px !important;
+    }
+    .max-wep{
+        margin-top: -47px !important;
+    }
+    .label-adults{
+        margin-top:35px !important;
+    }
+    .range-wep{
+        margin-top:-77px !important;
+    }
+    .input-first{
+        margin-top: -67px !important;
+    }
+    .label-child{
+            margin-top: 70px !important;
+    }
+    .input-second{
+        margin-top: -50px !important;
+    }  
+    #image_edit_modal_body2{
+        overflow-y: scroll !important;
+    } 
+    .m-120{
+        margin-left: 5px;
+        width: max-content !important;
+    } 
+    #image_edit_modal_body1{
+        overflow-y: scroll !important;
+    }
+    .m-121{
+        margin-left: -111px;
+        width: max-content !important;
+    } 
+}
+.app-sidebar.sidebar-text-light{
     border-right:0 !important
 }
 .app-sidebar.sidebar-text-light .app-sidebar__heading{
@@ -3893,3 +4175,113 @@ input.error {
     font-weight: 300;
     color: red;
 }
+
+
+
+/* iPads (portrait and landscape) ----------- */
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) {
+    .green-wep {
+        float: left!important;
+        margin-top: 60px;
+        margin-left: -197px;
+    }
+    .width-fix-wep {
+        width: 106%;
+        /* margin-left: -15px; */
+    }
+    .left-sidebar-fix-wep {
+        height: 100px!important;
+    }
+    #booking-modal .left-sidebar{
+        min-height: 100px!important;
+    }
+    .tab-gap-wep{
+        margin-top: 19px !important;
+    }
+    .head-fix-wep{
+        display: flex !important; 
+    }
+    #search_submit{
+        width: 100%!important;
+    }
+    .form-inline .form-control #search_submit{
+        width: 100%!important;
+    } 
+    .search_submit-wep
+    {
+        width: 100% !important;
+    }
+    .pull-right-wep{
+        width: 100%!important;
+    }
+    .mt-004 {
+        display: flex!important;
+        float: left!important;
+    }
+    .m-008{
+        position: inherit;
+        left: 0;
+        top: 0;
+        /* z-index: 9; */
+    }
+    #m-012{
+        margin-left: -59px;
+        float: left;
+    }
+    .btn-fix-001{
+        float: right !important;
+        margin-top: 0px;
+        margin-bottom: 0px;
+    }
+    .m-116{
+        width: 75px!important;
+    }
+    #image_edit_modal_body2{
+        overflow-y: scroll !important;
+    } 
+    .m-120{
+        margin-left: 5px;
+        width: max-content !important;
+    } 
+    #image_edit_modal_body1{
+        overflow-y: scroll !important;
+    }
+    .m-121{
+        margin-left: -111px;
+        width: max-content !important;
+    }
+}
+/* ----------- iPad Pro ----------- */
+/* Portrait */
+@media only screen 
+  and (min-width: 1024px) 
+  and (max-height: 1366px) 
+  and (orientation: portrait) 
+  and (-webkit-min-device-pixel-ratio: 1.5) {
+    .pull-right-wep{
+        width: 100%!important;
+    }
+    .m-116{
+        width: 75px!important;
+    }
+    .search_submit-wep{
+        width: 67%!important;
+    }
+    .left-sidebar-fix-wep {
+        height: 100px!important;
+    }
+    #booking-modal .left-sidebar{
+        min-height: 100px!important;
+    }
+    .tab-gap-wep{
+        margin-top: 19px !important;
+    }
+    .h-fix-wep{
+        margin-left: 11px!important;
+    }
+    #m-012 {
+        margin-left: -57px!important;
+        margin-top: 20px!important;
+    }
+    
+  }

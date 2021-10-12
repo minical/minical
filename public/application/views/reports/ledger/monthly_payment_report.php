@@ -21,7 +21,7 @@
 	<div class="panel panel-default hidden-print">
 		<div class="panel-body h4">
 			<div class="form-inline">
-				<div class="form-group col-md-3 col-lg-3 col-xs-12 col-sm-3 monthselectpicker" style="padding: 0;">
+				<div class="form-group col-md-4 col-lg-3 col-xs-12 col-sm-6 monthselectpicker" style="padding: 0;">
 					<?php 
                         if(empty($dateRange))
                         {
@@ -39,8 +39,8 @@
                    <?php echo l('Date Range', true); ?> <span style="color:red;">*</span> <div class="form-group"><input name="date_range" class="form-control date_range_picker" value="01/01/2015 - 01/31/2015"  placeholder="<?php echo l('Start Date', true); ?>" ></div>
                    <button class="show_payment_report btn btn-sm btn-success" type="button"><?php echo l('Submit', true); ?></button>
                 </div>
-                <div class="col-md-3 col-lg-3 col-xs-12 col-sm-3">
-                    <button id="printReportButton" class="btn btn-primary pull-right hidden-print"><span class="glyphicon glyphicon-print" title="Print Report"></span></button>
+                <div class="col-md-3 col-lg-3 col-xs-12 col-sm-3" id="m-012">
+                    <button id="printReportButton download-btn" class="btn btn-primary pull-right hidden-print"><span class="glyphicon glyphicon-print" title="Print Report"></span></button>
                     <?php $url_date = ($this->uri->segment(4) != '') ? $this->uri->segment(4) : ""; ?>       
                     <a style="margin: 0 10px;" href="<?php if($url_date != '//'){ echo base_url()."reports/ledger/download_payments_csv_export/".$url_date; } else { echo base_url()."reports/ledger/download_payments_csv_export/"; } ?>" class="btn btn-primary pull-right ">
                         <span title="Export to CSV" class="glyphicon glyphicon-download-alt"></span>
@@ -61,7 +61,7 @@
 	echo '<div class="payment_report_table">';
 	//Construct table
 	if (isset($result[0])) {
-		echo "<table class='table table-hover table-condensed'>";
+		echo "<div class='table-responsive'><table class='table table-hover table-condensed'>";
 		// table head
 		echo '<thead><tr>';			
 		$pi = 0; // keep track of column index. To prevent making date/shift_type_name into currency format
@@ -128,7 +128,7 @@
 		echo '</tr></tfoot>';
 		echo '</table>'; 
 	}
-        echo '</div>';
+        echo '</div></div>';
 	?>
 
 	<!--Google Graph-->
