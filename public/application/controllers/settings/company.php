@@ -773,15 +773,14 @@ class Company extends MY_Controller
                     }
 
                     unlink($location);
-                    // rmdir($path . $name);  
+                    
+                    echo ("<script LANGUAGE='JavaScript'>
+                            window.alert('Succesfully Imported');
+                            window.location.href='".base_url()."';
+                            </script>"); 
                 }
             }
         }
-
-        echo ("<script LANGUAGE='JavaScript'>
-                            window.alert('Succesfully Imported');
-                            window.location.href='".base_url()."';
-                            </script>");
 
         // redirect('/settings/company/import');
     }
