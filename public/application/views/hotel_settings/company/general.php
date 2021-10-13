@@ -55,7 +55,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-md-10 logo-img">
+		<div class="col-md-10">
 			<div class="position-relative form-group" >
 				<?php
 				if (isset($logo_images)):
@@ -63,7 +63,7 @@
 						$image_url = $this->image_url.$company['company_id']."/".$image['filename'];
 						?>
 						<img 
-						class="thumbnail col-md-3 add-image logo-img-fix" 
+						class="thumbnail col-md-3 add-image" 
 						src="<?php echo $image_url; ?>" 
 						title="<?php echo $image['filename']; ?>" 
 						data-toggle="modal" 
