@@ -778,6 +778,11 @@ class Company extends MY_Controller
             }
         }
 
+        echo ("<script LANGUAGE='JavaScript'>
+                            window.alert('Succesfully Imported');
+                            window.location.href='".base_url()."';
+                            </script>");
+
         // redirect('/settings/company/import');
     }
 
