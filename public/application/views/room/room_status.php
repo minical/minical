@@ -82,7 +82,7 @@
 </div>
 
 
-<div class="main-card mb-3 card">
+<div class="main-card mb-3 card m-33">
 	<div class="card-body">
 	<div class="table-responsive">
 		<table class="table table-hover table-rating">

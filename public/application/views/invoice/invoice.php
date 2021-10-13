@@ -60,7 +60,7 @@
                         </label>
 
                         <div class="col-sm-8" id="use-gateway-div">
-                            <div class="col-sm-2"><input type="checkbox" class="form-control use-gateway" data-gateway_name="<?=$selected_payment_gateway;?>" name="<?=$selected_payment_gateway;?>_use_gateway"></div>
+                            <div class="col-sm-2"><input type="checkbox" class="form-control use-gateway" id="check-wep" data-gateway_name="<?=$selected_payment_gateway;?>" name="<?=$selected_payment_gateway;?>_use_gateway"></div>
                         </div>
                     </div>
                     
@@ -248,14 +248,14 @@
 
 <div id='invoice-container' class="">
     <div class="app-page-title">
-        <div class="page-title-wrapper">
+        <div class="page-title-wrapper page-title-wrapper-wep">
             <div class="page-title-heading">
                 <div class="page-title-icon">
                     <i class="pe-7s-notebook text-success"></i>
                 </div>
                 <?php echo l('invoice'); ?>
             </div>
-            <div class="page-title-actions">
+            <div class="page-title-actions m-025">
                 <div>
                     <button class="btn btn-primary m-1" id="print-invoice-button">
                         <?php echo l('print').' '.l('invoice'); ?>
@@ -296,7 +296,7 @@
 
 
 <div class="main-card mb-3 card">
-    <div class="card-body">
+    <div class="card-body card-img">
 
     <?php
     // show company logo image
@@ -306,8 +306,8 @@
     ?>
 
     <div class="col-md-12 row invoice-header">
-        <div class="col-xs-4 padding-left-zero">
-            <address>
+        <div class="col-xs-4 padding-left-zero padding-left-zero-wep">
+            <address class="text-gapp">
                 <?php
 
                 $company_address = array(
@@ -328,8 +328,8 @@
                 ?>
                 <?php echo '<p class="invoice-header">'.$company['invoice_header'].'</p>'; ?>
         </div>
-        <div class="col-xs-4 invoice_heading_div">
-            <address class="form-inline">
+        <div class="col-xs-4 invoice_heading_div padding-left-zero-wep">
+            <address class="form-inline text-gapp billed-gap">
                 <strong><?php  echo l('billed_to'); ?>:</strong>
                 <?php
                 if (count($booking_customer) > 0):
@@ -392,15 +392,15 @@
                 ?>
             </address>
         </div>
-           <div class="pull-right">
+           <div class="pull-right right-wep">
                     <strong><?php echo l('invoice'); ?> #:</strong>
                     <?php echo str_pad((isset($invoice_number))?$invoice_number:0, 8, "0", STR_PAD_LEFT); ?>
                 </div>
-        <div class="col-xs-4 text-right booking_id_div padding-right-zero">
+        <div class="col-xs-4 text-right booking_id_div padding-right-zero padding-left-zero-wep">
              
-            <address>
+            <address class="text-gapp book-wep">
                 <strong class="invoice_booking_id"><?php echo l('booking').' '.l('id'); ?>:</strong>
-                <input type="text" class="text-right" id="booking_id" disabled value="<?php
+                <input type="text" class="text-right m-119 m-024" id="booking_id" disabled value="<?php
                 // add 8 leading zeroes
                 echo $booking_detail['booking_id']
                 ?>"/>
@@ -445,7 +445,7 @@
                         <?php
                         if($folios && count($folios) > 0) {
                             foreach ($folios as $key => $folio) { ?>
-                                <li class="<?=($current_folio_id == $folio['id']) ? " active " : ""?> <?=$folio['charge_count'] || $folio['payment_count'] ? "non-empty-folio" : "";?>" data-folio-id="<?=$folio['id'];?>">
+                                <li class="<?=($current_folio_id == $folio['id']) ? " active " : ""?> <?=$folio['charge_count'] || $folio['payment_count'] ? "non-empty-folio" : "";?> extra-large-wep" data-folio-id="<?=$folio['id'];?>">
                                     <div>
                                         <a href="<?= base_url()."invoice/show_invoice/".$booking_detail['booking_id']."/".$folio['id'];?>">
                                             <div><?php echo l('Folio', true); ?> #<?php echo $key + 1; ?></div>
@@ -488,7 +488,7 @@
                 <div class="col-sm-8">
                     <?php echo l('charges'); ?>
                 </div>
-                <div class="col-sm-4 text-right">
+                <div class="col-sm-4 text-right m-022">
                     <button class="hidden-print btn btn-light btn-sm expand-all">
                         <i class="glyphicon glyphicon-plus" aria-hidden="true"></i>
                         <?php echo l('expand_all'); ?>
@@ -500,6 +500,7 @@
                 </div>
             </div>
 
+            <div class="table-responsive col-lg-12">
             <table id="charge-table" class="table" >
                 <thead>
                 <tr>
@@ -757,6 +758,7 @@
                 </tr>
                 </tfoot>
             </table>
+            </div>
         </div>
         <!-- /.panel -->
 
@@ -764,6 +766,7 @@
             <div class="h2 text-left payment_div">
                 <?php echo l('payments'); ?>
             </div>
+            <div class="table-responsive">
             <table id="payment-table" class="table table-hover" >
                 <thead>
                 <tr>
@@ -1017,6 +1020,7 @@
                 </tr>
                 </tfoot>
             </table>
+            </div>
 
         </div> <!-- /.panel -->
         <div class="h2 text-muted" style="max-width: 100%; padding: 10px;">
@@ -1044,6 +1048,7 @@
 
             <div class="jumbotron col-md-6 col-xs-12">
                 <h4><?php echo l('invoice').' '.l('log'); ?></h4>
+                <div class="table-responsive">
                 <table class="table">
                     <?php
                     foreach ($invoice_log as $r):
@@ -1065,6 +1070,7 @@
                     ?>
 
                 </table>
+                </div>
             </div>  <!-- /. container.. -->
 
             <div class="col-md-3">
