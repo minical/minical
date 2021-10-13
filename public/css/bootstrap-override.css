@@ -3159,6 +3159,60 @@ a.btn.disabled,fieldset:disabled a.btn{
         margin-left: -111px;
         width: max-content !important;
     } 
+    .page-title-wrapper-wep{
+        display: grid !important;
+    }
+    .m-119{
+        margin-left: 91px !important;
+    }
+    .text-gapp{
+        text-align: left !important;
+    }
+    .padding-left-zero-wep{
+        width:100%;
+    }
+    .card-img img{
+      width: 40%!important;margin-bottom: 20px;
+    }
+    .billed-gap{
+        margin-left: -14px;
+    }
+    .right-wep{
+        float: left!important;
+    }
+    .book-wep{
+        margin-left: -14px;
+    }
+    .m-022{
+      text-align: left!important;
+      margin-top: 20px!important;
+    }
+    .m-025{
+      margin-left: 56px!important;
+    }
+    .m-024{
+      margin-left: 0px !important;
+      text-align: left!important;
+    }
+    .extra-large-wep{
+      width: 100% !important;
+    }
+    #check-wep{
+      width: 15%;
+      margin-left: -18px;
+    }
+    /* .logo-img-fix{
+      width: 100%;
+    } */
+    .thumbnail{
+      width: 100%!important;
+    }
+    .ui-corner-all{
+        margin-left: -65px;
+    }
+    .m-33{
+      margin-top: 45px !important;
+    }
 }
 .app-sidebar.sidebar-text-light{
     border-right:0 !important
@@ -4185,6 +4239,9 @@ input.error {
         margin-top: 60px;
         margin-left: -197px;
     }
+    .thumbnail{
+      width: 100%!important;
+    }
     .width-fix-wep {
         width: 106%;
         /* margin-left: -15px; */
@@ -4250,6 +4307,27 @@ input.error {
         margin-left: -111px;
         width: max-content !important;
     }
+    .m-025 {
+      margin-left: 0px!important;
+      position: absolute;left: 65%;
+  }
+  .padding-left-zero-wep {
+      width: 40%!important;
+  }
+  .m-024{
+      margin-left: 0px !important;
+      text-align: left!important;
+  }
+  .extra-large-wep{
+      width: 50% !important;
+  }
+  #check-wep{
+      width: 80%;
+      margin-left: -14px;
+  }
+  .m-33 {
+      margin-top: 5px !important;
+  }
 }
 /* ----------- iPad Pro ----------- */
 /* Portrait */
