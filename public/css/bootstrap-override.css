@@ -2938,9 +2938,9 @@ a.btn.disabled,fieldset:disabled a.btn{
         margin-left: 3.5px !important;
     }
     .fc-customStartDatePicker-button{
-        margin-bottom: 20px !important;
+        /* margin-bottom: 20px !important;
         margin-top: 9px !important;
-        margin-left: 16px !important;
+        margin-left: 16px !important; */
     }
     .fc-toolbar {
         display: inherit !important;
@@ -3208,7 +3208,7 @@ a.btn.disabled,fieldset:disabled a.btn{
       width: 100%!important;
     }
     .ui-corner-all{
-        margin-left: -65px;
+        /* margin-left: -65px; */
     }
     .m-33{
       margin-top: 45px !important;
