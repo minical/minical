@@ -3205,7 +3205,7 @@ a.btn.disabled,fieldset:disabled a.btn{
       width: 100%;
     } */
     .thumbnail{
-      width: 100%!important;
+      /* width: 100%!important; */
     }
     .ui-corner-all{
         /* margin-left: -65px; */
@@ -4240,7 +4240,7 @@ input.error {
         margin-left: -197px;
     }
     .thumbnail{
-      width: 100%!important;
+      /* width: 100%!important; */
     }
     .width-fix-wep {
         width: 106%;
