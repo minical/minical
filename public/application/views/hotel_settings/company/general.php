@@ -63,7 +63,7 @@
 						$image_url = $this->image_url.$company['company_id']."/".$image['filename'];
 						?>
 						<img 
-						class="thumbnail col-md-3 add-image" 
+						class="thumbnail col-md-3 add-image img-0345" 
 						src="<?php echo $image_url; ?>" 
 						title="<?php echo $image['filename']; ?>" 
 						data-toggle="modal" 

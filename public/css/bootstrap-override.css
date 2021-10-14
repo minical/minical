@@ -3213,6 +3213,19 @@ a.btn.disabled,fieldset:disabled a.btn{
     .m-33{
       margin-top: 45px !important;
     }
+    #generateReport{
+        margin-top: 10px !important;
+    }
+    .m-035{
+        margin-top: 10px !important;
+    }
+    .m-036{
+        margin-left: 0px !important;
+    }
+    .img-0345{
+        width: 240px;
+        height: 200px;
+    }
 }
 .app-sidebar.sidebar-text-light{
     border-right:0 !important
@@ -4328,6 +4341,10 @@ input.error {
   .m-33 {
       margin-top: 5px !important;
   }
+  .img-0345{
+    width: 240px;
+    height: 200px;
+    }
 }
 /* ----------- iPad Pro ----------- */
 /* Portrait */
