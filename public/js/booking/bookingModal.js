@@ -2449,8 +2449,8 @@ var bookingModalInvoker = function ($) {
                         )
                         .append(
                             $("<div/>", {
-                                'id': 'history tab-gap-wep',
-                                'class': "tab-pane"
+                                'id': 'history',
+                                'class': "tab-pane tab-gap-wep"
                             }).append(
                                 $("<div/>", {
                                     class: "content"
