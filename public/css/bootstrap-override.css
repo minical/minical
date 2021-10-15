@@ -2964,9 +2964,9 @@ a.btn.disabled,fieldset:disabled a.btn{
     .fc-customCreateBooking-button{
         /* margin-left: 16px !important;*/
         margin-right: 60px !important; 
-        margin-top: 52px;
+        margin-top: 52px !important;
         margin-left: -1px!important;
-        margin-bottom: 27px;
+        margin-bottom: 27px !important;
     }
     /* .filter-booking{
         margin-left: 18px !important;
@@ -2989,7 +2989,7 @@ a.btn.disabled,fieldset:disabled a.btn{
     }
     .form-group.input-group > .check-out-date-wrapper{
         width: 71%!important;
-        margin-left: 2px;
+        margin-left: 2px !important;
     }
     .fix-wep {
         /* width: 73% !important; */
@@ -3242,7 +3242,7 @@ a.btn.disabled,fieldset:disabled a.btn{
     }
     .m-040{
         margin-left: 202px!important;
-        margin-top: -93px;
+        margin-top: -93px !important;
     }
     .btn-group-toggle{
         /* change this class name  booking main page top elment */
