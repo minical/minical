@@ -16,7 +16,7 @@
     <div class="pull-left h4">
         <strong><?php echo l('filters'); ?></strong>
     </div>
-    <div class="col-sm-2 col-md-2 col-lg-2 col-xs-12">
+    <div class="col-sm-3 col-md-2 col-lg-2 col-xs-12">
         <select name="room-type" class="form-control" onchange="filter_data()" id="filter-sapce">
             <option value=""><?php echo l('all_room_types'); ?></option>
             <?php
@@ -28,7 +28,7 @@
         </select>
     </div>    
 
-    <div class="col-sm-2 col-md-2 col-lg-2 col-xs-12">
+    <div class="col-sm-3 col-md-2 col-lg-2 col-xs-12">
         <select name="reservation-type" class="form-control col-sm-4 col-md-4 col-lg-4 col-xs-4" onchange="filter_data()" id="filter-sapce">
             <option value=""><?php echo l('all_bookings_except_cancelled'); ?></option>
             <option value="-1"><?php echo l('all_bookings'); ?></option>
@@ -41,7 +41,7 @@
         </select>
     </div>
 
-    <div class="col-sm-2 col-md-2 col-lg-2 col-xs-12">
+    <div class="col-sm-3 col-md-2 col-lg-2 col-xs-12">
         <select name="booking-source" class="form-control" onchange="filter_data()" id="new-select">
             <option value=""><?php echo l('All Booking Sources'); ?></option>
             <?php

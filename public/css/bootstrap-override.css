@@ -3249,6 +3249,21 @@ a.btn.disabled,fieldset:disabled a.btn{
         position: absolute !important;
         margin-bottom: 20px !important;
     }
+    .m-043{
+        margin-top: 50px !important;
+    }
+    .m-045{
+        margin-left: -3px !important;
+    }
+    .m-046{
+        margin-bottom: 12px !important;
+    }
+    .m-047{
+        position: relative!important;
+    }
+    .m-048{
+        margin-left: -112px;
+    }
 }
 .app-sidebar.sidebar-text-light{
     border-right:0 !important
@@ -4406,6 +4421,23 @@ input.error {
     }
     .fc-left{
         float: left!important;
+    }
+    .m-048 {
+        margin-left: 5px;
+    }
+    .m-055{
+        margin-left: 37px!important;
+        margin-top: 65px!important;
+        position: relative!important;
+    }
+    .m-045 {
+        margin-left: 10px !important;
+    }
+    .m-058{
+        float: left!important;
+    }
+    .m-046 {
+        margin-bottom: 3px !important;
     }
 }
 /* ----------- iPad Pro ----------- */
