@@ -4372,8 +4372,8 @@ input.error {
         display: flex !important;
     }
     .m-040{
-        margin-left: 0px!important;
-        margin-top: 0px;
+        margin-left: 495px!important;
+        margin-top: -110px !important;
     }
     .btn-group-toggle{
         /* change this class name  booking main page top elment */
@@ -4381,8 +4381,11 @@ input.error {
         margin-bottom: 0px !important;
     }
     .fc-button-group{
-        margin-left: 3.5px !important;
+        /* margin-left: 3.5px !important;
+        margin-bottom: 0px !important; */
         margin-bottom: 0px !important;
+        margin-top: 23px;
+        margin-left: 20px!important;
     }
     .fc-customCreateBooking-button{
         /* margin-left: 16px !important;*/
@@ -4391,7 +4394,19 @@ input.error {
         margin-left: 0px!important;
         margin-bottom: 0px;
     }
-
+    .fc-customStartDatePicker-button {
+        margin-top: 40px !important;
+        margin-left: 20px !important;
+        margin-bottom: 15px !important;
+    }
+    .m-041{
+    margin-left: -9px!important;
+    margin-top: 0px !important;
+    margin-bottom: 27px;
+    }
+    .fc-left{
+        float: left!important;
+    }
 }
 /* ----------- iPad Pro ----------- */
 /* Portrait */

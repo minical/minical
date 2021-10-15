@@ -956,7 +956,7 @@ function addCalendarHeaderFilters() {
     $('.fc-toolbar.fc-header-toolbar')
         .find('.fc-right')
         .append(
-            $('<div/>', {class: 'form-inline'})
+            $('<div/>', { class: 'form-inline m-041' })
                 .append(
                     $("<form/>",
                         {
