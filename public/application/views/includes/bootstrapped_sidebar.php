@@ -19,7 +19,7 @@
     $my_companies = $this->Company_model->get_companies($this->user_id);
     
     ?>
-<div class="app-sidebar sidebar-shadow">
+<div class="app-sidebar sidebar-shadow m-038">
     <div class="scrollbar-sidebar ps ps--active-y">
         <div class="sidebar__logo ">
             <ul style="padding-left: 10px;" class="multi-properties hide_properties <?=$this->session->userdata('user_role') == "is_housekeeping" ? "hidden" : "";?>">

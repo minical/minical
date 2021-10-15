@@ -2936,14 +2936,19 @@ a.btn.disabled,fieldset:disabled a.btn{
     }
     .fc-button-group{
         margin-left: 3.5px !important;
+        margin-bottom: -31px !important;
     }
     .fc-customStartDatePicker-button{
         /* margin-bottom: 20px !important;
         margin-top: 9px !important;
         margin-left: 16px !important; */
+        margin-top: 3px !important;
+        margin-left: 4px !important;
+        margin-bottom: 20px !important;
     }
-    .fc-toolbar {
+    .fc-toolbar.fc-header-toolbar {
         display: inherit !important;
+        margin-bottom: -15px!important;
     }
     #new-select{
         margin-bottom: 19px;
@@ -2957,12 +2962,15 @@ a.btn.disabled,fieldset:disabled a.btn{
         margin-bottom: 20px;
     }
     .fc-customCreateBooking-button{
-        margin-left: 16px !important;
-        margin-right: 28px !important;
+        /* margin-left: 16px !important;*/
+        margin-right: 60px !important; 
+        margin-top: 52px;
+        margin-left: -1px!important;
+        margin-bottom: 27px;
     }
-    .filter-booking{
+    /* .filter-booking{
         margin-left: 18px !important;
-    }
+    } */
    /* .booking-modal-body{
          margin-top: -92em !important; 
     } */
@@ -3225,6 +3233,21 @@ a.btn.disabled,fieldset:disabled a.btn{
     .img-0345{
         width: 240px;
         height: 200px;
+    }
+    .m-038{
+        height: 95% !important;
+    }
+    .m-039{
+        display: flex !important;
+    }
+    .m-040{
+        margin-left: 202px!important;
+        margin-top: -93px;
+    }
+    .btn-group-toggle{
+        /* change this class name  booking main page top elment */
+        position: absolute !important;
+        margin-bottom: 20px !important;
     }
 }
 .app-sidebar.sidebar-text-light{
@@ -4345,6 +4368,30 @@ input.error {
     width: 240px;
     height: 200px;
     }
+    .m-039{
+        display: flex !important;
+    }
+    .m-040{
+        margin-left: 0px!important;
+        margin-top: 0px;
+    }
+    .btn-group-toggle{
+        /* change this class name  booking main page top elment */
+        position: absolute !important;
+        margin-bottom: 0px !important;
+    }
+    .fc-button-group{
+        margin-left: 3.5px !important;
+        margin-bottom: 0px !important;
+    }
+    .fc-customCreateBooking-button{
+        /* margin-left: 16px !important;*/
+        margin-right: 0px !important; 
+        margin-top: 0px;
+        margin-left: 0px!important;
+        margin-bottom: 0px;
+    }
+
 }
 /* ----------- iPad Pro ----------- */
 /* Portrait */
