@@ -1339,7 +1339,11 @@ $(function() {
         }
     });
 
-    $(document).on("click", ".charge_row .x-button", function() {
+    // $(document).on("click", ".charge_row .x-button", function() {
+    //     innGrid.deleteChargeRow($(this));
+    // });
+
+    $('.delete_charge').on("click", function() {
         innGrid.deleteChargeRow($(this));
     });
 
@@ -2089,43 +2093,3 @@ function calculatePOSTotal() {
     $('.pos-total').text(number_format(total, 2));
 }
 
-$(document).on('keyup', '.search_pos', function() {
-    var item = $(this).val();
-    var bookingID = $('.pos_booking_id').val();
-
-    $.ajax({
-        type: "POST",
-        url: getBaseURL() + 'invoice/search_pos_items',
-        data: { item: item },
-        dataType: "json",
-        success: function(data) {
-            // console.log(data);
-            var pos_item_result = extraID = extraName = "";
-            var extraRate = 0;
-            $.each(data, function(index, value) {
-                extraRate = value.rate ? value.rate : 0;
-
-                extraID = "'" + value.extra_id + "'";
-                extraName = "'" + value.extra_name + "'";
-                extraChargeTypeID = "'" + value.charge_type_id + "'";
-                extraChargeTypeName = "'" + value.name + "'";
-
-                pos_item_result += '<div onclick="posItem(' + extraID + ',' + extraName + ',' + extraRate + ',' + extraChargeTypeID + ',' + extraChargeTypeName + ',' + extraRate + ')" id="' + value.extra_id + '" class="col-sm-3 pos-item" title="click to add" >' +
-                    '<input type="hidden" name="booking_id" class="inv_booking_id" value="' + bookingID + '">' +
-                    '<h4 class="extra_name_' + value.extra_id + '" data-extra_name="' + value.extra_name + '">' +
-                    value.extra_name +
-                    '</h4>' +
-                    '<div>' +
-                    '<div class="pull-left extra_charge_type_' + value.extra_id + '" id="' + value.charge_type_id + '">' +
-                    '<small>' + value.name +
-                    '</small>' +
-                    '</div>' +
-                    '</div>' +
-                    '</div>';
-                console.log('pos_item_result', pos_item_result);
-            });
-
-            $('.pos_items').html(pos_item_result);
-        }
-    });
-})

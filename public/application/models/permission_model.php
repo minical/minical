@@ -113,6 +113,12 @@ class Permission_model extends CI_Model {
                 ) ||
                 // channel manager update
                 $controller_name === "channel_manager"
+                ||
+                ($controller_name === "settings" &&
+                    (
+                        $function_name == "show_booking_list"
+                    )
+                )
 
             ) {
                 return true;
@@ -261,6 +267,11 @@ class Permission_model extends CI_Model {
 							$function_name == 'update_notes_AJAX' || $function_name == 'set_rooms_clean'
 						)
                     )
+                )
+                ||
+                (
+                    $permission == 'access_to_extensions' && 
+                    ($controller_name == 'extensions' || $this->router->fetch_module() != '')
                 )
             )
             {

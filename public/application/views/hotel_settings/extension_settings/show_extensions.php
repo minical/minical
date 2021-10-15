@@ -32,7 +32,7 @@ $bootstrapColWidth = 12 / $numOfCols;
      <div class="main-extension">
              <div class="icon">
 
-            <img src="<?php echo (isset($extension['image_name']) && $extension['image_name']) ?  base_url().'/images/'.$extension['image_name'] : ''?>" onerror="this.src='<?php echo base_url().'application/extensions/'.$extension['extension_folder_name'].'/'.$extension['image_name'];?>'" style="width: 30px;height: 30px">
+            <img src="<?php echo (isset($extension['image_name']) && $extension['image_name']) ?  base_url().'/images/'.$extension['image_name'] : ''?>" style="width: 30px;height: 30px">
             </div>
             <div class="extension-content">
                 <b style="font-size: 12px;"><?php
@@ -64,7 +64,7 @@ $bootstrapColWidth = 12 / $numOfCols;
                         name="<?php echo $extension['extension_folder_name']; ?>"
                         data-status="<?php echo $extension['is_active']; ?>">
                         
-                        <?php if($extension['is_active'] == 1 && $extension['setting_link'] !=null){
+                        <?php if($extension['is_active'] == 1 && $extension['setting_link'] !=null && $this->user_permission != 'is_employee'){
                             echo '<i class="pe-7s-config text-primary"></i>';
                         }else{
                             echo '';
@@ -87,7 +87,9 @@ $bootstrapColWidth = 12 / $numOfCols;
                     <label class="extension-box" style="padding-right: 1.5rem !important;">
                      <input type="checkbox" class="extension-status-button" data-status="<?php echo $extension['is_active']; ?>" name="<?php echo $extension['extension_folder_name']; ?>"
                                <?= $extension['is_active'] ? 'checked=checked' : ''; ?>/>
-                        <span></span>
+                        <?php if($this->user_permission != 'is_employee'){ ?>
+                            <span></span>
+                        <?php } ?>
                     </label>
                 </div>
             </div>

@@ -85,7 +85,8 @@ class User_model extends CI_Model {
                 array("permission" => "can_edit_invoices",      "company_id" => $company_id, "user_id" => $user_id),
 				array("permission" => "can_post_charges_payments",		"company_id" => $company_id, "user_id" => $user_id),
                 array("permission" => "can_modify_charges",		"company_id" => $company_id, "user_id" => $user_id),
-				array("permission" => "can_date_manage",		"company_id" => $company_id, "user_id" => $user_id)
+                array("permission" => "can_modify_charges",     "company_id" => $company_id, "user_id" => $user_id),
+				array("permission" => "access_to_extensions",	"company_id" => $company_id, "user_id" => $user_id)
 			);
 			$this->db->insert_batch('user_permissions', $default_permissions);
 		}
@@ -500,7 +501,7 @@ class User_model extends CI_Model {
     function get_user_by_id($id, $get_company_data = true)
     {
         if ($get_company_data) {
-            $this->db->select('users.tos_agreed_date, users.email, users.is_overview_calendar, user_profiles.first_name, user_profiles.last_name, company.phone, company.address, company.city, company.country');
+            $this->db->select('users.tos_agreed_date, users.email, users.is_overview_calendar, user_profiles.first_name, user_profiles.last_name, company.phone, company.address, company.city, company.country, user_permissions.permission');
             $this->db->from('users');
             $this->db->join('user_permissions','user_permissions.user_id=users.id','left');
             $this->db->join('user_profiles','user_profiles.user_id=users.id','left');

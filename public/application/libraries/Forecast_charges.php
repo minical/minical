@@ -897,7 +897,9 @@ class Forecast_charges
         }
         elseif($pay_period == ONE_TIME)
         {
-            if($start_date)
+            $last_room_charge = $this->ci->Charge_model->get_last_applied_charge($booking_id, $booking_details['charge_type_id'], null, true);
+            
+            if($start_date && !$last_room_charge && $check_out_date >= $this->ci->selling_date)
             {
 				$tax_total = 0;
                 if($tax_rates && count($tax_rates) > 0)

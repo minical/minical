@@ -97,7 +97,8 @@
 				Array("title" => l("Can delete bookings", true), "value" => "can_delete_bookings"),
                 Array("title" => l("Can date manage", true), "value" => "can_date_manage"),
                 //Array("title" => "Can delete payments", "value" => "can_delete_payments"),
-                Array("title" => l("Minical reseller (access to /admin)", true), "value" => "is_salesperson")
+                Array("title" => l("Minical reseller (access to /admin)", true), "value" => "is_salesperson"),
+                Array("title" => l("Can view extensions & functionality", true), "value" => "access_to_extensions")
 				);
             if(isset($employees)) : 
 		?>
