@@ -64,7 +64,7 @@ $bootstrapColWidth = 12 / $numOfCols;
                         name="<?php echo $extension['extension_folder_name']; ?>"
                         data-status="<?php echo $extension['is_active']; ?>">
                         
-                        <?php if($extension['is_active'] == 1 && $extension['setting_link'] !=null){
+                        <?php if($extension['is_active'] == 1 && $extension['setting_link'] !=null && $this->user_permission != 'is_employee'){
                             echo '<i class="pe-7s-config text-primary"></i>';
                         }else{
                             echo '';
@@ -87,7 +87,9 @@ $bootstrapColWidth = 12 / $numOfCols;
                     <label class="extension-box" style="padding-right: 1.5rem !important;">
                      <input type="checkbox" class="extension-status-button" data-status="<?php echo $extension['is_active']; ?>" name="<?php echo $extension['extension_folder_name']; ?>"
                                <?= $extension['is_active'] ? 'checked=checked' : ''; ?>/>
-                        <span></span>
+                        <?php if($this->user_permission != 'is_employee'){ ?>
+                            <span></span>
+                        <?php } ?>
                     </label>
                 </div>
             </div>

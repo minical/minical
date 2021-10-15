@@ -268,6 +268,11 @@ class Permission_model extends CI_Model {
 						)
                     )
                 )
+                ||
+                (
+                    $permission == 'access_to_extensions' && 
+                    ($controller_name == 'extensions' || $this->router->fetch_module() != '')
+                )
             )
             {
                 return true;
