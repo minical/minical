@@ -1,26 +1,25 @@
-<?php
-$module_menus = $this->module_menus;
-$side_menus = $sub_menus = $sidebar_menus = array(); 
-
-$menus = $this->session->userdata('menus');
-
-if ($menus && isset($menus['primary_menus']) && $menus['primary_menus']) {
-    $primary_menus = $menus['primary_menus'];
-} else {
-    $primary_menus = $this->Menu_model->get_menus(array('parent_id' => 0, 'partner_type_id' => 1));
-    $menus['primary_menus'] = $primary_menus;
-    $this->session->set_userdata('menus', $menus);
-}
-
-$first_segment= $this->uri->segment(1);
-$second_segment= $this->uri->segment(2);
-$third_segment= $this->uri->segment(3);
-
-$my_companies = $this->Company_model->get_companies($this->user_id);
-
-?>
-<div class="app-sidebar sidebar-shadow">
-
+<?php 
+    $module_menus = $this->module_menus;
+    $side_menus = $sub_menus = $sidebar_menus = array(); 
+    
+    $menus = $this->session->userdata('menus');
+    
+    if ($menus && isset($menus['primary_menus']) && $menus['primary_menus']) {
+        $primary_menus = $menus['primary_menus'];
+    } else {
+        $primary_menus = $this->Menu_model->get_menus(array('parent_id' => 0, 'partner_type_id' => 1));
+        $menus['primary_menus'] = $primary_menus;
+        $this->session->set_userdata('menus', $menus);
+    }
+    
+    $first_segment= $this->uri->segment(1);
+    $second_segment= $this->uri->segment(2);
+    $third_segment= $this->uri->segment(3);
+    
+    $my_companies = $this->Company_model->get_companies($this->user_id);
+    
+    ?>
+<div class="app-sidebar sidebar-shadow m-038">
     <div class="scrollbar-sidebar ps ps--active-y">
         <div class="sidebar__logo ">
 

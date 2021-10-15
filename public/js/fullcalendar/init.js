@@ -985,7 +985,7 @@ function addCalendarHeaderFilters() {
                 .append(
                     $("<button/>", {
                         href: '#',
-                        class: 'btn btn-light filter-booking',
+                        class: 'btn btn-light filter-booking m-040',
                         style: 'margin-left:10px',
                         text: l('More Filters', true)
                     }).on('click', function () {
