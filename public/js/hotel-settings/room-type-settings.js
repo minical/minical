@@ -419,6 +419,14 @@ $('body').on('change', '.max-occupancy', function(){
 
 $('body').on('input', '.rt-occupancy-slider', function(){
     var range = $(this).val();
+
+    var maxAdultsRange = $('#max-adults-range').val();
+    var maxChildrenRange = $('#max-children-range').val();
+
+    var total = parseInt(parseInt(maxAdultsRange) + parseInt(maxChildrenRange));
+
+    $('.max_occupancy').parents('.range_occupancy').find(".slider-range").slider('values', 1, total);
+    $('.max_occupancy').val(total);
     $(this).parent('div.occupancy-range').next('div.rt-occupancy').find('.slider_value').val(range);
 });
 
@@ -441,7 +449,7 @@ $( ".slider-range" ).each(function() {
     $(this).slider({
         range: true,
         min: 1,
-        max: 30,
+        max: 60,
         values: [ $(this).data('min'), $(this).data('max') ],
         slide: function( event, ui ) {
             $(this).parents('.range_occupancy').find('.min_occupancy').val(ui.values[ 0 ]);

@@ -17,6 +17,7 @@ class MY_Controller extends CI_Controller {
     public $module_menus;
     public $current_payment_gateway;
     public $is_super_admin;
+    public $all_active_modules;
 
 
     public function __construct()
@@ -53,7 +54,7 @@ class MY_Controller extends CI_Controller {
         $modules_path = $this->config->item('module_location'); 
         $modules = scandir($modules_path);
 
-        $extensions = $this->session->userdata('all_active_modules');
+        // $extensions = $this->session->userdata('all_active_modules');
         
         foreach($modules as $module)
         {
@@ -88,7 +89,9 @@ class MY_Controller extends CI_Controller {
             }
         }
 
-        $this->session->set_userdata('all_active_modules', $all_active_modules);
+        $this->all_active_modules = $all_active_modules;
+
+        // $this->session->set_userdata('all_active_modules', $all_active_modules);
 
         $this->module_assets_files = array();
         $modules_path = $this->config->item('module_location');     
@@ -290,7 +293,7 @@ class MY_Controller extends CI_Controller {
             $this->selected_payment_gateway = $company['selected_payment_gateway'];
             $this->booking_cancelled_with_balance = $company['booking_cancelled_with_balance'];
 
-            $user = $this->User_model->get_user_by_id($this->user_id, FALSE);
+            $user = $this->User_model->get_user_by_id($this->user_id);
             $this->user_email = $user['email'];
             $this->company_is_tos_agreed = ($user['tos_agreed_date'] >= TOS_PUBLISH_DATE);
             $this->is_overview_calendar = false; // $user['is_overview_calendar'];
@@ -307,6 +310,8 @@ class MY_Controller extends CI_Controller {
 
             $admin_user_ids = $this->Whitelabel_partner_model->get_partner_detail();
             $this->is_super_admin = (($user && isset($user['email']) && $user['email'] == SUPER_ADMIN) || ($admin_user_ids && isset($admin_user_ids['admin_user_id']) && $this->user_id == $admin_user_ids['admin_user_id']));
+
+            $this->user_permission = ($user && isset($user['permission']) && $user['permission']) ? $user['permission'] : '';
 
             if($this->is_super_admin){
                 $get_active_extensions = $this->Extension_model->get_active_extensions($this->company_id, 'reseller_package', false);
@@ -353,7 +358,7 @@ class MY_Controller extends CI_Controller {
                     $this->session->set_userdata('white_label_information', $white_label_detail[0]);
                 }
             }
-            
+
             if(
                 $this->company_feature_limit == 1 && 
                 $this->company_subscription_state != 'trialing' &&

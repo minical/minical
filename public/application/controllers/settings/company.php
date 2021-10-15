@@ -549,6 +549,7 @@ class Company extends MY_Controller
                 'automatic_email_cancellation' => $this->input->post('automatic_email_cancellation'),
                 'send_booking_notes' => $this->input->post('send_booking_notes'),
                 'email_confirmation_for_ota_reservations' => $this->input->post('email_confirmation_for_ota_reservations'),
+                'email_cancellation_for_ota_reservations' => $this->input->post('email_cancellation_for_ota_reservations'),
                 'allow_non_continuous_bookings' => $this->input->post('allow_non_continuous_bookings'),
                 'maximum_no_of_blocks' => $this->input->post('maximum_no_of_blocks'),
                 'make_guest_field_mandatory' => $this->input->post('make_guest_field_mandatory'),
@@ -772,7 +773,11 @@ class Company extends MY_Controller
                     }
 
                     unlink($location);
-                    // rmdir($path . $name);  
+                    
+                    echo ("<script LANGUAGE='JavaScript'>
+                            window.alert('Succesfully Imported');
+                            window.location.href='".base_url()."';
+                            </script>"); 
                 }
             }
         }
@@ -821,7 +826,14 @@ class Company extends MY_Controller
                     $sold_online = $room['Room Can be Sold online'] == 'true' ? 1 : 0 ;
                     $sort_order = isset($room['Sort Order']) && $room['Sort Order'] != '' && $room['Sort Order'] != null ? $room['Sort Order'] : 0 ;
 
-                    $room_id = $this->Room_model->create_rooms($this->company_id, $room['Room Name'], $room_type_id, $sort_order,$sold_online);
+                    $room_id = $this->Room_model->create_rooms(
+                                            $this->company_id, 
+                                            $room['Room Name'],
+                                            $room_type_id, 
+                                            $sort_order,
+                                            $sold_online,
+                                            $room['Status']
+                                        );
 
                     $data_import_mapping = Array(
                         "new_id" => $room_id,
@@ -921,7 +933,7 @@ class Company extends MY_Controller
 
         foreach ($value as $charge) {
 
-            $get_charge_name = $this->Charge_type_model->get_charge_type_by_name($charge['Charge Type'],$this->company_id);
+            // $get_charge_name = $this->Charge_type_model->get_charge_type_by_name($charge['Charge Type'],$this->company_id);
             $get_the_charge_type = $this->Import_mapping_model->get_mapping_charge_id($charge['Charge Type Id']);
             // /prx($get_the_charge_type);
 
@@ -990,7 +1002,7 @@ class Company extends MY_Controller
                         "amount" => $charge['Amount'] == '' ? 0 : $charge['Amount'],
                         "charge_type_id" => $charge_type_id,
                         "selling_date" => $charge['Selling Date'],
-                        "customer_id" => $customer_id['new_id'],
+                        "customer_id" => isset($customer_id['new_id']) && $customer_id['new_id'] ? $customer_id['new_id'] : null,
                         "pay_period" => $pay_period,
                         "is_night_audit_charge" => $charge['Night Audit Charge'] == 'true' ? 1 : 0
 
@@ -1020,7 +1032,7 @@ class Company extends MY_Controller
 
         foreach ($value as $rate) {
 
-            $get_rate_plan = $this->Rate_plan_model->get_rate_plan_by_name($rate['Name'], $this->company_id);
+            // $get_rate_plan = $this->Rate_plan_model->get_rate_plan_by_name($rate['Name'], $this->company_id);
 
             $get_import_rate_plan = $this->Import_mapping_model->get_rate_plan_mapping_id($rate['Rate Plan Id']);
 
@@ -1079,7 +1091,8 @@ class Company extends MY_Controller
                         'minimum_length_of_stay' => $rate['Min Length of Stay'] ? $rate['Min Length of Stay'] : null,
                         'maximum_length_of_stay' => $rate['Max Length of Stay'] ? $rate['Max Length of Stay'] : null,
                         'closed_to_departure' => $rate['Close to Departure'] == 'true' ? 1 : 0,
-                        'closed_to_arrival' => $rate['Close to Arrival'] == 'true' ? 1 : 0
+                        'closed_to_arrival' => $rate['Close to Arrival'] == 'true' ? 1 : 0,
+                        'can_be_sold_online' => $rate['Can be sold online'] == 'true' ? 1 : 0
                     )
                 );
 
@@ -1222,9 +1235,14 @@ class Company extends MY_Controller
 
         foreach ($value as $booking) {
 
-            $charge_type_id = $this->Charge_type_model->get_charge_type_by_name($booking['Charge Type'], $this->company_id);
-            $room_type_id = $this->Room_type_model->get_room_type_name($booking['Room Type'], $this->company_id);
-            $room_id = $this->Room_model->get_room_by_name($booking['Room'] , $room_type_id[0]['id']);
+            // $charge_type_id = $this->Charge_type_model->get_charge_type_by_name($booking['Charge Type'], $this->company_id);
+            $charge_type_id = $this->Import_mapping_model->get_mapping_charge_id($booking['Charge Type']);
+            
+            // $room_type_id = $this->Room_type_model->get_room_type_name($booking['Room Type'], $this->company_id);
+            $room_type_id = $this->Import_mapping_model->get_mapping_room_type_id($booking['Room Type']);
+            
+            // $room_id = $this->Room_model->get_room_by_name($booking['Room'] , $room_type_id[0]['id']);
+            $room_id = $this->Import_mapping_model->get_mapping_room_id($booking['Room']);
 
             $rate_plan_id = $this->Import_mapping_model->get_rate_plan_mapping_id($booking['Rate Plan Id']);
 
@@ -1251,36 +1269,35 @@ class Company extends MY_Controller
             }
 
             $source = "";
-            switch ($booking['Source']) {
-                case "Walk-in / Telephone" : $source = '0'; break;
-                case "Online Widget" : $source = '1'; break;
-                case "Booking Dot Com" : $source = '2'; break;
-                case "Expedia" : $source = '3'; break;
-                case "Agoda" : $source = '4'; break;
-                case "Trip Connect" : $source = '5'; break;
-                case "Air BNB" : $source = '6'; break;
-                case "Hotel World" : $source = '7'; break;
-                case "Myallocator" : $source = '8'; break;
-                case "Company" : $source = '9'; break;
-                case "Guest Member" : $source = '10'; break;
-                case "Owner" : $source = '11'; break;
-                case "Returning Guest" : $source = '12'; break;
-                case "Apartment" : $source = '13'; break;
-                case "sitminder" : $source = '14'; break;
-                case "Seasonal" : $source = '15'; break;
-                case "Other taravel agency" : $source = '20'; break;
 
-            }
+            if(isset($booking['Custom Booking Source']) && $booking['Custom Booking Source'] != ''){
 
-            if($source == ''){
-
-                $get_source = $this->Booking_source_model->get_booking_source_by_company($this->company_id, $booking['Source']);
+                $get_source = $this->Booking_source_model->get_booking_source_by_company($this->company_id, $booking['Custom Booking Source']);
                 if(empty($get_source)){
-                    $source = $this->Booking_source_model->create_booking_source($this->company_id, $booking['Source']);
+                    $source = $this->Booking_source_model->create_booking_source($this->company_id, $booking['Custom Booking Source']);
                 }else{
-                    $source = isset($get_source['id']) ? $get_source['id'] : 0 ;
+                    $source = $get_source ? $get_source : 0 ;
                 }
-
+            } else {
+                switch ($booking['Source']) {
+                    case "Walk-in / Telephone" : $source = '0'; break;
+                    case "Online Widget" : $source = '-1'; break;
+                    case "Booking Dot Com" : $source = '-2'; break;
+                    case "Expedia" : $source = '-3'; break;
+                    case "Agoda" : $source = '-4'; break;
+                    case "Trip Connect" : $source = '-5'; break;
+                    case "Air BNB" : $source = '-6'; break;
+                    case "Hotel World" : $source = '-7'; break;
+                    case "Myallocator" : $source = '-8'; break;
+                    case "Company" : $source = '-9'; break;
+                    case "Guest Member" : $source = '-10'; break;
+                    case "Owner" : $source = '-11'; break;
+                    case "Returning Guest" : $source = '-12'; break;
+                    case "Apartment" : $source = '-13'; break;
+                    case "sitminder" : $source = '-14'; break;
+                    case "Seasonal" : $source = '-15'; break;
+                    case "Other taravel agency" : $source = '-20'; break;
+                }
             }
 
 
@@ -1292,16 +1309,16 @@ class Company extends MY_Controller
                     "adult_count" => $booking['Adult Count'] == '' ? null : $booking['Adult Count'],
                     "children_count" => $booking['Children Count'] == '' ? null : $booking['Children Count'],
                     "booking_customer_id" => $customer_id['new_id'],
-                    "booking_notes" => $booking['Booking Note'] == '' ? null : $booking['Booking Note'] ,
+                    "booking_notes" => $booking['Booking Note'] == '' ? '' : $booking['Booking Note'] ,
                     "booked_by" => $booking['Booked By'] == '' ? null : $booked_by['new_id'],
                     "balance" => $booking['Balance'] == '' ? null : $booking['Balance'],
                     "balance_without_forecast" => $booking['Balance Without Forecast'] == '' ? null : $booking['Balance Without Forecast'],
                     "use_rate_plan" => $booking['Use Rate Plan'] == 'true' ? 1 : 0,
                     "rate_plan_id" => $rate_plan_id['new_id'] == '' ? null : $rate_plan_id['new_id'],
                     "color" => $booking['Color'] != '' ? $booking['Color'] : '',
-                    "charge_type_id" => $charge_type_id['id'],
+                    "charge_type_id" => $charge_type_id['new_id'],
                     "pay_period" => isset($pay_period) ? $pay_period : 0,
-                    "source" => isset($source) ? $source : 0 ,
+                    "source" => $source ? $source : 0 ,
                     "company_id" => $this->company_id,
                     "state" => isset($state) ? $state : 0
 
@@ -1343,26 +1360,17 @@ class Company extends MY_Controller
                                 $this->Booking_model->create_booking_staying_customer($data);
 
                             }
-
-
-
-
                         }
 
                     }
                 }
 
-
                 foreach($booking as $key => $booking_data) {
-
-                    $key_name =  array(
-                        "Booking Id","Rate","Adult Count","Children Count","State","Booking Customer Id","Booked By","Balance","Balance Without Forecast","Use Rate Plan","Rate Plan Id","Color","Charge Type","Check In Date","Check Out Date","Room","Room Type","Group Id","Group Name","Daily Charges","Pay Period","Source","Custom  Booking Source","Booking Note","Booking Room History","Staying Customers"
+                    $key_name = array(
+                        "Booking Id","Rate","Adult Count","Children Count","State","Booking Customer Id","Booked By","Balance","Balance Without Forecast","Use Rate Plan","Rate Plan Id","Color","Charge Type","Check In Date","Check Out Date","Room","Room Type","Group Id","Group Name", "Daily Charges", "Pay Period", "Source", "Custom Booking Source","Booking Note","Booking Room History","Staying Customers"
                     );
 
-
-
                     if (!in_array($key, $key_name) ) {
-
 
                         $existing_booking_field = $this->Booking_field_model->get_the_booking_fields_by_name($key , $this->company_id);
 
@@ -1428,8 +1436,8 @@ class Company extends MY_Controller
 
                 $booking_data_fileds = Array(
                     "booking_id" => $booking_id['new_id'],
-                    "room_id" => isset($room_id[0]['room_id']) &&  $room_id[0]['room_id'] ? $room_id[0]['room_id'] : 0,
-                    "room_type_id" => isset($room_type_id[0]['id']) && $room_type_id[0]['id'] ? $room_type_id[0]['id'] : 0,
+                    "room_id" => isset($room_id['new_id']) &&  $room_id['new_id'] ? $room_id['new_id'] : 0,
+                    "room_type_id" => isset($room_type_id['new_id']) && $room_type_id['new_id'] ? $room_type_id['new_id'] : 0,
                     "check_in_date" => $booking['Check In Date'] == '' ? null : $booking['Check In Date'],
                     "check_out_date" => $booking['Check Out Date'] == '' ? null : $booking['Check Out Date']
 
@@ -1457,7 +1465,7 @@ class Company extends MY_Controller
         foreach ($value as $extra) {
 
             $extras = $this->Import_mapping_model->get_extra_mapping($extra['Extra Id']);
-            $charge_type_id = $this->Charge_type_model->get_charge_type_by_name($extra['Charge Type'], $this->company_id);
+            $charge_type_id = $this->Import_mapping_model->get_mapping_charge_id($extra['Charge Type']);
             if(empty($extras)){
 
                 $data = array (
@@ -1466,7 +1474,7 @@ class Company extends MY_Controller
                     'extra_type' => $extra['Extra Type'] != '' ? $extra['Extra Type'] : null ,
                     'charging_scheme' => $extra['Charging Scheme'] != '' ? $extra['Charging Scheme'] : null ,
                     'show_on_pos' => $extra['Show on POS'],
-                    'charge_type_id' => $charge_type_id['id'] ? $charge_type_id['id'] : 0
+                    'charge_type_id' => $charge_type_id['new_id'] ? $charge_type_id['new_id'] : 0
 
                 );
 
@@ -1655,8 +1663,8 @@ class Company extends MY_Controller
             'is_display_tooltip' => isset($value['Feature settings']['Display Tooltip']) ? $value['Feature settings']['Display Tooltip'] : "",
             'ask_for_review_in_invoice_email' => isset($value['Feature settings']['Ask For Review In Invoice Email']) ? $value['Feature settings']['Ask For Review In Invoice Email'] : "",
             'redirect_to_trip_advisor' => isset($value['Feature settings']['Redirect To Trip Advisor']) ? $value['Feature settings']['Redirect To Trip Advisor'] : "",
-            // 'email_confirmation_for_ota_reservations' => isset($value['Feature settings']['Email Confirmation For Ota Reservations']) ? $value['Feature settings']['Email Confirmation For Ota Reservations'] : "",
-            // 'email_cancellation_for_ota_reservations' => isset($value['Feature settings']['Email Cancellation For Ota Reservations']) ? $value['Feature settings']['Email Cancellation For Ota Reservations'] : "",
+            'email_confirmation_for_ota_reservations' => isset($value['Feature settings']['Email Confirmation For Ota Reservations']) ? $value['Feature settings']['Email Confirmation For Ota Reservations'] : "",
+            'email_cancellation_for_ota_reservations' => isset($value['Feature settings']['Email Cancellation For Ota Reservations']) ? $value['Feature settings']['Email Cancellation For Ota Reservations'] : "",
             'allow_non_continuous_bookings' => isset($value['Feature settings']['Allow Non Continuous Bookings']) ? $value['Feature settings']['Allow Non Continuous Bookings'] : "",
             'maximum_no_of_blocks' => isset($value['Feature settings']['Maximum No Of Blocks']) ? $value['Feature settings']['Maximum No Of Blocks'] : "",
             'force_room_selection' => isset($value['Feature settings']['Force Room Selection']) ? $value['Feature settings']['Force Room Selection'] : "",
@@ -1737,7 +1745,6 @@ class Company extends MY_Controller
 
         //         $this->User_model->add_teams($this->company_id, $user['user_id'],$team['permission']);
         //     }
-
         // }
 
         $booking_fields = $value['Booking Fields'];

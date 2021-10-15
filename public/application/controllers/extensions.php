@@ -20,7 +20,7 @@ class Extensions extends MY_Controller
 	// Called from booking_form.js
 	function get_all_extensions()
 	{
-		$all_active_modules = $this->session->userdata('all_active_modules');
+		$all_active_modules = $this->all_active_modules;
 
         if($this->is_super_admin != 1){
             foreach ($all_active_modules as $key => $value) {

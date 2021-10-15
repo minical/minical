@@ -190,7 +190,12 @@
 
 				<?php if(isset($menu_on) && $menu_on){ ?>
                     <?php
-                        if(current_url() != $protocol . $_SERVER['HTTP_HOST'].'/booking' && !str_ends_with(current_url(), '/public/booking')){
+                        if(
+                        	current_url() != $protocol . $_SERVER['HTTP_HOST'].'/booking' &&
+                        	!str_ends_with(current_url(), '/public/booking') &&
+                        	current_url() != $protocol . $_SERVER['HTTP_HOST'].'/booking/overview' &&
+                        	!str_ends_with(current_url(), '/public/booking/overview')
+                        ){
                             ?>
                             <div class="app-main__outer main" ><div class="app-main__inner">
                         <?php
