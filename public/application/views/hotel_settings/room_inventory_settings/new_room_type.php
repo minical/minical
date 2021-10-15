@@ -28,7 +28,7 @@
 			<div class="clearfix range_occupancy">
                 <div class="col-md-1"></div>
                 <div class="col-md-3">
-                	<input type="number" name="min-occupancy " class="ranged_slider_value min_occupancy min-wep" value="1" size="1" min="1" max="30" style="float: right; margin-top: -6px;">
+                	<input type="number" name="min-occupancy" class="ranged_slider_value min_occupancy min-wep" value="1" size="1" min="1" max="30" style="float: right; margin-top: -6px;">
                 </div>
             	<div class="col-md-5 min-max-occupancy-range">
                     <div class="slider-range" data-min="1" data-max="8"></div>

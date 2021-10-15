@@ -35,7 +35,7 @@
 									<div class="clearfix range_occupancy">
                                         <div class="col-md-3"></div>
                                         <div class="col-md-1 ">
-	                                    	<input type="number" name="min-occupancy " class="ranged_slider_value min_occupancy min-wep" value="<?php echo $room_type['min_occupancy']; ?>" size="1" min="1" max="30" style="float: right; margin-top: -6px;">
+	                                    	<input type="number" name="min-occupancy" class="ranged_slider_value min_occupancy min-wep" value="<?php echo $room_type['min_occupancy']; ?>" size="1" min="1" max="30" style="float: right; margin-top: -6px;">
 	                                    </div>
                                     	<div class="col-md-7 min-max-occupancy-range">
   											<div class="slider-range" data-min="<?php echo $room_type['min_occupancy']; ?>" data-max="<?php echo $room_type['max_occupancy']; ?>"></div>
