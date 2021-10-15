@@ -34,7 +34,7 @@
                     <div class="slider-range" data-min="1" data-max="8"></div>
 				</div>
 				<div class="col-md-1 rt-occupancy">
-                	<input type="number" name="max-occupancy" class="ranged_slider_value max_occupancy max-wep" value="8" size="1" min="1" max="30" style="float: right; margin-top: -6px;">
+                	<input type="number" name="max-occupancy" class="ranged_slider_value max_occupancy max-wep" value="8" size="1" min="1" max="60" style="float: right; margin-top: -6px;">
                 </div>
             </div>                                    
         </div>

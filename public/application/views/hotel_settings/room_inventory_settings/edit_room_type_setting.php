@@ -41,7 +41,7 @@
   											<div class="slider-range" data-min="<?php echo $room_type['min_occupancy']; ?>" data-max="<?php echo $room_type['max_occupancy']; ?>"></div>
 										</div>
 										<div class="col-md-1 rt-occupancy">
-	                                    	<input type="number" name="max-occupancy" class="ranged_slider_value max_occupancy max-wep" value="<?php echo $room_type['max_occupancy']; ?>" size="1" min="1" max="30" style="float: right; margin-top: -6px;">
+	                                    	<input type="number" name="max-occupancy" class="ranged_slider_value max_occupancy max-wep" value="<?php echo $room_type['max_occupancy']; ?>" size="1" min="1" max="60" style="float: right; margin-top: -6px;">
 	                                    </div>
                                     </div>                                    
                                 </div>
