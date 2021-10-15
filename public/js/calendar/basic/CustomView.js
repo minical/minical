@@ -129,7 +129,7 @@ function CustomView(element, calendar) {
         });
 
         $content = $('<div>')
-            .addClass('fc-header-title-custom form-group')
+            .addClass('fc-header-title-custom form-group m-055')
             .append(l('show')+': ')
             .append($dateStart)
             .append(' '+l('to')+' ')
