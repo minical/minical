@@ -8378,6 +8378,13 @@ CREATE TABLE `image_type` (
   `height` int(5) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+
+INSERT INTO `image_type` (`id`,`name`,`width`,`height`) VALUES (1,'Logo',200,100);
+INSERT INTO `image_type` (`id`,`name`,`width`,`height`) VALUES (2,'Gallery',960,640);
+INSERT INTO `image_type` (`id`,`name`,`width`,`height`) VALUES (3,'Slide',1280,493);
+INSERT INTO `image_type` (`id`,`name`,`width`,`height`) VALUES (4,'Rate Plan',960,640);
+INSERT INTO `image_type` (`id`,`name`,`width`,`height`) VALUES (5,'Room Type',960,640);
+
 -- --------------------------------------------------------
 
 --

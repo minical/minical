@@ -736,7 +736,7 @@
             </div>
 
 
-            <div class="form-group features-div-padding ">
+            <!-- <div class="form-group features-div-padding ">
                 <div class="checkbox checbox-switch switch-primary">
                     <label>
                         <input type="checkbox" name="enable_new_calendar"
@@ -745,7 +745,7 @@
                     </label>
                     <label for="enable_new_calendar"><b><?= l("Enable new calendar UI (with hourly calendar support)", true); ?></b></label>
                 </div>
-            </div>
+            </div> -->
 
             <div class="form-group features-div-padding  form-inline">
 
