@@ -994,38 +994,38 @@ function addCalendarHeaderFilters() {
                 )
         );
 
-        $('.fc-toolbar.fc-header-toolbar')
-        .find('.fc-left')
-        .prepend(
-            $('<div/>', {class: 'btn-group btn-group-toggle', data_toggle: "buttons"})
-                .append(
-                    $('<a/>', {
-                        href: getBaseURL()+'booking/overview',
-                        class: 'btn btn-primary btn_calendar_view',
-                        'data-view': "overview",
-                        'data-content': "<strong>"+l('Room Type availability view', true)+"</strong>",
-                        rel: "popover",
-                        'data-placement': "bottom",
-                        style: "padding: 3px 10px;",
-                        'data-original-title': "",
-                        title: ""
-                    })
-                        .append($('<img/>', {src: getBaseURL()+'images/overview.png', style: "width: 29px;"}))
-                )
-                .append(
-                    $('<label/>', {
-                        class: 'btn btn-primary btn_calendar_view active',
-                        'data-view': "bookings",
-                        'data-content': "<strong>"+l('Booking calendar view', true)+"</strong>",
-                        rel: "popover",
-                        'data-placement': "bottom",
-                        style: "padding: 3px 10px; background-color: #051f35;border-color: #051f35;",
-                        'data-original-title': "",
-                        title: ""
-                    })
-                        .append($('<img/>', {src: getBaseURL()+'images/calendar.png', style: "width: 29px;"}))
-                )
-        );
+        // $('.fc-toolbar.fc-header-toolbar')
+        // .find('.fc-left')
+        // .prepend(
+        //     $('<div/>', {class: 'btn-group btn-group-toggle', data_toggle: "buttons"})
+        //         .append(
+        //             $('<a/>', {
+        //                 href: getBaseURL()+'booking/overview',
+        //                 class: 'btn btn-primary btn_calendar_view',
+        //                 'data-view': "overview",
+        //                 'data-content': "<strong>"+l('Room Type availability view', true)+"</strong>",
+        //                 rel: "popover",
+        //                 'data-placement': "bottom",
+        //                 style: "padding: 3px 10px;",
+        //                 'data-original-title': "",
+        //                 title: ""
+        //             })
+        //                 .append($('<img/>', {src: getBaseURL()+'images/overview.png', style: "width: 29px;"}))
+        //         )
+        //         .append(
+        //             $('<label/>', {
+        //                 class: 'btn btn-primary btn_calendar_view active',
+        //                 'data-view': "bookings",
+        //                 'data-content': "<strong>"+l('Booking calendar view', true)+"</strong>",
+        //                 rel: "popover",
+        //                 'data-placement': "bottom",
+        //                 style: "padding: 3px 10px; background-color: #051f35;border-color: #051f35;",
+        //                 'data-original-title': "",
+        //                 title: ""
+        //             })
+        //                 .append($('<img/>', {src: getBaseURL()+'images/calendar.png', style: "width: 29px;"}))
+        //         )
+        // );
 
     $('.btn_calendar_view[rel="popover"]').popover({trigger: 'hover', container: 'body', html: true});
 }
