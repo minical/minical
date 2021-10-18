@@ -60,9 +60,15 @@
                         </ul>
                     <?php } ?>
             </ul>
-            <div class="alert_dropdown" style="left: 145px;position: fixed;z-index: 9999999;">
+            <div class="alert_dropdown m-55" style="left: 145px;position: absolute;z-index: 9999999;">
             </div>
+            
         </div>
+        <div class="m-54">
+        <button type="button" id="hamburger-01" class="hamburger hamburger--elastic mobile-toggle-nav">
+            <i class="fa fa-times"  style="font-size: 26px;color: #3f6ad8;"></i>
+        </button>
+    </div>
         <div class="app-sidebar__inner">
             <ul class="vertical-nav-menu metismenu">
                 <?php foreach($primary_menus as $m_menu){ ?>
