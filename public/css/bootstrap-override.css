@@ -25,6 +25,9 @@
   
 }
 
+.m-54{
+    display: none;
+}
 @media (min-width: 1000px) {
 /*  #booking-modal input[name='check_in_date'], 
   #booking-modal input[name='check_out_date'],
@@ -3235,7 +3238,9 @@ a.btn.disabled,fieldset:disabled a.btn{
         height: 200px;
     }
     .m-038{
-        height: 95% !important;
+        /* height: 95% !important; */
+        position: absolute;
+        top: 0;
     }
     .m-039{
         display: flex !important;
@@ -3263,6 +3268,30 @@ a.btn.disabled,fieldset:disabled a.btn{
     }
     .m-048{
         margin-left: -112px;
+    }
+    .m-050{
+        margin-left: -37px !important;
+        /* font-size: 18px; */
+    }
+    .m-051{
+        padding: 0px !important;
+    }
+    .m-052{
+        font-size: 21px !important;
+    }
+    .m-053{
+        width: 100% !important;
+        /* m-038
+        alert-drod-down */
+    }
+    .m-54{
+        display: block;
+        float: right;
+        margin-right: 27px;
+        margin-top: -71px;
+    }
+    .m-55{
+        position: absolute !important;
     }
 }
 .app-sidebar.sidebar-text-light{

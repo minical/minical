@@ -169,11 +169,9 @@
 				<div class="app-main">
 					
 					<div class="app-header__mobile-menu">
-                		<div>
-                    	<button type="button" class="hamburger hamburger--elastic mobile-toggle-nav">
-                        <span class="hamburger-box">
-                            <span class="hamburger-inner"></span>
-                        </span>
+					<div>
+                    	<button type="button" id="hamburger-01" class="hamburger hamburger--elastic mobile-toggle-nav">
+                        <i class="fa fa-bars" style="font-size: 26px;color: #3f6ad8;"></i>
                     	</button>
                 		</div>
             		</div>
