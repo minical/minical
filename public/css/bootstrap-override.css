@@ -2955,6 +2955,7 @@
       .fc-toolbar.fc-header-toolbar {
           display: inherit !important;
           margin-bottom: -15px!important;
+          margin-top: -30px;
       }
       #new-select{
           margin-bottom: 19px;
