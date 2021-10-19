@@ -540,7 +540,7 @@ CREATE TABLE `company` (
   `customer_modify_booking` tinyint(1) NOT NULL DEFAULT '0',
   `booking_cancelled_with_balance` tinyint(1) NOT NULL DEFAULT '0',
   `booking_checkedout_with_balance` tinyint(1) NOT NULL DEFAULT '0',
-  `enable_new_calendar` tinyint(1) NOT NULL DEFAULT '0',
+  `enable_new_calendar` tinyint(1) NOT NULL DEFAULT '1',
   `default_language` int(10) NOT NULL DEFAULT '1',
   `hide_room_name` tinyint(1) NOT NULL DEFAULT '0',
   `email_confirmation_for_booking_engine` tinyint(1) NOT NULL DEFAULT '0',
