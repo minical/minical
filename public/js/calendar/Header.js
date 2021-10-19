@@ -47,7 +47,7 @@ function Header(calendar, options) {
 								)	
 							.append(
 									$(innGrid.enableNewCalendar ? "<a/>" : "<label/>", {
-										href: innGrid.enableNewCalendar ? getBaseURL()+'/booking' : null,
+										href: innGrid.enableNewCalendar ? getBaseURL()+'booking' : null,
 										class: 'btn btn-primary btn_calendar_view '+(innGrid.enableNewCalendar ? '' : ' btn_calendar_view_bookings ')+(innGrid.isOverviewCalendar ? '' : 'active'),
 										'data-view': 'bookings', 						
 										'data-content':'<strong>'+l("Booking calendar view", true)+'</strong>',
