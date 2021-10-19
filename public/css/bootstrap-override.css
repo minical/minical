@@ -3293,6 +3293,21 @@ a.btn.disabled,fieldset:disabled a.btn{
     .m-55{
         position: absolute !important;
     }
+    .m-057{
+        font-size: 17px !important;
+    }
+    .m-059{
+        width: 100%;
+    }
+    .m-060{
+        text-align: left !important;
+    }
+    .m-061{
+        margin-bottom: 15px !important;
+    }
+    .m-062{
+        width: -webkit-fill-available !important;
+    }
 }
 .app-sidebar.sidebar-text-light{
     border-right:0 !important
@@ -4467,6 +4482,9 @@ input.error {
     }
     .m-046 {
         margin-bottom: 3px !important;
+    }
+    .m-059{
+        width: auto;
     }
 }
 /* ----------- iPad Pro ----------- */
