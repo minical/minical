@@ -2871,7 +2871,9 @@
     left: 200px !important;
     position: fixed !important;
     }
-
+    .btn-calendar-view{
+        margin-top: 14px !important;
+    }
   
   @media (max-width: 991.98px){
     .m-0690{
