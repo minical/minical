@@ -2866,8 +2866,20 @@
   #filter-booking{
       margin-left: 50px !important;
   }
+  .m-0690{
+    top: 34px !important;
+    left: 200px !important;
+    position: fixed !important;
+    }
+
   
   @media (max-width: 991.98px){
+    .m-0690{
+        top: 34px !important;
+        left: 190px !important;
+        position: fixed !important;
+        width: 219px;
+        }
       .app-main{
           display:block
       }
@@ -3301,6 +3313,9 @@
       .m-066{
           /* margin-top: 150px !important; */
   
+      }
+      .m-034{
+        margin-left: -40px;
       }
   }
   .app-sidebar.sidebar-text-light{
