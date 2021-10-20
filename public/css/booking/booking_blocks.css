@@ -61,3 +61,11 @@
 	cursor: pointer;
 	
 }
+
+
+.app-header__menu,.app-header__mobile-menu{
+	display:none;
+	padding:2px 1.5rem;
+	align-items:center;
+	background-color:white;
+  }
