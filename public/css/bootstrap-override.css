@@ -2867,6 +2867,7 @@
       margin-left: 50px !important;
   }
   .m-0690{
+    word-wrap: break-word !important;
     top: 34px !important;
     left: 200px !important;
     position: fixed !important;
@@ -2877,11 +2878,15 @@
   
   @media (max-width: 991.98px){
     .m-0690{
+        word-wrap: break-word !important;
         top: 34px !important;
-        left: 190px !important;
+        left: 155px !important;
         position: fixed !important;
-        width: 219px;
+        width: 254px;
         }
+      .new-badge-margin{
+          margin-top: 9px !important;
+      }  
       .app-main{
           display:block
       }
@@ -3048,7 +3053,11 @@
           margin-top: 14px !important;
       }
       .left-sidebar-fix-wep {
-          height: 100px!important;
+          height: 10px!important;
+          display: flex;
+          margin-left: 2px;
+          flex-flow: column wrap;
+          flex-direction: row;
       }
       #booking-modal .left-sidebar{
           min-height: 100px!important;
@@ -3319,6 +3328,23 @@
       .m-034{
         margin-left: -40px;
       }
+      .alert-heading{
+        display: flex !important;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+    #myIframe {
+        width: -webkit-fill-available !important;
+    }
+    .property-menu{
+        width: 255px;
+        top: 7px;
+        left: 0px;
+        height: 237px;
+        overflow-y: scroll;
+        position: absolute;
+    }
   }
   .app-sidebar.sidebar-text-light{
       border-right:0 !important
@@ -4340,6 +4366,9 @@
   
   /* iPads (portrait and landscape) ----------- */
   @media only screen and (min-device-width : 768px) and (max-device-width : 1024px) {
+    #myIframe {
+        width: -webkit-fill-available !important;
+    }  
       .green-wep {
           float: left!important;
           margin-top: 60px;
@@ -4353,7 +4382,7 @@
           /* margin-left: -15px; */
       }
       .left-sidebar-fix-wep {
-          height: 100px!important;
+          height: 10px!important;
       }
       #booking-modal .left-sidebar{
           min-height: 100px!important;
@@ -4512,7 +4541,7 @@
           width: 67%!important;
       }
       .left-sidebar-fix-wep {
-          height: 100px!important;
+          height: 10px!important;
       }
       #booking-modal .left-sidebar{
           min-height: 100px!important;
