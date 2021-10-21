@@ -3345,6 +3345,19 @@
         overflow-y: scroll;
         position: absolute;
     }
+    .input-margin-fix{
+        margin-bottom: 20px;
+    }
+    .group-input{
+        width: -webkit-fill-available !important;
+        margin-top: 12px;
+        /* margin-bottom: 12px; */
+    }
+    .gen-report-fix{     
+        
+        width: -webkit-fill-available !important;
+        margin-bottom: 10px !important;
+        margin-top: -17px !important}
   }
   .app-sidebar.sidebar-text-light{
       border-right:0 !important
