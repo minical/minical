@@ -2880,9 +2880,9 @@
     .m-0690{
         word-wrap: break-word !important;
         top: 34px !important;
-        left: 155px !important;
+        left: 145px !important;
         position: fixed !important;
-        width: 254px;
+        width: 271px;
         }
       .new-badge-margin{
           margin-top: 9px !important;
@@ -2961,7 +2961,7 @@
       }
       .fc-button-group{
           margin-left: 3.5px !important;
-          margin-bottom: -31px !important;
+          margin-bottom: 10px !important;
       }
       .fc-customStartDatePicker-button{
           /* margin-bottom: 20px !important;
@@ -2975,6 +2975,8 @@
           display: inherit !important;
           margin-bottom: -15px!important;
           margin-top: -30px;
+          /* display: flex !important; */
+          flex-direction: column;
       }
       #new-select{
           margin-bottom: 19px;
@@ -2990,7 +2992,7 @@
       .fc-customCreateBooking-button{
           /* margin-left: 16px !important;*/
           margin-right: 60px !important; 
-          margin-top: 52px !important;
+          margin-top: 30px !important;
           margin-left: -1px!important;
           margin-bottom: 27px !important;
       }
@@ -4484,8 +4486,10 @@
           display: flex !important;
       }
       .m-040{
-          margin-left: 495px!important;
-          margin-top: -110px !important;
+          /* margin-left: 495px!important;
+          margin-top: -110px !important; */
+          margin-left: 587px!important;
+          margin-top: -63px !important;
       }
       .btn-group-toggle{
           /* change this class name  booking main page top elment */
@@ -4502,7 +4506,7 @@
       .fc-customCreateBooking-button{
           /* margin-left: 16px !important;*/
           margin-right: 0px !important; 
-          margin-top: 0px;
+          margin-top: 52px !important;
           margin-left: 0px!important;
           margin-bottom: 0px;
       }
