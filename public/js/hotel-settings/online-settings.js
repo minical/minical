@@ -149,7 +149,7 @@ $(function (){
             'customer_modify_booking' : $('input[name="customer_modify_booking"]').prop('checked') ? 1 : 0,
             'booking_cancelled_with_balance' : $('input[name="booking_cancelled_with_balance"]').prop('checked') ? 1 : 0,
             'hide_room_name' : $('input[name="hide_room_name"]').prop('checked') ? 1 : 0,
-            'enable_new_calendar' : $('input[name="enable_new_calendar"]').prop('checked') ? 1 : 0,
+            'enable_new_calendar' : 1,
             'restrict_booking_dates_modification' : $('input[name="restrict_booking_dates_modification"]').prop('checked') ? 1 : 0,
             'restrict_checkout_with_balance' : $('input[name="restrict_checkout_with_balance"]').prop('checked') ? 1 : 0,
             'show_guest_group_invoice' : $('input[name="show_guest_group_invoice"]').prop('checked') ? 1 : 0
