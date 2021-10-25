@@ -9,8 +9,15 @@
     </div>
 </div>
 
+<?php $is_favourite = false; if(isset($extensions) && $extensions){ 
+foreach ($extensions as $extension){
+    if(isset($extension['is_favourite']) && $extension['is_favourite']){
+        $is_favourite = true;
+    }
+} } if($is_favourite) { ?>
 <div><h4><?php echo l('Favourites');?></h4></div>
-<div class="main-card mb-3">
+<?php } ?>
+<div class="main-card  <?php echo $is_favourite ? 'mb-5' : ''; ?> ">
     <div class="extension-card">
 
         <?php
@@ -49,7 +56,7 @@
                                             <?php if(isset($extension['is_admin_module']) && $extension['is_admin_module']){ ?>
                                                 <span style="font-size: 11px;color: gray;font-weight: 500;padding: 0px 0 5px;">VENDOR ONLY</span>
                                             <?php } ?>
-                                            <p class="extension-discription" ><?php echo substr($extension['description'], 0,60).'...  '; ?>
+                                            <p class="extension-discription" ><?php echo  strlen($extension['description']) > 200 ? substr($extension['description'],0,200)."..." : $extension['description']; ?>
                                                 <?php if(isset($extension['marketplace_product_link']) && $extension['marketplace_product_link']){ ?>
                                                     <a href="<?php echo (isset($extension['marketplace_product_link']) && $extension['marketplace_product_link'] ? $extension['marketplace_product_link']: "")?>" style="font-size: 14px"><?php echo l('more');?></a>
                                                 <?php } ?>
@@ -116,7 +123,7 @@
     <div class="col-sm-3">
         <h4><?php echo l('Extensions');?></h4></div>
     <div class="col-sm-9">
-        <div class="form-inline">
+        <div class="form-inline pull-right">
             
                 <label><?php echo l('status');?></label>
                 <select name="status" id="status" class="form-control" onchange="getval(this);">
@@ -191,7 +198,9 @@
                                             <!-- <span style="font-size: 11px;color: gray;font-weight: 500;padding: 0px 0 5px;">VENDOR ONLY</span> -->
                                             <?php //}?>
 
-                                            <p class="extension-discription" ><?php echo substr($extension['description'], 0,60).'...  '; ?>
+                                            <p class="extension-discription" style= "margin-bottom: 0px"><?php echo 
+
+                                            strlen($extension['description']) > 200 ? substr($extension['description'],0,200)."..." : $extension['description']; ?>
                                             <?php if(isset($extension['marketplace_product_link']) && $extension['marketplace_product_link']){ ?>
 
                                             <a href="<?php echo (isset($extension['marketplace_product_link']) && $extension['marketplace_product_link'] ? $extension['marketplace_product_link']: "")?>" style="font-size: 14px"><?php echo l('more');?></a>

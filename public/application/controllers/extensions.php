@@ -186,16 +186,20 @@ class Extensions extends MY_Controller
         $active_extension = $this->Extension_model->get_filter_extension($status,$this->company_id);
 
         $active_extension_name = array();
-        foreach ($active_extension as $key => $value) {
-            $active_extension_name[] = $value['extension_name'];
+        if($active_extension){
+            foreach ($active_extension as $key => $value) {
+                $active_extension_name[] = $value['extension_name'];
+            }
         }
 
         $fv_status = 1;
         $fv_extension = $this->Extension_model->get_favourite_extension($fv_status,$this->company_id);
 
         $fv_extension_name = array();
-        foreach ($fv_extension as $key => $value) {
-            $fv_extension_name[] = $value['extension_name'];
+        if($fv_extension){
+            foreach ($fv_extension as $key => $value) {
+                $fv_extension_name[] = $value['extension_name'];
+            }
         }
 
         $final_modules = array();

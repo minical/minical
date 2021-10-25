@@ -86,15 +86,24 @@ $("body").on("click",".favourite-button", function() {
     });
 
 
+
+var req;
+
 $(document).on('keyup', '.search_ext', function() {
-    var item = $(this).val();
-   
-    $.ajax({
-        type: "POST",
-        url: getBaseURL() + 'extensions/search_extension',
-        data: { item: item },
-        success: function(results) {
-        	$(".extension_view").html(results);
-        }
-    });
+   		var item = $(this).val();
+	    if (req) {
+	        req.abort();
+	    }
+	    setTimeout(function() {
+	        req =  $.ajax({
+	        type: "POST",
+	        url: getBaseURL() + 'extensions/search_extension',
+	        data: { item: item },
+	        success: function(results) {
+	        	$(".extension_view").html(results);
+	        }
+	    });
+
+	    },100);
+	   
 });
