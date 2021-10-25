@@ -21,6 +21,11 @@ class="text-center"
         	} 
         ?>
 
+        <div style="color: red;">
+        	<?php echo isset($errors['incorrect_email']) && $errors['incorrect_email'] ? $errors['incorrect_email'] : ''; ?>
+        	<?php echo isset($errors['password']) && $errors['password'] ? $errors['password'] : ''; ?>
+        </div>
+
 		<div class="form-group">
 			<label for="email" class="sr-only">Email</label>
 			<input title="email" class="form-control" type="text" name="login" placeholder="Email" id="Email" maxlength="80" value="<?php echo $email; ?>" required>

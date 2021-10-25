@@ -224,8 +224,14 @@ class Auth extends MY_Controller
                 }
                 else 
                 {
-                    foreach ($errors as $k => $v) {
-                        $data['errors'][$k] = $this->lang->line($v);
+                    if(isset($_POST['submit'])){
+                        foreach ($errors as $k => $v) {
+                            $data['errors'][$k] = $this->lang->line($v);
+                        }
+
+                        if(!$this->user_model->get_user_by_email($email)){
+                            $data['errors']['incorrect_email'] = 'Email does not exists';
+                        }
                     }
                 }
             }
@@ -535,7 +541,12 @@ class Auth extends MY_Controller
             }                
             else{
                 //print_r(validation_errors());
-                echo strip_tags(form_error('email'));
+                if($_SERVER['HTTP_HOST'] == "app.minical.io" || $_SERVER['HTTP_HOST'] == "demo.minical.io"){
+                    echo 'The Email field must contain a valid email address.';
+                } else {
+                    echo strip_tags(form_error('email'));
+                }
+                
             }
         }
 
