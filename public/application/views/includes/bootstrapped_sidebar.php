@@ -48,7 +48,7 @@
                     ?>
 
                     <?php if(count($my_companies) > 1){ ?>
-                        <ul class="dropdown-menu" role="menu" aria-labelledby="myAccountMenu">
+                        <ul class="dropdown-menu property-menu" role="menu" aria-labelledby="myAccountMenu">
                             <?php
                             foreach($my_companies as $key => $values){
                                 echo '<li>
