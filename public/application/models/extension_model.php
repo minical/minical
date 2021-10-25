@@ -94,6 +94,38 @@ class Extension_model extends CI_Model {
              return null;
         }
 	}
+
+	function get_filter_extension($status,$company_id){
+		$this->db->select('*');
+		$this->db->from('extensions_x_company');
+		$this->db->where('company_id', $company_id);
+		$this->db->where('is_active', $status);
+		
+		$query = $this->db->get();
+		
+		if ($query->num_rows >= 1)
+		{
+			return $result = $query->result_array();
+		}
+		
+		return NULL;
+	}
+
+	function get_favourite_extension($status,$company_id){
+		$this->db->select('*');
+		$this->db->from('extensions_x_company');
+		$this->db->where('company_id', $company_id);
+		$this->db->where('is_favourite', $status);
+		
+		$query = $this->db->get();
+		
+		if ($query->num_rows >= 1)
+		{
+			return $result = $query->result_array();
+		}
+		
+		return NULL;
+	}
 }
 
 /* End of file - extra_model.php */
