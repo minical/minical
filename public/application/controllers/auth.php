@@ -1456,6 +1456,25 @@ class Auth extends MY_Controller
             }
         }
 
+        if(isset($_POST['submit'])){
+
+            if($this->input->post('new_password') == ''){
+                $data['errors']['blank_new_password'] = 'The New Password field is required.';
+            }
+
+            if($this->input->post('new_password') != '' && strlen($this->input->post('new_password')) < 4){
+                $data['errors']['short_new_password'] = 'The New Password field must be at least 4 characters in length.';
+            }
+
+            if($this->input->post('confirm_new_password') == ''){
+                $data['errors']['blank_confirm_new_password'] = 'The Confirm new Password field is required.';
+            }
+
+            if($this->input->post('new_password') != $this->input->post('confirm_new_password')){
+                $data['errors']['password_not_match'] = 'The Confirm new Password field does not match the New Password field.';
+            }
+        }
+
         $user_profile = $this->User_model->get_user_profile($user_id);
         $data['email'] = $user_profile['email'];
 

@@ -33,12 +33,20 @@
 		<tr>
 			<td><?php echo form_label('Password', $new_password['id']); ?></td>
 			<td><?php echo form_password($new_password); ?></td>
-			<td style="color: red;"><?php echo form_error($new_password['name']); ?><?php echo isset($errors[$new_password['name']])?$errors[$new_password['name']]:''; ?></td>
+			<td style="color: red;">
+				<?php //echo form_error($new_password['name']); ?>
+				<?php echo isset($errors['blank_new_password']) && $errors['blank_new_password'] ? $errors['blank_new_password'] : ''; ?>
+				<?php echo isset($errors['short_new_password']) && $errors['short_new_password'] ? $errors['short_new_password'] : ''; ?>
+				</td>
 		</tr>
 		<tr>
 			<td><?php echo form_label('Confirm Password', $confirm_new_password['id']); ?></td>
 			<td><?php echo form_password($confirm_new_password); ?></td>
-			<td style="color: red;"><?php echo form_error($confirm_new_password['name']); ?><?php echo isset($errors[$confirm_new_password['name']])?$errors[$confirm_new_password['name']]:''; ?></td>
+			<td style="color: red;">
+				<?php //echo form_error($confirm_new_password['name']); ?>
+				<?php echo isset($errors['blank_confirm_new_password']) && $errors['blank_confirm_new_password'] ? $errors['blank_confirm_new_password'] : ''; ?>
+				<?php echo isset($errors['password_not_match']) && $errors['password_not_match'] ? $errors['password_not_match'] : ''; ?>
+				</td>
 		</tr>
 	</table>
 	<br />
@@ -46,6 +54,6 @@
 		By clicking 'I accept' below, you are agreeing to the <a href="<?php echo base_url(); ?>auth/show_terms_of_service"><?php if($whitelabelinfo){ echo $whitelabelinfo['name']; }else{ echo 'Minical';} ?> Terms of Service.</a>
 	</div>
 	<br />
-	<input class="btn btn-success" type="submit" value="I accept" />
+	<input class="btn btn-success" type="submit" name="submit" value="I accept" />
 	<?php echo form_close(); ?>
 </div>
