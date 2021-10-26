@@ -411,6 +411,12 @@ class Room_model extends CI_Model {
 			$max_adult_sql = "rt.max_adults >= '$adults_count' AND";				
 			$max_children_sql = "rt.max_children + (rt.max_adults - '$adults_count') >= '$children_count' AND";			
 		}
+
+		if($this->enable_hourly_booking){
+			$date_condition = " brh.check_out_date > '$check_in_date' AND '$check_out_date' > brh.check_in_date ";
+		} else {
+			$date_condition = " DATE(brh.check_out_date) > '$check_in_date' AND '$check_out_date' > DATE(brh.check_in_date) ";
+		}
 		
         $sql = "SELECT 
 					DISTINCT r.room_id, r.room_name as room_name, r.status, r.room_type_id, rt.acronym
@@ -421,7 +427,7 @@ class Room_model extends CI_Model {
 					FROM booking as b, booking_block as brh
 					WHERE
 					(
-						brh.check_out_date > '$check_in_date' AND '$check_out_date' > brh.check_in_date
+						$date_condition
 					) AND #include currently selected room in the available room list
 					b.booking_id = brh.booking_id AND
 					b.booking_id != '$booking_id' AND
