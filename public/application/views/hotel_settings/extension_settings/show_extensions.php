@@ -123,7 +123,7 @@ foreach ($extensions as $extension){
     <div class="col-sm-3">
         <h4><?php echo l('Extensions');?></h4></div>
     <div class="col-sm-9">
-        <div class="form-inline pull-right">
+        <div class="form-inline pull-right extension-filter">
             
                 <label><?php echo l('status');?></label>
                 <select name="status" id="status" class="form-control" onchange="getval(this);">
