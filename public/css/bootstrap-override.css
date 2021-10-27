@@ -3356,6 +3356,13 @@
         margin-top: 12px;
         /* margin-bottom: 12px; */
     }
+    .search_ext{
+        max-width: 100% !important;
+        margin-top: 10px;
+    }
+    .extension-filter{
+        width: 100% !important;
+    }
     .gen-report-fix{     
         
         width: -webkit-fill-available !important;
@@ -4551,6 +4558,13 @@
       .m-046 {
           margin-bottom: 3px !important;
       }
+      .search_ext{
+        margin-top: 0px !important;
+     }
+    .extension-filter{
+        width: max-content !important; 
+    }
+
   }
   /* ----------- iPad Pro ----------- */
   /* Portrait */
