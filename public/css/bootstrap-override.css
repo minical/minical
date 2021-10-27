@@ -2875,14 +2875,7 @@
     .btn-calendar-view{
         margin-top: 14px !important;
     }
-    .property-menu{
-        width: 255px;
-        top: 7px !important;
-        left: 5px !important;
-        height: 237px;
-        overflow-y: scroll;
-        position: absolute;
-    }
+  
   
   @media (max-width: 991.98px){
     .m-0690{
@@ -3730,6 +3723,16 @@
       border:1px solid rgba(0,0,0,0.15);
       border-radius:.25rem
   }
+  
+
+  .property-menu{
+    width: 200px!important;
+    top: 7px!important;
+    left: 0px!important;
+    height: 240px!important;
+    overflow-y: scroll !important;
+    /* position: fixed !important; */
+}
   .dropdown-menu-right{
       right:0;
       left:auto
