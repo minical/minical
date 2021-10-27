@@ -2875,6 +2875,14 @@
     .btn-calendar-view{
         margin-top: 14px !important;
     }
+    .property-menu{
+        width: 255px;
+        top: 7px !important;
+        left: 5px !important;
+        height: 237px;
+        overflow-y: scroll;
+        position: absolute;
+    }
   
   @media (max-width: 991.98px){
     .m-0690{
