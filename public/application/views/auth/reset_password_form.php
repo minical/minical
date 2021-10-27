@@ -53,12 +53,22 @@ $confirm_new_password = array(
 		<label for="new_password" class="col-sm-4 control-label">Password</label>
 		<div class="col-sm-8">
     		<input class="form-control" title="password" type="password" name="new_password" maxlength="80" >
+    		<span style="color: red;">
+				<?php //echo form_error($new_password['name']); ?>
+				<?php echo isset($errors['blank_new_password']) && $errors['blank_new_password'] ? $errors['blank_new_password'] : ''; ?>
+				<?php echo isset($errors['short_new_password']) && $errors['short_new_password'] ? $errors['short_new_password'] : ''; ?>
+				</span>
     	</div>
 	</div>
 	<div class="form-group">
 		<label for="confirm_new_password" class="col-sm-4 control-label">Confirm Password</label>
 		<div class="col-sm-8">
     		<input class="form-control" title="password" type="password" name="confirm_new_password" maxlength="80" >
+    		<span style="color: red;">
+				<?php //echo form_error($confirm_new_password['name']); ?>
+				<?php echo isset($errors['blank_confirm_new_password']) && $errors['blank_confirm_new_password'] ? $errors['blank_confirm_new_password'] : ''; ?>
+				<?php echo isset($errors['password_not_match']) && $errors['password_not_match'] ? $errors['password_not_match'] : ''; ?>
+				</span>
     	</div>
 	</div>
 	<div class="form-group">
