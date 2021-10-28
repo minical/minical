@@ -1026,6 +1026,7 @@ class Charge_model extends CI_Model {
             'customer_id' => $customer_id
         );
 
+        $customer_id = $customer_id != " " ? $customer_id : null;
 
         $sql = "UPDATE
 				    `charge` AS c
