@@ -128,7 +128,7 @@ class Company extends MY_Controller
             base_url().auto_version('js/hotel-settings/cropper_jsmin.js'),
             base_url().auto_version('js/company_settings.js'),
             base_url().auto_version('js/hotel-settings/logo-image-settings.js'),
-           "https://ajax.aspnetcdn.com/ajax/jquery.validate/1.7/jquery.validate.min.js",
+            "https://ajax.aspnetcdn.com/ajax/jquery.validate/1.7/jquery.validate.min.js",
         );
 
         $data['company_ID'] = $this->company_id;
@@ -741,12 +741,12 @@ class Company extends MY_Controller
                     $csv_data = $result;
 
                     if (isset($csv_data['rooms'])) {
-                        $this->import_rooms_csv($csv_data['rooms']);
+                        $this->import_rooms_csv($csv_data['rooms'],$csv_data['settings']);
                     }
                     if (isset($csv_data['taxes'])) {
                         $this->import_taxes_csv($csv_data['taxes']);
                     }
-                     if (isset($csv_data['customers'])) {
+                    if (isset($csv_data['customers'])) {
                         $this->import_customers_csv($csv_data['customers']);
                     }
                     if (isset($csv_data['charges'])) {
@@ -773,11 +773,11 @@ class Company extends MY_Controller
                     }
 
                     unlink($location);
-                    
+
                     echo ("<script LANGUAGE='JavaScript'>
                             window.alert('Succesfully Imported');
                             window.location.href='".base_url()."';
-                            </script>"); 
+                            </script>");
                 }
             }
         }
@@ -785,7 +785,7 @@ class Company extends MY_Controller
         // redirect('/settings/company/import');
     }
 
-    function import_rooms_csv($value){
+    function import_rooms_csv($value,$setting){
 
         foreach ($value as $room) {
             // $get_room_type = $this->Room_type_model->get_room_type_name($room['Room Type Name'], $this->company_id);
@@ -827,13 +827,13 @@ class Company extends MY_Controller
                     $sort_order = isset($room['Sort Order']) && $room['Sort Order'] != '' && $room['Sort Order'] != null ? $room['Sort Order'] : 0 ;
 
                     $room_id = $this->Room_model->create_rooms(
-                                            $this->company_id, 
-                                            $room['Room Name'],
-                                            $room_type_id, 
-                                            $sort_order,
-                                            $sold_online,
-                                            $room['Status']
-                                        );
+                        $this->company_id,
+                        $room['Room Name'],
+                        $room_type_id,
+                        $sort_order,
+                        $sold_online,
+                        $room['Status']
+                    );
 
                     $data_import_mapping = Array(
                         "new_id" => $room_id,
@@ -845,6 +845,9 @@ class Company extends MY_Controller
                     $import_data = $this->Import_mapping_model->insert_import_mapping($data_import_mapping);
 
                 }
+
+
+
             }
 
             // if(!empty($room['Floor'])){
@@ -875,6 +878,50 @@ class Company extends MY_Controller
             //     }
 
             // }
+
+            $settings = json_decode($setting,true);
+
+            $extra_room_types = $settings['Room Types'];
+
+
+            if($extra_room_types){
+
+                foreach ($extra_room_types as $key => $rt) {
+
+                    $extra_room_type = $this->Import_mapping_model->get_mapping_room_type_id($rt['id']);
+
+                    if(empty($extra_room_type)){
+
+                        $extra_data = array(
+                            'company_id' => $this->company_id,
+                            'name' => $rt['name'] == '' ? null : $rt['name'],
+                            'acronym' => $rt['acronym'] == ''? null : $rt['acronym'] ,
+                            'max_adults' => $rt['max_adults'] == ''  ? 0 : $rt['max_adults'] ,
+                            'max_children' => $rt['max_children'] == ''  ? 0 : $rt['max_children'] ,
+                            'max_occupancy' => $rt['max_occupancy'] == ''  ? 0 : $rt['max_occupancy'] ,
+                            'min_occupancy' => $rt['min_occupancy'] == ''  ? 0 : $rt['min_occupancy'] ,
+                            'can_be_sold_online' => $rt['can_be_sold_online'] == 'true' ? 1 : 0,
+                            'default_room_charge' => $rt['default_room_charge'],
+                            'description' => $rt['description']
+
+                        );
+
+                        $extra_room_type_id = $this->Room_type_model->add_new_room_type($extra_data);
+                        $extra_data_import_mapping = Array(
+                            "new_id" => $extra_room_type_id,
+                            "old_id" => $rt['id'],
+                            "company_id" => $this->company_id,
+                            "type" => "room_type"
+                        );
+
+                        $import_data = $this->Import_mapping_model->insert_import_mapping($extra_data_import_mapping);
+
+                    }
+
+                }
+
+            }
+
 
         }
     }

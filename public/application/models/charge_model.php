@@ -1017,14 +1017,30 @@ class Charge_model extends CI_Model {
         $this->db->update("charge", $data);
 		//echo $this->db->last_query();
 	}
+
+	
     function update_charge_booking($old_booking_id, $new_booking_id, $customer_id) {
 
         $data = array(
             'booking_id' => $new_booking_id,
             'customer_id' => $customer_id
         );
-        $this->db->where('booking_id', $old_booking_id);
-        $this->db->update("charge", $data);
+
+
+        $sql = "UPDATE
+				    `charge` AS c
+				LEFT JOIN charge_type AS ct
+				ON
+				    ct.id = c.charge_type_id
+				SET
+				    `booking_id` = '$new_booking_id',
+				    `customer_id` = '$customer_id'
+				WHERE
+				    `ct`.`company_id` = '$this->company_id' AND `ct`.`is_deleted` = 0 AND `c`.`booking_id` = '$old_booking_id'"
+				;
+
+
+        $q = $this->db->query($sql);
 
     }
   
