@@ -1026,16 +1026,16 @@ class Charge_model extends CI_Model {
             'customer_id' => $customer_id
         );
 
-        $customer_id = $customer_id != " " ? $customer_id : null;
+       $set_customer = $customer_id != ''? ", `customer_id` = '$customer_id'" : '';
 
-        $sql = "UPDATE
+		$sql = "UPDATE
 				    `charge` AS c
 				LEFT JOIN charge_type AS ct
 				ON
 				    ct.id = c.charge_type_id
 				SET
-				    `booking_id` = '$new_booking_id',
-				    `customer_id` = '$customer_id'
+				    `booking_id` = '$new_booking_id'
+				   	 $set_customer
 				WHERE
 				    `ct`.`company_id` = '$this->company_id' AND `ct`.`is_deleted` = 0 AND `c`.`booking_id` = '$old_booking_id'"
 				;
