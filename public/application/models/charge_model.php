@@ -1021,12 +1021,6 @@ class Charge_model extends CI_Model {
 	
     function update_charge_booking($old_booking_id, $new_booking_id, $customer_id) {
 
-        $data = array(
-            'booking_id' => $new_booking_id,
-            'customer_id' => $customer_id
-        );
-
-        $customer_id = $customer_id != '' ? $customer_id : null;
 
         $sql = "UPDATE
 				    `charge` AS c
@@ -1034,8 +1028,8 @@ class Charge_model extends CI_Model {
 				ON
 				    ct.id = c.charge_type_id
 				SET
-				    `booking_id` = '$new_booking_id',
-				    `customer_id` = '$customer_id'
+				    `booking_id` = '$new_booking_id'
+				  
 				WHERE
 				    `ct`.`company_id` = '$this->company_id' AND `ct`.`is_deleted` = 0 AND `c`.`booking_id` = '$old_booking_id'"
 				;
