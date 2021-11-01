@@ -214,7 +214,7 @@ class Statement_model extends CI_Model {
 
     function create_statement($data){
 
-        $this->db->insert("Statement", $data);
+        $this->db->insert("statement", $data);
 
         $query = $this->db->query('select LAST_INSERT_ID( ) AS last_id');
         $result = $query->result_array();
