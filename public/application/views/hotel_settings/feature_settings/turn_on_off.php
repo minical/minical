@@ -62,7 +62,7 @@
                 </div>
             </div>
 
-            <div class="form-group features-div-padding ">
+            <div class="form-group features-div-padding form-inline ">
                 <div class="checkbox checbox-switch switch-primary">
                     <label>
                         <input type="checkbox" name="send_copy_to_additional_emails"
@@ -149,6 +149,34 @@
                         <span></span>
                     </label>
                     <label for="make_guest_field_mandatory"><b><?= l("Make guest field required when creating bookings", true); ?></b></label>
+                </div>
+            </div>
+
+
+            <div class="form-group features-div-padding ">
+                <div class="checkbox checbox-switch switch-primary">
+                 <label>
+                        <input type="checkbox" name="book_over_unconfirmed_reservations"
+                               <?= $company_data['book_over_unconfirmed_reservations'] == 1 ? 'checked=checked' : ''; ?>/>
+                        <span></span>
+                    </label>
+                    <label for="book_over_unconfirmed_reservations"><b><?= l("Allow an online reservation in a room with an unconfirmed reservation", true); ?></b></label>
+                </div>
+            </div>
+
+
+             <div class="form-group features-div-padding ">
+                <div class="checkbox checbox-switch switch-primary">
+                    <label>
+                        <input type="checkbox" name="allow_non_continuous_bookings"
+                               <?= $company_data['allow_non_continuous_bookings'] == 1 ? 'checked=checked' : ''; ?>/>
+                        <span></span>
+                    </label>
+                    <label for="allow_non_continuous_bookings"><b><?= l("Allow OTA bookings with non-continuous rooms/blocks", true); ?></b></label>
+                    <br/>
+                    <div class="form-group features-div-padding  form-inline max-number-blocks">
+                        <?= l("Maximum number of blocks:", true); ?> <input type="text" class="form-control" name="maximum_no_of_blocks" value="<?php echo $company_data['maximum_no_of_blocks']; ?>" size=10/>
+                    </div>
                 </div>
             </div>
 
@@ -586,6 +614,20 @@
                 </div>
             </div>
 
+
+
+            <div class="form-group features-div-padding ">
+                <div class="checkbox checbox-switch switch-primary">
+                   <label>
+                        <input type="checkbox" name="customer_modify_booking"
+                               <?= $company_data['customer_modify_booking'] == 1 ? 'checked=checked' : ''; ?>/>
+                        <span></span>
+                    </label>
+                    <label for="customer_modify_booking"><b><?= l("Allow customers to modify their booking", true); ?></b></label>
+                </div>
+            </div>
+
+
             <div class="form-group features-div-padding ">
                 <div class="checkbox checbox-switch switch-primary">
                     <label>
@@ -675,6 +717,25 @@
             <h4 style="padding-bottom:20px;border-bottom: 2px solid #DDDDDD">
                 <b><?php echo l('INVOICE', true); ?></b></h4></div>
         <div style="padding-top:10px">
+
+            <div class="form-group features-div-padding  form-inline">
+                <label for="payment_capture">
+                    <?= l("Payment Capture", true); ?>
+                </label>
+                <select class="form-control" name="payment_capture" id="payment_capture">
+                    <option value="0" <?php if ($company_data['manual_payment_capture'] == 0) {
+                        echo 'selected = "selected"';
+                    } ?>><?php echo l('Instant', true); ?>
+                    </option>
+                    <option value="1" <?php if ($company_data['manual_payment_capture'] == 1) {
+                        echo 'selected = "selected"';
+                    } ?>><?php echo l('Manual', true); ?>
+                    </option>
+                </select>
+               
+            </div>
+
+           
 
             <div class="form-group features-div-padding ">
                 <div class="checkbox checbox-switch switch-primary">
