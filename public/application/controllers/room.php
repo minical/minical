@@ -209,7 +209,7 @@ class Room extends MY_Controller
         $start_date = sqli_clean($this->security->xss_clean($this->input->get('start_date')));
         $end_date = sqli_clean($this->security->xss_clean($this->input->get('end_date')));
 		$filter_can_be_sold_online = $this->input->get('filter_can_be_sold_online') == 'true' ? true : false;
-		$res = $this->Room_type_model->get_room_type_availability($this->company_id, $channel, $start_date, $end_date, null, null, $filter_can_be_sold_online, null, true, true, true, true, $channel_key);
+		$res = $this->Room_type_model->get_room_type_availability($this->company_id, $channel, $start_date, $end_date, null, null, $filter_can_be_sold_online, null, true, true, true, true, null, $channel_key);
         $data_ar = array();
 
 

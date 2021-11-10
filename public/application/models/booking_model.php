@@ -2699,6 +2699,7 @@ class Booking_model extends CI_Model {
                     WHERE 
                     ('$start_date' < (room_history.check_out_date) AND (room_history.check_in_date) < '$end_date') AND 
                     b.`is_deleted` = '0' AND 
+                    b.company_id = '$this->company_id' AND    
                     b.`state` != 4 
                     $room_sql 
                     $booking_sql";

@@ -13,7 +13,7 @@ class Room_type_model extends CI_Model {
 
     // return company's room_types
 
-    function get_room_type_availability($company_id, $ota_id, $start_date, $end_date, $adult_count = null, $children_count = null, $filter_can_be_sold_online = true, $company_group_id = null, $get_max_availability = true, $get_inventorysold = true, $get_closeout_status = true, $get_inventory = true, $ota_key = null)
+    function get_room_type_availability($company_id, $ota_id, $start_date, $end_date, $adult_count = null, $children_count = null, $filter_can_be_sold_online = true, $company_group_id = null, $get_max_availability = true, $get_inventorysold = true, $get_closeout_status = true, $get_inventory = true, $company_access_key = null , $ota_key = null)
     {
         $inventory = array();
         
