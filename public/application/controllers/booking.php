@@ -3172,5 +3172,34 @@ class Booking extends MY_Controller
         echo json_encode($result);
     }
 
+    function delete_booking_extra_AJAX() {
+
+        $booking_extra_id = $this->input->post('booking_extra_id');
+
+        $booking_extra = $this->Booking_extra_model->get_booking_extra($booking_extra_id); // get extra by booking extra id 
+
+        //$this->Booking_extra_model->delete_booking_extra($booking_extra_id);
+        $data = array('is_deleted'=>1);
+        $this->Booking_extra_model->update_booking_extra($booking_extra_id, $data);
+
+        $balance = $this->Booking_model->update_booking_balance($booking_extra->booking_id);
+
+        if($booking_extra_id)
+        {
+
+            $log = array(
+                "booking_id" => $booking_extra->booking_id,
+                "date_time" => gmdate('Y-m-d H:i:s'),
+                "log_type" => 25,
+                "log" => $booking_extra_id,
+                "user_id" => $this->user_id,
+                "selling_date" => $this->selling_date
+            );
+            $this->Booking_log_model->insert_log($log);
+        }
+        $response = array("message" => l("extra successfully deleted", true), 'balance' => $balance);
+        echo json_encode($response);
+    }
+
 
 }
