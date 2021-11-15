@@ -229,10 +229,20 @@ class Room extends MY_Controller
     function get_rooms_available_AJAX()
 	{
 		$channel = sqli_clean($this->security->xss_clean($this->input->get('channel', TRUE)));
+        $channel_key = sqli_clean($this->security->xss_clean($this->input->get('channel_key', TRUE)));
 		$start_date =  sqli_clean($this->security->xss_clean($this->input->get('start_date', TRUE)));
 		$end_date =  sqli_clean($this->security->xss_clean($this->input->get('end_date', TRUE)));
 		$company_id = sqli_clean($this->security->xss_clean($this->input->get('company_id', TRUE)));
-		$res = $this->Room_type_model->get_room_type_availability($company_id, $channel, $start_date, $end_date);
+
+        $res = null;
+        if ($channel_key && $channel_key == 'obe') {
+            $channel = apply_filters('get_ota_id', $channel_key);
+            $channel = $channel ? $channel : SOURCE_ONLINE_WIDGET;
+            $res = $this->Room_type_model->get_room_type_availability($company_id, $channel, $start_date, $end_date, null, null, true, null, true, true, true, true, null, $channel_key);
+        } else {
+            $res = $this->Room_type_model->get_room_type_availability($company_id, $channel, $start_date, $end_date);
+        }
+
 		$data_ar = array();
 		$result = null;
 		if(!empty($res)){
