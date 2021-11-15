@@ -57,7 +57,8 @@ $confirm_new_password = array(
 				<?php //echo form_error($new_password['name']); ?>
 				<?php echo isset($errors['blank_new_password']) && $errors['blank_new_password'] ? $errors['blank_new_password'] : ''; ?>
 				<?php echo isset($errors['short_new_password']) && $errors['short_new_password'] ? $errors['short_new_password'] : ''; ?>
-				</span>
+				<?php echo isset($errors['password_contains_special_characters']) && $errors['password_contains_special_characters'] ? $errors['password_contains_special_characters'] : ''; ?>	
+			</span>
     	</div>
 	</div>
 	<div class="form-group">
