@@ -116,10 +116,10 @@ class Room_inventory extends MY_Controller {
             $data = Array(
                 'room_name' => $room->room_name,
                 'room_type_id' => $room->room_type_id,
-                // 'location_id' => isset($room->location_id) ? $room->location_id : '',
-                // 'floor_id' => isset($room->floor_id) ? $room->floor_id : '',
+                'location_id' => isset($room->location_id) ? $room->location_id : '',
+                'floor_id' => isset($room->floor_id) ? $room->floor_id : '',
                 'can_be_sold_online' => $room->can_be_sold_online,
-                // 'group_id' => $room->group_id,
+                'group_id' => $room->group_id,
                 'sort_order' => isset($room->sort_order) ? (int) $room->sort_order : 0
             );
             $this->Room_model->update_room($room->room_id, $data);
@@ -602,4 +602,207 @@ class Room_inventory extends MY_Controller {
             echo json_encode($data);
         }
     }
+
+
+     function location(){
+        $view_data = array();
+        if (!is_null($room_types = $this->Room_type_model->get_room_types($this->company_id))) {
+            $view_data['room_types'] = $room_types;
+        }
+        if (!is_null($room_location = $this->Room_location_model->get_room_location($this->company_id))) {
+            $view_data['room_location'] = $room_location;
+        }
+        if (!is_null($rooms = $this->Room_model->get_rooms($this->company_id,'room_name'))) {
+            $view_data['rooms'] = $rooms;
+        }
+        $view_data['js_files'] = array(
+            base_url() . auto_version('js/hotel-settings/room-settings.js')
+        );
+        $view_data['selected_sidebar_link'] = 'Location';
+        $view_data['main_content'] = 'hotel_settings/room_inventory_settings/room_location_settings';
+        $this->load->view('includes/bootstrapped_template', $view_data);
+        
+    }
+    function create_room_location_AJAX() {
+        $data = array (
+                    'location_name' => 'New Location',
+                    'company_id' => $this->company_id,
+                    'is_deleted' => 0,
+                );
+        $this->Room_location_model->insert($data);
+        $this->_create_room_log('New room loaction added');
+        $room_location = $this->Room_location_model->get_room_location($this->company_id, '1');
+        $view_data['room_location'] = $room_location[0];
+        $this->load->view('hotel_settings/room_inventory_settings/new_room_location', $view_data);
+    }
+    
+    function save_room_locations_AJAX() {
+        $strRequest = file_get_contents('php://input');
+        $roomLocations = json_decode($strRequest, true);
+        for($i=0; $i < count($roomLocations); $i++){
+            $data = Array();
+            $location_id = '';
+            $data = Array(
+                'location_name' => $roomLocations[$i]['location_name']
+            );
+            $location_id = $roomLocations[$i]['location_id'];
+            $this->Room_location_model->update_location($location_id, $data);
+            $this->_create_room_log("Room loaction updated (ID: $location_id)");
+        }
+        echo 1;
+    }
+    function delete_room_location_AJAX() {
+        $location_id = $this->input->post('location_id');
+        $data = array('is_deleted' => 1);
+        $this->Room_location_model->update_location($location_id, $data);
+        $this->_create_room_log("Room loaction deleted (ID: $location_id)");
+        $data = array('isSuccess' => TRUE, 'message' => 'Room Location deleted');
+        echo json_encode($data);
+    }
+
+
+    function floor(){
+        $view_data = array();
+        if (!is_null($room_types = $this->Room_type_model->get_room_types($this->company_id))) {
+            $view_data['room_types'] = $room_types;
+        }
+        if (!is_null($room_location = $this->Floor_model->get_floor($this->company_id))) {
+            $view_data['room_location'] = $room_location;
+        }
+        if (!is_null($rooms = $this->Room_model->get_rooms($this->company_id,'room_name'))) {
+            $view_data['rooms'] = $rooms;
+        }
+        $view_data['js_files'] = array(
+            base_url() . auto_version('js/hotel-settings/room-settings.js')
+        );
+        $view_data['selected_sidebar_link'] = 'Floor';
+        $view_data['main_content'] = 'hotel_settings/room_inventory_settings/floor_settings';
+        $this->load->view('includes/bootstrapped_template', $view_data);
+        
+    }
+
+
+    /*
+        ceate floor by AJAX
+    */
+    function create_floor_AJAX() {
+        $data = array (
+                    'floor_name' => 'New Floor',
+                    'company_id' => $this->company_id,
+                    'is_deleted' => 0
+                );
+        $this->Floor_model->insert($data);
+        $this->_create_room_log('New floor added');
+
+        $room_floor = $this->Floor_model->get_floor($this->company_id, 1);
+        $view_data['floor'] = $room_floor[0];
+        $this->load->view('hotel_settings/room_inventory_settings/new_floor', $view_data);
+    }
+
+
+    /*
+        Save floor by AJAX
+    */
+    function save_floor_AJAX() {
+        $strRequest = file_get_contents('php://input');
+        $floor = json_decode($strRequest,true);
+        for($i=0;$i<count($floor);$i++){
+            $data = Array();
+            $floor_id = '';
+            $data = Array(
+                'floor_name' => $floor[$i]['floor_name']
+            );
+            $floor_id = $floor[$i]['floor_id'];
+            $this->Floor_model->update_floor($floor_id,$data);
+            $this->_create_room_log("Floor updated (ID: $floor_id)");
+        }
+        echo 1;
+    }
+
+
+    /*
+        Delete floor by AJAX
+    */
+    function delete_floor_AJAX() {
+        $floor_id = $this->input->post('floor_id');
+        $data = array('is_deleted' => 1);
+        $this->Floor_model->update_floor($floor_id, $data);
+        $this->_create_room_log("Floor deleted (ID: $floor_id)");
+        $data = array('isSuccess' => TRUE, 'message' => 'Floor deleted');
+        echo json_encode($data);
+    }
+
+
+    /*
+        Get feature list for view
+    */
+    function features() {
+        $view_data = array();
+        $features = $this->Feature_model->get_features($this->company_id);
+        $view_data['features'] = $features;
+        $view_data['js_files'] = array(
+            base_url() . auto_version('js/hotel-settings/feature.js')
+        );
+
+        $view_data['selected_sidebar_link'] = 'Features';
+
+        $view_data['main_content'] = 'hotel_settings/room_inventory_settings/features';
+        $this->load->view('includes/bootstrapped_template', $view_data);
+    }
+
+    /*
+        Return new feature creation form in HTML
+    */
+    function get_new_feature_form_AJAX() {
+
+        $company_info = $this->Company_model->get_company($this->company_id);
+        $number_of_rooms = $company_info['number_of_rooms'];
+        $features = $this->Feature_model->get_features($this->company_id);
+        $actual_used_feature = count($features);
+
+        $room_id = $this->Feature_model->create_feature($this->company_id, 'New');
+        $this->_create_room_log('New Room Feature added');
+        $view_data['feature'] = $this->Feature_model->get_feature($room_id);
+
+        $this->load->view('hotel_settings/room_inventory_settings/new_feature', $view_data);
+    }
+
+    /*
+        Save features by AJAX
+    */
+    function save_features_AJAX() {
+        $strRequest = file_get_contents('php://input');
+        $features = json_decode($strRequest);
+        foreach ($features as $feature) {
+            $data = Array(
+                'feature_name' => $feature->feature_name,
+                'show_on_website' => $feature->show_on_website
+            );
+            $this->Feature_model->update_feature($feature->feature_id, $data);
+            $this->_create_room_log("Room Feature updated (ID: $feature->feature_id)");
+        }
+
+        // todo report error
+        echo 1;
+    }
+
+    /*
+        Delete features by AJAX
+    */
+    function delete_feature_AJAX() {
+        $feature_id = $this->input->post('feature_id');
+
+        $data = array('is_deleted' => 1);
+
+        if ($this->Feature_model->update_feature($feature_id, $data)) {
+            $this->_create_room_log("Room Feature deleted (ID: $feature_id)");
+            $data = array('isSuccess' => TRUE, 'message' => 'Feature deleted');
+            echo json_encode($data);
+        } else {
+            $data = array('isSuccess' => FALSE, 'message' => 'Feature delete fail');
+            echo json_encode($data);
+        }
+    }
+
+     
 }
