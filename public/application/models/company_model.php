@@ -1054,6 +1054,39 @@ class Company_model extends CI_Model {
 
           return $que->row_array();
     } 
+
+    function get_company_data($company_ids){
+    	$this->db->select('company_id, name');
+		$this->db->from('company');
+
+		$this->db->where_in('company_id', $company_ids);
+		
+		$query = $this->db->get();
+		
+		if ($query->num_rows >= 1)
+		{
+			return $result = $query->result_array();
+		}
+		
+		return NULL;
+    }
+
+    function get_partner_company_data($user_id){
+    	$this->db->select('company_id, name');
+		$this->db->from('company');
+
+		$this->db->where('partner_id', $user_id);
+		$this->db->where('is_deleted', 0);
+		
+		$query = $this->db->get();
+		
+		if ($query->num_rows >= 1)
+		{
+			return $result = $query->result_array();
+		}
+		
+		return NULL;
+    }
 }
 
 

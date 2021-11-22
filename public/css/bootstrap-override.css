@@ -4600,3 +4600,9 @@
       }
       
     }
+
+/* by mradul */
+.uninstall_extension, .install_extension{
+    float: right;
+    margin: 6px 5px;
+}

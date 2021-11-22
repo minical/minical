@@ -21838,6 +21838,17 @@ CREATE TABLE `hoteli_pay_bank_details` (
   `created_date` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+
+--
+-- Table structure for table `extensions_x_vendor`
+--
+
+CREATE TABLE `extensions_x_vendor` (
+  `extension_name` varchar(100) NOT NULL,
+  `vendor_id` bigint(20) NOT NULL,
+  `is_installed` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 --
 -- Indexes for dumped tables
 --
@@ -22727,6 +22738,13 @@ ALTER TABLE `ota_x_company` CHANGE `ota_id` `ota_manager_id` BIGINT(20) NOT NULL
 ALTER TABLE `extra` CHANGE `extra_name` `extra_name` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
 
 ALTER TABLE `company` ADD `email_cancellation_for_ota_reservations` TINYINT(1) NOT NULL DEFAULT '0' AFTER `booking_engine_tracking_code`;
+
+ALTER TABLE `room_type` CHANGE `max_occupancy` `max_occupancy` INT(10) NOT NULL DEFAULT '0';
+ALTER TABLE `room_type` CHANGE `min_occupancy` `min_occupancy` INT(10) NOT NULL DEFAULT '0';
+
+ALTER TABLE `extensions_x_company` ADD `is_favourite` TINYINT(1) NOT NULL DEFAULT '0' AFTER `is_active`;
+
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

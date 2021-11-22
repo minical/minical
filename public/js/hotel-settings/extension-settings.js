@@ -107,3 +107,82 @@ $(document).on('keyup', '.search_ext', function() {
 	    },100);
 	   
 });
+
+$(document).on('click', '.uninstall_extension', function(){
+	var extension_name = $(this).data('ext_name');
+	$.ajax({
+            url    : getBaseURL() + 'extensions/uninstall_extension',
+            method : 'post',
+            dataType: 'json',
+            data   : {
+                extension_name: extension_name
+            },
+            success: function (resp) {
+            	console.log('resp',resp);
+            	var companyNameHtml = '';
+            	if ($.isArray(resp.success)){
+
+            		$('.company_names').html('');
+
+            		companyNameHtml = '<table class="table table-hover">';
+
+            		$.each(resp.success, function(i,v){
+            			console.log('i',i);
+            			console.log('v',v);
+            			companyNameHtml += 	'<tr>'+
+            									'<th>'+v.name+'</th>'+
+            						// 			'<td>'+
+            						// 				'<a href="'+getBaseURL()+'menu/select_hotel/'+v.company_id+'" class="btn btn-primary">Show</a>'+
+        										// '</td>'+
+    										'</tr>';
+            		});
+
+            		companyNameHtml += '</table>';
+            		$('.company_names').append(companyNameHtml);
+
+            		$('#active_modules_modal').modal('show');
+				} else if (resp.success == true){
+					var r  = confirm('Are you sure you want to uninstall this extension?');
+    
+				    if (r == true) {
+				       $.ajax({
+				            url    : getBaseURL() + 'extensions/uninstall_extension_process',
+				            method : 'post',
+				            dataType: 'json',
+				            data   : {
+				                extension_name: extension_name
+				            },
+				            success: function (resp) {
+				            	if (resp.success == true){
+				            		location.reload();
+				            	}
+				            }
+				        });
+				    } else {
+				        event.preventDefault();
+				    }
+					
+				}
+            }
+    });
+});
+
+$(document).on('click', '.install_extension', function(){
+	var extension_name = $(this).data('ext_name');
+	$.ajax({
+            url    : getBaseURL() + 'extensions/install_extension',
+            method : 'post',
+            dataType: 'json',
+            data   : {
+                extension_name: extension_name
+            },
+            success: function (resp) {
+            	if (resp.success == true){
+					location.reload();
+				}
+				else {
+					//alert(results.message);
+				}
+            }
+    });
+});

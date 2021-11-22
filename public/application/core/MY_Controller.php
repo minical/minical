@@ -311,7 +311,13 @@ class MY_Controller extends CI_Controller {
             $admin_user_ids = $this->Whitelabel_partner_model->get_partner_detail();
             $this->is_super_admin = (($user && isset($user['email']) && $user['email'] == SUPER_ADMIN) || ($admin_user_ids && isset($admin_user_ids['admin_user_id']) && $this->user_id == $admin_user_ids['admin_user_id']));
 
-            $this->user_permission = ($user && isset($user['permission']) && $user['permission']) ? $user['permission'] : '';
+            //if($_SERVER['HTTP_HOST'] != "app.minical.io" || $_SERVER['HTTP_HOST'] != "demo.minical.io"){
+                $this->vendor_id = $admin_user_ids['partner_id'] ? $admin_user_ids['partner_id'] : $this->company_data['partner_id'];
+
+                $this->user_permission = ($user && isset($user['permission']) && $user['permission']) ? $user['permission'] : '';
+            //}
+
+            // $this->user_permission = ($user && isset($user['permission']) && $user['permission']) ? $user['permission'] : '';
 
             if($this->is_super_admin){
                 $get_active_extensions = $this->Extension_model->get_active_extensions($this->company_id, 'reseller_package', false);

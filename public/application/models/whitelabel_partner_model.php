@@ -198,4 +198,19 @@ class Whitelabel_partner_model extends CI_Model {
         
         return $partner;
     }
+
+    function get_whitelabel_partner_id($user_id)
+    {
+        $this->db->from('whitelabel_partner AS wp');
+        $this->db->join('whitelabel_partner_x_admin AS wpxa', "wp.id = wpxa.partner_id", "left");
+        $this->db->join('whitelabel_partner_type AS wpt', "wp.type_id = wpt.id", "left");
+        $this->db->where('wpxa.admin_id', $user_id);
+        $this->db->group_by('wp.id');
+        $query = $this->db->get();
+        if($query->num_rows() > 0)
+        {
+            return $query->row_array();
+        }
+        return NULL;
+    }
 }

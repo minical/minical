@@ -224,7 +224,10 @@ class Company extends MY_Controller
             $first_name = $this->input->post('employee_first_name');
             $last_name  = $this->input->post('employee_last_name');
 
-            $this->_add_employee($this->company_id, $email, $first_name, $last_name);
+            // $this->_add_employee($this->company_id, $email, $first_name, $last_name);
+            $user_id = $this->_add_employee($this->company_id, $email, $first_name, $last_name);
+
+            $this->User_model->update_user($user_id, array('partner_id' => $this->vendor_id));
             redirect('settings/company/employees');
         }
 
@@ -316,6 +319,8 @@ class Company extends MY_Controller
             if (is_null($role = $this->User_model->get_user_role($user_id, $company_id))) {
                 $this->User_model->add_user_permission($company_id, $user_id, 'is_employee', $add_default_permissions = true);
             }
+
+            return $user_id;
 
         }
 
