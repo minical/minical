@@ -17,7 +17,7 @@ class Post_model extends CI_Model {
     {
         $this->db->select('*');
        
-        if(isset($post) && count($post)>0){
+        if(isset($post) && is_array($post) && count($post) > 0){
             foreach($post as $key=>$value){
              $this->db->where($key, $value);      
             }
@@ -54,12 +54,16 @@ class Post_model extends CI_Model {
         }
     }
 
-    function delete_post(int $post_id = null)
+    function delete_post(int $post_id = null, bool $force_delete = false )
     {
      
         $data = Array('is_deleted' => '1');
         $this->db->where('post_id', $post_id);
-        $this->db->update('posts', $data);
+        if(isset($force_delete) && $force_delete == TRUE){
+            $this->db->delete('posts');
+        }else{
+            $this->db->update('posts', $data);
+        }
         if ($this->db->_error_message())
         {
             show_error($this->db->_error_message());
@@ -74,7 +78,7 @@ class Post_model extends CI_Model {
         }
     }
 
-    function get_post_meta(int $post_id = null, string $key = null)
+    function get_post_meta(int $post_id = null, string $key = null, bool $single = false )
     {
         
         $this->db->select('*');
@@ -84,22 +88,26 @@ class Post_model extends CI_Model {
         
         }
         if(isset($key) && $key !== null){
-            $this->db->where('meta_key', $key);   
-        
+            $this->db->where('meta_key', $key);
+
         }
-        
-        $query = $this->db->get('postmeta');
+        if(isset($single) && $single == TRUE){
+            $result_array = $this->db->get('postmeta')->row_array();
+
+        }else{
+            $query = $this->db->get('postmeta');
+            $result_array = $query->result_array();
+        }
+
         if ($this->db->_error_message())
         {
             show_error($this->db->_error_message());
         }
-       
-        $result_array = $query->result_array();
 
         return $result_array;
     }
 
-    function edit_post_meta(array $post_meta = null, int $post_id= null)
+    function update_post_meta(array $post_meta = null, int $post_id= null)
     {
         $data = array();      
         foreach ($post_meta as $key => $value) {
@@ -127,9 +135,13 @@ class Post_model extends CI_Model {
         }
     }
 
-    function delete_post_meta(int $post_id = null)
+    function delete_post_meta(int $post_id = null, string $meta_key = null,  $meta_value = null)
     {
         $this->db->where('post_id', $post_id);
+        $this->db->where('meta_key', $meta_key);
+        if(isset($meta_value) && $meta_value !== null){
+            $this->db->where('meta_value', $meta_value); 
+        }
         $this->db->delete('postmeta');
         if ($this->db->affected_rows() > 0){
             return TRUE;

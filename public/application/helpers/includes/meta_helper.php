@@ -28,12 +28,13 @@ function add_post_meta ($post_id, $key, $value) {
 /**
  * to get postmeta data from postmeta table by post_id or meta_key.
  * 
- * @param  post_id $post_id The id of the post corresponds to the postmeta data.
- * @param  key $key Optional, the key of postmeta data.
+ * @param  int $post_id The id of the post corresponds to the postmeta data.
+ * @param  string $key Optional, The meta key to retrieve. By default, returns data for all keys.
+ * @param  boolean $single Optional Whether to return a single value. This parameter has no effect if $key is not specified.
  * @return mixed Either array or null, if postmeta data is available or no error occurs, then array else null.
  * 
  */
-function get_post_meta(int $post_id = null, string $key = null)
+function get_post_meta(int $post_id = null, string $key = null, bool $single = false )
 {
     $post_meta_data = null;
     $CI = & get_instance();
@@ -54,7 +55,7 @@ function get_post_meta(int $post_id = null, string $key = null)
     // before getting postmeta 
     do_action('pre.get.post_meta', $post_id, $CI->input->post());
 
-    $post_meta_data = $CI->Post_model->get_post_meta($post_id, $key);
+    $post_meta_data = $CI->Post_model->get_post_meta($post_id, $key, $single);
 
     // after getting postmeta
     do_action('post.get.post_meta', $post_id, $post_id, $CI->input->post());
@@ -64,23 +65,23 @@ function get_post_meta(int $post_id = null, string $key = null)
 }
 
 /**
- * edit postmeta data. 
+ * update postmeta data. 
  * 
  * @param array $post_meta An array of postmeta data to be updated.
  * @param int $post_id The id of the post corresponds to the postmeta data. 
  * @return mixed Either true or null, if postmeta data is updated then true else null.
  */
-function edit_post_meta(array $post_meta = null, int $post_id = null)
+function update_post_meta(array $post_meta = null, int $post_id = null)
 {
     $post_meta_data = null;
     $CI = & get_instance();
     $CI->load->model('Post_model');
 
     //filters
-    $data = apply_filters( 'before_edit_post_meta', $post_id, $CI->input->post());
-    $should_edit_post_meta = apply_filters( 'should_edit_post_meta', $post_id, $CI->input->post());
+    $data = apply_filters( 'before_update_post_meta', $post_id, $CI->input->post());
+    $should_update_post_meta = apply_filters( 'should_update_post_meta', $post_id, $CI->input->post());
 
-    if (!$should_edit_post_meta) {
+    if (!$should_update_post_meta) {
         return;
     }
 
@@ -88,16 +89,16 @@ function edit_post_meta(array $post_meta = null, int $post_id = null)
         return null;
     }
    
-    // before editing postmeta 
-    do_action('pre.edit.post_meta', $post_id, $CI->input->post());
+    // before updateing postmeta 
+    do_action('pre.update.post_meta', $post_id, $CI->input->post());
     
-    $updated_flag = $CI->Post_model->edit_post_meta($post_meta,$post_id);
+    $updated_flag = $CI->Post_model->update_post_meta($post_meta,$post_id);
     if(empty($updated_flag)){
         return null;
     }
 
-    // before editing postmeta 
-    do_action('post.edit.post_meta', $post_id, $post_id, $CI->input->post());
+    // before updateing postmeta 
+    do_action('post.update.post_meta', $post_id, $post_id, $CI->input->post());
      
     return true;
 }
@@ -106,10 +107,12 @@ function edit_post_meta(array $post_meta = null, int $post_id = null)
  * delete a postmeta data.
  * 
  * @param int $post_id The id of the post corresponds to the postmeta data.
+ * @param string $meta_key name of key.
+ * @param mixed $meta_value value of key this will make delete more certain (in case key name is same).
  * @return mixed Either true or null, if postmeta data is deleted then true else null.
  * 
  */
-function delete_post_meta(int $post_id = null)
+function delete_post_meta(int $post_id = null, string $meta_key = null, $meta_value = null)
 { 
     $CI = & get_instance();
     $CI->load->model('Post_model');
@@ -128,7 +131,7 @@ function delete_post_meta(int $post_id = null)
     //for action befor deleteting the postmeta
     do_action('pre.delete.post_meta', $post_id, $CI->input->post()); 
   
-    $delete_flag = $CI->Post_model->delete_post_meta($post_id);
+    $delete_flag = $CI->Post_model->delete_post_meta($post_id, $meta_key, $meta_value);
     if(empty($delete_flag)){
         return null;
     }

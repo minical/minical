@@ -31,11 +31,11 @@ function add_post ($data) {
 /**
  * get post form posts table
  * 
- * @param array $post An Array of post data including post_id (require), additional data will be added in where clause.
+ * @param mixed $post Int id of post or An Array of post data, this key will be added in where clause.
  * @return mixed Either array or null, if post data is available or no error occurs, then array else null.
  * 
  */
-function get_post(array $post = null)
+function get_post( $post )
 {
 
     $post_data = null;
@@ -57,15 +57,14 @@ function get_post(array $post = null)
         do_action('pre.get.post', $post, $CI->input->post()); 
         $post_data = $CI->Post_model->get_post($post);
     }
-
+    
     if(!$post_data){
         return null;
     }
 
-    $post_id = $post_data['post_id'];
     //for action after getting the post
-    do_action('post.get.post', $post_id, $post, $CI->input->post());
-    return $post_data;
+    do_action('post.get.post', $post_data, $post, $CI->input->post());
+    return $post_data[0];
     
 }
 
@@ -90,7 +89,10 @@ function edit_post(array $post = null)
     if(empty($post)){
         return null;
     }
-    
+    if(!isset($post['post_id'])){
+        return false;
+    }
+
     //for action befor editing the post
     do_action('pre.edit.post', $post, $CI->input->post()); 
 
@@ -99,12 +101,11 @@ function edit_post(array $post = null)
         return null;
     }
 
-    $post_id = $post_data['post_id'];
+    $post_id = $post['post_id'];
 
     //for action after editing the post
     do_action('post.edit.post', $post_id, $post, $CI->input->post());
-    
-    
+     
     return $post_id;
 
 }
@@ -116,7 +117,7 @@ function edit_post(array $post = null)
  * @return mixed Either true or null, if postmeta data is delete then true else null.
  * 
  */
-function delete_post(int $post_id = null)
+function delete_post(int $post_id = null, bool $force_delete = false )
 {
     $CI = & get_instance();
     $CI->load->model('Post_model');
@@ -135,7 +136,7 @@ function delete_post(int $post_id = null)
     //for action befor deleteting the post
     do_action('pre.delete.post', $post_id, $CI->input->post()); 
   
-    $delete_flag = $CI->Post_model->delete_post($post_id);
+    $delete_flag = $CI->Post_model->delete_post($post_id, $force_delete);
     if(empty($delete_flag)){
         return null;
     }
