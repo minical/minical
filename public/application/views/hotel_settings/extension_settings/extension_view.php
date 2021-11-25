@@ -43,7 +43,11 @@
                                     <!-- <span style="font-size: 11px;color: gray;font-weight: 500;padding: 0px 0 5px;">VENDOR ONLY</span> -->
                                     <?php //}?>
 
-                                    <p class="extension-discription" ><?php echo substr($extension['description'], 0,60).'...  '; ?><a href="<?php echo (isset($extension['marketplace_product_link']) && $extension['marketplace_product_link'] ? $extension['marketplace_product_link']: "")?>" style="font-size: 14px">more</a></p>
+                                    <p class="extension-discription" ><?php echo  strlen($extension['description']) > 200 ? substr($extension['description'],0,200)."..." : $extension['description']; ?>
+                                        <?php if(isset($extension['marketplace_product_link']) && $extension['marketplace_product_link']){ ?>
+                                            <a href="<?php echo (isset($extension['marketplace_product_link']) && $extension['marketplace_product_link'] ? $extension['marketplace_product_link']: "")?>" style="font-size: 14px"><?php echo l('more');?></a>
+                                        <?php } ?>
+                                    </p>
                                 </div>
 
                             </div>

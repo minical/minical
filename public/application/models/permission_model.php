@@ -455,7 +455,7 @@ class Permission_model extends CI_Model {
             return true;
         }
         $permissions = $this->session->userdata("permissions");
-        $is_salesperson = in_array("is_salesperson", $permissions) ? 1 : 0;
+        $is_salesperson = is_array($permissions) && in_array("is_salesperson", $permissions) ? 1 : 0;
         $sql = "SELECT 
                     'is_admin' as permission
                 FROM user_permissions as up

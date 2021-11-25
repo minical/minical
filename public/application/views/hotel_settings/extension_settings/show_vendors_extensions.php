@@ -43,9 +43,10 @@
                                             <span style="font-size: 11px;color: gray;font-weight: 500;padding: 0px 0 5px;">VENDOR ONLY</span>
                                             <?php } ?>
                                            
-                                            <p class="extension-discription" ><?php echo substr($extension['description'], 0,60).'...  '; ?>
-                                                <a href="<?php echo (isset($extension['marketplace_product_link']) && $extension['marketplace_product_link'] ? $extension['marketplace_product_link']: "")?>" style="font-size: 14px">more
-                                                </a>
+                                            <p class="extension-discription" ><?php echo strlen($extension['description']) > 200 ? substr($extension['description'],0,200)."..." : $extension['description']; ?>
+                                                <?php if(isset($extension['marketplace_product_link']) && $extension['marketplace_product_link']){ ?>
+                                                    <a href="<?php echo (isset($extension['marketplace_product_link']) && $extension['marketplace_product_link'] ? $extension['marketplace_product_link']: "")?>" style="font-size: 14px"><?php echo l('more');?></a>
+                                                <?php } ?>
                                             </p>
                                         </div>
                                     </div>
@@ -56,10 +57,10 @@
                                     <div class="checkbox checbox-switch switch-primary" style="margin-bottom: 5px;margin-top: 5px">
                                         
                                         
-                                        <label class="extension-box" style="padding-right: 1.5rem !important;">
+                                        <!-- <label class="extension-box" style="padding-right: 1.5rem !important;">
                                             <input type="checkbox" class="extension-status-button" data-status="<?php echo $extension['is_active']; ?>" name="<?php echo $extension['extension_folder_name']; ?>"
                                             <?= $extension['is_active'] ? 'checked=checked' : ''; ?>/>
-                                        </label>
+                                        </label> -->
                                         <?php if($this->is_super_admin){ ?>
                                             <a href="javascript:" data-ext_name="<?php echo $extension['extension_folder_name']; ?>" class="uninstall_extension" >Uninstall</a>
                                         <?php } ?>
@@ -110,9 +111,10 @@
                                                 <span style="font-size: 11px;color: gray;font-weight: 500;padding: 0px 0 5px;">VENDOR ONLY</span>
                                                 <?php } ?>
                                                
-                                                <p class="extension-discription" ><?php echo substr($extension['description'], 0,60).'...  '; ?>
-                                                    <a href="<?php echo (isset($extension['marketplace_product_link']) && $extension['marketplace_product_link'] ? $extension['marketplace_product_link']: "")?>" style="font-size: 14px">more
-                                                    </a>
+                                                <p class="extension-discription" ><?php echo  strlen($extension['description']) > 200 ? substr($extension['description'],0,200)."..." : $extension['description']; ?>
+                                                    <?php if(isset($extension['marketplace_product_link']) && $extension['marketplace_product_link']){ ?>
+                                                        <a href="<?php echo (isset($extension['marketplace_product_link']) && $extension['marketplace_product_link'] ? $extension['marketplace_product_link']: "")?>" style="font-size: 14px"><?php echo l('more');?></a>
+                                                    <?php } ?>
                                                 </p>
                                             </div>
                                         </div>
@@ -120,10 +122,10 @@
 
                                     <div class="features-div-padding">
                                         <div class="checkbox checbox-switch switch-primary" style="margin-bottom: 5px;margin-top: 5px">
-                                            <label class="extension-box" style="padding-right: 1.5rem !important;">
+                                            <!-- <label class="extension-box" style="padding-right: 1.5rem !important;">
                                                 <input type="checkbox" class="extension-status-button" data-status="<?php echo $extension['is_active']; ?>" name="<?php echo $extension['extension_folder_name']; ?>"
                                                 <?= $extension['is_active'] ? 'checked=checked' : ''; ?>/>
-                                            </label>
+                                            </label >-->
                                             <a href="javascript:" data-ext_name="<?php echo $extension['extension_folder_name']; ?>" class="install_extension" >Install</a>
                                         </div>
                                     </div>

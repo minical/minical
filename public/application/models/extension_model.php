@@ -275,6 +275,21 @@ class Extension_model extends CI_Model {
 		
 		return NULL;
 	}
+
+	function insert_vendors_extension($data){
+		
+		for ($i = 0, $total = count($data); $i < $total; $i = $i + 50)
+        {
+            $batch = array_slice($data, $i, 50);
+
+            $this->db->insert_batch("extensions_x_vendor", $batch);
+
+            if ($this->db->_error_message())
+            {
+                show_error($this->db->_error_message());
+            }
+        }
+	}
 }
 
 /* End of file - extra_model.php */

@@ -216,7 +216,16 @@ class Extensions extends MY_Controller
         $status = 1;
         $active_extension = $this->Extension_model->get_filter_extension($status,$this->company_id);
 
-        $active_extension_name = array();
+        $installed_extensions = $this->Extension_model->get_installed_extensions(null, $this->vendor_id);
+
+        $active_extension_name = $modules_name = array();
+
+        if($installed_extensions){
+            foreach ($installed_extensions as $key => $value) {
+                $modules_name[] = $value['extension_name'];
+            }
+        }
+
         foreach ($active_extension as $key => $value) {
             $active_extension_name[] = $value['extension_name'];
         }
@@ -225,7 +234,7 @@ class Extensions extends MY_Controller
         $final_modules = array();
         foreach ($all_active_modules as $key => $module) {
             if(isset($module['categories']) && $module['categories'] ){
-                if(in_array($category,$module['categories'])){
+                if(in_array($category,$module['categories']) && in_array($module['extension_folder_name'], $modules_name)){
                     $extension = array();
                     $extension['description'] = $module['description'];
                     $extension['extension_folder_name'] = $module['extension_folder_name'];
@@ -264,19 +273,26 @@ class Extensions extends MY_Controller
     function search_extension(){
         $search = $this->input->post('item');
         $all_active_modules = $this->all_active_modules;
+
+        $installed_extensions = $this->Extension_model->get_installed_extensions(null, $this->vendor_id);
+
         $modules_name = array();
         if($search != ""){
-            foreach($all_active_modules as $module)
+            if($installed_extensions){
+                foreach($installed_extensions as $module)
             {
-                $name = ($module['name']);
+                    $name = ($module['extension_name']);
                 if(stripos($name,$search) !== false){
-                    $modules_name[] = $module['name'];
+                        $modules_name[] = $module['extension_name'];
 
                 }
             }
+            }
         } else {
-            foreach ($all_active_modules as $key => $value) {
-                $modules_name[] = $value['name'];
+            if($installed_extensions){
+                foreach ($installed_extensions as $key => $value) {
+                    $modules_name[] = $value['extension_name'];
+                }
             }
         }
 
@@ -304,7 +320,7 @@ class Extensions extends MY_Controller
         foreach ($all_active_modules as $key => $module) {
             if($modules_name){
                 foreach ($modules_name as $key => $name) {
-                    if($name == $module['name']){
+                    if($name == $module['extension_folder_name']){
                         $extension = array();
                         $extension['description'] = $module['description'];
                         $extension['extension_folder_name'] = $module['extension_folder_name'];
@@ -380,9 +396,24 @@ class Extensions extends MY_Controller
             $new_array = array_values($new_array);
         }
 
+        $installed_extensions = $this->Extension_model->get_installed_extensions(null, $this->vendor_id);
+
+        $modules_name = $final_modules = array();
+
+        if($installed_extensions){
+            foreach ($installed_extensions as $key => $value) {
+                if(in_array($value['extension_name'], $new_array))
+                {
+                    $modules_name[] = $value['extension_name'];
+                }
+            }
+        }
+
+        $new_array = $modules_name;
+
         foreach($all_active_modules as $key => $module){
 
-            if(in_array($module['extension_folder_name'],$new_array)){
+            if($new_array && in_array($module['extension_folder_name'], $new_array)){
                 $extension['description'] = $module['description'];
                 $extension['extension_folder_name'] = $module['extension_folder_name'];
                 $extension['extension_name'] = $module['name'];
@@ -567,54 +598,54 @@ class Extensions extends MY_Controller
             $temp_ext = $temp_extension = array();
             $is_ext_matched = false;
 
-            if($extensions){
-                foreach ($extensions as $key => $ext) {
-                    if($installed_extensions){
-                        $is_ext_matched = false;
-                        foreach ($installed_extensions as $key1 => $in_ext) {
-                            if(
-                                isset($in_ext['vendor_id']) && 
-                                $ext['extension_name'] == $in_ext['extension_name']
-                            ){
-                                $is_ext_matched = true;
-                                $temp_ext[$key] = $installed_extensions[$key1];
-                                $temp_ext[$key]['is_active'] = $ext['is_active'];
-                            }
-                        }
-                    }
-                    if(!$is_ext_matched){
-                        $temp_ext[$key] = $extensions[$key];
-                    }
-                }
+            // if($extensions){
+            //     foreach ($extensions as $key => $ext) {
+            //         if($installed_extensions){
+            //             $is_ext_matched = false;
+            //             foreach ($installed_extensions as $key1 => $in_ext) {
+            //                 if(
+            //                     isset($in_ext['vendor_id']) && 
+            //                     $ext['extension_name'] == $in_ext['extension_name']
+            //                 ){
+            //                     $is_ext_matched = true;
+            //                     $temp_ext[$key] = $installed_extensions[$key1];
+            //                     $temp_ext[$key]['is_active'] = $ext['is_active'];
+            //                 }
+            //             }
+            //         }
+            //         if(!$is_ext_matched){
+            //             $temp_ext[$key] = $extensions[$key];
+            //         }
+            //     }
 
-                if($installed_extensions && count($extensions) <= count($installed_extensions)){
-                    $i = 0;
-                    foreach ($installed_extensions as $key1 => $in_ext) {
-                        foreach ($extensions as $key => $ext) {
+            //     if($installed_extensions && count($extensions) <= count($installed_extensions)){
+            //         $i = 0;
+            //         foreach ($installed_extensions as $key1 => $in_ext) {
+            //             foreach ($extensions as $key => $ext) {
 
-                            if(
-                                $ext['extension_name'] == $in_ext['extension_name']
-                            ){
-                                $temp_ext[$i] = $in_ext;
-                                $temp_ext[$i]['is_active'] = $ext['is_active'];
-                                break;
-                            } else {
-                                $temp_ext[$i] = $in_ext;
-                                $temp_ext[$i]['is_active'] = 0;
-                            }
-                        } $i++;
-                    }
-                }
-                $extensions = $temp_ext;
-            }
-            else {
-                if($installed_extensions){
-                    foreach ($installed_extensions as $key1 => $in_ext) {
-                        $installed_extensions[$key1]['is_active'] = 0;
-                    }
-                }
-                $extensions = $installed_extensions;
-            }
+            //                 if(
+            //                     $ext['extension_name'] == $in_ext['extension_name']
+            //                 ){
+            //                     $temp_ext[$i] = $in_ext;
+            //                     $temp_ext[$i]['is_active'] = $ext['is_active'];
+            //                     break;
+            //                 } else {
+            //                     $temp_ext[$i] = $in_ext;
+            //                     $temp_ext[$i]['is_active'] = 0;
+            //                 }
+            //             } $i++;
+            //         }
+            //     }
+            //     $extensions = $temp_ext;
+            // }
+            // else {
+            //     if($installed_extensions){
+            //         foreach ($installed_extensions as $key1 => $in_ext) {
+            //             $installed_extensions[$key1]['is_active'] = 0;
+            //         }
+            //     }
+            //     $extensions = $installed_extensions;
+            // }
         }
 
         $final_modules = array();
@@ -622,8 +653,8 @@ class Extensions extends MY_Controller
         foreach($all_active_modules as $key => $module)
         {
             $flag = true;
-            if($extensions){
-                foreach ($extensions as $key1 => $extension) {
+            if($installed_extensions){
+                foreach ($installed_extensions as $key1 => $extension) {
                     if($module['extension_folder_name'] == $extension['extension_name'])
                     {
                         $extension['description'] = $module['description'];
@@ -660,7 +691,7 @@ class Extensions extends MY_Controller
         $activated_modules = array();
         if(count($data['extensions']) > 0){
             foreach($data['extensions'] as $ext){
-                if($ext['is_active'] == 1){
+                if(isset($ext['is_active']) && $ext['is_active'] == 1){
                     $activated_modules[] = $ext['extension_folder_name'];
                 }
             }
@@ -695,5 +726,31 @@ class Extensions extends MY_Controller
         $data['selected_sidebar_link'] = 'Extensions';
         $data['main_content'] = 'hotel_settings/extension_settings/show_vendors_extensions';
         $this->load->view('includes/bootstrapped_template', $data);
+    }
+
+    function set_vendors_extension(){
+
+        $all_active_modules = $this->all_active_modules;
+
+        $whitelabel_partners = $this->Whitelabel_partner_model->get_partners();
+        $partner_ids = $ext_array = array();
+
+        foreach ($whitelabel_partners as $partner)
+        {
+            $partner_ids[] = $partner['id'];
+        }
+
+        $i = 0;
+                foreach ($partner_ids as $key1 => $id) {
+                foreach ($all_active_modules as $key => $module) {
+                    $ext_array[$i]['vendor_id'] = $id;
+                    $ext_array[$i]['extension_name'] = $key;
+                    $ext_array[$i]['is_installed'] = 1;
+
+                    $i++;
+                }
+            }
+
+        $this->Extension_model->insert_vendors_extension($ext_array);
     }
 }
