@@ -85,11 +85,14 @@ if ( ! function_exists('get_languages'))
                 $files_path = $modules_path . $module."/language/".$language_name."/index.php";
                 if(file_exists($files_path))
                 {
+                    $lang = array();
                     require($files_path);
-                    if(isset($lang[$module])){
-                        foreach($lang[$module] as $key => $value)
-                        {
-                            $data_arr[strtolower($module.'/'.$key)] = $value;
+                    if(count($lang) > 0){
+                        foreach ($lang as $m => $v) {
+                            foreach($v as $key => $value)
+                            {
+                                $data_arr[strtolower($m.'/'.$key)] = $value;
+                            }
                         }
                     }
                 }
@@ -98,11 +101,14 @@ if ( ! function_exists('get_languages'))
                     $files_path = $modules_path . $module."/language/english/index.php";
                     if(file_exists($files_path))
                     {
+                        $lang = array();
                         require($files_path);
-                        if(isset($lang[$module])){
-                            foreach($lang[$module] as $key => $value)
-                            {
-                                $data_arr[strtolower($module.'/'.$key)] = $value;
+                        if(count($lang) > 0){
+                            foreach ($lang as $m => $v) {
+                                foreach($v as $key => $value)
+                                {
+                                    $data_arr[strtolower($m.'/'.$key)] = $value;
+                                }
                             }
                         }
                     }
