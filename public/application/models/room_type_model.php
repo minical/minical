@@ -40,7 +40,7 @@ class Room_type_model extends CI_Model {
                 'get_inventory'             => $get_inventory,
                 'company_id'                => $company_id,
                 'ota_key'                   => $ota_key,
-                'X-API-KEY'                 => $this->company_api_key
+                'X-API-KEY'                 => $this->company_api_key ? $this->company_api_key : $company_access_key
             )
         );
 
