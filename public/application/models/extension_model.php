@@ -25,48 +25,10 @@ class Extension_model extends CI_Model {
 		return NULL;
 	}
 
-	function get_ins_extensions($modules_name, $company_id, $vendor_id)
-	{
-		$this->db->select('*');
-		$this->db->from('extensions_x_vendor as exv');
-		$this->db->join('extensions_x_company as exc','exc.extension_name = exv.extension_name', 'left');
-
-		if($modules_name)
-			$this->db->where_in('exv.extension_name', $modules_name);
-
-		if($vendor_id){
-			$this->db->where('exv.vendor_id', $vendor_id);
-			if($company_id)
-				$this->db->where('exc.company_id', $company_id);
-		}
-		else {
-			$this->db->where('exv.vendor_id', 0);
-			$this->db->where('exc.company_id', 1);
-		}
-
-		$this->db->where('exv.is_installed', 1);
-
-		// $this->db->group_by('exv.extension_name');		
-		
-		$query = $this->db->get();
-		
-		if ($query->num_rows >= 1)
-		{
-			return $result = $query->result_array();
-		}
-		
-		return NULL;
-	}
-
 	function get_installed_extensions($company_id, $vendor_id)
 	{
 		$this->db->select('*');
 		$this->db->from('extensions_x_vendor');
-
-		// if($company_id)
-		// 	$this->db->where('company_id', $company_id);
-		// else
-		// 	$this->db->where('company_id', 1);
 
 		if($vendor_id)
 			$this->db->where('vendor_id', $vendor_id);
@@ -90,11 +52,6 @@ class Extension_model extends CI_Model {
 		$this->db->select('*');
 		$this->db->from('extensions_x_vendor');
 
-		// if($company_id)
-		// 	$this->db->where('company_id', $company_id);
-		// else
-		// 	$this->db->where('company_id', 1);
-		
 		if($vendor_id)
 			$this->db->where('vendor_id', $vendor_id);
 		else

@@ -126,7 +126,7 @@ class Extensions extends MY_Controller
                     }
                 }
             }
-            if($_SERVER['HTTP_HOST'] != "app.minical.io" || $_SERVER['HTTP_HOST'] != "demo.minical.io"){
+            if($_SERVER['HTTP_HOST'] != "app.minical.io" && $_SERVER['HTTP_HOST'] != "demo.minical.io"){
                 if($flag){
                     $module['is_active'] = 0;
                     $module['company_id'] = $this->company_id;
@@ -520,19 +520,14 @@ class Extensions extends MY_Controller
             if($this->vendor_id != 0 && $this->user_id != SUPER_ADMIN_USER_ID)
             {
                 $installed_extensions = $this->Extension_model->get_installed_extensions($this->company_id, $this->vendor_id);
-
-                $uninstalled_extensions = $this->Extension_model->get_uninstalled_extensions($this->company_id, $this->vendor_id);
             } else {
                 $installed_extensions = $this->Extension_model->get_installed_extensions(null, $this->vendor_id);
-
-                $uninstalled_extensions = $this->Extension_model->get_uninstalled_extensions(null, $this->vendor_id);
             }
 
             // echo $this->company_id; echo '<br/>';
             // echo $this->vendor_id ? $this->vendor_id : 0; echo '<br/>';
             // echo 'extensions = '; prx($extensions, 1);
-            // echo 'installed_extensions = '; prx($installed_extensions, 1);
-            // echo 'uninstalled_extensions = '; prx($uninstalled_extensions);
+            // echo 'installed_extensions = '; prx($installed_extensions);
 
             $temp_ext = $temp_extension = array();
             $is_ext_matched = false;
