@@ -603,7 +603,8 @@ if ( ! function_exists('auto_version'))
 	function auto_version($file)
 	{
 		//Define the proper DOCUMENT_ROOT
-		if ($_SERVER['HTTP_HOST'] === 'app.minical.io' || $_SERVER['HTTP_HOST'] === 'demo.minical.io') {
+        $is_hosted_prod_service = getenv('IS_HOSTED_PROD_SERVICE');
+		if ($is_hosted_prod_service || $_SERVER['HTTP_HOST'] === 'app.minical.io' || $_SERVER['HTTP_HOST'] === 'demo.minical.io') {
             $mtime = filemtime($_SERVER['DOCUMENT_ROOT'] . '/'. $file);
             return preg_replace('{\\.([^./]+)$}', ".$mtime.\$1", $file);
 		} else {

@@ -5664,10 +5664,10 @@ var bookingModalInvoker = function ($) {
                 var customer_type_id = item.customer_type_id;
                 var background_color = '';
                 var blacklist = '';
-                if (customer_type_id == '1') {
+                if (customer_type_id == '-1') {
                     background_color = "background-color: #FF0000";
                     blacklist = true;
-                } else if (customer_type_id == '2') {
+                } else if (customer_type_id == '-2') {
                     background_color = "background-color: #DAA520";
                 }
                 return $("<li>", {

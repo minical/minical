@@ -43,7 +43,7 @@ window.onload = function () {
                         ],
                     }
 
-                    var formUrl = window.miniCal.projectUrl ? window.miniCal.projectUrl : 'http://app.minical.io/';
+                    var formUrl = window.miniCal.projectUrl ? window.miniCal.projectUrl : 'https://app.minical.io/';
                     
                     var xhr = new XMLHttpRequest();
                     xhr.open("POST", formUrl+"language_translation/get_translated_phrase");

@@ -315,7 +315,9 @@
 
 
 
-                                <?php if($_SERVER['HTTP_HOST'] == "app.minical.io" || $_SERVER['HTTP_HOST'] == "demo.minical.io"){?>
+                                <?php
+                                $is_hosted_prod_service = getenv('IS_HOSTED_PROD_SERVICE');
+                                if($is_hosted_prod_service || $_SERVER['HTTP_HOST'] == "app.minical.io" || $_SERVER['HTTP_HOST'] == "demo.minical.io"){?>
                                     <br/><br/>
                                     <div class="form-group" >
                                     <label for="property_type" class="col-sm-3 control-label">

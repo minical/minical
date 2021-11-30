@@ -541,7 +541,8 @@ class Auth extends MY_Controller
             }                
             else{
                 //print_r(validation_errors());
-                if($_SERVER['HTTP_HOST'] == "app.minical.io" || $_SERVER['HTTP_HOST'] == "demo.minical.io"){
+                $is_hosted_prod_service = getenv('IS_HOSTED_PROD_SERVICE');
+                if($is_hosted_prod_service || $_SERVER['HTTP_HOST'] == "app.minical.io" || $_SERVER['HTTP_HOST'] == "demo.minical.io"){
                     echo 'The Email field must contain a valid email address.';
                 } else {
                     echo strip_tags(form_error('email'));
@@ -1831,7 +1832,8 @@ class Auth extends MY_Controller
 
         ///property build logic
          $data_build = $company_data = array();
-        if($_SERVER['HTTP_HOST'] == "app.minical.io" || $_SERVER['HTTP_HOST'] == "demo.minical.io"){
+        $is_hosted_prod_service = getenv('IS_HOSTED_PROD_SERVICE');
+        if($is_hosted_prod_service || $_SERVER['HTTP_HOST'] == "app.minical.io" || $_SERVER['HTTP_HOST'] == "demo.minical.io"){
          
             $property_data = $this->Company_model->get_property_build($data['property_type']);
             $feature_setting = json_decode($property_data['setting_json'], true);
