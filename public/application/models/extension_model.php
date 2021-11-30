@@ -25,7 +25,51 @@ class Extension_model extends CI_Model {
 		return NULL;
 	}
 
-	function update_extension($data)
+	function get_installed_extensions($company_id, $vendor_id)
+	{
+		$this->db->select('*');
+		$this->db->from('extensions_x_vendor');
+
+		if($vendor_id)
+			$this->db->where('vendor_id', $vendor_id);
+		else
+			$this->db->where('vendor_id', 0);
+
+		$this->db->where('is_installed', 1);
+		
+		$query = $this->db->get();
+		
+		if ($query->num_rows >= 1)
+		{
+			return $result = $query->result_array();
+		}
+		
+		return NULL;
+	}
+
+	function get_uninstalled_extensions($company_id, $vendor_id)
+	{
+		$this->db->select('*');
+		$this->db->from('extensions_x_vendor');
+
+		if($vendor_id)
+			$this->db->where('vendor_id', $vendor_id);
+		else
+			$this->db->where('vendor_id', 0);
+
+		$this->db->where('is_installed', 0);
+		
+		$query = $this->db->get();
+		
+		if ($query->num_rows >= 1)
+		{
+			return $result = $query->result_array();
+		}
+		
+		return NULL;
+	}
+
+	function update_extension($data, $is_vendor = false)
 	{
 		$this->db->select('*');
 		$this->db->from('extensions_x_company');
@@ -44,7 +88,9 @@ class Extension_model extends CI_Model {
 			$this->db->where('company_id', $data['company_id']);
 			$this->db->update('extensions_x_company', $data);
 		} else {
-			$data['is_active'] = 1;
+			if(!$is_vendor)
+				$data['is_active'] = 1;
+			
 			$this->db->insert('extensions_x_company', $data);
 		}
 
@@ -54,13 +100,73 @@ class Extension_model extends CI_Model {
 		return true;
 	}
 
+	function update_extension_status($data)
+	{
+		
+		if(isset($data['vendor_companies']) && $data['vendor_companies']){
+
+			$is_activated_extension = $this->get_active_extensions($data['vendor_companies'], $data['extension_name']);
+			if(
+				isset($is_activated_extension[0]) && 
+				$is_activated_extension[0] && 
+				isset($is_activated_extension[0]['is_active']) &&
+				$is_activated_extension[0]['is_active'] == 1
+			){
+				return $is_activated_extension;
+			} else {
+				return null;
+			}
+		} else {
+
+			unset($data['vendor_companies']);
+
+			$this->db->select('*');
+			$this->db->from('extensions_x_vendor');
+			$this->db->where('extension_name', $data['extension_name']);
+			$this->db->where('vendor_id', $data['vendor_id']);
+
+			$query = $this->db->get();
+			
+			if ($query->num_rows >= 1)
+			{
+				$result = $query->result_array();
+			}
+
+			$company_id = $data['company_id'];
+
+			if(isset($result) && $result){
+				unset($data['company_id']);
+				$this->db->where('extension_name', $data['extension_name']);
+				$this->db->where('vendor_id', $data['vendor_id']);
+				$this->db->update('extensions_x_vendor', $data);
+			} else {
+				unset($data['company_id']);
+				$this->db->insert('extensions_x_vendor', $data);
+			}
+
+			unset($data['is_installed']);
+			unset($data['vendor_id']);
+			$data['company_id'] = $company_id;
+			$data['is_active'] = 0;
+			$this->update_extension($data, true);
+
+			if ($this->db->_error_message()) // error checking
+				show_error($this->db->_error_message());
+
+			return true;
+		}
+	}
+
 	function get_active_extensions($company_id = null, $module_name = null, $is_active = true)
 	{
 		$this->db->select('*');
 		$this->db->from('extensions_x_company');
 
-		if($company_id)
+		if(is_array($company_id)){
+			$this->db->where_in('company_id', $company_id);
+		} else {
 			$this->db->where('company_id', $company_id);
+		}
 
 		if($module_name)
 			$this->db->where('extension_name', $module_name);
@@ -125,6 +231,21 @@ class Extension_model extends CI_Model {
 		}
 		
 		return NULL;
+	}
+
+	function insert_vendors_extension($data){
+		
+		for ($i = 0, $total = count($data); $i < $total; $i = $i + 50)
+        {
+            $batch = array_slice($data, $i, 50);
+
+            $this->db->insert_batch("extensions_x_vendor", $batch);
+
+            if ($this->db->_error_message())
+            {
+                show_error($this->db->_error_message());
+            }
+        }
 	}
 }
 

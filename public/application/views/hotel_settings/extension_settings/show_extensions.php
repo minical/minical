@@ -7,6 +7,9 @@
             <?php echo l('Extensions'); ?>
         </div>
     </div>
+    <?php if((isset($is_vendor[0]) && $this->user_permission != 'is_employee') || $this->is_super_admin){ ?>
+        <a class="pull-right btn btn-primary" href="<?php echo base_url().'extensions/show_vendors_extensions'; ?>">All Extensions</a>    
+    <?php } ?>
 </div>
 
 <?php $is_favourite = false; if(isset($extensions) && $extensions){ 
@@ -76,7 +79,7 @@ foreach ($extensions as $extension){
                                            name="<?php echo $extension['extension_folder_name']; ?>"
                                            data-status="<?php echo $extension['is_active']; ?>">
 
-                                            <?php if($extension['is_active'] == 1 && $extension['setting_link'] !=null && $this->user_permission != 'is_employee'){
+                                            <?php if($extension['is_active'] == 1 && $extension['setting_link'] !=null){
                                                 echo '<i class="pe-7s-config text-primary"></i>';
                                             }else{
                                                 echo '';
@@ -113,7 +116,7 @@ foreach ($extensions as $extension){
                     }}
                 ?>
             <?php else : ?>
-                <h3><?php echo l('No extensions have been found.', true); ?></h3>
+                <!-- <h3><?php echo l('No extensions have been found.', true); ?></h3> -->
             <?php endif; ?>
         </div>
     </div>
