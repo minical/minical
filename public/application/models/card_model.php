@@ -145,6 +145,8 @@ class Card_model extends CI_Model {
 		{
             show_error($this->db->_error_message());
 		}
+		
+		return $this->db->insert_id();
     }
     
     function update_customer_card($cardId, $customer_id, $data)
@@ -175,8 +177,8 @@ class Card_model extends CI_Model {
     
     function update_customer_card_is_primary_card_table($customer_id, $card_id, $active, $company_id = null)
     {
-        if($active == "active"){
-            $data['is_primary'] = 0;
+		if($active == "active"){
+			$data['is_primary'] = 0;
             $this->db->where('customer_id', $customer_id);
             $this->db->where('company_id', $company_id);
             $this->db->update("customer_card_detail", $data);
@@ -187,19 +189,18 @@ class Card_model extends CI_Model {
             $this->db->where('company_id', $company_id);
             $this->db->update("customer_card_detail", $data);
         }else{
-            $data['is_primary'] = 0;
+		    $data['is_primary'] = 0;
             $this->db->where('id', $card_id);
             $this->db->where('customer_id', $customer_id);
             $this->db->where('company_id', $company_id);
             $this->db->update("customer_card_detail", $data);
             //echo $this->db->last_query();
-            if($this->db->affected_rows() > 0){
-                return true;
-            }else{
-                return false;
-            }
         }
-
+		if($this->db->affected_rows() > 0){
+			return true;
+		}else{
+			return false;
+		}
     }
     
     function get_all_customer()
