@@ -236,9 +236,15 @@ class Room extends MY_Controller
 
         $res = null;
         if ($channel_key && $channel_key == 'obe') {
-            $channel = apply_filters('get_ota_id', $channel_key);
+
+        	$company_key_data = $this->Company_model->get_company_api_permission($company_id);
+            $company_access_key = isset($company_key_data[0]['key']) && $company_key_data[0]['key'] ? $company_key_data[0]['key'] : null;
+
+            $channel = apply_filters('get_ota_id', 'obe');
             $channel = $channel ? $channel : SOURCE_ONLINE_WIDGET;
-            $res = $this->Room_type_model->get_room_type_availability($company_id, $channel, $start_date, $end_date, null, null, true, null, true, true, true, true, null, $channel_key);
+
+            $res = $this->Room_type_model->get_room_type_availability($company_id, $channel, $start_date, $end_date, null, null, true, null, true, true, true, true, $company_access_key, $channel_key);
+
         } else {
             $res = $this->Room_type_model->get_room_type_availability($company_id, $channel, $start_date, $end_date);
         }
