@@ -26,6 +26,30 @@
                 }
             ?>
         </select>
+    </div> 
+
+     <div class="col-sm-2 col-md-2 col-lg-2 col-xs-2">
+        <select name="room-floor" class="form-control col-sm-4 col-md-4 col-lg-4 col-xs-4" onchange="filter_data()">
+            <option value=""><?php echo l('all_floors'); ?></option>    
+            <?php
+                foreach($room_floor as $key => $floors)
+                {
+                    echo "<option value='".$floors['id']."'>".$floors['floor_name']."</option>";
+                }
+            ?>
+        </select>
+    </div>
+        
+    <div class="col-sm-2 col-md-2 col-lg-2 col-xs-2">
+        <select name="room-location" class="form-control col-sm-4 col-md-4 col-lg-4 col-xs-4" onchange="filter_data()">
+            <option value=""><?php echo l('all_locations'); ?></option>    
+            <?php
+                foreach($room_location as $key => $locations)
+                {
+                    echo "<option value='".$locations['id']."'>".$locations['location_name']."</option>";
+                }
+            ?>
+        </select>
     </div>    
 
     <div class="col-sm-3 col-md-2 col-lg-2 col-xs-12">

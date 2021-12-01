@@ -796,10 +796,12 @@ class Invoice extends MY_Controller {
         {
 
             foreach ($charges as $key => $charge) {
+                 // prx($charge);
                 
                 $charge['user_id'] = $user_id;
 
                 $is_pos = false;
+                $quantity = isset($charge['qty']) ? $charge['qty'] : 1;
                 
                 if(!$is_extra_pos){
                     $isRoomChargeType = $charge['isRoomChargeType'];
@@ -821,10 +823,12 @@ class Invoice extends MY_Controller {
 
                 $post_charge_data = $charge;
                 $post_charge_data['charge_id'] = $charge_id;
+                // $post_charge_data['qty'] = $quantity;
 
+                
                 do_action('post.create.charge', $post_charge_data);
 
-                $charge_action_data = array('charge_id' => $charge_id, 'charge' => $charge, 'company_id'=> $this->company_id, 'is_pos' => $is_pos);
+                $charge_action_data = array('charge_id' => $charge_id, 'charge' => $charge, 'company_id'=> $this->company_id, 'is_pos' => $is_pos,'qty'=>$quantity);
                 do_action('post.add.charge', $charge_action_data);
 
                 if(isset($card_data['evc_card_status']) && $card_data['evc_card_status'] && $isRoomChargeType && false){

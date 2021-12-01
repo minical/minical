@@ -21,6 +21,8 @@ class Booking extends MY_Controller
         $this->load->model('Room_type_model');
         $this->load->model('Room_model');
         $this->load->model('Charge_type_model');
+        $this->load->model('Floor_model');
+        $this->load->model('Room_location_model');
         $this->load->model('Charge_model');
         $this->load->model('Rate_plan_model');
         $this->load->model('Booking_source_model');
@@ -178,6 +180,10 @@ class Booking extends MY_Controller
         }
 
         $data['room_types'] =  $this->Room_type_model->get_room_types($this->company_id);
+
+        $data['room_floor'] =  $this->Floor_model->get_floor($this->company_id);
+
+        $data['room_location'] =  $this->Room_location_model->get_room_location($this->company_id);
 
         $data['company_data'] =  $company_data;
 
