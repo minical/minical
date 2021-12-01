@@ -180,9 +180,9 @@ class MY_Controller extends CI_Controller {
         }
 
         if($company_id){
-            $this->session->set_userdata('current_company_id', $company_id);
+            $this->session->set_userdata('anonymous_company_id', $company_id);
         } else {
-            $company_id = $this->session->userdata('current_company_id');
+            $company_id = $this->session->userdata('anonymous_company_id');
         }
 
         $active_extensions = $this->Extension_model->get_active_extensions($company_id);
