@@ -118,6 +118,8 @@
                             cc_cvc_encrypted: ""
                          };
                             that._initializeCardModal(customer_data, customer_card_data[0], options.booking_id);
+                            $("#card_name").attr('disabled', 'disabled');
+                            $("#cc_number").attr('disabled', 'disabled');
                         }else{
                                 $.ajax({
                                     type: "POST",
@@ -212,13 +214,21 @@
                             ).append(
                     $("<div/>", {
                         class: "col-sm-6 iframe_div"
-                    }).append(
-                    $("<iframe/>", {
-                        id: "credit_card_iframe_card_modal",
-                        style: "width: 100%;height: 35px;border: none;",
-                        scrolling: "no",
-                        frameborder: "0"
                     })
+                                    .append(
+                                        // $("<iframe/>", {
+                                        //     id: "credit_card_iframe_card_modal",
+                                        //     style: "width: 100%;height: 35px;border: none;",
+                                        //     scrolling: "no",
+                                        //     frameborder: "0"
+                                        // })
+                                        $("<input/>", { // a workaround to disable autocomplete for email and cvv
+                                            class: "form-control cc_number",
+                                            name: "cc_number",
+                                            id: "cc_number",
+                                            type: 'text',
+                                            value: logs.cc_number
+                                        })
                     ).append(sensitiveCardNumber)
                     .append($('<span/>', {
                         id: "masked-card-number-label",
@@ -292,6 +302,7 @@
                                 $("<input/>", {
                                     class: "form-control cus_input card_info card_cvc_no",
                                     name: "cvc",
+                                    id: 'cvc',
                                     placeholder: '***',
                                     type: 'password',
                                     maxlength: 4,
@@ -340,7 +351,7 @@
                                         })
                                      )).append(
                                             $("<div/>", {
-                                              class: "form-group"
+                                                class: "form-group"
                                     })
                                         .append(
                                         $("<lable/>", {
@@ -365,20 +376,21 @@
                                             type: "button",
                                             class: "btn save_card",
                                             id:"save_card",
-                                            disabled: "disabled",
+                                            // disabled: "disabled",
                                             html: (customer_card_data.cc_number) ? l("Update") : l("Save")
                                         }).on("click", function () {
                                     var errorMsg = '';       
-                                    if (isTokenizationEnabled == 1 && !$.payment.validateCardExpiry($("input[name='cc_expiry']").payment('cardExpiryVal')) &&
-                                        $("input[name='cc_expiry']").val() !== '') {
-                                          errorMsg += "\nInvalid Expiry Date";
-                                    }
+                                    // if (isTokenizationEnabled == 1 && !$.payment.validateCardExpiry($("input[name='cc_expiry']").payment('cardExpiryVal')) &&
+                                    //     $("input[name='cc_expiry']").val() !== '') {
+                                    //       errorMsg += "\nInvalid Expiry Date";
+                                    // }
 
-                                    if (errorMsg !== '') {
-                                        alert(errorMsg);
-                                        $(this).attr('disabled', false);
-                                        return;
-                                    }
+                                            // if (errorMsg !== '') {
+                                            //     alert(errorMsg);
+                                            //     $(this).attr('disabled', false);
+                                            //     return;
+                                            // }
+                                     // $(this).attr('disabled', false);
                                     
                                     var customerData = that._fetchCustomerData();
                                     var update_create_client = function (data) {
@@ -389,7 +401,6 @@
                                         cc_tokenex_token = data.token;
                                         cc_cvc_encrypted = data.cc_cvc_encrypted;
                                     }
-                                    
                                     if (logs.cc_number) // new customer
                                     {
                                         $.ajax({
@@ -424,8 +435,7 @@
                                                /// $('#button-update-customer').attr('disabled', false);
                                             }
                                         });
-                                    }else{
-                                        
+                                    } else {
                                         $.ajax({
                                             type: "POST",
                                             url: getBaseURL() + "customer/insert_card_details",
@@ -485,10 +495,10 @@
                                         {
                                             // user not entered card number
                                             update_create_client();
-                                           // errorMsg = "\nCredit Card Number Can't be Emplty";
-                                           // alert(errorMsg);
-                                            //$('#button-update-customer').attr('disabled', false);
-                                           // return;
+                                            errorMsg = "\nCredit Card Number Can't be Emplty";
+                                            alert(errorMsg);
+                                            $('#button-update-customer').attr('disabled', false);
+                                            return;
                                         }
                                         else if(validator == "invalid")
                                         {
@@ -505,14 +515,16 @@
                                             return;
                                         }
                                     });
-                                if(isTokenizationEnabled == 1)
-                                {
-                                    $('#credit_card_iframe_card_modal')[0].contentWindow.postMessage('validate', '*');
-                                }
-                                else
-                                {
-                                    update_create_client();
-                                }   
+                                            // if(isTokenizationEnabled == 1)
+                                            // {
+                                            //     // $('#credit_card_iframe_card_modal')[0].contentWindow.postMessage('validate', '*');
+                                            // }
+                                            // else
+                                            // {
+
+                                            update_create_client();
+
+                                // }   
                                     })
                                      )
                                      .append(
@@ -525,48 +537,48 @@
                                         })
                                                 )
                                     )
-            if(isTokenizationEnabled == 1) // global variable
-            {
-                $.get(getBaseURL() + "customer/get_credit_card_frame",
-                    {customer_id: logs.customer_id}, 
-                    function(data){
-                        if(data){ console.log("tokan"); console.log(data);
-                            data = JSON.parse(data);
-                            if(typeof data.iframe_url !== "undefined"){
-                                setTimeout(function(){
-                                    $('#credit_card_iframe_card_modal').attr('src', data.iframe_url);
-                                },500); 
+            // if(isTokenizationEnabled == 1) // global variable
+            // {
+            //     $.get(getBaseURL() + "customer/get_credit_card_frame",
+            //         {customer_id: logs.customer_id}, 
+            //         function(data){
+            //             if(data){ console.log("tokan"); console.log(data);
+            //                 data = JSON.parse(data);
+            //                 if(typeof data.iframe_url !== "undefined"){
+            //                     setTimeout(function(){
+            //                         $('#credit_card_iframe_card_modal').attr('src', data.iframe_url);
+            //                     },500); 
                                 
-                                if (window.addEventListener) {
-                                    addEventListener("message", that._iframe_listener_card, false);
-                                } else {
-                                    attachEvent("onmessage", that._iframe_listener_card);
-                                }
-                            }
-                        }
-                    }
-                );
+            //                     if (window.addEventListener) {
+            //                         addEventListener("message", that._iframe_listener_card, false);
+            //                     } else {
+            //                         attachEvent("onmessage", that._iframe_listener_card);
+            //                     }
+            //                 }
+            //             }
+            //         }
+            //     );
 
-                $.get(getBaseURL() + "settings/accounting/cc_tokenization_status",
-                    {customer_id: logs.customer_id}, 
-                    function(data){
-                        if(data){
-                            data = JSON.parse(data);
-                            if(logs.cc_tokenex_token){
-                                $('#card-image-card-modal').hide();
-                                $('#detokenize-card').attr('src', getBaseURL()+'images/cards/eye.png').show();
-                                data.push('Tokenex');
-                            }
-                            if(data.length > 0){
-                                $('#card-modal #cc_tokenization_status').html('<span class="btn btn-success" style="cursor:help;">'+l("Card Tokenized", true)+' ('+data.join(', ')+')</span>');
-                            }
-                        }
-                    }
-                );
-              //  $("#save_card").prop('disabled', true);
-                // disable create or update customer button utill iframe loads
+            //     $.get(getBaseURL() + "settings/accounting/cc_tokenization_status",
+            //         {customer_id: logs.customer_id}, 
+            //         function(data){
+            //             if(data){
+            //                 data = JSON.parse(data);
+            //                 if(logs.cc_tokenex_token){
+            //                     $('#card-image-card-modal').hide();
+            //                     $('#detokenize-card').attr('src', getBaseURL()+'images/cards/eye.png').show();
+            //                     data.push('Tokenex');
+            //                 }
+            //                 if(data.length > 0){
+            //                     $('#card-modal #cc_tokenization_status').html('<span class="btn btn-success" style="cursor:help;">'+l("Card Tokenized", true)+' ('+data.join(', ')+')</span>');
+            //                 }
+            //             }
+            //         }
+            //     );
+            //   //  $("#save_card").prop('disabled', true);
+            //     // disable create or update customer button utill iframe loads
                
-            }              
+            // }              
         },
         _iframe_listener_card: function(event){
             var button_text = $('#save_card').text();
@@ -576,7 +588,7 @@
                     if($('.card_exp').val() && $(".card_cvc_no").val()){
                          $("#save_card").prop('disabled', false);
                     }else{
-                         $("#save_card").prop('disabled', true);
+                        $("#save_card").prop('disabled', true);
                     }
                 });
             }else{
@@ -682,7 +694,8 @@
                 customer_id:  $('#Guest_id').val(),
                 customer_name:  $('#Guest_name').val(),
                 card_name:  $('#card_name').val(),
-               
+                card_number: $('#cc_number').val(),
+                cvc: $('#cvc').val()
             };
             if(isTokenizationEnabled == 1)
             {

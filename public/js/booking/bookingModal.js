@@ -895,7 +895,7 @@ var bookingModalInvoker = function ($) {
                             // )
                             .append(
                                 $("<li/>", {
-                                    style: isTokenizationEnabled == 1 && innGrid.featureSettings.selectedPaymentGateway ? "" : "display: none;"
+                                    // style: isTokenizationEnabled == 1 && innGrid.featureSettings.selectedPaymentGateway ? "" : "display: none;"
                                 }).append(
                                     $("<a/>", {
                                         'href': '#payment_details',
@@ -1058,6 +1058,47 @@ var bookingModalInvoker = function ($) {
                             //         })
                             //     )
                             // )
+
+                            .append(
+                                $("<li/>", {
+                                    // style: isTokenizationEnabled == 1 && innGrid.featureSettings.selectedPaymentGateway ? "" : "display: none;"
+                                }).append(
+                                    $("<a/>", {
+                                        'href': '#payment_details',
+                                        'id': 'pay_details_tab',
+                                        'data-toggle': "tab",
+                                        'text': l('Payment Details')
+                                    }).on('click', function (e) {
+                                        if (that.booking.state !== undefined) {
+                                            var customer_array = new Array();
+                                            if (that.booking.booking_id) {
+                                                $.ajax({
+                                                    type: "POST",
+                                                    url: getBaseURL() + "customer/get_customer_card_data",
+                                                    data: {
+                                                        booking_id: that.booking.booking_id
+                                                    },
+                                                    dataType: "json",
+                                                    success: function (new_customer_data) {
+                                                        if (new_customer_data != null) {
+                                                            // new_customer_data.push( {'booking_id': that.booking.booking_id} );
+                                                            that._populatePaymentCard(new_customer_data, that.booking.booking_id);
+                                                        }
+                                                    },
+                                                    error: function (e) {
+
+                                                    }
+                                                });
+                                            }
+
+
+                                        }
+                                        setTimeout(function () {
+                                            that._setHeight('payment_details');
+                                        }, 1000);
+                                    })
+                                )
+                            )
                             .append(
                                 $("<li/>", {
                                     style: isTokenizationEnabled == 1 && innGrid.featureSettings.selectedPaymentGateway ? "" : "display: none;"
@@ -3379,9 +3420,9 @@ var bookingModalInvoker = function ($) {
                             card_details_part_sec
                         )
                 }
-                /*$(".payment-modal").find(".row").append(
+                $(".payment-modal").find(".row").append(
                                  error_part
-                           )*/
+                )
                 $("#remove_card").on("click", function () {
                     $(document).openCardModal({
                         customer_id: log.customer_id,
@@ -6395,25 +6436,25 @@ var bookingModalInvoker = function ($) {
 
         },
         // Populate payment_card
-        /* _populatePaymentCardDDL: function () {
+        //  _populatePaymentCardDDL: function () {
 
-                        $('#payment_details').html('');
-                        $('#payment_details').append(
-                                                $("<div/>", {
-                                                    style: 'text-align:right;'
-                                                })
-                                                .append(
-                                                    $('<button/>', {
-                                                        class: 'btn btn-primary btn-sm',
-                                                        text: l('print'),
-                                                        style: 'margin: 0px 0px 10px 0px;'
-                                                    }).on('click', function (e) {
-                                                        $('.full_registration').printThis();
-                                                    })
-                                                )
-                                            )
+        //                 $('#payment_details').html('');
+        //                 $('#payment_details').append(
+        //                                         $("<div/>", {
+        //                                             style: 'text-align:right;'
+        //                                         })
+        //                                         .append(
+        //                                             $('<button/>', {
+        //                                                 class: 'btn btn-primary btn-sm',
+        //                                                 text: l('print'),
+        //                                                 style: 'margin: 0px 0px 10px 0px;'
+        //                                             }).on('click', function (e) {
+        //                                                 $('.full_registration').printThis();
+        //                                             })
+        //                                         )
+        //                                     )
 
-        }, */
+        // }, 
         // set height of right sidebar
         _setHeight: function (tab) {
             var height = $('#' + tab).height() + 100;

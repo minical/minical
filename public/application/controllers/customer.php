@@ -1214,7 +1214,7 @@ class Customer extends MY_Controller {
                 $customer['cc_expiry_year'] = $card_details['cc_expiry_year'];
                 $customer['cc_tokenex_token'] = $card_details['cc_tokenex_token'];
                 $customer['cc_cvc_encrypted'] = $card_details['cc_cvc_encrypted'];
-                $customer['customer_pci_token'] = json_decode($card_details['customer_meta_data'], true)['token'];
+                $customer['customer_pci_token'] = json_decode($card_details['customer_meta_data'], true)['token'] ?? null;
             }
 
         echo json_encode($customer);
@@ -1317,7 +1317,7 @@ class Customer extends MY_Controller {
             $post_customer_data = $customer_data;
             $post_customer_data['customer_id'] = $customer_id;
 
-            do_action('post.update.customer', $post_customer_data);
+            // do_action('post.update.customer', $post_customer_data);
 
             if(isset($cc_number)){
                 $this->Card_model->create_customer_card_info($card_details);
@@ -1450,7 +1450,8 @@ class Customer extends MY_Controller {
             }
             
         }
-            
+         
+        apply_filters('post.update.customer', $customer_data);
         
         if(isset($customer_data['cc_number']) && $customer_data['cc_number'])
            $customer_data['cc_number'] = "";
@@ -1547,9 +1548,15 @@ class Customer extends MY_Controller {
             }
         }
         
-		$customer_data['customer_name'] = sqli_clean($this->security->xss_clean($customer_data['customer_name']));
-		
+        $cvc = $customer_data['cvc'];
+        unset($customer_data['card_number']);
+        unset($customer_data['cvc']);
+
+        // $customer_data['customer_name'] = sqli_clean($this->security->xss_clean($customer_data['customer_name']));
         $row = $this->Card_model->update_customer_card($cardId, $customer_id, $customer_data);
+        $customer_data['card_id'] = $cardId;
+        $customer_data['cvc'] = $cvc;
+        apply_filters('post.update.payment_source', $customer_data);
 
         if($row){
             $data['res']     = "success";
@@ -1947,20 +1954,22 @@ class Customer extends MY_Controller {
                 $error_msg = $e->getMessage();
             }
         }
+        $cc_number = 'XXXX XXXX XXXX ' . substr($customer_data['card_number'], -4);
         $data = array(
            'customer_id' => $customer_data['customer_id'],
            'customer_name' => $customer_data['customer_name'],
            'card_name' => $customer_data['card_name'],
            'company_id' => $this->company_id,
-           'cc_number' => $customer_data['cc_number'],
            'cc_expiry_month' => $customer_data['cc_expiry_month'],
            'cc_expiry_year' => $customer_data['cc_expiry_year'],
-           'cc_tokenex_token' => $cc_tokenex_token,
-           'cc_cvc_encrypted' => $cc_cvc_encrypted
-               
+           'cc_tokenex_token' => $cc_tokenex_token ?? null,
+           'cc_cvc_encrypted' => $cc_cvc_encrypted ?? null,
+           'cc_number' => $cc_number,
         );
-        
+       
         $is_primary_card = $this->Card_model->get_customer_primary_card($data['customer_id']);
+        $customer_data['company_id'] = $this->company_id;
+
         if($is_primary_card){
             $data['is_primary'] = 0;
             $insert_customer_card = $this->Card_model->create_customer_card_info($data);
@@ -1972,6 +1981,9 @@ class Customer extends MY_Controller {
             $data['error']     = $error;
             $data['error_msg'] = $error_msg;
         }
+        
+        $customer_data['card_id'] = $insert_customer_card ?? null; 
+        apply_filters('post.create.payment_source', $customer_data);
 
         $this->_create_booking_log($booking_id, "New Credit Card Added by " . $customer_data['customer_name'], USER_LOG);
         
@@ -1990,7 +2002,15 @@ class Customer extends MY_Controller {
 			$this->tokenex->delete_token($card_token);
 		}
         
+        $customer_data = array(
+                        'customer_id' =>$customer_id,
+                        'card_id'=> $card_id
+                    );
+        apply_filters('post.delete.payment_source', $customer_data);
+
 		$del_result = $this->Card_model->delete_customer_card($customer_id, $card_id, $this->company_id);
+
+       
         if($del_result){
             $customer_detail = $this->Customer_model->get_customer($customer_id);
             $this->_create_booking_log($booking_id, "Credit Card Deleted by " . $customer_detail['customer_name'], USER_LOG);
@@ -2007,8 +2027,17 @@ class Customer extends MY_Controller {
         $customer_id = sqli_clean($this->security->xss_clean($this->input->post('customer_id')));
         $card_id = sqli_clean($this->security->xss_clean($this->input->post('card_id')));
         $active = sqli_clean($this->security->xss_clean($this->input->post('active')));
-        
+
         $update_res = $this->Card_model->update_customer_card_is_primary_card_table($customer_id, $card_id, $active, $this->company_id);
+
+        $data = array(
+            'customer_id' => $customer_id,
+            'card_id' => $card_id,
+        );
+
+        if($active == 'active'){
+            apply_filters("post.update.defult_payment_source",$data);
+        }
     
         if($update_res){
             $res = "success";
