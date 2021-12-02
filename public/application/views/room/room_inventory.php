@@ -57,9 +57,9 @@
          </li>
       </ul>
       <br>
-      <span disabled class="btn btn-primary modify-availabilities m-011"><?php echo l('modify_maximum_availabilities'); ?></span>
-      <span class="btn btn-default change-dates" data-date-diff="-7"><?php echo l('previous_week'); ?></span>
-      <span class="btn btn-default change-dates" data-date-diff="7"><?php echo l('next_week'); ?></span>
+      <button disabled class="btn btn-primary modify-availabilities m-011"><?php echo l('modify_maximum_availabilities'); ?></button>
+      <span class="btn btn-light change-dates" data-date-diff="-7"><?php echo l('previous_week'); ?></span>
+      <span class="btn btn-light change-dates" data-date-diff="7"><?php echo l('next_week'); ?></span>
       <span id="loading_img" style="display:none;">
       <img src="<?php echo base_url().'images/loading.gif' ?>"  style='width: 2%;'/>
       </span>
