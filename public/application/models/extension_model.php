@@ -162,10 +162,12 @@ class Extension_model extends CI_Model {
 		$this->db->select('*');
 		$this->db->from('extensions_x_company');
 
-		if(is_array($company_id)){
-			$this->db->where_in('company_id', $company_id);
-		} else {
-			$this->db->where('company_id', $company_id);
+		if($company_id){
+			if(is_array($company_id)){
+				$this->db->where_in('company_id', $company_id);
+			} else {
+				$this->db->where('company_id', $company_id);
+			}
 		}
 
 		if($module_name)
