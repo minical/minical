@@ -593,12 +593,12 @@ class Extensions extends MY_Controller
                         $data['extensions'][$key]['is_installed'] = 0;
                     } 
 
-                    if(
-                        isset($data['extensions'][$key]['is_admin_module']) &&
-                        $data['extensions'][$key]['is_admin_module']
-                    ) {
-                        $data['extensions'][$key]['is_installed'] = 1;
-                    }
+                    // if(
+                    //     isset($data['extensions'][$key]['is_admin_module']) &&
+                    //     $data['extensions'][$key]['is_admin_module']
+                    // ) {
+                    //     $data['extensions'][$key]['is_installed'] = 1;
+                    // }
                 }
             }
         }
