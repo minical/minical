@@ -7,12 +7,22 @@
       <?php echo l('Extensions'); ?>
         </div>
     </div>
+
+    <hr>
+
+    <?php if((isset($is_vendor[0]) && $this->user_permission != 'is_employee') || $this->is_super_admin || $this->user_permission == 'is_admin'){ ?>
+        <div class="topnav mb-3">
+            <ul>
+                <li><a class="<?php if($this->uri->segment(2) == '') echo 'active'; ?>" href="<?php echo base_url().'extensions'?>"><?php echo l('Installed Extensions', true); ?></a></li>
+                <li><a class="<?php if($this->uri->segment(2) == 'show_vendors_extensions') echo 'active'; ?>" href="<?php echo base_url().'extensions/show_vendors_extensions'?>"><?php echo l('All Extensions', true); ?></a></li>
+            </ul>
+        </div>
+    <?php } ?>
+
 </div>
 
-
-
 <div class="main-card mb-3">
-    <?php if($this->is_super_admin){ ?>
+    <?php if($this->is_super_admin || $this->user_permission == 'is_admin'){ ?>
         <b style="font-size: 17px;">Installed Extensions :</b>
     <?php } ?>
     <div class="extension-card">
@@ -61,7 +71,7 @@
                                             <input type="checkbox" class="extension-status-button" data-status="<?php echo $extension['is_active']; ?>" name="<?php echo $extension['extension_folder_name']; ?>"
                                             <?= $extension['is_active'] ? 'checked=checked' : ''; ?>/>
                                         </label> -->
-                                        <?php if($this->is_super_admin){ ?>
+                                        <?php if($this->is_super_admin || $this->user_permission == 'is_admin'){ ?>
                                             <a href="javascript:" data-ext_name="<?php echo $extension['extension_folder_name']; ?>" class="uninstall_extension" >Uninstall</a>
                                         <?php } ?>
                                     </div>
@@ -75,13 +85,13 @@
                     }
                 } ?>
                 <?php else : ?> 
-                <h3><?php echo l('No extensions have been found.', true); ?></h3>
+                <h4><?php echo l('No extensions found!', true); ?></h4>
             <?php endif; ?>
             
         </div>
     </div>
 
-    <?php if($this->is_super_admin){ ?>
+    <?php if($this->is_super_admin || $this->user_permission == 'is_admin'){ ?>
         <b style="font-size: 17px;">Uninstalled Extensions :</b>
         <div class="extension-card">
 
@@ -138,7 +148,7 @@
                     }
                     ?>
                     <?php else : ?> 
-                    <h3><?php echo l('No extensions have been found.', true); ?></h3>
+                    <h4><?php echo l('No extensions found!', true); ?></h4>
                 <?php endif; ?>
                 
             </div>

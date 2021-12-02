@@ -545,6 +545,20 @@ class User_model extends CI_Model {
         }
         return NULL;
     }
+
+    function get_users_count(){
+        $this->db->select('count(*) as total_users');
+        $this->db->from('users');
+
+        $query = $this->db->get();
+
+        if ($query->num_rows >= 1)
+        {
+            $results = $query->row_array();
+            return $results['total_users'];
+        }
+        return null;
+    }
 }
 
 /* End of file user_model.php */

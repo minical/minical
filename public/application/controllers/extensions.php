@@ -87,7 +87,8 @@ class Extensions extends MY_Controller
                             }
                         }
                             
-                        $extensions = $temp_ext;
+                        // if($temp_ext)
+                            $extensions = $temp_ext;
                     }
                 }
             } else {

@@ -1219,7 +1219,7 @@ class Invoice extends MY_Controller {
         }
 
         $post_payment_data = $refund;
-        $post_payment_data['payment_id'] = $refund['payment_id'];
+        $post_payment_data['payment_id'] = $payment_id;
 
         do_action('post.create.payment', $post_payment_data);
         

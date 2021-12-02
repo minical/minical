@@ -7,18 +7,30 @@
             <?php echo l('Extensions'); ?>
         </div>
     </div>
-    <?php if((isset($is_vendor[0]) && $this->user_permission != 'is_employee') || $this->is_super_admin){ ?>
-        <a class="pull-right btn btn-primary" href="<?php echo base_url().'extensions/show_vendors_extensions'; ?>">All Extensions</a>    
+
+    <hr>
+
+    <?php if((isset($is_vendor[0]) && $this->user_permission != 'is_employee') || $this->is_super_admin || $this->user_permission == 'is_admin'){ ?>
+        <div class="topnav mb-3">
+            <ul>
+                <li><a class="<?php if($this->uri->segment(2) == '') echo 'active'; ?>" href="<?php echo base_url().'extensions'?>"><?php echo l('Installed Extensions', true); ?></a></li>
+                <li><a class="<?php if($this->uri->segment(2) == 'show_vendors_extensions') echo 'active'; ?>" href="<?php echo base_url().'extensions/show_vendors_extensions'?>"><?php echo l('All Extensions', true); ?></a></li>
+            </ul>
+        </div>
     <?php } ?>
+    
 </div>
 
-<?php $is_favourite = false; if(isset($extensions) && $extensions){ 
-foreach ($extensions as $extension){
-    if(isset($extension['is_favourite']) && $extension['is_favourite']){
-        $is_favourite = true;
+<?php $is_favourite = false; 
+if(isset($extensions) && $extensions){ 
+    foreach ($extensions as $extension){
+        if(isset($extension['is_favourite']) && $extension['is_favourite']){
+            $is_favourite = true;
+        }
     }
-} } if($is_favourite) { ?>
-<div><h4><?php echo l('Favourites');?></h4></div>
+} 
+if($is_favourite) { ?>
+    <div><h4><?php echo l('Favourites');?></h4></div>
 <?php } ?>
 <div class="main-card  <?php echo $is_favourite ? 'mb-5' : ''; ?> ">
     <div class="extension-card">
@@ -124,7 +136,10 @@ foreach ($extensions as $extension){
 
 <div class="row form-group">
     <div class="col-sm-3">
-        <h4><?php echo l('Extensions');?></h4></div>
+        <?php if($is_favourite) { ?>
+            <h4><?php echo l('Extensions');?></h4>
+        <?php } ?>
+        </div>
     <div class="col-sm-9">
         <div class="form-inline pull-right extension-filter">
             
@@ -266,7 +281,11 @@ foreach ($extensions as $extension){
                     }
                     ?>
                 <?php else : ?>
-                    <h3><?php echo l('No extensions have been found.', true); ?></h3>
+                    <?php if((isset($is_vendor[0]) && $this->user_permission != 'is_employee') || $this->is_super_admin || $this->user_permission == 'is_admin'){ ?>
+                        <h4><?php $href = base_url()."extensions/show_vendors_extensions"; echo l('No extensions found! Try installing a few, Go to <a href="'.$href.'">All Extensions</a>', true); ?></h4>
+                    <?php } else { ?>
+                        <h4><?php echo l('No extensions found!'); ?></h4>
+                    <?php } ?>
                 <?php endif; ?>
             </div>
         </div>

@@ -2381,6 +2381,19 @@ INSERT INTO `otas` VALUES (1,'channex','Channex'),(2,'hotellink','HotelLink'),(3
 UNLOCK TABLES;
 
 --
+-- Dumping data for table `whitelabel_partner`
+--
+
+LOCK TABLES `whitelabel_partner` WRITE;
+/*!40000 ALTER TABLE `whitelabel_partner_type` DISABLE KEYS */;
+INSERT INTO `whitelabel_partner` (`id`, `type_id`, `name`, `username`, `logo`, `admin_user_id`, `status`, `is_deleted`, `domain`, `privacy_policy`, `terms_of_service`, `timezone`, `currency_id`, `location`, `support_email`, `do_not_reply_email`, `intercom_app_id`, `auto_close_io`) VALUES
+(0, 1, 'Minical', 'minical', 'minical-logo.jpeg', 1, '1', '0', NULL, '', '', 'Pacific/Midway', 151, '["USA"]', '', '', NULL, 0);
+
+UPDATE `whitelabel_partner` SET `id` = '0' WHERE `whitelabel_partner`.`id` = 1 AND `whitelabel_partner`.`username` = 'minical';
+/*!40000 ALTER TABLE `whitelabel_partner_type` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Dumping data for table `whitelabel_partner_type`
 --
 

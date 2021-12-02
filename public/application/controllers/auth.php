@@ -852,6 +852,11 @@ class Auth extends MY_Controller
         if(isset($data['email']) && $data['email'] == SUPER_ADMIN){
             $this->User_model->add_user_permission($company_id, $data['user_id'], 'is_admin');
         }
+
+        if($this->User_model->get_users_count() == 1){
+            $this->User_model->add_user_permission($company_id, $data['user_id'], 'is_admin');
+        }
+
          // support@minical.io will have admin permission
         
         // check for whitelabel partner
