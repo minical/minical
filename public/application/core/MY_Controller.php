@@ -158,18 +158,20 @@ class MY_Controller extends CI_Controller {
         
         require APPPATH."config/routes.php";
 
-        foreach ($module_permission as $key => $module) {
-            if(
-                strpos($key, 'cron') && 
-                (
-                    isset($this->company_id) && 
-                    $this->company_id != '' && 
-                    $this->router->fetch_module() != '' && 
-                    !strpos($module, $this->router->fetch_module()) && 
-                    !($this->permission->is_extension_active($this->router->fetch_module(), $this->company_id))
-                )
-            ){
-                show_404();
+        if (isset($module_permission) && count($module_permission) > 0) {
+            foreach ($module_permission as $key => $module) {
+                if(
+                    strpos($key, 'cron') &&
+                    (
+                        isset($this->company_id) &&
+                        $this->company_id != '' &&
+                        $this->router->fetch_module() != '' &&
+                        !strpos($module, $this->router->fetch_module()) &&
+                        !($this->permission->is_extension_active($this->router->fetch_module(), $this->company_id))
+                    )
+                ){
+                    show_404();
+                }
             }
         }
 

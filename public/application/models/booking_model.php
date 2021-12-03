@@ -2519,7 +2519,7 @@ class Booking_model extends CI_Model {
                 LEFT JOIN customer c 
                     ON c.customer_id = b.booking_customer_id
                 LEFT JOIN booking_log bl 
-                    ON bl.booking_id = b.booking_id AND (bl.log = 'Booking created' OR bl.log = 'OTA Booking created' OR bl.log = 'Online reservation submitted')
+                    ON bl.booking_id = b.booking_id AND (bl.log = 'Booking created' OR bl.log = 'OTA Booking created' OR bl.log = 'OTA Booking modified' OR bl.log = 'Online reservation submitted')
                 $booking_log_join
                 LEFT JOIN user_profiles up 
                     ON up.user_id = bl.user_id
