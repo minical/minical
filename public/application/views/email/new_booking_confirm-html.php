@@ -172,7 +172,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <?php if($charge_type_id && $average_daily_rate && $average_daily_rate > 0): ?>
+                                <?php if($average_daily_rate && $average_daily_rate > 0): ?>
                                 <div id="module_1559902991513" class="hse-section hse-section-1-col " style="padding-left:10px; padding-right:10px">
                                     <div class="hse-column-container " style="min-width:280px; max-width:600px; width:100%; Margin-left:auto; Margin-right:auto; border-collapse:collapse; border-spacing:0; background-color:#ffffff" bgcolor="#ffffff">
                                         <div id="module_1559902991513_0" class="hse-column ">
