@@ -1055,6 +1055,19 @@ class Company_model extends CI_Model {
           return $que->row_array();
     } 
 
+    function get_company_detail($company_id){
+    	$this->db->where('company_id', $company_id);
+		$query = $this->db->get('company');		
+		
+		if ($query->num_rows >= 1)
+		{
+			$result = $query->result_array();
+			return $result[0];
+		}
+		
+		return NULL;
+    }
+
     function get_company_data($company_ids){
     	$this->db->select('company_id, name');
 		$this->db->from('company');

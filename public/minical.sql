@@ -2402,6 +2402,18 @@ LOCK TABLES `whitelabel_partner_type` WRITE;
 INSERT INTO `whitelabel_partner_type` VALUES (1,'PMS','pms',0),(2,'Channel Manager','channel_manager',0);
 /*!40000 ALTER TABLE `whitelabel_partner_type` ENABLE KEYS */;
 UNLOCK TABLES;
+
+
+INSERT INTO `menu` (`id`, `name`, `link`, `icon`, `parent_id`, `partner_type_id`) VALUES (NULL, 'features', 'settings/room_inventory/features', '', '32', '1');
+
+INSERT INTO `menu` (`id`, `name`, `link`, `icon`, `parent_id`, `partner_type_id`) VALUES (NULL, 'floor', 'settings/room_inventory/floor', '', '32', '1');
+
+INSERT INTO `menu` (`id`, `name`, `link`, `icon`, `parent_id`, `partner_type_id`) VALUES (NULL, 'location', 'settings/room_inventory/location', '', '32', '1');
+
+ALTER TABLE `whitelabel_partner` ADD `logo_image_group_id` BIGINT(20) NULL AFTER `auto_close_io`;
+
+ALTER TABLE `ota_manager` CHANGE `email` `email` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL, CHANGE `password` `password` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL;
+
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 -- Dump completed on 2021-11-29 11:31:39

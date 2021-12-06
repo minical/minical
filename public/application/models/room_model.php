@@ -905,5 +905,79 @@ class Room_model extends CI_Model {
         return null;
     }
 
+    function get_availability_for_room_by_date_range($start_date, $end_date, $room_type_id, $room_id, $subscription_level = null, $book_over_unconfirmed_reservations = 0)
+    {
+    	$order_by = "";
+		if($subscription_level == ELITE)			
+		{
+			$order_by = "ORDER BY r.score DESC";
+		}
+
+		$booking_state_sql = $book_over_unconfirmed_reservations ? "(b.state < 4 OR b.state = '5') AND" : "(b.state < 4 OR b.state = '5' OR b.state = 7) AND";
+
+        $sql = "
+                SELECT  
+                    di.date,
+                    r.room_name,
+                    r.room_id,
+                    (
+                        SELECT
+                            b.booking_id 
+                        FROM 
+                            booking as b, 
+                            booking_block as brh,
+                            room as r 
+                        WHERE 
+                            DATE(brh.check_out_date) > di.date AND 
+                            di.date >= DATE(brh.check_in_date) AND 
+                            b.booking_id = brh.booking_id AND 
+                            (b.state < 4  || b.state = '5' ) AND 
+                            $booking_state_sql
+                            b.is_deleted = '0' AND
+                            r.room_type_id = rt.id AND
+                            brh.room_id = r.room_id AND
+                            r.is_deleted = '0' AND 
+                            r.room_id = '$room_id'
+                            LIMIT 0, 1
+                    ) as booking 
+                FROM 
+                    date_interval as di, 
+                    room_type as rt
+                LEFT JOIN 
+                    room as r ON r.room_type_id = rt.id AND r.is_deleted = '0'
+                WHERE 
+                    rt.id  = '$room_type_id' AND
+                    di.date >= '$start_date' AND
+                    di.date <= '$end_date' AND
+                    rt.is_deleted = '0' AND
+                    r.room_id = '$room_id'
+                $order_by
+            ";
+
+        $query = $this->db->query($sql);
+      
+        if ($this->db->_error_message())
+		{
+			show_error($this->db->_error_message());
+		}
+        
+        $result_array = array();
+        
+        if($query->num_rows() > 0)
+        {
+            $results = $query->result_array();
+
+            foreach($results as $result)
+            {
+                if($result['booking'] == "" )
+                    $result_array[$result['date']] = $result['room_id'];
+                
+            }
+           
+            return $result_array; 
+        }
+        return NULL; 
+    }
+
 
 }
