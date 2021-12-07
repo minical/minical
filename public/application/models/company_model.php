@@ -32,9 +32,11 @@ class Company_model extends CI_Model {
 		$this->db->from('company as c');
 
 		if($is_ota_connected){
-			$this->db->join('ota_manager as om','om.company_id=c.company_id','left');
-			$this->db->where('om.id IS NOT NULL');
+			$this->db->join('ota_x_company as oxc','oxc.company_id=c.company_id','left');
+			$this->db->where('oxc.ota_manager_id IS NOT NULL');
 		}
+		
+		$this->db->where('c.is_deleted', 0);
 		$this->db->group_by('c.company_id');
         
 		$query = $this->db->get();

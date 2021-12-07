@@ -19,7 +19,7 @@ class Cron extends CI_Controller
 	{
 		$this->load->model('Company_model');
 		
-		$companies = $this->Company_model->get_all_companies();
+		$companies = $this->Company_model->get_all_companies(true);
 		
 		foreach ($companies as $company)
 		{
