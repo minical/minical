@@ -57,7 +57,7 @@
                     </select>
 					<button id="generateReport" class="btn btn-success hidden-print"><?php echo l('generate_report'); ?></button>
 				</div> <!-- /.form-group -->
-				<button id="printReportButton download-btn" class="btn btn-primary pull-right hidden-print"><span class="glyphicon glyphicon-print" title="Print Report"></span></button>
+				<button id="printReportButton" class="btn btn-primary pull-right hidden-print"><span class="glyphicon glyphicon-print" title="Print Report"></span></button>
                                 
                 <a id="downloadReport" target="_blank" style="margin: 0 10px;" href="javascript:" class="btn btn-primary pull-right ">
                     <span title="Export to CSV" class="glyphicon glyphicon-download-alt"></span>

@@ -40,7 +40,7 @@
                    <button class="show_payment_report btn btn-sm btn-success" type="button"><?php echo l('Submit', true); ?></button>
                 </div>
                 <div class="col-md-3 col-lg-3 col-xs-12 col-sm-3" id="m-012">
-                    <button id="printReportButton download-btn" class="btn btn-primary pull-right hidden-print"><span class="glyphicon glyphicon-print" title="Print Report"></span></button>
+                    <button id="printReportButton" class="btn btn-primary pull-right hidden-print"><span class="glyphicon glyphicon-print" title="Print Report"></span></button>
                     <?php $url_date = ($this->uri->segment(4) != '') ? $this->uri->segment(4) : ""; ?>       
                     <a style="margin: 0 10px;" href="<?php if($url_date != '//'){ echo base_url()."reports/ledger/download_payments_csv_export/".$url_date; } else { echo base_url()."reports/ledger/download_payments_csv_export/"; } ?>" class="btn btn-primary pull-right ">
                         <span title="Export to CSV" class="glyphicon glyphicon-download-alt"></span>
