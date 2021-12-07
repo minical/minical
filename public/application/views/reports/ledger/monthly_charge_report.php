@@ -41,7 +41,7 @@
                                    <?php echo l('Date Range', true); ?> <span style="color:red;">*</span> <div class="form-group"><input name="date_range" class="form-control date_range_picker"  placeholder="<?php echo l('Start Date', true); ?>" ></div>
                                    <button class="show_charge_report btn btn-sm btn-success" type="button"><?php echo l('Submit', true); ?></button>
                                 </div>
-				<button id="printReportButton download-btn" class="btn btn-primary pull-right hidden-print"><span class="glyphicon glyphicon-print" title="Print Report"></span></button>
+				<button id="printReportButton" class="btn btn-primary pull-right hidden-print"><span class="glyphicon glyphicon-print" title="Print Report"></span></button>
                     <?php $url_date = ($this->uri->segment(4) != '') ? $this->uri->segment(4) : ""; ?>       
                     <?php $param = $url_date;  ?> 
                 <a style="margin: 0 10px;" href="<?php if($param != '//'){ echo base_url()."reports/ledger/download_charges_csv_export/".$url_date; } else { echo base_url()."reports/ledger/download_charges_csv_export/"; } ?>" class="btn btn-primary pull-right ">

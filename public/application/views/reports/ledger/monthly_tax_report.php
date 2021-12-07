@@ -34,7 +34,7 @@
 					?>	  		
 	
 				</div> <!-- /.form-group -->
-				<button id="printReportButton download-btn" class="btn btn-primary pull-right hidden-print"><span class="glyphicon glyphicon-print" title="Print Report"></span></button>
+				<button id="printReportButton" class="btn btn-primary pull-right hidden-print"><span class="glyphicon glyphicon-print" title="Print Report"></span></button>
                 <?php $url_date = ($this->uri->segment(4) != '') ? $this->uri->segment(4) : ""; ?>       
                 <a style="margin: 0 10px;" href="<?php if($url_date != '//'){ echo base_url()."reports/ledger/download_taxes_csv_export/".$url_date; } else { echo base_url()."reports/ledger/download_taxes_csv_export/"; } ?>" class="btn btn-primary pull-right ">
                     <span title="Export to CSV" class="glyphicon glyphicon-download-alt"></span>
