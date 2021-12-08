@@ -10,7 +10,7 @@
 
     <hr>
 
-    <?php if((isset($is_vendor[0]) && $this->user_permission != 'is_employee') || $this->is_super_admin || $this->user_permission == 'is_admin'){ ?>
+    <?php if((isset($is_vendor[0]) && $this->user_permission == 'is_admin') || $this->is_super_admin == 1){ ?>
         <div class="topnav mb-3">
             <ul>
                 <li><a class="<?php if($this->uri->segment(2) == '') echo 'active'; ?>" href="<?php echo base_url().'extensions'?>"><?php echo l('Installed Extensions', true); ?></a></li>
@@ -281,7 +281,7 @@ if($is_favourite) { ?>
                     }
                     ?>
                 <?php else : ?>
-                    <?php if((isset($is_vendor[0]) && $this->user_permission != 'is_employee') || $this->is_super_admin || $this->user_permission == 'is_admin'){ ?>
+                    <?php if((isset($is_vendor[0]) && $this->user_permission == 'is_admin') || $this->is_super_admin == 1){ ?>
                         <h4><?php $href = base_url()."extensions/show_vendors_extensions"; echo l('No extensions found! Try installing a few, Go to <a href="'.$href.'">All Extensions</a>', true); ?></h4>
                     <?php } else { ?>
                         <h4><?php echo l('No extensions found!'); ?></h4>

@@ -613,30 +613,4 @@ class Extensions extends MY_Controller
         $data['main_content'] = 'hotel_settings/extension_settings/show_vendors_extensions';
         $this->load->view('includes/bootstrapped_template', $data);
     }
-
-    function set_vendors_extension(){
-
-        $all_active_modules = $this->all_active_modules;
-
-        $whitelabel_partners = $this->Whitelabel_partner_model->get_partners();
-        $partner_ids = $ext_array = array();
-
-        foreach ($whitelabel_partners as $partner)
-        {
-            $partner_ids[] = $partner['id'];
-        }
-
-        $i = 0;
-        foreach ($partner_ids as $key1 => $id) {
-            foreach ($all_active_modules as $key => $module) {
-                $ext_array[$i]['vendor_id'] = $id;
-                $ext_array[$i]['extension_name'] = $key;
-                $ext_array[$i]['is_installed'] = 1;
-
-                $i++;
-            }
-        }
-
-        $this->Extension_model->insert_vendors_extension($ext_array);
-    }
 }
