@@ -2316,7 +2316,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `image_type` WRITE;
 /*!40000 ALTER TABLE `image_type` DISABLE KEYS */;
-INSERT INTO `image_type` VALUES (1,'Logo',200,100),(2,'Gallery',960,640),(3,'Slide',1280,493),(4,'Rate Plan',960,640),(5,'Room Type',960,640);
+INSERT INTO `image_type` VALUES (1,'Logo',200,100),(2,'Gallery',960,640),(3,'Slide',1280,493),(4,'Rate Plan',960,640),(5,'Room Type',960,640),(6,'Vendor Logo',200,200);
 /*!40000 ALTER TABLE `image_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
