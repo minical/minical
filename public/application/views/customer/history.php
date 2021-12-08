@@ -317,9 +317,9 @@ if ($permissions && in_array('bookings_view_only', $permissions) && !(in_array('
                                 }
                                 ?>
                             </td>
-                            <td class="date-td"><?= ($this->enable_hourly_booking == 1 ? date('Y-m-d h:i A', strtotime($booking['charge_start_selling_date'])) : ($booking['charge_start_selling_date'] ? date('Y-m-d', strtotime($booking['charge_start_selling_date'])) : '')); ?></td>
+                            <td class="date-td"><?= ($this->enable_hourly_booking == 1 ? date('Y-m-d h:i A', strtotime($booking['check_in_date'])) : ($booking['check_in_date'] ? date('Y-m-d', strtotime($booking['check_in_date'])) : '')); ?></td>
 
-                            <td class="date-td"><?= ($this->enable_hourly_booking == 1 ? date('Y-m-d h:i A', strtotime($booking['charge_end_selling_date'])) : ($booking['charge_end_selling_date'] ? date('Y-m-d', strtotime($booking['charge_end_selling_date'])) : '')); ?></td>
+                            <td class="date-td"><?= ($this->enable_hourly_booking == 1 ? date('Y-m-d h:i A', strtotime($booking['check_out_date'])) : ($booking['check_out_date'] ? date('Y-m-d', strtotime($booking['check_out_date'])) : '')); ?></td>
                             <td class="text-right sub-charge">
                                 <?php
                                 $sub_total = $booking['charge_total'];
