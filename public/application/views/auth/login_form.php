@@ -8,8 +8,17 @@ class="text-center"
 	accept-charset="utf-8"
 	style="  max-width: 400px;
     margin: auto;"
->		
-		
+>
+
+    <a href="<?php echo base_url();?>">
+        <?php
+        if($whitelabel_detail && $whitelabel_detail['logo']) {
+            $image_url = $this->image_url . "/" . $whitelabel_detail['logo'];
+            echo '<img src="'.$image_url.'" style="max-width: 200px;">';
+        }
+        ?>
+    </a>
+
     <h2 class="form-signin-heading"><?php  if($whitelabel_detail){  echo ucfirst($whitelabel_detail['name']); }else{echo $this->config->item('branding_name');}?> Login</h2>
 	
 		<?php $email = '';
