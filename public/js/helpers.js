@@ -42,14 +42,7 @@ innGrid.addCommas = function(nStr)
 //Function getBaseURL
 //returns baseURL
 var getBaseURL = function () {
-	
-	pathArray = window.location.href.split( '/' );
-	protocol = pathArray[0];
-	host = pathArray[2];
-	url = protocol + '//' + host + "/";
-
-    url = $('#project_url').val() + '/'; // for local development
-	
+    var url = $('#project_url').val() + '/';
 	return url;
 }
 

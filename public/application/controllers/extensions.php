@@ -55,8 +55,9 @@ class Extensions extends MY_Controller
         $temp_ext = $temp_extension = array();
 
         $i = 0;
+        $is_hosted_prod_service = getenv('IS_HOSTED_PROD_SERVICE');
 
-        if($_SERVER['HTTP_HOST'] == "app.minical.io" || $_SERVER['HTTP_HOST'] == "demo.minical.io"){
+        if($is_hosted_prod_service || $_SERVER['HTTP_HOST'] == "app.minical.io" || $_SERVER['HTTP_HOST'] == "demo.minical.io"){
 
             if($extensions){
                 foreach ($extensions as $e => $ext) {
@@ -127,7 +128,9 @@ class Extensions extends MY_Controller
                     }
                 }
             }
-            if($_SERVER['HTTP_HOST'] != "app.minical.io" && $_SERVER['HTTP_HOST'] != "demo.minical.io"){
+            $is_hosted_prod_service = getenv('IS_HOSTED_PROD_SERVICE');
+
+            if($is_hosted_prod_service || $_SERVER['HTTP_HOST'] != "app.minical.io" && $_SERVER['HTTP_HOST'] != "demo.minical.io"){
                 if($flag){
                     $module['is_active'] = 0;
                     $module['company_id'] = $this->company_id;
@@ -517,7 +520,9 @@ class Extensions extends MY_Controller
 
         $extensions = $this->Extension_model->get_extensions($modules_name, $this->company_id);
 
-        if($_SERVER['HTTP_HOST'] == "app.minical.io" || $_SERVER['HTTP_HOST'] == "demo.minical.io"){
+        $is_hosted_prod_service = getenv('IS_HOSTED_PROD_SERVICE');
+
+        if($is_hosted_prod_service || $_SERVER['HTTP_HOST'] == "app.minical.io" || $_SERVER['HTTP_HOST'] == "demo.minical.io"){
             if($this->vendor_id != 0 && $this->user_id != SUPER_ADMIN_USER_ID)
             {
                 $installed_extensions = $this->Extension_model->get_installed_extensions($this->company_id, $this->vendor_id);
@@ -583,7 +588,9 @@ class Extensions extends MY_Controller
             }
         }
 
-        if($_SERVER['HTTP_HOST'] == "app.minical.io" || $_SERVER['HTTP_HOST'] == "demo.minical.io"){
+        $is_hosted_prod_service = getenv('IS_HOSTED_PROD_SERVICE');
+
+        if($is_hosted_prod_service || $_SERVER['HTTP_HOST'] == "app.minical.io" || $_SERVER['HTTP_HOST'] == "demo.minical.io"){
             if($data['extensions']){
                 foreach ($data['extensions'] as $key => $value) {
                     if(

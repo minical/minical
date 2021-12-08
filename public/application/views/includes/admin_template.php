@@ -100,7 +100,7 @@
 			?>
 		</div>
 
-        <input type="text" name="project_url" id="project_url" value="<?php echo getenv('PROJECT_URL'); ?>">
+        <input type="text" name="project_url" id="project_url" value="<?php echo base_url(); ?>">
 
 	</body>
 

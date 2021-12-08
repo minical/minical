@@ -72,7 +72,7 @@
 		$this->load->view('includes/bootstrapped_header', $data);
 		?>
 
-        <input type="hidden" name="project_url" id="project_url" value="<?php echo getenv('PROJECT_URL'); ?>">
+        <input type="hidden" name="project_url" id="project_url" value="<?php echo base_url(); ?>">
 
 		<!-- Google Tag Manager (noscript) -->
 		<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MLXS7DC"

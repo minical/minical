@@ -67,7 +67,7 @@ $files = get_asstes_files($this->module_assets_files, $this->router->fetch_modul
 		endif;
 	?>
 
-    <input type="hidden" name="project_url" id="project_url" value="<?php echo getenv('PROJECT_URL'); ?>">
+    <input type="hidden" name="project_url" id="project_url" value="<?php echo base_url(); ?>">
 
 	<div class="">
         <div class="panel panel-default" style="border: none;padding-top: 20px;">
