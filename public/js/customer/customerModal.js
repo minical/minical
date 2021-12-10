@@ -303,9 +303,9 @@ var customerId;
 
 
             if (isTokenizationEnabled == true) {
-                console.log(innGrid.isAsaasPaymentEnabled);
+                console.log('customer-data',customer);
                 var sensitiveCardNumber =
-                    (customer.customer_pci_token ? '<a style="position: absolute; right: 26px; top: 7px; z-index: 9999;" title = "Show Card Number" class="show_cc" data-cc_number_encrypted="' + customer.cc_number_encrypted + '" data-cc_number="' + customer.cc_number + '" data-customer_pci_token="' + customer.customer_pci_token + '" data-cc_detail="card_number" href="javascript:"><i class="fa fa-eye" ></i></a><input type="hidden" class="customer_id" data-cc_token="' + customer.cc_tokenex_token + '" data-cc_cvc="' + customer.cc_cvc_encrypted + '" value="' + customer.customer_id + '"/>' : '');
+                    (customer.customer_pci_token && customer.customer_pci_token.length == 32 ? '<a style="position: absolute; right: 26px; top: 7px; z-index: 9999;" title = "Show Card Number" class="show_cc" data-cc_number_encrypted="' + customer.cc_number_encrypted + '" data-cc_number="' + customer.cc_number + '" data-customer_pci_token="' + customer.customer_pci_token + '" data-cc_detail="card_number" href="javascript:"><i class="fa fa-eye" ></i></a><input type="hidden" class="customer_id" data-cc_token="' + customer.cc_tokenex_token + '" data-cc_cvc="' + customer.cc_cvc_encrypted + '" value="' + customer.customer_id + '"/>' : '');
                 var sensitiveCardCVC = (customer.cc_cvc_encrypted ? '<a style="position: absolute; right: 26px; top: 7px; z-index: 9999;" title = "Show Card CVC" class="show_cc" data-cc_number_encrypted="' + customer.cc_number_encrypted + '" data-cc_number="' + customer.cc_number + '" data-cc_detail="card_cvc" href="javascript:"><i class="fa fa-eye" ></i></a>' : '');
 
                 $customer_form.append(
