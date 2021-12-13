@@ -26,7 +26,7 @@ class Post_model extends CI_Model {
             $this->db->where('post_id', $post);   
         }
 
-
+        $this->db->where('is_deleted', 0); 
         $query = $this->db->get('posts');
         if ($this->db->_error_message())
         {

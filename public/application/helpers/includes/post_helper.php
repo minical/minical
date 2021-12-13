@@ -64,7 +64,7 @@ function get_post( $post )
 
     //for action after getting the post
     do_action('post.get.post', $post_data, $post, $CI->input->post());
-    return $post_data[0];
+    return $post_data;
     
 }
 

@@ -89,6 +89,36 @@ function get_option( string $option, bool $default = false)
 
 
 /**
+ * Retrieves all option value.
+ * @return bool Value of the option. A value of any type may be returned, If there is no option in the database, boolean false is *               returned
+ *  
+ */
+function get_options()
+{
+    $CI = & get_instance();
+    $CI->load->model('Option_model');
+    
+    $data = apply_filters( 'before_get_options', $option, $CI->input->post());
+    // $should_get_option = apply_filters( 'should_get_options', $option, $CI->input->post());
+    // if (!$should_get_option) {
+    //     return;
+    // }
+   
+    do_action('pre.get.options', $option, $CI->input->post());
+    
+    $option_data = $CI->Option_model->get_options();
+
+    do_action('post.get.options', $option_data, $option, $CI->input->post());
+
+    if(!empty($option_data) && $option_data !== null){
+        return $option_data;
+    }
+
+    return false;
+
+}
+
+/**
  * Updates the value of an option that was already added.
  * 
  * @param string $option  (Required) Name of the option to update.
