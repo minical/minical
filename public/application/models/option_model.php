@@ -23,6 +23,15 @@ class Option_model extends CI_Model {
 
     }
 
+    function get_options(){
+
+        $this->db->select('*');
+        $query = $this->db->get('options');
+        $result_array = $query->result_array();
+        return $result_array;
+
+    }
+
     
     function update_option($option, $value, $autoload)
     {
