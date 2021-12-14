@@ -120,8 +120,14 @@ class MY_Controller extends CI_Controller {
             $get_active_modules = $this->permission->is_extension_active($all_modules, $company_id, true);
         }
 
+        $this->is_channex_pci_enabled = false;
+
         if($get_active_modules){
             foreach ($get_active_modules as $key => $value) {
+
+                if($value['extension_name'] == 'channexpci_integration'){
+                    $this->is_channex_pci_enabled = true;
+                }
 
                 $config = array();
                 $files_path = $modules_path . $value['extension_name'] . '/config/autoload.php';
