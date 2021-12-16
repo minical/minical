@@ -882,6 +882,7 @@ class Booking_model extends CI_Model {
                 b.add_daily_charge,
                 b.residual_rate,
                 b.balance,
+                r.room_name,
                 $select_column
                 (
                     SELECT 
@@ -902,6 +903,8 @@ class Booking_model extends CI_Model {
                 
             FROM booking as b
             LEFT JOIN customer as c ON c.customer_id = b.booking_customer_id
+            LEFT JOIN booking_block as bb ON bb.booking_id = b.booking_id
+            LEFT JOIN room as r ON r.room_id = bb.room_id
             $get_booking_review
             WHERE b.booking_id = '$booking_id' 
 
