@@ -61,6 +61,8 @@ class Forecast_charges
             $description = "Monthly ".$company_details['default_charge_name'];
         }
         $company_id = $booking_details['company_id'];
+        $room_name = $booking_details['room_name'];
+        $customer_name = $booking_details['booking_customer_name'];
         
 		//Load data used in calculations
 		$current_selling_date = $this->ci->Company_model->get_selling_date($company_id);
@@ -187,6 +189,8 @@ class Forecast_charges
                     unset($rate_array[$index]['rate_plan_name']);
 					unset($rate_array[$index]['is_deleted']); // you can't delete forecasted charges, but this variable is set from DB
                     $rate_array[$index]['booking_id'] = $booking_id;
+                    $rate_array[$index]['room_name'] =  $room_name ;
+                    $rate_array[$index]['customer_name'] = $customer_name;
 					
                     if($get_amount_only)
                     {
@@ -233,7 +237,9 @@ class Forecast_charges
                             "charge_type_name" => $charge_type['name'],
                             "pay_period"   => $booking_details['pay_period'],
                             "booking_id"   => $booking_id,
-                            "taxes" => $tax_rates
+                            "taxes" => $tax_rates,
+                            "room_name" =>  $room_name,
+                            "customer_name" =>  $customer_name,
                         );
                         
                         if($get_amount_only)
@@ -265,7 +271,9 @@ class Forecast_charges
                         "charge_type_name" => $charge_type['name'],
                         "pay_period"   => DAILY,
                         "booking_id"   => $booking_id,
-                        "taxes" => $tax_rates
+                        "taxes" => $tax_rates,
+                        "room_name" =>  $room_name ,
+                        "customer_name" =>  $customer_name,
 					);
                     
                     if($get_amount_only)
@@ -301,7 +309,9 @@ class Forecast_charges
                             "charge_type_name" => $charge_type['name'],
                             "pay_period"   => $booking_details['pay_period'],
                             "booking_id"   => $booking_id,
-                            "taxes" => $tax_rates
+                            "taxes" => $tax_rates,
+                            "room_name" =>  $room_name,
+                            "customer_name" =>  $customer_name, 
                         );
                         $charge_start_date = Date("Y-m-d", strtotime($date_increment, strtotime($charge_start_date)));
                         
@@ -341,7 +351,9 @@ class Forecast_charges
                                     "charge_type_name" => $charge_type['name'],
                                     "pay_period"   => DAILY,
                                     "booking_id"   => $booking_id,
-                                    "taxes" => $tax_rates
+                                    "taxes" => $tax_rates,
+                                    "room_name" =>  $room_name,
+                                    "customer_name" =>  $customer_name, 
                                 );
                                 
                                 if($get_amount_only)
@@ -378,7 +390,7 @@ class Forecast_charges
             $response = $rate_array;
         }
         return $response;
-	}
+    }
 	
     
     // get forecast extra charge array without taxes
@@ -387,9 +399,9 @@ class Forecast_charges
 		$extra_array = Array();
         $extra_charges = 0;
 		$booking_details = $booking_details ? $booking_details : $this->ci->Booking_model->get_booking_detail($booking_id);
-		$company_id = $booking_details['company_id'];
-				
-		if ($booking_details['state'] == CANCELLED || $booking_details['state'] == CHECKOUT)
+        $company_id = $booking_details['company_id'];
+       
+        if ($booking_details['state'] == CANCELLED || $booking_details['state'] == CHECKOUT)
 		{
 			return $get_amount_only ? $extra_charges : $extra_array;
 		}
@@ -400,8 +412,8 @@ class Forecast_charges
 				$current_selling_date = $this->ci->Company_model->get_selling_date($company_id);
                 
                 $tax_rates = $this->ci->Tax_model->get_tax_rates_by_charge_type_id($extra['charge_type_id'], $company_id, $extra['rate']);
-                
-				$date_start = Date('Y-m-d', max(strtotime($current_selling_date), strtotime($extra['start_date'])));
+				
+                $date_start = Date('Y-m-d', max(strtotime($current_selling_date), strtotime($extra['start_date'])));
 				$date_end = $extra['end_date'];
                 if 	(
                     ($extra['charging_scheme'] == 'on_start_date' && strtotime($current_selling_date) <= strtotime($extra['start_date'])) ||

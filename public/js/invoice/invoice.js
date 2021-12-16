@@ -114,6 +114,7 @@ innGrid.getChargeGroups = function() {
 	$(".charge_row").each(function() {
 		charge = $(this);
 		var chargeObject = {
+			room_name: charge.find("span[name='room_name']").text().trim(),
 			date: innGrid._getBaseFormattedDate(charge.find("span[name='selling-date']").text().trim()),
 			description: charge.find("span[name='description']").text().trim(),
 			customer: charge.find("span[name='customer']").attr("id").trim(),
@@ -129,6 +130,7 @@ innGrid.getChargeGroups = function() {
 		$.each(chargeGroups, function(j, chargeGroup) {
 			$.each(chargeGroup, function(k, groupedCharge) {
 				var groupedChargeObject = {
+					room_name: groupedCharge.find("span[name='room_name']").text().trim(),
 					date: innGrid._getBaseFormattedDate(groupedCharge.find("span[name='selling-date']").text().trim()),
 					pay_period: groupedCharge.find("span[name='description']").text().trim(),
 					customer: groupedCharge.find("span[name='customer']").attr("id").trim(),
@@ -138,7 +140,7 @@ innGrid.getChargeGroups = function() {
                     description: groupedCharge.find("span[name='description']").text().trim(),
 					booking_id: groupedCharge.find("span[name='booking_id']").text().trim(),
 				};
-                
+
 				if(chargeObject.date == groupedChargeObject.date) {
 					chargeBelongsToAGroup = false;
 					chargePositionInGroup = false;
@@ -149,6 +151,7 @@ innGrid.getChargeGroups = function() {
                     (groupedChargeObject.pay_period === '1' && innGrid.getDateDiff(chargeObject.date, 7, null) === groupedChargeObject.date) || 
                     (groupedChargeObject.pay_period === '2' && innGrid.getDateDiff(chargeObject.date, null, 1) === groupedChargeObject.date) ) &&
 					chargeObject.description === groupedChargeObject.description &&
+					chargeObject.room_name === groupedChargeObject.room_name &&
 					chargeObject.customer === groupedChargeObject.customer &&
 					chargeObject.chargeType === groupedChargeObject.chargeType &&
 					chargeObject.amount === groupedChargeObject.amount &&
@@ -164,6 +167,7 @@ innGrid.getChargeGroups = function() {
                         (groupedChargeObject.pay_period === '1' && innGrid.getDateDiff(chargeObject.date, -7, null) === groupedChargeObject.date) || 
                         (groupedChargeObject.pay_period === '2' && innGrid.getDateDiff(chargeObject.date, null, -1) === groupedChargeObject.date) ) &&
 					chargeObject.description === groupedChargeObject.description &&
+					chargeObject.room_name === groupedChargeObject.room_name &&
 					chargeObject.customer === groupedChargeObject.customer &&
 					chargeObject.chargeType === groupedChargeObject.chargeType &&
 					chargeObject.booking_id === groupedChargeObject.booking_id &&
@@ -199,24 +203,25 @@ innGrid.getChargeGroups = function() {
 	return chargeGroups;
 }
 
-innGrid.renderChargeGroups = function(chargeGroups) {
-    
-    var chargeGroupID = 0;
+innGrid.renderChargeGroups = function (chargeGroups) {
+	var chargeGroupID = 0;
   
     $.each(chargeGroups, function() {
         var chargeGroup = $(this);
-        var chargeCount = chargeGroup.length;
+		var chargeCount = chargeGroup.length;
 
 		if (chargeCount < 2)
 			return;
-    
-        var dateStart = innGrid._getBaseFormattedDate(chargeGroup[0].find("span[name='selling-date']").text().trim());
+
+		var dateStart = innGrid._getBaseFormattedDate(chargeGroup[0].find("span[name='selling-date']").text().trim());
 		var dateEnd = innGrid._getBaseFormattedDate(chargeGroup[chargeCount-1].find("span[name='selling-date']").text().trim());
 		var amount = chargeGroup[0].find("span[name='amount']").text().trim();
 		var customer = chargeGroup[0].find("span[name='customer']").text().trim();
 		var chargeType = chargeGroup[0].find("span[name='charge-type']").text().trim();
 		var description =  chargeGroup[0].find("span[name='description']").text().trim();
 		var bookingId = chargeGroup[0].find("span[name='booking_id']").text().trim();
+		var room_name = chargeGroup[0].find("span[name='room_name']").text().trim();
+
 		var period = "day";
         if(description == 'Daily Room Charge')
         {
@@ -253,7 +258,7 @@ innGrid.renderChargeGroups = function(chargeGroups) {
         
         var url = $(location).attr('href');
         var segments = url.split( '/' );
-        var function_name = segments[4];
+		var function_name = segments[4];
         var booking_id_td = '';
         var booking_id_data = {html: ''};
         if(function_name == 'show_master_invoice')
@@ -276,6 +281,8 @@ innGrid.renderChargeGroups = function(chargeGroups) {
 						}).add(booking_id_td,
 							booking_id_data
 						).add('<td />', {
+							html: room_name
+						}).add('<td />', {
 							html: description
 						}).add('<td />', {
 							html: customer
@@ -364,7 +371,7 @@ $(function() {
 	{
 
             var chargeGroups = innGrid.getChargeGroups();
-            innGrid.renderChargeGroups(chargeGroups);
+		innGrid.renderChargeGroups(chargeGroups);
 
             innGrid.collapseAll();	
             $(document).on("click", ".collapse-all", function(){
