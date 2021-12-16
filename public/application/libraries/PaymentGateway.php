@@ -495,13 +495,16 @@ class PaymentGateway
     {
         $credentials                                     = array();
         $credentials['selected_payment_gateway']         = $this->selected_gateway; // itodo legacy
-        $credentials['stripe']['stripe_publishable_key'] = $this->company_gateway_settings['stripe_publishable_key'];
+        $credentials['stripe']['stripe_publishable_key'] = isset($this->company_gateway_settings['stripe_publishable_key']) ? $this->company_gateway_settings['stripe_publishable_key'] : null;
 
         if (!$publicOnly) {
-            $credentials['stripe']['stripe_secret_key'] = $this->company_gateway_settings['stripe_secret_key'];
+            $credentials['stripe']['stripe_secret_key'] = isset($this->company_gateway_settings['stripe_secret_key']) ? $this->company_gateway_settings['stripe_secret_key'] : null;
         }
         
-        $meta_data = json_decode($this->company_gateway_settings['gateway_meta_data'], true);
+        if(isset($this->company_gateway_settings) && $this->company_gateway_settings && json_decode($this->company_gateway_settings['gateway_meta_data'], true)){
+            $company_meta = json_decode($this->company_gateway_settings['gateway_meta_data'], true);
+        }
+        $meta_data = $company_meta ?? null;
         if($meta_data)
         {
             if((isset($meta_data["gateway_mid"]) && $meta_data["gateway_mid"]) || (isset($meta_data["gateway_client_id"]) && $meta_data["gateway_client_id"]))
@@ -578,7 +581,7 @@ class PaymentGateway
             unset($credentials['payment_gateway']['gateway_login']);
             unset($credentials['payment_gateway']['gateway_password']);
         }
-        $credentials['paypal']['paypal_email'] = $this->company_gateway_settings['paypal_email'];
+        $credentials['paypal']['paypal_email'] = isset( $this->company_gateway_settings['paypal_email'] ) ? $this->company_gateway_settings['paypal_email'] : null;
         $result                                = $credentials;
 
         if ($filter) {
