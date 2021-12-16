@@ -446,7 +446,7 @@
 					<tr>
                         <th class="text-left"><?php echo l('date'); ?></th>
                         <th class="text-left"><?php echo l('booking_id'); ?></th>
-						<th class="text-left"><?php echo l('Room No'); ?></th>
+						<th class="text-left"><?php echo l('Room'); ?></th>
 						<th class="text-left"><?php echo l('description'); ?></th>
 						<th class="text-left"><?php echo l('paying').' '.l('customer'); ?></th>
                         <th class="text-left"><?php echo l('charge_type'); ?></th>
