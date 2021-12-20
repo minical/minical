@@ -1437,7 +1437,7 @@ class Booking extends MY_Controller
         $post_booking_data = $booking_data;
         $post_booking_data['booking_id'] = $booking_id;
 
-        do_action('post.create.booking', $post_booking_data);
+      
 
         $response = array();
 
@@ -1553,6 +1553,12 @@ class Booking extends MY_Controller
             )
         );
 
+        $post_booking_data['check_in_date'] =  $room['check_in_date'];
+        $post_booking_data['check_out_date'] = $room['check_out_date'];
+        $post_booking_data['room_id'] = $room['room_id'];
+        $post_booking_data['room_type_id'] =  $room['room_type_id'];
+        do_action('post.create.booking', $post_booking_data);
+
         if (isset($customer_data['staying_customers'])) {
             $staying_customers = $customer_data['staying_customers'];
             $staying_customer_ids = Array();
@@ -1616,8 +1622,6 @@ class Booking extends MY_Controller
         $post_booking_batch_data = $booking_batch;
         $post_booking_batch_data['booking_ids'] = $booking_ids;
 
-        do_action('post.create.booking', $post_booking_batch_data);
-
         $booking_history_batch = array();
 
         for ($i = 0; $i < $room['room_count']; $i++) {
@@ -1633,6 +1637,10 @@ class Booking extends MY_Controller
         }
 
         $this->Booking_room_history_model->insert_booking_room_history_batch($booking_history_batch);
+        $post_booking_data['group_booking'] = $booking_history_batch;
+
+        do_action('post.create.booking', $post_booking_batch_data);
+
 
         //Create a corresponding invoice
         $this->Invoice_model->create_batch_invoice($booking_ids);
@@ -2169,8 +2177,6 @@ class Booking extends MY_Controller
                 $post_booking_data = $booking;
                 $post_booking_data['booking_id'] = $booking_id;
 
-                do_action('post.update.booking', $post_booking_data);
-
                 $block = array(
                     "booking_id" => $booking_id,
                     "check_in_date" => $room['check_in_date'],
@@ -2230,6 +2236,13 @@ class Booking extends MY_Controller
                                 $new_booking_block['check_in_date'] = $this->selling_date;
                                 $new_booking_block['check_out_date'] = $block['check_out_date'];
                                 $this->Booking_room_history_model->create_booking_room_history($new_booking_block);
+
+                                
+                                $post_booking_data['room_id'] = $new_room_id;;
+                                $post_booking_data['room_type_id'] = $block['room_type_id'];
+                                $post_booking_data['check_in_date'] = $this->selling_date;
+                                $post_booking_data['check_out_date'] = $block['check_out_date'];
+                                do_action('post.update.booking', $post_booking_data);
                             }
                             else
                             {
@@ -3129,6 +3142,14 @@ class Booking extends MY_Controller
                 $this->Booking_room_history_model->update_check_out_date($brh_data, $check_out_date);
             }
             
+            $post_booking_data['booking_id'] = $booking_id;
+            $post_booking_data['room_id'] = $room_id;
+            $post_booking_data['check_in_date'] = $check_in_date;
+            $post_booking_data['check_out_date'] = $check_out_date;
+
+            do_action('post.update.booking', $post_booking_data);
+            
+
             $return_type = $session_data['is_total_balance_include_forecast'] ? 'balance' : 'balance_without_forecast';
             $balance = $this->Booking_model->update_booking_balance($booking_id, $return_type);
 
