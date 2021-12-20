@@ -48,6 +48,34 @@ class Company_model extends CI_Model {
         
 		return NULL;
 	}
+
+	function get_ota_x_company_data($company_ids)
+	{
+		$this->db->from('ota_x_company as oxc');
+		$this->db->where_in('oxc.company_id', $company_ids);
+        
+		$query = $this->db->get();
+        
+		if($query->num_rows() >= 1)
+		{
+			return $query->result_array();
+		}
+        
+		return NULL;
+	}
+
+	function set_pricing_mode_rate_plan($data){
+
+		$update_data = array('rate_update_type' => $data['rate_update_type']);
+
+		$this->db->where('company_id', $data['company_id']);
+		$this->db->where('ota_x_company_id', $data['ota_x_company_id']);
+		$this->db->update("ota_rate_plans", $update_data);
+
+		$this->db->where('company_id', $data['company_id']);
+		$this->db->where('ota_x_company_id', $data['ota_x_company_id']);
+		$this->db->update("ota_x_company", array('rate_update_type' => null));
+	}
     
     function get_data_of_companies()
     {

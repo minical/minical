@@ -170,6 +170,26 @@ class Cron extends CI_Controller
         echo json_encode($company_ids);
     }
 
+    function set_pricing_mode(){
+    	$this->load->model(array('Company_model'));
+
+    	$companies = $this->Company_model->get_all_companies(true);
+		$company_ids = array();
+
+		foreach ($companies as $company)
+		{
+			$company_ids[] = $company['company_id'];
+		}
+
+		$ota_x_data = $this->Company_model->get_ota_x_company_data($company_ids);
+
+		foreach ($ota_x_data as $key => $value) {
+			if(isset($value['rate_update_type']) && $value['rate_update_type']){
+				$this->Company_model->set_pricing_mode_rate_plan($value);
+			}
+		}
+    }
+
     function full_sync(){
     	$this->load->model(array('Company_model'));
 
