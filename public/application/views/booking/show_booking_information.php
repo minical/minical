@@ -132,7 +132,7 @@
                 <span style="font-size: 15px;">
                     <?php echo l('check_in_date'); ?>: <span id="check-in-date">
 
-                    <?php echo $this->enable_hourly_booking ? get_local_formatted_date($booking_detail['check_in_date']).' '.date('h:i A', strtotime($booking_detail['check_in_date'])) : get_local_formatted_date($booking_detail['check_in_date']);
+                    <?php echo isset($this->enable_hourly_booking)  && $this->enable_hourly_booking ? get_local_formatted_date($booking_detail['check_in_date']).' '.date('h:i A', strtotime($booking_detail['check_in_date'])) : get_local_formatted_date($booking_detail['check_in_date']);
                     ?>
                     </span>
                     <br/><br/>
@@ -154,7 +154,7 @@
                     <?php echo l('check_out_date'); ?>:
                     <span class="change-check-out-date">
                     
-                    <?php echo $this->enable_hourly_booking ? get_local_formatted_date($booking_detail['check_out_date']).' '.date('h:i A', strtotime($booking_detail['check_out_date'])) : get_local_formatted_date($booking_detail['check_out_date']);
+                    <?php echo isset($this->enable_hourly_booking)  && $this->enable_hourly_booking ? get_local_formatted_date($booking_detail['check_out_date']).' '.date('h:i A', strtotime($booking_detail['check_out_date'])) : get_local_formatted_date($booking_detail['check_out_date']);
                     ?>
 
                     </span>
