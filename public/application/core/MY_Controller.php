@@ -418,6 +418,7 @@ class MY_Controller extends CI_Controller {
         }
         else
         {
+            $this->enable_hourly_booking =  false;
             // if user is not logged-in, but the controller & function combination is publicly accessible
 
             if ($this->permission->is_function_public($this->controller_name, $this->function_name)) 
