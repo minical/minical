@@ -280,6 +280,16 @@ innGrid.customRangeForSuppliedRate = function(input) {
 
 innGrid.createRate = function() {
 
+	var end_date = $("#date_end").val()
+	var confirmbox = false;
+
+	if (end_date != '') {
+		confirmbox = true;
+	} else {
+		confirmbox = confirm(l("Are you sure you don't want to set the end date? The default value of the end date will be 10years from now."));
+	}
+
+	if (confirmbox) {
 	var rateArray = {
 		date_start: $("#date_start").val(),
 		date_end: $("#date_end").val(),
@@ -414,6 +424,7 @@ innGrid.createRate = function() {
 			}
 		}, 'json'
 	);
+	}
 }
 
 // Create supplied rate
