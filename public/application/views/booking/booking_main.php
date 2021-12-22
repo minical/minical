@@ -490,6 +490,7 @@
 <input type="hidden" id="registration_session" value="<?php echo $this->session->userdata('is_registration_page'); ?>"/>
 <input type="hidden" id="trial_expiry_date" value="<?php echo $company_data['trial_expiry_date']; ?>"/>
 <input type="hidden" id="subscription_state" value="<?php echo $company_data['subscription_state']; ?>"/>
+<input type="hidden" id="support_email" value="<?php echo $support_email; ?>"/>
 
 <style>
 	.group_booking_confirm_dialog{
@@ -513,11 +514,11 @@
             }
             
             var subscription_state = $('#subscription_state').val();
-
+            var support_email = $('#support_email').val();
             if(registration_session == '' && subscription_state == 'on_hold'){
                 $("#dialog-onhold-message").find(".close").hide();
                 $("#dialog-onhold-message").modal("show");
-                $('#dialog-onhold-message .message').html('The account is put on hold please contact us at Support@minical.io to reactivate the account.');
+                $('#dialog-onhold-message .message').html('The account is put on hold please contact us at'+ support_email to +'reactivate the account.');
             }
             
             var trial_expiry_date = $('#trial_expiry_date').val();

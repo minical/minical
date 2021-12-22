@@ -237,6 +237,11 @@ class Booking extends MY_Controller
         });
         $data['booking_sources'] = $source_data;
 
+        $whitelabelinfo = $this->session->userdata('white_label_information');
+
+        $data['support_email'] = $whitelabelinfo && isset($whitelabelinfo['support_email']) && $whitelabelinfo['support_email'] ? $whitelabelinfo['support_email'] : 'support@minical.io';
+
+
         $data['is_show_unassigned_rooms'] = $company_data['force_room_selection'];
         $data['hide_decimal_places'] = isset($company_data["hide_decimal_places"]) ? $company_data["hide_decimal_places"] : "";
         $data['make_guest_field_mandatory'] = isset($company_data["make_guest_field_mandatory"]) ? $company_data["make_guest_field_mandatory"] : "";
