@@ -518,7 +518,7 @@
             if(registration_session == '' && subscription_state == 'on_hold'){
                 $("#dialog-onhold-message").find(".close").hide();
                 $("#dialog-onhold-message").modal("show");
-                $('#dialog-onhold-message .message').html('The account is put on hold please contact us at'+ support_email to +'reactivate the account.');
+                $('#dialog-onhold-message .message').html('The account is put on hold please contact us at'+ support_email+' to reactivate the account.');
             }
             
             var trial_expiry_date = $('#trial_expiry_date').val();
