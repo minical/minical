@@ -365,6 +365,7 @@ class Company extends MY_Controller
         
         $reply_to_name = isset($whitelabelinfo['name']) && $whitelabelinfo['name'] ? $whitelabelinfo['name'] : $this->config->item('website_name', 'tank_auth');
 
+        $data['support_email'] = $from_email;
         $this->email->from($from_email, $from_name);
         $this->email->reply_to($reply_to_email, $reply_to_name);
         $this->email->to($email);

@@ -19,7 +19,7 @@ Link doesn't work? Copy the following link to your browser address bar:<br />
 <nobr><a href="<?php echo site_url('/auth/activate_employee/'.$user_id.'/'.$new_pass_key); ?>" style="color: #3366cc;"><?php echo site_url('/auth/activate_employee/'.$user_id.'/'.$new_pass_key); ?></a></nobr><br />
 <br />
 <br />
-If you have any questions, please contact support@minical.io. <br />
+If you have any questions, please contact <?php echo $support_email?>. <br />
 <br />
 <br />
 Thank you,<br />
