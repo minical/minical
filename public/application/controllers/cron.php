@@ -13,6 +13,8 @@ class Cron extends CI_Controller
 	function ota_booking_retrieval()
 	{	
         $this->get_channex_bookings();
+
+        $this->get_siteminder_bookings();
 	}
 
 	function get_channex_bookings()
@@ -28,6 +30,35 @@ class Cron extends CI_Controller
             $protocol = $this->config->item('server_protocol');
 		    $url = $protocol . $_SERVER['HTTP_HOST']."/cron/channex_get_bookings/".$company_id;
 
+		    $ch = curl_init();
+		    curl_setopt($ch, CURLOPT_URL, $url);
+		    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		    curl_setopt($ch, CURLOPT_AUTOREFERER, false);
+		    curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+		    curl_setopt($ch, CURLOPT_HEADER, 0);
+		    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+		    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+		    $result = curl_exec($ch);
+		    curl_close($ch);
+
+		    echo $company_id. ' => '; prx($result, 1);
+
+		}
+	}
+
+	function get_siteminder_bookings()
+	{
+		$this->load->model('Company_model');
+		
+		$companies = $this->Company_model->get_all_companies(true);
+		
+		foreach ($companies as $company)
+		{
+			$company_id = $company['company_id'];
+
+            $protocol = $this->config->item('server_protocol');
+		    $url = $protocol . $_SERVER['HTTP_HOST']."/cron/siteminder_get_bookings/".$company_id;
+            //$url = base_url()."cron/siteminder_get_bookings/".$company_id;
 		    $ch = curl_init();
 		    curl_setopt($ch, CURLOPT_URL, $url);
 		    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -297,6 +328,11 @@ class Cron extends CI_Controller
         // update rates
         do_action('update_rates', $data);
 		// }
+		// update siteminder availabilities
+        do_action('update_siteminder_availability', $data);
+
+        // update siteminder rates
+        do_action('update_siteminder_rates', $data);
 	}
 
 	function hourly(){
