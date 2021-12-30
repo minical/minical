@@ -267,6 +267,14 @@ innGrid.renderChargeGroups = function (chargeGroups) {
 			var booking_id_data = {html: bookingId};
         }
 
+        var room_id_td = '';
+        var room_id_data = {html: ''};
+        if(function_name == 'show_master_invoice')
+        {
+            room_id_td = '<td/>';
+			var room_id_data = {html: room_name};
+        }
+
         expandableTR = $('<tr />', {
 				'class': 'expandable',
 				'name': chargeGroupID,
@@ -280,9 +288,9 @@ innGrid.renderChargeGroups = function (chargeGroups) {
 							html: innGrid._getLocalFormattedDate(dateStart)+" "+l('to')+" "+innGrid._getLocalFormattedDate(dateEnd)
 						}).add(booking_id_td,
 							booking_id_data
+						).add(booking_id_td,
+							room_id_data
 						).add('<td />', {
-							html: room_name
-						}).add('<td />', {
 							html: description
 						}).add('<td />', {
 							html: customer
