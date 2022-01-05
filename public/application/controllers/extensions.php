@@ -442,12 +442,12 @@ class Extensions extends MY_Controller
 
     function uninstall_extension()
     {
-        $whitelabel_partner_detail = $this->Whitelabel_partner_model->get_whitelabel_partner_id($this->user_id);
+        //$whitelabel_partner_detail = $this->Whitelabel_partner_model->get_whitelabel_partner_id($this->user_id);
 
         $data['extension_name'] = $this->input->post('extension_name');
         $data['is_installed'] = 0;
         $data['company_id'] = $this->company_id;
-        $data['vendor_id'] = $whitelabel_partner_detail['partner_id'] ? $whitelabel_partner_detail['partner_id'] : 0;
+        $data['vendor_id'] = $this->company_partner_id;
 
         $get_vendors_companies = $this->Company_model->get_partner_company_data($data['vendor_id']);
         $vendor_companies = $company_ids = array();
@@ -472,12 +472,12 @@ class Extensions extends MY_Controller
 
     function uninstall_extension_process()
     {
-        $whitelabel_partner_detail = $this->Whitelabel_partner_model->get_whitelabel_partner_id($this->user_id);
+        //$whitelabel_partner_detail = $this->Whitelabel_partner_model->get_whitelabel_partner_id($this->user_id);
 
         $data['extension_name'] = $this->input->post('extension_name');
         $data['is_installed'] = 0;
         $data['company_id'] = $this->company_id;
-        $data['vendor_id'] = $whitelabel_partner_detail['partner_id'] ? $whitelabel_partner_detail['partner_id'] : 0;
+        $data['vendor_id'] = $this->company_partner_id;
 
         
         $status = $this->Extension_model->update_extension_status($data);
@@ -489,12 +489,12 @@ class Extensions extends MY_Controller
 
     function install_extension()
     {
-        $whitelabel_partner_detail = $this->Whitelabel_partner_model->get_whitelabel_partner_id($this->user_id);
+        //$whitelabel_partner_detail = $this->Whitelabel_partner_model->get_whitelabel_partner_id($this->user_id);
 
         $data['extension_name'] = $this->input->post('extension_name');
         $data['is_installed'] = 1;
         $data['company_id'] = $this->company_id;
-        $data['vendor_id'] = $whitelabel_partner_detail['partner_id'] ? $whitelabel_partner_detail['partner_id'] : 0;
+        $data['vendor_id'] = $this->company_partner_id;
 
         $this->Extension_model->update_extension_status($data);
         echo json_encode(array('success' => true));
