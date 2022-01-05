@@ -2414,6 +2414,7 @@ ALTER TABLE `whitelabel_partner` ADD `logo_image_group_id` BIGINT(20) NULL AFTER
 
 ALTER TABLE `ota_manager` CHANGE `email` `email` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL, CHANGE `password` `password` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL;
 
+ALTER TABLE `ota_rate_plans` ADD `rate_update_type` VARCHAR(255) NOT NULL AFTER `ota_room_type_id`;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 -- Dump completed on 2021-11-29 11:31:39

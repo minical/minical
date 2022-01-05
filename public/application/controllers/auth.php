@@ -856,7 +856,7 @@ class Auth extends MY_Controller
             $this->User_model->add_user_permission($company_id, $data['user_id'], 'is_admin');
         }
 
-        if($this->User_model->get_users_count() == 1 && $data['email'] != SUPER_ADMIN){
+        if($this->User_model->get_users_count() == 1 && isset($data['email']) && $data['email'] != SUPER_ADMIN){
             $this->User_model->add_user_permission($company_id, $data['user_id'], 'is_admin');
         }
 
