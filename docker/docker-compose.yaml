@@ -1,0 +1,53 @@
+version: '3'
+services:
+    web:
+        image: nginx:latest
+        ports:
+            - "8080:80"
+        volumes:
+            - ./nginx.conf:/etc/nginx/conf.d/default.conf
+            - ../:/app
+        links:
+            - php
+
+    php:
+        build:
+            context: .
+            dockerfile: PHP.Dockerfile
+        volumes:
+            - ../:/app
+        links:
+            - db
+            - composer
+
+    db:
+        image: mariadb:latest
+        environment:
+            MYSQL_USER: 'minical'
+            MYSQL_PASSWORD: 'MiniCalPwd'
+            # ensure the password matches the DATABASE_PASS above
+            MYSQL_ROOT_PASSWORD: 'MiniCalPwd'
+            # ensure the name matches the DATABASE_NAME above
+            MYSQL_DATABASE: 'minical'
+        volumes:
+            - mysqldata:/var/lib/mysql
+        ports:
+            - 3306:3306
+
+    composer:
+        image: composer:latest
+        command: ["composer", "install"]
+        volumes:
+            - ..:/app
+
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        ports:
+            - '8888:80'
+        environment:
+            PMA_HOST: db
+        depends_on:
+            - db
+
+volumes:
+    mysqldata: {}
