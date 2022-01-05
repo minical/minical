@@ -286,7 +286,7 @@ innGrid.createRate = function() {
 	if (end_date != '') {
 		confirmbox = true;
 	} else {
-		confirmbox = confirm(l("Are you sure you don't want to set the end date? The default value of the end date will be 10years from now."));
+		confirmbox = confirm(l("Are you sure you don't want to set the end date? The default value of the end date will be set to FOREVER (10 years from now) and will update Rates for all future dates."));
 	}
 
 	if (confirmbox) {
