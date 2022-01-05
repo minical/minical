@@ -2156,7 +2156,7 @@ class Roomsy_migration extends MY_Controller
             }
 
             $booking_row = array();
-            $booking_row['Booking Id'] = $data['booking_id'];
+            $booking_row['Booking Id'] = $data['bookingid'];
             $booking_row['Rate'] = $data['rate'];
             $booking_row['Adult Count'] = $data['adult_count'];
             $booking_row['Children Count'] = $data['children_count'];
