@@ -12,7 +12,13 @@ docker/ $ docker-compose up
 This would download and build all docker images and will run all services.
 
 You still need to create the `.env` file in the main directory as described in the Minical Installation
-instructions. For running the demo server using docker, you can simply run the following command in the
+instructions. You can copy the `.env` file from the `docker` directory into Minical's root.
+
+NOTE that it is best to change the URLs in the `.env` file from `localhost` to your actual IP address.
+This is necessary to get some functions working, such as the Room Inventory page which makes internal
+calls to the site using the API interface.
+
+For running the demo server using docker, you can simply run the following command in the
 main Minical directory:
 
 ```
