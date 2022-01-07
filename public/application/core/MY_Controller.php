@@ -326,7 +326,7 @@ class MY_Controller extends CI_Controller {
             $this->is_super_admin = (($user && isset($user['email']) && $user['email'] == SUPER_ADMIN) || ($admin_user_ids && isset($admin_user_ids['admin_user_id']) && $this->user_id == $admin_user_ids['admin_user_id']));
 
             //if($_SERVER['HTTP_HOST'] != "app.minical.io" || $_SERVER['HTTP_HOST'] != "demo.minical.io"){
-                $this->vendor_id = $admin_user_ids['partner_id'] ? $admin_user_ids['partner_id'] : $this->company_data['partner_id'];
+                $this->vendor_id = isset($admin_user_ids['partner_id']) && $admin_user_ids['partner_id'] ? $admin_user_ids['partner_id'] : $this->company_data['partner_id'];
 
                 $this->user_permission = ($user && isset($user['permission']) && $user['permission']) ? $user['permission'] : '';
             //}
