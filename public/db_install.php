@@ -16,16 +16,24 @@ $dbName = getenv("DATABASE_NAME");
 
 $maxRuntime = 3; // less then your max script execution limit
 $deadline = time() + $maxRuntime;
-$errorFilename = $filename . '_error'; // tmp file for erro
 
-$mysqli_connection = mysqli_connect("$dbHost", "$dbUser", "$dbPass", "$dbName");
-mysqli_select_db($mysqli_connection, $dbName) OR die('select db: ' . $dbName . ' failed: ' . mysqli_error($mysqli_connection));
+$mysqli_connection = @mysqli_connect("$dbHost", "$dbUser", "$dbPass", "$dbName");
+if (!$mysqli_connection) {
+    echo json_encode(array('success' => false, 'message' => "Database connection failed with error: " . mysqli_connect_error()), true);
+    return;
+}
+
+$mysqli_select_db = @mysqli_select_db($mysqli_connection, $dbName);
+if (!$mysqli_select_db) {
+    echo json_encode(array('success' => false, 'message' => 'Database: ' . $dbName . ' selection failed with error: ' . mysqli_error($mysqli_connection)), true);
+    return;
+}
 
 ($fp = fopen($filename, 'r')) OR die('failed to open file:' . $filename);
 
 $sql = "SELECT pointer FROM minical_installation_meta";
 if ($result = mysqli_query($mysqli_connection, $sql)) {
-  // Fetch one and one row
+    // Fetch one and one row
     while ($row = mysqli_fetch_row($result)) {
         $file_position = $row[0];
     }
@@ -70,7 +78,7 @@ if (feof($fp)) {
     $project_url = getenv('PROJECT_URL');
     echo json_encode(array('success' => true, 'project_url' => trim($project_url)), true);
     return;
-} 
+}
 
 echo json_encode(array('file_position' => $file_position, 'file_size' => filesize($filename)), true);
 

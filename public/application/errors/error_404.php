@@ -57,10 +57,8 @@ p {
 	<div id="container">
 		<h1><?php echo $heading; ?></h1>
 		<div style="margin:20px;">
-			<img src="<?php echo base_url()."images/taro.jpg" ?>" style="margin-bottom:10px;"/>
-			
-			<br/><br/>
-			For any questions/inquiries, contact me at <a href="mailto:support@minical.io">support@minical.io<a/>
+            <br/><br/>
+			For any questions/inquiries, contact support at <a href="mailto:support@minical.io">support@minical.io<a/>
 		</div>
 		<?php //echo $message; ?>
 	</div>

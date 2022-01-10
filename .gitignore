@@ -6,5 +6,6 @@ composer.phar
 /DB_active_rec.php
 /my_models.php
 /*.sql
-/.env
+.env
 /nbproject/private/
+/public/application/extensions/

@@ -22,13 +22,13 @@ For running the demo server using docker, you can simply run the following comma
 main Minical directory:
 
 ```
-$ cp docker/.env ./.env
+$ cp docker/.env.example ./.env
 ```
 
 or if you are in the docker directory:
 
 ```
-docker/ $ cp .env ../.env
+docker/ $ cp .env.example ../.env
 ```
 
 When everything is started, and the `.env` file exists in the Minical root directory, you can simply
