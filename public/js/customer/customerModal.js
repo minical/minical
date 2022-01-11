@@ -683,8 +683,14 @@ var customerId;
                             // }
 
                             if (typeof nexioGateway !== "undefined" && nexioGateway) {
-                                var event = new CustomEvent('post.create_user', { detail: { "customer": customerData } });
-                                document.dispatchEvent(event);
+                                var myIframe = window.document.getElementById('myIframe');
+                                if(myIframe) {
+                                    var event = new CustomEvent('post.create_user', { detail: { "customer": customerData } });
+                                    document.dispatchEvent(event);
+                                } else {
+                                    update_create_client();
+                                }
+                                
                             } else {
                                 update_create_client();
                             }
