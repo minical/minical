@@ -858,6 +858,21 @@ class Auth extends MY_Controller
 
         if($this->User_model->get_users_count() == 1 && isset($data['email']) && $data['email'] != SUPER_ADMIN){
             $this->User_model->add_user_permission($company_id, $data['user_id'], 'is_admin');
+
+            $is_hosted_prod_service = getenv('IS_HOSTED_PROD_SERVICE');
+
+            if(
+                !$is_hosted_prod_service && 
+                $_SERVER['HTTP_HOST'] != "app.minical.io" && 
+                $_SERVER['HTTP_HOST'] != "demo.minical.io"
+            ){
+                $partner_x_admin_data = array(
+                                            'partner_id' => $company_data['partner_id'], 
+                                            'admin_id' => $data['user_id']
+                                        );
+                $this->Whitelabel_partner_model->add_whitelabel_partner_x_admin($partner_x_admin_data);
+            }
+
         }
 
          // support@minical.io will have admin permission

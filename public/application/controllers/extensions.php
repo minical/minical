@@ -35,7 +35,7 @@ class Extensions extends MY_Controller
 
         $installed_extensions = $this->Extension_model->get_installed_extensions(null, $this->vendor_id);
 
-        if($installed_extensions){
+        if($installed_extensions && count($installed_extensions) > 0) {
             foreach($installed_extensions as $module)
             {
                 $modules_name[] = $module['extension_name'];
@@ -59,7 +59,7 @@ class Extensions extends MY_Controller
 
         if($is_hosted_prod_service || $_SERVER['HTTP_HOST'] == "app.minical.io" || $_SERVER['HTTP_HOST'] == "demo.minical.io"){
 
-            if($extensions){
+            if($extensions && count($extensions) > 0) {
                 foreach ($extensions as $e => $ext) {
                     if($installed_extensions && count($extensions) == count($installed_extensions)){
                         foreach ($installed_extensions as $ie => $in_ext) {
@@ -71,7 +71,7 @@ class Extensions extends MY_Controller
                             } 
                         } 
                     } else { 
-                        if($installed_extensions){
+                        if($installed_extensions && count($installed_extensions) > 0) {
                             foreach ($installed_extensions as $ie => $in_ext) {
                                 if($ext['extension_name'] == $in_ext['extension_name'])
                                 {
@@ -93,10 +93,12 @@ class Extensions extends MY_Controller
                     }
                 }
             } else {
-                foreach ($installed_extensions as $ie => $in_ext) {
-                    $temp_ext[$ie] = $in_ext;
-                    $temp_ext[$ie]['is_active'] = 0;
-                    $temp_ext[$ie]['is_favourite'] = 0;
+                if($installed_extensions && count($installed_extensions) > 0) {
+                    foreach ($installed_extensions as $ie => $in_ext) {
+                        $temp_ext[$ie] = $in_ext;
+                        $temp_ext[$ie]['is_active'] = 0;
+                        $temp_ext[$ie]['is_favourite'] = 0;
+                    }
                 }
             }
 
@@ -109,7 +111,7 @@ class Extensions extends MY_Controller
         foreach($all_active_modules as $key => $module)
         {
             $flag = true;
-            if($extensions){
+            if($extensions && count($extensions) > 0) {
                 foreach ($extensions as $key1 => $extension) {
                     if($module['extension_folder_name'] == $extension['extension_name'])
                     {
@@ -130,7 +132,7 @@ class Extensions extends MY_Controller
             }
             $is_hosted_prod_service = getenv('IS_HOSTED_PROD_SERVICE');
 
-            if($is_hosted_prod_service || $_SERVER['HTTP_HOST'] != "app.minical.io" && $_SERVER['HTTP_HOST'] != "demo.minical.io"){
+            if($is_hosted_prod_service && $_SERVER['HTTP_HOST'] != "app.minical.io" && $_SERVER['HTTP_HOST'] != "demo.minical.io"){
                 if($flag){
                     $module['is_active'] = 0;
                     $module['company_id'] = $this->company_id;
@@ -149,7 +151,7 @@ class Extensions extends MY_Controller
         $data['extensions'] = $final_modules ? $final_modules : array();
 
         $activated_modules = array();
-        if(count($data['extensions']) > 0){
+        if(isset($data['extensions']) && count($data['extensions']) > 0){
             foreach($data['extensions'] as $ext){
                 if($ext['is_active'] == 1){
                     $activated_modules[] = $ext['extension_folder_name'];
@@ -194,14 +196,16 @@ class Extensions extends MY_Controller
 
         $active_extension_name = $modules_name = array();
 
-        if($installed_extensions){
+        if($installed_extensions && count($installed_extensions) > 0) {
             foreach ($installed_extensions as $key => $value) {
                 $modules_name[] = $value['extension_name'];
             }
         }
 
-        foreach ($active_extension as $key => $value) {
-            $active_extension_name[] = $value['extension_name'];
+        if($active_extension && count($active_extension) > 0) {
+            foreach ($active_extension as $key => $value) {
+                $active_extension_name[] = $value['extension_name'];
+            }
         }
         $active_extension_name;
 
@@ -232,7 +236,7 @@ class Extensions extends MY_Controller
         $data['extensions'] = $final_modules ? $final_modules : array();
 
         $activated_modules = array();
-        if(count($data['extensions']) > 0){
+        if(isset($data['extensions']) && count($data['extensions']) > 0){
             foreach($data['extensions'] as $ext){
                 if($ext['is_active'] == 1){
                     $activated_modules[] = $ext['extension_folder_name'];
@@ -252,7 +256,7 @@ class Extensions extends MY_Controller
 
         $modules_name = array();
         if($search != ""){
-            if($installed_extensions){
+            if($installed_extensions && count($installed_extensions) > 0) {
                 foreach($installed_extensions as $module)
                 {
                     $name = ($module['extension_name']);
@@ -263,7 +267,7 @@ class Extensions extends MY_Controller
                 }
             }
         } else {
-            if($installed_extensions){
+            if($installed_extensions && count($installed_extensions) > 0) {
                 foreach ($installed_extensions as $key => $value) {
                     $modules_name[] = $value['extension_name'];
                 }
@@ -274,7 +278,7 @@ class Extensions extends MY_Controller
         $active_extension = $this->Extension_model->get_filter_extension($status,$this->company_id);
 
         $active_extension_name = array();
-        if($active_extension){
+        if($active_extension && count($active_extension) > 0) {
             foreach ($active_extension as $key => $value) {
                 $active_extension_name[] = $value['extension_name'];
             }
@@ -284,7 +288,7 @@ class Extensions extends MY_Controller
         $fv_extension = $this->Extension_model->get_favourite_extension($fv_status,$this->company_id);
 
         $fv_extension_name = array();
-        if($fv_extension){
+        if($fv_extension && count($fv_extension) > 0) {
             foreach ($fv_extension as $key => $value) {
                 $fv_extension_name[] = $value['extension_name'];
             }
@@ -320,7 +324,7 @@ class Extensions extends MY_Controller
         $data['extensions'] = $final_modules ? $final_modules : array();
 
         $activated_modules = array();
-        if(count($data['extensions']) > 0){
+        if(isset($data['extensions']) && count($data['extensions']) > 0){
             foreach($data['extensions'] as $ext){
                 if($ext['is_active'] == 1){
                     $activated_modules[] = $ext['extension_folder_name'];
@@ -350,14 +354,21 @@ class Extensions extends MY_Controller
 
         if($extension_status == "active"){
             $active_extension_name = array();
-            foreach ($active_extension as $key => $value) {
-                $active_extension_name[] = $value['extension_name'];
+
+            if($active_extension && count($active_extension) > 0) {
+                foreach ($active_extension as $key => $value) {
+                    $active_extension_name[] = $value['extension_name'];
+                }
             }
+            
             $new_array = array_values($active_extension_name);
         } else {
             $active_extension_name = array();
-            foreach ($active_extension as $key => $value) {
-                $active_extension_name[] = $value['extension_name'];
+
+            if($active_extension && count($active_extension) > 0) {
+                foreach ($active_extension as $key => $value) {
+                    $active_extension_name[] = $value['extension_name'];
+                }
             }
 
             $module_name = array();
@@ -374,7 +385,7 @@ class Extensions extends MY_Controller
 
         $modules_name = $final_modules = array();
 
-        if($installed_extensions){
+        if($installed_extensions && count($installed_extensions) > 0) {
             foreach ($installed_extensions as $key => $value) {
                 if(in_array($value['extension_name'], $new_array))
                 {
@@ -409,7 +420,7 @@ class Extensions extends MY_Controller
         $data['extensions'] = $final_modules ? $final_modules : array();
 
         $activated_modules = array();
-        if(count($data['extensions']) > 0){
+        if(isset($data['extensions']) && count($data['extensions']) > 0){
             foreach($data['extensions'] as $ext){
                 if($ext['is_active'] == 1){
                     $activated_modules[] = $ext['extension_folder_name'];
@@ -442,8 +453,6 @@ class Extensions extends MY_Controller
 
     function uninstall_extension()
     {
-        //$whitelabel_partner_detail = $this->Whitelabel_partner_model->get_whitelabel_partner_id($this->user_id);
-
         $data['extension_name'] = $this->input->post('extension_name');
         $data['is_installed'] = 0;
         $data['company_id'] = $this->company_id;
@@ -451,8 +460,11 @@ class Extensions extends MY_Controller
 
         $get_vendors_companies = $this->Company_model->get_partner_company_data($data['vendor_id']);
         $vendor_companies = $company_ids = array();
-        foreach ($get_vendors_companies as $key => $value) {
-            $vendor_companies[] = $value['company_id'];
+
+        if($get_vendors_companies && count($get_vendors_companies) > 0){
+            foreach ($get_vendors_companies as $key => $value) {
+                $vendor_companies[] = $value['company_id'];
+            }
         }
 
         $data['vendor_companies'] = $vendor_companies;
@@ -472,8 +484,6 @@ class Extensions extends MY_Controller
 
     function uninstall_extension_process()
     {
-        //$whitelabel_partner_detail = $this->Whitelabel_partner_model->get_whitelabel_partner_id($this->user_id);
-
         $data['extension_name'] = $this->input->post('extension_name');
         $data['is_installed'] = 0;
         $data['company_id'] = $this->company_id;
@@ -489,8 +499,6 @@ class Extensions extends MY_Controller
 
     function install_extension()
     {
-        //$whitelabel_partner_detail = $this->Whitelabel_partner_model->get_whitelabel_partner_id($this->user_id);
-
         $data['extension_name'] = $this->input->post('extension_name');
         $data['is_installed'] = 1;
         $data['company_id'] = $this->company_id;
@@ -530,11 +538,6 @@ class Extensions extends MY_Controller
                 $installed_extensions = $this->Extension_model->get_installed_extensions(null, $this->vendor_id);
             }
 
-            // echo $this->company_id; echo '<br/>';
-            // echo $this->vendor_id ? $this->vendor_id : 0; echo '<br/>';
-            // echo 'extensions = '; prx($extensions, 1);
-            // echo 'installed_extensions = '; prx($installed_extensions);
-
             $temp_ext = $temp_extension = array();
             $is_ext_matched = false;
         }
@@ -544,7 +547,7 @@ class Extensions extends MY_Controller
         foreach($all_active_modules as $key => $module)
         {
             $flag = true;
-            if($installed_extensions){
+            if($installed_extensions && count($installed_extensions) > 0){
                 foreach ($installed_extensions as $key1 => $extension) {
                     if($module['extension_folder_name'] == $extension['extension_name'])
                     {
@@ -580,7 +583,7 @@ class Extensions extends MY_Controller
         $data['extensions'] = $final_modules ? $final_modules : array();
 
         $activated_modules = array();
-        if(count($data['extensions']) > 0){
+        if(isset($data['extensions']) && count($data['extensions']) > 0){
             foreach($data['extensions'] as $ext){
                 if(isset($ext['is_active']) && $ext['is_active'] == 1){
                     $activated_modules[] = $ext['extension_folder_name'];
