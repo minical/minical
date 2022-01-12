@@ -74,6 +74,7 @@ var customerId;
                 innGrid.ajaxCache.customerTypes = data;
 
                 if (options.customer_id) {
+                    customerId = options.customer_id;
                     $.ajax({
                         type: "POST",
                         url: getBaseURL() + "customer/get_customer_AJAX",
@@ -91,6 +92,7 @@ var customerId;
                         customer_id: options.customer_id,
                         customer_name: options.customer_name
                     }
+                    customerId = options.customer_id;
                     that.customerData = data;
                     that.deferredCustomerTypes.resolve();
                     options.onload();
@@ -685,6 +687,8 @@ var customerId;
                             if (typeof nexioGateway !== "undefined" && nexioGateway) {
                                 var myIframe = window.document.getElementById('myIframe');
                                 if(myIframe) {
+                                    console.log('customer.customer_id',customerId);
+                                    customerData['customer_id'] = customerId;
                                     var event = new CustomEvent('post.create_user', { detail: { "customer": customerData } });
                                     document.dispatchEvent(event);
                                 } else {
