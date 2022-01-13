@@ -181,6 +181,13 @@ class Extensions extends MY_Controller
         $data['company_id'] = $this->company_id;
 
         $this->Extension_model->update_extension($data);
+        $data['vendor_id'] = $this->company_partner_id ? $this->company_partner_id : 0;
+
+        if($data['is_active']== 1) {
+            do_action('extension_activated', $data);
+        } else {
+            do_action('extension_deactivated', $data); 
+        }
         echo json_encode(array('success' => true));
     }
     
@@ -491,7 +498,7 @@ class Extensions extends MY_Controller
 
         
         $status = $this->Extension_model->update_extension_status($data);
-
+         do_action('extension_uninstall', $data);
         if($status){
             echo json_encode(array('success' => true));
         }
@@ -503,8 +510,10 @@ class Extensions extends MY_Controller
         $data['is_installed'] = 1;
         $data['company_id'] = $this->company_id;
         $data['vendor_id'] = $this->company_partner_id;
-
+        
         $this->Extension_model->update_extension_status($data);
+
+        do_action('extension_install', $data);
         echo json_encode(array('success' => true));
     }
 

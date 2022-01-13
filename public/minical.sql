@@ -1087,6 +1087,25 @@ CREATE TABLE `extensions_x_vendor` (
 -- Table structure for table `extra`
 --
 
+DROP TABLE IF EXISTS `extensions_log`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `extensions_log` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `extension_name` varchar(100) NOT NULL,
+  `company_id` bigint(20) NOT NULL DEFAULT '0',
+  `vendor_id` bigint(20) NOT NULL DEFAULT '0',
+  `user_id` bigint(20) NOT NULL DEFAULT '0',
+  `status` varchar(50) NOT NULL,
+  `date_time` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `extra`
+--
+
 DROP TABLE IF EXISTS `extra`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
