@@ -7,7 +7,7 @@ class Extensions extends MY_Controller
 
         $this->load->model('Extension_model');
         $this->load->model('User_model');
-
+        $this->load->helper('includes/extension');
         $view_data['menu_on']          = true;
        
 
@@ -184,9 +184,11 @@ class Extensions extends MY_Controller
         $data['vendor_id'] = $this->company_partner_id ? $this->company_partner_id : 0;
 
         if($data['is_active']== 1) {
-            do_action('extension_activated', $data);
+            extension_activated_log($data);
+          
         } else {
-            do_action('extension_deactivated', $data); 
+            extension_deactivated_log($data);
+             
         }
         echo json_encode(array('success' => true));
     }
@@ -498,7 +500,9 @@ class Extensions extends MY_Controller
 
         
         $status = $this->Extension_model->update_extension_status($data);
-         do_action('extension_uninstall', $data);
+
+        extension_uninstall_log($data);
+        
         if($status){
             echo json_encode(array('success' => true));
         }
@@ -513,7 +517,8 @@ class Extensions extends MY_Controller
         
         $this->Extension_model->update_extension_status($data);
 
-        do_action('extension_install', $data);
+        extension_install_log($data);
+
         echo json_encode(array('success' => true));
     }
 

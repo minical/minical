@@ -672,3 +672,71 @@ function force_ssl_admin( $force = null ) {
 
     return $forced;
 }
+
+function extension_install_log ($data) {
+    $CI = &get_instance();
+    $CI->load->model('Extension_log_model');
+    //prx($data);
+    $log_data = array(
+
+        'extension_name' => $data['extension_name'],
+        'vendor_id' => $data['vendor_id'],
+        'company_id' => $data['company_id'],
+        'user_id' =>$CI->user_id,
+        'status' => ($data['is_installed'] == 1) ? 'Installed' : 'Installed',
+        'date_time' =>  gmdate('Y-m-d H:i:s')
+    );
+
+    $CI->Extension_log_model->create_extension_log($log_data);
+}
+
+
+function extension_uninstall_log ($data) {
+    $CI = &get_instance();
+    $CI->load->model('Extension_log_model');
+    //prx($data);
+    $log_data = array(
+
+        'extension_name' => $data['extension_name'],
+        'vendor_id' => $data['vendor_id'],
+        'company_id' => $data['company_id'],
+        'user_id' =>$CI->user_id,
+        'status' => ($data['is_installed'] == 0) ? 'Uninstalled' : 'Uninstalled',
+        'date_time' =>  gmdate('Y-m-d H:i:s')
+    );
+    $CI->Extension_log_model->create_extension_log($log_data);
+}
+
+function extension_deactivated_log ($data) {
+    $CI = &get_instance();
+    $CI->load->model('Extension_log_model');
+    //prx($data);
+    $log_data = array(
+
+        'extension_name' => $data['extension_name'],
+        'vendor_id' => $data['vendor_id'],
+        'company_id' => $data['company_id'],
+        'user_id' =>$CI->user_id,
+        'status' => ($data['is_active'] == 0) ? 'Deactivated' : 'Deactivated',
+        'date_time' =>  gmdate('Y-m-d H:i:s')
+    );
+
+    $CI->Extension_log_model->create_extension_log($log_data);
+}
+
+function extension_activated_log ($data) {
+    $CI = &get_instance();
+    $CI->load->model('Extension_log_model');
+    //prx($data);
+    $log_data = array(
+
+        'extension_name' => $data['extension_name'],
+        'vendor_id' => $data['vendor_id'],
+        'company_id' => $data['company_id'],
+        'user_id' =>$CI->user_id,
+        'status' => ($data['is_active'] == 1) ? 'Activated' : 'Activated',
+        'date_time' =>  gmdate('Y-m-d H:i:s')
+    );
+
+    $CI->Extension_log_model->create_extension_log($log_data);
+}
