@@ -155,9 +155,7 @@ class Customer extends MY_Controller {
         $config['base_url'] = $base_url;
         $config['suffix'] = '?'.http_build_query($_GET, '', "&");
         $config['first_url'] = $base_url . $config['suffix'];
-        
-		
-        
+
         $data['order'] = $order;
         $data['groups'] = $this->Group_model->get_groups();
         $global_data['menu_on'] = true;			
@@ -729,7 +727,7 @@ class Customer extends MY_Controller {
     {
         $customer_id = sqli_clean($this->security->xss_clean($this->input->post('customer_id')));
         $showdelete = $this->input->post('show_deleted');
-        $bookings = $this->Booking_model->customer_total_bookings($customer_id);
+        $bookings = $this->Booking_model->customer_total_bookings($customer_id, true);
         // restrict customer if he has already a bookings associated with him.
         $result = array();
         if ($bookings > 0) {
