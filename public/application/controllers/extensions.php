@@ -30,6 +30,16 @@ class Extensions extends MY_Controller
                 }
             }
         }
+        if($this->user_email !='support@minical.io'){
+            foreach ($all_active_modules as $key => $value) {
+                 if(
+                    isset($value['is_super_admin_module']) &&
+                    $value['is_super_admin_module']
+                ){
+                    unset($all_active_modules[$key]);
+                }   
+            }
+        }
 
         $modules_name = array();
 
@@ -358,6 +368,16 @@ class Extensions extends MY_Controller
             }
         }
 
+        if($this->user_email !='support@minical.io'){
+            foreach ($all_active_modules as $key => $value) {
+                 if(
+                    isset($value['is_super_admin_module']) &&
+                    $value['is_super_admin_module']
+                ){
+                    unset($all_active_modules[$key]);
+                }   
+            }
+        }
         $status = 1;
         $active_extension = $this->Extension_model->get_filter_extension($status,$this->company_id);
 
@@ -531,6 +551,16 @@ class Extensions extends MY_Controller
                 if(isset($value['is_admin_module']) && $value['is_admin_module']){
                     unset($all_active_modules[$key]);
                 }
+            }
+        }
+        if($this->user_email !='support@minical.io'){
+            foreach ($all_active_modules as $key => $value) {
+                 if(
+                    isset($value['is_super_admin_module']) &&
+                    $value['is_super_admin_module']
+                ){
+                    unset($all_active_modules[$key]);
+                }   
             }
         }
 
