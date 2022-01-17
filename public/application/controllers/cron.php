@@ -26,8 +26,10 @@ class Cron extends CI_Controller
 			$company_id = $company['company_id'];
 
             $protocol = $this->config->item('server_protocol');
-		    $url = $protocol . $_SERVER['HTTP_HOST']."/cron/channex_get_bookings/".$company_id;
+		    // $url = $protocol . $_SERVER['HTTP_HOST']."/cron/channex_get_bookings/".$company_id;
 
+		    $url = base_url()."cron/channex_get_bookings/".$company_id;
+		    
 		    $ch = curl_init();
 		    curl_setopt($ch, CURLOPT_URL, $url);
 		    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
