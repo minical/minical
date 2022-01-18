@@ -15,8 +15,8 @@ $config['newline'] = "\r\n";
 $config['protocol'] = 'smtp';
 $config['smtp_host'] = getenv('SMTP_HOST') ?: 'smtp.sendgrid.com';
 $config['smtp_port'] = getenv('SMTP_PORT') ?: '587';
-$config['smtp_timeout'] = '30';
-$config['smtp_crypto'] = getenv('SMTP_CRYPTO') ?: 'ssl'; //can be 'ssl' or 'tls' for example
+$config['smtp_timeout'] = 30;
+$config['smtp_crypto'] = getenv('SMTP_CRYPTO') ?: ''; //Default: Empty, can be 'ssl' or 'tls' for example
 $config['smtp_user'] = getenv('SMTP_USER');
 $config['smtp_pass'] = getenv('SMTP_PASS');
 
