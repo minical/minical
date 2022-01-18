@@ -273,7 +273,7 @@ http://codeigniter.com/forums/viewthread/102456/#523991
 $config['sess_expiration']		= 345600;
 $config['sess_expire_on_close']	= FALSE;
 $config['sess_encrypt_cookie']	= TRUE;
-$config['sess_use_database']	= TRUE; //!(isset($_GET['MIGRATION_REQUEST']) && $_GET['MIGRATION_REQUEST']);
+$config['sess_use_database']	= !(isset($_GET['MIGRATION_REQUEST']) && $_GET['MIGRATION_REQUEST']);
 $config['sess_table_name'] = 'sessions';
 $config['sess_match_ip']		= FALSE;
 $config['sess_match_useragent']	= FALSE;
@@ -284,7 +284,6 @@ switch ($_SERVER['HTTP_HOST'])
 	case 'v2.roomsy.com':
 		$config['sess_cookie_name']	= 'ci_session2';
 		break;
-
 	default:
 		$config['sess_cookie_name']	= 'ci_session';
 }
