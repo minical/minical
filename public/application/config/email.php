@@ -11,12 +11,14 @@
 */
 $config['mailtype'] = 'html';
 $config['charset'] = 'utf-8';
-$config['newline']="\r\n";
+$config['newline'] = "\r\n";
 $config['protocol'] = 'smtp';
-$config['smtp_host']='smtp.sendgrid.com';  
-$config['smtp_port']='587';
-$config['smtp_timeout']='30';
-$config['smtp_user']=isset($_SERVER["SMTP_USER"]) ? $_SERVER["SMTP_USER"] : '';
-$config['smtp_pass']=isset($_SERVER["SMTP_PASS"]) ? $_SERVER["SMTP_PASS"] : '';
+$config['smtp_host'] = getenv('SMTP_HOST') ?: 'smtp.sendgrid.com';
+$config['smtp_port'] = getenv('SMTP_PORT') ?: '587';
+$config['smtp_timeout'] = '30';
+$config['smtp_crypto'] = getenv('SMTP_CRYPTO') ?: 'ssl'; //can be 'ssl' or 'tls' for example
+$config['smtp_user'] = getenv('SMTP_USER');
+$config['smtp_pass'] = getenv('SMTP_PASS');
+
 /* End of file email.php */
 /* Location: ./application/config/email.php */
