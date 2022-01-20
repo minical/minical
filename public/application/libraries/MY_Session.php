@@ -143,7 +143,9 @@ class MY_Session extends CI_Session
             $error_number = $this->CI->db->_error_number();
             if ($error_number == 1146 && strpos($error_message, ".sessions' doesn't exist")) {
                 // redirect to installation page
-                redirect('/install/index.php');
+                if (!(isset($_GET['MIGRATION_REQUEST']) && $_GET['MIGRATION_REQUEST'])) {
+                    redirect('/install/index.php');
+                }
             }
 
             if ($db_debug) {
@@ -253,7 +255,9 @@ class MY_Session extends CI_Session
                 $error_number = $this->CI->db->_error_number();
                 if ($error_number == 1146 && strpos($error_message, ".sessions' doesn't exist")) {
                     // redirect to installation page
-                    redirect('/install/index.php');
+                    if (!(isset($_GET['MIGRATION_REQUEST']) && $_GET['MIGRATION_REQUEST'])) {
+                        redirect('/install/index.php');
+                    }
                 }
                 return FALSE;
             }
