@@ -48,7 +48,7 @@ foreach ($rate_plans as $rate_plan): ?>
             </td>
 			<td>
 
-			<?php 
+			<?php 			if($charge_types && count($charge_types) > 0) {
 								foreach($charge_types as $charge_type)
 								{
 							
@@ -58,6 +58,7 @@ foreach ($rate_plans as $rate_plan): ?>
 									}
 									
 								}
+							}
 							?>
 			</td>
 			<td>
