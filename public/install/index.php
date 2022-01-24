@@ -355,35 +355,27 @@ $mysqli_connection = @mysqli_connect("$dbHost", "$dbUser", "$dbPass", "$dbName")
                                 <i class="fas fa-check-circle db_seeding_status" style="font-size:24px;color:green"></i>
                             </td>
                         </tr>
-                        <tr><?php
-                            if ($mysqli_connection != null) {
-                                    $query = "SELECT count(*) AS TOTALNUMBEROFTABLES  FROM INFORMATION_SCHEMA.TABLES
-                                    WHERE TABLE_SCHEMA = '$dbName'";
-                                    if($result = mysqli_query($mysqli_connection, $query)){
-                                        $row = mysqli_fetch_row($result);
-                                    }
-                            }?>
+                        <tr>
                             <td>Verify Database Installation</td>
                             <td>
                             <?php
                                     if($mysqli_connection == null) {
                                         echo 'Connection Failed.';
-                                    }elseif(isset($row[0]) && $row[0] = 11002){
+                                    }else{
                                         echo '<p class="db_verify">Database Installation Done</p>';
                                     }
                                 ?>
+                                <p class="db_verify_status"></p>
+    
                             </td>
                             <td>
                             <?php
                                 if($mysqli_connection == null) {
                                         echo '<p class="error">Database installation Failed due to "Connection Failed"</p>';
-                                }
-                                elseif(isset($row) && $row[0] = 1102){
-                                        echo '<i class="fas fa-check-circle db_verify" style="font-size:24px;color:green"></i>';
-                                }else{
-                                        echo '<p class="error db_verify">Database Installation Failed</p>';
-                                }
+                                }  
                                 ?>
+                               <i class="fas fa-check-circle db_verify" style="font-size:24px;color:green"></i>
+                                <p class="db_verify_error error"></p>
                             </td>
                         </tr>
                     </tbody>
@@ -464,6 +456,8 @@ $mysqli_connection = @mysqli_connect("$dbHost", "$dbUser", "$dbPass", "$dbName")
 $(".register-btn").hide(); 
 
 $(".db_verify").hide();
+$(".db_verify_status").hide();
+
 $(".db_schema_loader").hide();
 $(".db_schema_pending").hide();
 $(".install_status").hide();
@@ -533,7 +527,7 @@ if(connectionFlag != undefined && connectionFlag){
                         $(".db_seeding_pending").hide(); 
                         $(".db_seeding_status").show();
                         $(".db_seeding").html('Database Seeding done successfully'); 
-                        $(".db_verify").show();
+                        db_validation();
                     }
                 },
                 error: function(error){
@@ -549,8 +543,36 @@ if(connectionFlag != undefined && connectionFlag){
 
     function stopinterval(){
     clearInterval(ajax_interval); 
-    $(".register-btn").show();
+ 
     return false;
+    }
+
+    function db_validation(){
+        $.ajax({
+                url: "db_verification.php",
+                type: "POST",
+                data: {},
+                dataType: "JSON",
+                success: function(resp){
+                    console.log(resp);
+                    if(resp.success){
+                        if(resp.message <112){
+                            $(".db_verify_status").show();
+                            $(".db_verify_status").html('Only '+resp.message+' table migrated.');
+                            $(".db_verify_error").show();   
+                            $(".db_verify_error").html('Database validation failed');
+                        }else{
+                            $(".register-btn").show();              
+                            $(".db_verify").show();
+                        }  
+                    }
+                },
+                error: function(error){
+                    $(".db_verify_error").show();   
+                    $(".db_verify_error").html(error); 
+                }
+                
+            });
     }
 }
 

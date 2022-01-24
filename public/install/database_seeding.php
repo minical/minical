@@ -1,12 +1,12 @@
 <?php
 
 // your config
-$file = '../vendor/autoload.php';
+$file = '../../vendor/autoload.php';
 if (file_exists($file)) {
     include_once $file;
 }
 
-$dotenv = \Dotenv\Dotenv::createImmutable(__DIR__ . '/minical/')->load();
+$dotenv = \Dotenv\Dotenv::createImmutable(__DIR__ . '/../../')->load();
 $filename = "minical-seed.sql";
 
 $dbHost = getenv("DATABASE_HOST");
@@ -32,6 +32,7 @@ if (!$mysqli_select_db) {
 ($fp = fopen($filename, 'r')) OR die('failed to open file:' . $filename);
 
 $sql = "SELECT pointer FROM minical_installation_meta";
+$file_position = 0;
 if ($result = mysqli_query($mysqli_connection, $sql)) {
     // Fetch one and one row
     while ($row = mysqli_fetch_row($result)) {
