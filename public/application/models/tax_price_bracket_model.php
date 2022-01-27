@@ -38,5 +38,18 @@ class Tax_price_bracket_model extends CI_Model {
     function create_price_bracket($data){
         $this->db->insert('tax_price_bracket', $data);
     }
+
+    function delete_price_braket($tax_type_id){
+
+        $data = Array('is_deleted' => 1);
+
+        $this->db->where('tax_type_id', $tax_type_id);
+        $this->db->update("tax_price_bracket", $data);
+
+        if ($this->db->_error_message())
+        {
+            show_error($this->db->_error_message());
+        }
+    }
 	
 }

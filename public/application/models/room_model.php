@@ -59,6 +59,34 @@ class Room_model extends CI_Model {
 
         return $result;
     }
+
+    function get_rooms_data($filter)
+    {
+        $this->db->select("r.*");
+        $this->db->from("room as r");
+        $this->db->where("r.is_deleted != '1'");
+
+        if($filter && isset($filter['room_name'])) {
+        	$this->db->where("r.room_name", $filter['room_name']);
+    	}
+    	if($filter && isset($filter['company_id'])) {
+        	$this->db->where("r.company_id", $filter['company_id']);
+    	}
+    	if($filter && isset($filter['room_type_id'])) {
+        	$this->db->where("r.room_type_id", $filter['room_type_id']);
+    	}
+
+        $query = $this->db->get();
+
+        if ($this->db->_error_message()) // error checking
+            show_error($this->db->_error_message());
+        if ($query->num_rows >= 1)
+        {
+            $result = $query->result_array();
+            return $result;
+        }
+        return NULL;
+    }
 	
 		
 	// return number of rooms that are actually entered on room table
@@ -866,6 +894,19 @@ class Room_model extends CI_Model {
     }
 
 
+    function delete_room_data($room_id){
+
+        $data = Array('is_deleted' => 1);
+
+        $this->db->where('room_id', $room_id);
+        $this->db->update("room", $data);
+
+        if ($this->db->_error_message())
+        {
+            show_error($this->db->_error_message());
+        }
+
+    }
 
     function delete_rooms($company_id){
 
@@ -893,6 +934,21 @@ class Room_model extends CI_Model {
 
         );
         
+        $this->db->insert('room', $data);
+        //return $this->db->insert_id();
+        $query = $this->db->query('select LAST_INSERT_ID( ) AS last_id');
+        $result = $query->result_array();
+        if(isset($result[0]))
+        {
+            return $result[0]['last_id'];
+        }
+
+        return null;
+    }
+    
+    function create_room_data($data)
+    {
+       
         $this->db->insert('room', $data);
         //return $this->db->insert_id();
         $query = $this->db->query('select LAST_INSERT_ID( ) AS last_id');

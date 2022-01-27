@@ -405,6 +405,37 @@ class Payment_model extends CI_Model {
         }
     }
 
+    function get_payments_data($filter)
+    {	
+
+    	if($filter && isset($filter['booking_id'])) {
+        	$this->db->where("booking_id", $filter['booking_id']);
+    	}
+    	if($filter && isset($filter['customer_id'])) {
+        	$this->db->where("payment.customer_id", $filter['customer_id']);
+    	}
+    	if($filter && isset($filter['folio_id'])) {
+        	$this->db->where("folio_id", $filter['folio_id']);
+    	}
+    	if($filter && isset($filter['payment_id'])) {
+        	$this->db->where("payment.payment_id", $filter['payment_id']);
+    	}
+        $this->db->where('payment.is_deleted', '0');
+        $this->db->join('payment_folio' , 'payment.payment_id = payment_folio.payment_id', 'left');
+        $this->db->join('payment_type', 'payment.payment_type_id = payment_type.payment_type_id', 'left');
+        $this->db->join('user_profiles', 'payment.user_id = user_profiles.user_id', 'left');
+        $this->db->join('customer', 'payment.customer_id = customer.customer_id', 'left');
+        $this->db->select('payment.payment_id, payment.is_captured, description, customer_name, date_time, booking_id, amount, payment_status, payment.is_deleted, payment_type, payment.payment_type_id, payment.payment_gateway_used, gateway_charge_id, read_only, selling_date, CONCAT_WS(" ",first_name,  last_name ) as user_name,payment_folio.folio_id as folio_id, payment.payment_link_id');
+        $this->db->order_by('selling_date', 'ASC');
+        $this->db->order_by('date_time', 'ASC');
+        $query = $this->db->get("payment");
+		if ($this->db->_error_message())
+			show_error($this->db->_error_message());
+        if ($query->num_rows() > 0) {
+            return $query->result_array();
+        }
+    }
+
     function get_payment_detail($date,$date_end, $employee_id = '', $only_include_cancelled_bookings = false, $not_include_cancelled_bookings = false)
     {
 
@@ -843,7 +874,8 @@ class Payment_model extends CI_Model {
         $this->db->update("payment", $data);
     }
 	
-	// returns the payment_type_id of the payment that is read_only
+
+		// returns the payment_type_id of the payment that is read_only
 	// used for PayPal payment types
 
     function get_read_only_payment_type_id_by_name($payment_type_name, $company_id)

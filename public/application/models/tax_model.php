@@ -481,6 +481,66 @@ class Tax_model extends CI_Model {
         }
     }
 
+    function delete_tax_type($tax_type_id){
+
+        $data = Array('is_deleted' => 1);
+
+        $this->db->where('tax_type_id', $tax_type_id);
+        $this->db->update("tax_type", $data);
+
+        if ($this->db->_error_message())
+        {
+            show_error($this->db->_error_message());
+        }
+    }
+
+    function get_tax($tax_type_id)
+	{
+        $this->db->select("tt.*, tp.start_range,tp.end_range,tp.tax_rate as price_tax_rate ,tp.is_percentage as price_percentage");
+		$this->db->from("tax_type as tt");
+		$this->db->join("tax_price_bracket as tp","tp.tax_type_id = tt.tax_type_id", "left");
+		$this->db->where("tt.is_deleted != '1'");
+		$this->db->where("tt.tax_type_id", $tax_type_id);
+		
+		$query = $this->db->get();
+		//echo $this->db->last_query();
+		if ($this->db->_error_message()) // error checking
+			show_error($this->db->_error_message());
+		if ($query->num_rows >= 1) 
+		{
+			$q = $query->result_array();
+			return $q[0];
+		}
+		return NULL;
+	}
+
+
+	 function get_taxes($filter)
+	{
+        $this->db->select("tt.*, tp.start_range,tp.end_range,tp.tax_rate as price_tax_rate ,tp.is_percentage as price_percentage");
+		$this->db->from("tax_type as tt");
+		$this->db->join("tax_price_bracket as tp","tp.tax_type_id = tt.tax_type_id", "left");
+		$this->db->where("tt.is_deleted",0);
+		if($filter && isset($filter['tax_type'])) {
+        	$this->db->where('bs.tax_type', $filter['tax_type']);
+        }
+        if($filter && isset($filter['company_id'])) {
+        	$this->db->where('s.company_id', $filter['company_id']);
+        }
+        if($filter && isset($filter['tax_type_id'])) {
+			$this->db->where("tt.tax_type_id", $tax_type_id);
+		}
+		$query = $this->db->get();
+		//echo $this->db->last_query();
+		if ($this->db->_error_message()) // error checking
+			show_error($this->db->_error_message());
+		if ($query->num_rows >= 1) 
+		{
+			$q = $query->result_array();
+			return $q[0];
+		}
+		return NULL;
+	}
 }
 
 /* End of file tax_model.php */

@@ -813,6 +813,45 @@ class Charge_model extends CI_Model {
 		return $query->result_array();
     }
     
+    function get_charges_data($filter)
+    {
+        if($filter && isset($filter['customer_id'])) {
+        	$this->db->where("charge.customer_id", $filter['customer_id']);
+    	}
+    	if($filter && isset($filter['charge_type_id'])) {
+        	$this->db->where("charge.charge_type_id", $filter['charge_type_id']);
+    	}
+    	if($filter && isset($filter['user_id'])) {
+        	$this->db->where("charge.user_id", $filter['user_id']);
+    	}
+
+    	if($filter && isset($filter['booking_id'])) {
+        	$this->db->where("charge.booking_id", $filter['booking_id']);
+    	}
+
+    	if($filter && isset($filter['description'])) {
+        	$this->db->where("charge.description", $filter['description']);
+    	}
+    	$this->db->where('charge.is_deleted', '0');
+		$this->db->join('charge_folio as cf' , 'charge.charge_id = cf.charge_id', 'left');
+        $this->db->join('charge_type as ct', 'charge.charge_type_id = ct.id', 'left');
+		$this->db->join('customer as cu', 'charge.customer_id = cu.customer_id', 'left');
+		$this->db->join('user_profiles', 'charge.user_id = user_profiles.user_id', 'left');
+        $this->db->join('booking as b', 'b.booking_id = charge.booking_id', 'left');
+		$this->db->select('charge.*, cu.*, ct.*, user_profiles.*, b.*, b.pay_period, ct.name as charge_type_name, ct.id as charge_type_id,`cf`.`folio_id` as folio_id, CONCAT_WS(" ",first_name,  last_name ) as user_name');
+		$this->db->order_by('selling_date', 'ASC');
+        $query = $this->db->get("charge");
+
+        if ($this->db->_error_message()) // error checking
+            show_error($this->db->_error_message());
+        if ($query->num_rows >= 1)
+        {
+            $result = $query->result_array();
+            return $result;
+        }
+        return NULL;
+    }
+    
 	function get_accounting_charges($start_date, $end_date, $include_cancelled_bookings = false){
 		
 		$where_condition = " b.state < '3' AND";

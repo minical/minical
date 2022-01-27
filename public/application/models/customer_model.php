@@ -45,6 +45,35 @@ class Customer_model extends CI_Model {
 
         return $customer;
 	}
+
+	function get_customers_data($filter)
+	{
+		
+		if($filter && isset($filter['customer_name'])) {
+		$this->db->where('customer_name', $filter['customer_name']);
+	    }
+	    if($filter && isset($filter['company_id'])) {
+		$this->db->where('company_id', $filter['company_id']);
+	    }
+	    if($filter && isset($filter['customer_id'])) {
+		$this->db->where('customer_id', $filter['customer_id']);
+	    }
+	    if($filter && isset($filter['email'])) {
+		$this->db->where('email', $filter['email']);
+	    }
+        $this->db->where('is_deleted', 0);
+    	$this->db->from('customer');
+        $query = $this->db->get();
+        $result = $query->result_array();
+		//echo $this->db->last_query();
+		if ($query->num_rows >= 1)
+		{
+			return $result;
+		}
+
+		return NULL;
+	}
+	
     function get_bookedby_customer($customer_id)
 	{
             $this->db->where('customer_id', $customer_id);

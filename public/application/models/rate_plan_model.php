@@ -43,7 +43,35 @@ class Rate_plan_model extends CI_Model {
 		}
 		return NULL;
 	}
-		
+	
+	function get_rate_plans_data($filter)
+    {
+        $this->db->select("rp.*");
+        $this->db->from("rate_plan as rp");
+        $this->db->where("rp.is_deleted != '1'");
+
+        if($filter && isset($filter['rate_plan_name'])) {
+        	$this->db->where("rp.rate_plan_name", $filter['rate_plan_name']);
+    	}
+    	if($filter && isset($filter['company_id'])) {
+        	$this->db->where("rp.company_id", $filter['company_id']);
+    	}
+    	if($filter && isset($filter['room_type_id'])) {
+        	$this->db->where("rp.room_type_id", $filter['room_type_id']);
+    	}
+
+        $query = $this->db->get();
+
+        if ($this->db->_error_message()) // error checking
+            show_error($this->db->_error_message());
+        if ($query->num_rows >= 1)
+        {
+            $result = $query->result_array();
+            return $result;
+        }
+        return NULL;
+    }
+
 	function get_rate_plan($rate_plan_id)
 	{
         $this->db->select("rp.*, r.*");
@@ -149,7 +177,9 @@ class Rate_plan_model extends CI_Model {
 	
 	function create_rate_plan($data)
     {
-		$data['image_group_id'] = $this->Image_model->create_image_group(RATE_PLAN_IMAGE_TYPE_ID);
+    	$CI =& get_instance();
+        $CI->load->model('Image_model');
+		$data['image_group_id'] = $CI->Image_model->create_image_group(RATE_PLAN_IMAGE_TYPE_ID);
 		$this->db->insert('rate_plan', $data);
 
 		if ($this->db->_error_message()) // error checking

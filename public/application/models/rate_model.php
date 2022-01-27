@@ -39,6 +39,29 @@ class Rate_model extends CI_Model {
         return $query->num_rows();
     }
 
+    function get_rates($filter)
+	{
+		
+		if($filter && isset($filter['rate_id'])) {
+		$this->db->where('rate_id', $filter['rate_id']);
+	    }
+	    if($filter && isset($filter['rate_plan_id'])) {
+		$this->db->where('rate_plan_id', $filter['rate_plan_id']);
+	    }
+
+	    $this->db->where("is_deleted IS NULL");
+        $this->db->from('rate');
+        $query = $this->db->get();
+        $result = $query->result_array();
+		//echo $this->db->last_query();
+		if ($query->num_rows >= 1)
+		{
+			return $result;
+		}
+
+		return NULL;
+	}
+
     function get_date_range($date_start, $date_end)
     {
       
@@ -557,11 +580,11 @@ class Rate_model extends CI_Model {
 
         }
 
-    function delete_rates($company_id){
+    function delete_rates($rate_id){
 
         $data = Array('is_deleted' => '1');
 
-        $this->db->where('company_id', $company_id);
+        $this->db->where('rate_id', $rate_id);
         $this->db->update("rate", $data);
 
         if ($this->db->_error_message())
