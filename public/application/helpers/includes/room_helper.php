@@ -7,12 +7,17 @@
 * pre.add.room: the hook executed before add room. 
 * post.add.room: the hook executed after added room.
 * @param array $room (Required) includes following attributes:
-* $data['room_name'] : the room_name of specific room.
-* $data['room_type_id'] : the room_type_id for specific room.
-* $data['sort_order'] : the sort_order for specific room.
-* $data['status'] : the status for specific room.
-* $data['company_id'] : the company_id for specific room.
-* $data['can_be_sold_online'] : the can_be_sold_online  for specific room.
+* $data['room_name'] : the room_name (character) of specific room.
+* $data['room_type_id'] : the room_type_id (integer) for specific room.
+* $data['sort_order'] : the sort_order (integer) for specific room.
+* $data['status'] : the status (character) for specific room.
+* $data['company_id'] : the company_id (integer) for specific room.
+* $data['group_id'] : the group_id (integer) for specific room.
+* $data['floor_id'] : the floor_id (integer) for specific room.
+* $data['location_id'] : the location_id (integer) for specific room.
+* $data['score'] : the score (integer) for specific room.
+* $data['instructions'] : the instructions (text)for specific room.
+* $data['can_be_sold_online'] : the can_be_sold_online (integer) for specific room.
 * and many more attributes for table room.
 * @return $response: array value of the room data. A value of any type may be returned, If there  
    is no room in the database, boolean false is returned
@@ -196,7 +201,7 @@ function get_rooms(array $filter = null)
 
 }
 
-/* update a room in room table.
+/* update a room details in room table.
 * Supported hooks:
 * before_update_room: the filter executed before update room
 * should_update_room: the filter executed to check update room.
@@ -204,12 +209,17 @@ function get_rooms(array $filter = null)
 * post.update.room: the hook executed after update room.
 * @param array $room (Required) includes following attributes:
 * @param int $room_id The id of the room corresponds to the room data.
-* $data['room_name'] : the room_name of specific room.
-* $data['room_type_id'] : the room_type_id for specific room.
-* $data['sort_order'] : the sort_order for specific room.
-* $data['status'] : the status for specific room.
-* $data['company_id'] : the company_id for specific room.
-* $data['can_be_sold_online'] : the can_be_sold_online  for specific room.
+* $data['room_name'] : the room_name (character) of specific room.
+* $data['room_type_id'] : the room_type_id (integer) for specific room.
+* $data['sort_order'] : the sort_order (integer) for specific room.
+* $data['status'] : the status (character) for specific room.
+* $data['company_id'] : the company_id (integer) for specific room.
+* $data['group_id'] : the group_id (integer) for specific room.
+* $data['floor_id'] : the floor_id (integer) for specific room.
+* $data['location_id'] : the location_id (integer) for specific room.
+* $data['score'] : the score (integer) for specific room.
+* $data['instructions'] : the instructions (text)for specific room.
+* $data['can_be_sold_online'] : the can_be_sold_online (integer) for specific room.
 * and many more attributes for table room.
 * @return mixed Either true or null, if room data is updated then true else null.
 *

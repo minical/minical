@@ -8,27 +8,29 @@
 * post.create.booking: the hook executed after added booking.
 * post.add.booking: the hook executed after added booking.
 * @param array $booking (Required) includes following attributes:
-* $data['room_id'] : the room_id for specific booking block (must required).
-* $data['check_in_date'] : the check_in_date for specific booking block (must required).
-* $data['check_out_date'] : the check_out_date for specific booking block (must required).
+* $data['room_id'] : the room_id (integer) for specific booking block (must required).
+* $data['check_in_date'] : the check_in_date for specific booking block (must required date in gmdate()
+   format).
+* $data['check_out_date'] : the check_out_date for specific booking block(must required date in gmdate()
+   format).
 * $data['booking_type'] : the booking_type of specific booking.
 * $data['booking_from'] : the booking_from of specific booking.
-* $data['rate'] : the rate of specific booking.
-* $data['adult_count'] : the adult_count for specific booking (must required).
-* $data['children_count'] : the children_count for specific booking.
-* $data['company_id'] : the company_id for specific booking.
-* $data['state'] : the state for specific booking (must required).
+* $data['rate'] : the rate (integer) of specific booking.
+* $data['adult_count'] : the adult_count (integer) for specific booking (must required).
+* $data['children_count'] : the children_count (integer) for specific booking.
+* $data['company_id'] : the company_id (integer) for specific booking.
+* $data['state'] : the state (integer) for specific booking (must required).
 * $data['booking_notes'] : the booking_notes for specific booking.
-* $data['booking_customer_id'] : the booking_customer_id for specific booking.
+* $data['booking_customer_id'] : the booking_customer_id (integer) for specific booking.
 * $data['booked_by'] : the booked_by for specific booking.
-* $data['balance'] : the balance for specific booking.
-* $data['use_rate_plan'] : the use_rate_plan for specific booking (must required).
-* $data['rate_plan_id'] : the rate_plan_id for specific booking.
-* $data['charge_type_id'] : the charge_type_id for specific booking.
+* $data['balance'] : the balance (integer) for specific booking.
+* $data['use_rate_plan'] : the use_rate_plan (integer) for specific booking (must required).
+* $data['rate_plan_id'] : the rate_plan_id (integer) for specific booking.
+* $data['charge_type_id'] : the charge_type_id (integer) for specific booking.
 * $data['source'] : the source for specific booking.
-* $data['is_ota_booking'] : the is_ota_booking for specific booking.
-* $data['pay_period'] : the pay_period for specific booking.
-* $data['room_type_id'] : the room_type_id for specific booking block.
+* $data['is_ota_booking'] : the is_ota_booking (integer) for specific booking.
+* $data['pay_period'] : the pay_period (integer) for specific booking.
+* $data['room_type_id'] : the room_type_id (integer) for specific booking block.
 * @return $response: array value of the booking data. A value of any type may be returned, If there  
    is no booking in the database, boolean false is returned
 * $response array includes following attributes:
@@ -162,6 +164,72 @@ function get_booking(int $booking_id = null )
 
     // after getting booking
     do_action('post.get.booking', $booking_id, $booking_id, $CI->input->post());
+     
+    return $get_booking_data;
+
+}
+
+
+/* Retrieves a booking value based on a booking filter.
+* Supported hooks:
+* before_get_booking: the filter executed before get booking
+* should_get_booking: the filter executed to check get booking.
+* pre.get.booking: the hook executed before getting booking. 
+* post.get.booking: the hook executed after getting booking
+* @param array $filter (Required) The data for booking table
+* you can filter data base on customer id ,booking id ,company id and room id.
+* @return $response: array value of the booking data. A value of any type may be returned, If there  
+   is no booking in the database, boolean false is returned
+* $response array includes following attributes:
+* $response['room_id'] : the room_id for specific booking block.
+* $response['check_in_date'] : the check_in_date for specific booking block.
+* $response['check_out_date'] : the check_out_date for specific booking block.
+* $response['booking_type'] : the booking_type of specific booking.
+* $response['booking_from'] : the booking_from of specific booking.
+* $response['rate'] : the rate of specific booking.
+* $response['adult_count'] : the adult_count for specific booking .
+* $response['children_count'] : the children_count for specific booking.
+* $response['company_id'] : the company_id for specific booking.
+* $response['state'] : the state for specific booking.
+* $response['booking_notes'] : the booking_notes for specific booking.
+* $response['booking_customer_id'] : the booking_customer_id for specific booking.
+* $response['booked_by'] : the booked_by for specific booking.
+* $response['balance'] : the balance for specific booking.
+* $response['use_rate_plan'] : the use_rate_plan for specific booking.
+* $response['rate_plan_id'] : the rate_plan_id for specific booking.
+* $response['charge_type_id'] : the charge_type_id for specific booking.
+* $response['source'] : the source for specific booking.
+* $response['is_ota_booking'] : the is_ota_booking for specific booking.
+* $response['pay_period'] : the pay_period for specific booking.
+* $response['room_type_id'] : the room_type_id for specific booking block.
+* and many more attributes for table booking and join with customer , booking block table.
+*/
+
+function get_bookings(array $filter = null)
+{
+    $get_booking_data = null;
+    $CI = & get_instance();
+    $CI->load->model('Booking_model');
+
+    // filters
+    $data = apply_filters( 'before_get_booking', $filter, $CI->input->post());
+    $should_get_booking = apply_filters( 'should_get_booking', $filter, $CI->input->post());
+
+    if (!$should_get_booking) {
+        return;
+    }
+
+    if(empty($filter)){
+        return null;
+    }
+
+    // before getting booking 
+    do_action('pre.get.booking', $filter, $CI->input->post());
+
+    $get_booking_data = $CI->Booking_model->get_bookings_data($filter);
+
+    // after getting booking
+    do_action('post.get.booking', $filter, $CI->input->post());
      
     return $get_booking_data;
 

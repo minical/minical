@@ -6,17 +6,20 @@
 * pre.add.charge: the hook executed before add charge. 
 * post.add.charge: the hook executed after added charge.
 * @param array $charge (Required) includes following attributes:
-* $data['description'] : the description of specific charge.
-* $data['date_time'] : the date_time  for specific charge( must provide date in gmdate() format).
-* $data['booking_id'] : the booking_id  for specific charge.
-* $data['amount'] : the amount for specific charge.
+* $data['description'] : the description (character) of specific charge.
+* $data['date_time'] : the date_time (date_time) for specific charge( must provide date in gmdate()
+   format).
+* $data['booking_id'] : the booking_id (integer) for specific charge.
+* $data['amount'] : the amount (decimal integer) for specific charge.
 * $data['company_id'] : the company_id for specific charge.
-* $data['quantity'] : the quantity for specific charge.
-* $data['folio_id'] : the folio_id for specific charge.
-* $data['charge_type_id'] : the charge_type_id for specific charge.
-* $data['selling_date'] : the selling_date  for specific charge ( must provide date in gmdate() format).
-* $data['is_extra_pos'] : the is_extra_pos  for specific charge .
-* $data['is_night_audit_charge'] : the is_night_audit_charge  for specific charge.
+* $data['quantity'] : the quantity (integer) for specific charge.
+* $data['folio_id'] : the folio_id (integer) for specific charge.
+* $data['user_id'] : the user_id (integer) for specific charge.
+* $data['customer_id'] : the customer_id (integer) for specific charge.
+* $data['charge_type_id'] : the charge_type_id (integer)  for specific charge.
+* $data['selling_date'] : the selling_date (date) for specific charge ( must provide date in gmdate() format).
+* $data['is_extra_pos'] : the is_extra_pos (integer)  for specific charge .
+* $data['is_night_audit_charge'] : the is_night_audit_charge (integer) for specific charge.
 * and many more attributes for table charge.
 * @return $response: array value of the charge data. A value of any type may be returned, If there  
    is no charge in the database, boolean false is returned
@@ -208,14 +211,20 @@ function get_charges(array $filter = null)
 * post.update.charge: the hook executed after update roochargem.
 * @param array $charge (Required) includes following attributes:
 * @param int $charge_id The id of the charge corresponds to the charge data.
-* $data['description'] : the description of specific charge.
-* $data['date_time'] : the date_time  for specific charge( must provide date in gmdate() format).
-* $data['amount'] : the amount for specific charge.
-* $data['folio_id'] : the folio_id for specific charge.
-* $data['charge_type_id'] : the charge_type_id for specific charge.
-* $data['pay_period'] : the pay_period for specific charge.
-* $data['selling_date'] : the selling_date  for specific charge ( must provide date in gmdate() format).
-* $data['is_night_audit_charge'] : the is_night_audit_charge  for specific charge.
+* $data['description'] : the description (character) of specific charge.
+* $data['date_time'] : the date_time (date_time) for specific charge( must provide date in gmdate()
+   format).
+* $data['booking_id'] : the booking_id (integer) for specific charge.
+* $data['amount'] : the amount (decimal integer) for specific charge.
+* $data['company_id'] : the company_id for specific charge.
+* $data['quantity'] : the quantity (integer) for specific charge.
+* $data['folio_id'] : the folio_id (integer) for specific charge.
+* $data['user_id'] : the user_id (integer) for specific charge.
+* $data['customer_id'] : the customer_id (integer) for specific charge.
+* $data['charge_type_id'] : the charge_type_id (integer)  for specific charge.
+* $data['selling_date'] : the selling_date (date) for specific charge ( must provide date in gmdate() format).
+* $data['is_extra_pos'] : the is_extra_pos (integer)  for specific charge .
+* $data['is_night_audit_charge'] : the is_night_audit_charge (integer) for specific charge.
 * and many more attributes for table charge.
 * @return mixed Either true or null, if room data is updated then true else null.
 *

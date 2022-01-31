@@ -50,19 +50,20 @@ class Customer_model extends CI_Model {
 	{
 		
 		if($filter && isset($filter['customer_name'])) {
-		$this->db->where('customer_name', $filter['customer_name']);
+		$this->db->where('c.customer_name', $filter['customer_name']);
 	    }
 	    if($filter && isset($filter['company_id'])) {
-		$this->db->where('company_id', $filter['company_id']);
+		$this->db->where('c.company_id', $filter['company_id']);
 	    }
 	    if($filter && isset($filter['customer_id'])) {
-		$this->db->where('customer_id', $filter['customer_id']);
+		$this->db->where('c.customer_id', $filter['customer_id']);
 	    }
 	    if($filter && isset($filter['email'])) {
-		$this->db->where('email', $filter['email']);
+		$this->db->where('c.email', $filter['email']);
 	    }
-        $this->db->where('is_deleted', 0);
-    	$this->db->from('customer');
+        $this->db->where('c.is_deleted', 0);
+    	$this->db->from('customer as c');
+    	$this->db->join('customer_card_detail as cc', 'cc.customer_id = c.customer_id', 'left');
         $query = $this->db->get();
         $result = $query->result_array();
 		//echo $this->db->last_query();
@@ -73,7 +74,6 @@ class Customer_model extends CI_Model {
 
 		return NULL;
 	}
-	
     function get_bookedby_customer($customer_id)
 	{
             $this->db->where('customer_id', $customer_id);

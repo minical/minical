@@ -2849,4 +2849,31 @@ class Booking_model extends CI_Model {
 
     }
 
+      function get_bookings_data($filter)
+    {   
+
+        if($filter && isset($filter['booking_id'])) {
+            $this->db->where("b.booking_id", $filter['booking_id']);
+        }
+        if($filter && isset($filter['customer_id'])) {
+            $this->db->where("b.booking_customer_id", $filter['customer_id']);
+        }
+        if($filter && isset($filter['room_id'])) {
+            $this->db->where("bb.room_id", $filter['room_id']);
+        }
+        if($filter && isset($filter['company_id'])) {
+            $this->db->where("b.company_id", $filter['company_id']);
+        }
+        $this->db->where('b.is_deleted', '0');
+        
+        $this->db->join('booking_block as bb', 'bb.booking_id = b.booking_id', 'left');
+        $this->db->join('customer', 'b.booking_customer_id = customer.customer_id', 'left');
+        $query = $this->db->get("booking as b");
+        if ($this->db->_error_message())
+            show_error($this->db->_error_message());
+        if ($query->num_rows() > 0) {
+            return $query->result_array();
+        }
+    }
+
 }

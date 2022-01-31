@@ -7,16 +7,19 @@
 * pre.add.rates: the hook executed before add rate. 
 * post.add.rates: the hook executed after added rate.
 * @param array $rates (Required) includes following attributes:
-* $data['rate_plan_id'] : the rate_plan_id of specific rate.
-* $data['base_rate'] : the base_rate for specific rate.
-* $data['adult_1_rate'] : the adult_1_rate for specific rate.
-* $data['adult_2_rate'] : the adult_2_rate for specific rate.
-* $data['adult_3_rate'] : the adult_3_rate for specific rate.
-* $data['adult_4_rate'] : the adult_4_rate for specific rate.
-* $data['additional_adult_rate'] : the additional_adult_rate for specific rate.
-* $data['minimum_length_of_stay'] : the minimum_length_of_stay for specific rate.
-* $data['closed_to_arrival'] : the closed_to_arrival  for specific rate.
-* $data['closed_to_departure'] : the closed_to_departure for specific rate.
+* $data['rate_plan_id'] : the rate_plan_id (integer) of specific rate.
+* $data['base_rate'] : the base_rate (integer) for specific rate.
+* $data['adult_1_rate'] : the adult_1_rate (decimal integer) for specific rate.
+* $data['adult_2_rate'] : the adult_2_rate (decimal integer) for specific rate.
+* $data['adult_3_rate'] : the adult_3_rate (decimal integer) for specific rate.
+* $data['adult_4_rate'] : the adult_4_rate (decimal integer) for specific rate.
+* $data['additional_adult_rate'] : the additional_adult_rate (decimal integer) for specific rate.
+* $data['minimum_length_of_stay'] : the minimum_length_of_stay (integer) for specific rate.
+* $data['closed_to_arrival'] : the closed_to_arrival (integer) for specific rate.
+* $data['additional_child_rate'] : the additional_child_rate (decimal integer) for specific rate.
+* $data['maximum_length_of_stay'] : the maximum_length_of_stay (integer) for specific rate.
+* $data['closed_to_departure'] : the closed_to_departure (integer) for specific rate.
+* $data['can_be_sold_online'] : the can_be_sold_online (integer) for specific rate.
 * and many more attributes for table rate.
 * @return $response: array value of the rate data. A value of any type may be returned, If there  
    is no rates in the database, boolean false is returned
@@ -186,15 +189,19 @@ function get_rates(array $filter = null )
 * post.update.rates: the hook executed after update rate.
 * @param array $rate (Required) includes following attributes:
 * @param int $rate_id The id of the rate  corresponds to the rate data.
-* $data['rate_plan_id'] : the rate_plan_id of specific rate.
-* $data['base_rate'] : the base_rate for specific rate.
-* $data['adult_1_rate'] : the adult_1_rate for specific rate.
-* $data['adult_2_rate'] : the adult_2_rate for specific rate.
-* $data['adult_3_rate'] : the adult_3_rate for specific rate.
-* $data['adult_4_rate'] : the adult_4_rate for specific rate.
-* $data['additional_adult_rate'] : the additional_adult_rate for specific rate.
-* $data['minimum_length_of_stay'] : the minimum_length_of_stay for specific rate.
-* $data['closed_to_arrival'] : the closed_to_arrival  for specific rate.
+* $data['rate_plan_id'] : the rate_plan_id (integer) of specific rate.
+* $data['base_rate'] : the base_rate (integer) for specific rate.
+* $data['adult_1_rate'] : the adult_1_rate (decimal integer) for specific rate.
+* $data['adult_2_rate'] : the adult_2_rate (decimal integer) for specific rate.
+* $data['adult_3_rate'] : the adult_3_rate (decimal integer) for specific rate.
+* $data['adult_4_rate'] : the adult_4_rate (decimal integer) for specific rate.
+* $data['additional_adult_rate'] : the additional_adult_rate (decimal integer) for specific rate.
+* $data['minimum_length_of_stay'] : the minimum_length_of_stay (integer) for specific rate.
+* $data['closed_to_arrival'] : the closed_to_arrival (integer) for specific rate.
+* $data['additional_child_rate'] : the additional_child_rate (decimal integer) for specific rate.
+* $data['maximum_length_of_stay'] : the maximum_length_of_stay (integer) for specific rate.
+* $data['closed_to_departure'] : the closed_to_departure (integer) for specific rate.
+* $data['can_be_sold_online'] : the can_be_sold_online (integer) for specific rate.
 * and many more attributes for table rate.
 * @return mixed Either true or null, if rate data is updated then true else null.
 *

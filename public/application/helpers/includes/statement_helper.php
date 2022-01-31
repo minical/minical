@@ -6,10 +6,10 @@
 * pre.add.statement: the hook executed before add statement. 
 * post.add.statement: the hook executed after added statement.
 * @param array $statement (Required) includes following attributes:
-* $data['statement_number'] : the statement_number of specific statement.
-* $data['creation_date'] : the creation_date for specific statement ( must provide date in gmdate() format) .
-* $data['statement_name'] : the statement_name for specific statement.
-* $data['booking_id'] : the booking_id for specific statement.
+* $data['statement_number'] : the statement_number (integer) of specific statement.
+* $data['creation_date'] : the creation_date (date_time) for specific statement ( must provide date in gmdate() format) .
+* $data['statement_name'] : the statement_name (character) for specific statement.
+* $data['booking_id'] : the booking_id (integer) for specific statement.
 * @return $response: array value of the statement data. A value of any type may be returned, If there  
    is no statement in the database, boolean false is returned
 * $response array includes following attributes:
@@ -166,9 +166,9 @@ function get_statements(array $filter = null)
 * post.update.statement: the hook executed after update statement.
 * @param array $statement (Required) includes following attributes:
 * @param int $statement_id The id of the statement corresponds to the statement data.
-* $data['statement_number'] : the statement_number of specific statement.
-* $data['creation_date'] : the creation_date for specific statement ( must provide date in gmdate() format) .
-* $data['statement_name'] : the statement_name for specific statement.
+* $data['statement_number'] : the statement_number (integer) of specific statement.
+* $data['creation_date'] : the creation_date (date_time) for specific statement ( must provide date in gmdate() format) .
+* $data['statement_name'] : the statement_name (character) for specific statement.
 * @return mixed Either true or null, if statement data is updated then true else null.
 *
 */

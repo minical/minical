@@ -6,19 +6,22 @@
 * pre.add.payment: the hook executed before add payment. 
 * post.add.payment: the hook executed after added payment.
 * @param array $payment (Required) includes following attributes:
-* $data['user_id'] : the user_id of specific payment.
-* $data['booking_id'] : the booking_id for specific payment.
-* $data['cvc'] : the cvc for specific payment.
-* $data['selling_date'] : the selling_date for specific payment.
-* $data['company_id'] : the company_id for specific payment.
-* $data['amount'] : the amount for specific payment.
-* $data['customer_id'] : the customer_id for specific payment.
-* $data['payment_type_id'] : the payment_type_id for specific payment.
-* $data['description'] : the description for specific payment.
-* $data['is_captured'] : the is_captured for specific payment.
+* $data['user_id'] : the user_id (integer) of specific payment.
+* $data['booking_id'] : the booking_id (integer) for specific payment.
+* $data['cvc'] : the cvc (integer) for specific payment.
+* $data['selling_date'] : the selling_date (date) for specific payment.
+* $data['company_id'] : the company_id (integer) for specific payment.
+* $data['amount'] : the amount (decimal integer) for specific payment.
+* $data['cvc'] : the cvc (integer) for specific payment.
+* $data['customer_id'] : the customer_id (integer) for specific payment.
+* $data['payment_type_id'] : the payment_type_id (integer) for specific payment.
+* $data['description'] : the description (character) for specific payment.
+* $data['payment_status'] : the payment_status (character) for specific payment.
+* $data['parent_charge_id'] : the parent_charge_id (character) for specific payment.
+* $data['is_captured'] : the is_captured (integer) for specific payment.
 * $data['selected_gateway'] : the selected_gateway for specific payment.
 * $data['capture_payment_type'] : the capture_payment_type for specific payment.
-* $data['folio_id'] : the folio_id for specific payment.
+* $data['folio_id'] : the folio_id (integer) for specific payment.
 * @return $response: array value of the payment data. A value of any type may be returned, If there  
    is no payment in the database, boolean false is returned
 * $response array includes following attributes:
@@ -57,6 +60,8 @@ function add_payment($payment)
         "customer_id" => isset($payment['customer_id']) ? $payment['customer_id'] : 0,
         "payment_type_id" => isset($payment['payment_type_id']) ? $payment['payment_type_id'] : 0 ,
         "description" => isset($payment['description']) ? $payment['description'] : null,
+        "payment_status" => isset($payment['payment_status']) ? $payment['payment_status'] : null,
+        "parent_charge_id" => isset($payment['parent_charge_id']) ? $payment['parent_charge_id'] : null,
         "is_captured" => isset($payment['is_captured']) ? $payment['is_captured'] : 0,
         "date_time" => gmdate("Y-m-d H:i:s"),
         "selected_gateway" =>isset($payment['selected_gateway']) ? $payment['selected_gateway'] : null
@@ -165,16 +170,19 @@ function get_payment(int $payment_id = null )
 * @return $response: array value of the payment data. A value of any type may be returned, If there  
    is no payment in the database, boolean false is returned
 * $response array includes following attributes:
-* $response['tax_type'] : the tax_type of specific tax.
-* $response['tax_rate'] : the tax_rate for specific tax .
-* $response['is_percentage'] : the is_percentage for specific tax.
-* $response['company_id'] : the company_id for specific tax.
-* $response['is_brackets_active'] : the is_brackets_active for specific tax.
-* $response['is_tax_inclusive'] : the is_tax_inclusive for specific tax.
-* $response['start_range'] : the start_range for specific tax price_bracket.
-* $response['end_range'] : the end_range for specific tax price_bracket.
-* $response['tax_rate_price_bracket'] : the tax_rate for specific tax price_bracket.
-* $response['is_percentage_price_bracket'] : the is_percentage for specific tax price_bracket.
+* $response['user_id'] : the user_id of specific payment.
+* $response['booking_id'] : the booking_id for specific payment.
+* $response['cvc'] : the cvc for specific payment.
+* $daresponseta['selling_date'] : the selling_date for specific payment.
+* $response['company_id'] : the company_id for specific payment.
+* $response['amount'] : the amount for specific payment.
+* $response['customer_id'] : the customer_id for specific payment.
+* $response['payment_type_id'] : the payment_type_id for specific payment.
+* $response['description'] : the description for specific payment.
+* $response['is_captured'] : the is_captured for specific payment.
+* $response['selected_gateway'] : the selected_gateway for specific payment.
+* $response['capture_payment_type'] : the capture_payment_type for specific payment.
+* $response['folio_id'] : the folio_id for specific payment.
 * and many more attributes for table payment and join with customer , user_profiles table.
 */
 
@@ -216,12 +224,13 @@ function get_payments(array $filter = null)
 * pre.update.payment: the hook executed before update payment. 
 * post.update.payment: the hook executed after update payment.
 * @param array $payment (Required) includes following attributes:
-* @param int $payment_id The id of the tax corresponds to the tax data.
-* $data['payment_type_id'] : the payment_type_id for specific payment.
-* $data['description'] : the description for specific payment.
-* $data['is_captured'] : the is_captured for specific payment.
-* $data['selected_gateway'] : the selected_gateway for specific payment.
-* @return mixed Either true or null, if tax data is updated then true else null.
+* @param int $payment_id The id of the payment corresponds to the payment data.
+* $data['payment_type_id'] : the payment_type_id (integer) for specific payment.
+* $data['description'] : the description (character) for specific payment.
+* $data['payment_status'] : the payment_status (character) for specific payment.
+* $data['is_captured'] : the is_captured (integer)for specific payment.
+* $data['selected_gateway'] : the selected_gateway (integer) for specific payment.
+* @return mixed Either true or null, if payment data is updated then true else null.
 *
 */
 
@@ -256,6 +265,7 @@ function update_payment(array $payment = null, int $payment_id = null)
         
         "payment_type_id" => isset($payment['payment_type_id']) ? $payment['payment_type_id'] : $get_payment_data['payment_type_id'] ,
         "description" => isset($payment['description']) ? $payment['description'] : $get_payment_data['description'],
+        "payment_status" => isset($payment['payment_status']) ? $payment['payment_status'] : $get_payment_data['payment_status'],
         "is_captured" => isset($payment['is_captured']) ? $payment['is_captured'] :$get_payment_data['is_captured'],
         "date_time" => gmdate("Y-m-d H:i:s"),
         "selected_gateway" =>isset($payment['selected_gateway']) ? $payment['selected_gateway'] : $get_payment_data['selected_gateway']

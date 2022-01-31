@@ -1,22 +1,23 @@
 <?php
 
-/* add a  new rate_plan in rate_plan table.
+/* add a new rate_plan in rate_plan table.
 * Supported hooks: 
 * before_add_rate_plan: the filter executed before add rate plan.
 * should_add_rate_plan: the filter executed to check add rate plan.
 * pre.add.rate_plan: the hook executed before add rate_plan. 
 * post.add.rate_plan: the hook executed after added rate_plan.
 * @param array $rate_plan (Required) includes following attributes:
-* $data['rate_plan_name'] : the rate_plan_name of specific rate_plan.
-* $data['room_type_id'] : the room_type_id for specific rate_plan.
-* $data['charge_type_id'] : the charge_type_id for specific rate_plan.
-* $data['description'] : the description for specific rate_plan.
-* $data['company_id'] : the company_id for specific rate_plan.
-* $data['base_rate_id'] : the base_rate_id for specific rate_plan.
-* $data['parent_rate_plan_id'] : the parent_rate_plan_id for specific rate_plan.
-* $data['policy_code'] : the policy_code for specific rate_plan.
-* $data['is_selectable'] : the is_selectable for specific rate_plan.
-* $data['number_of_adults_included_for_base_rate'] : the number_of_adults_included_for_base_rate for specific rate_plan.
+* $data['rate_plan_name'] : the rate_plan_name (character) of specific rate_plan.
+* $data['room_type_id'] : the room_type_id (integer) for specific rate_plan.
+* $data['charge_type_id'] : the charge_type_id (integer) for specific rate_plan.
+* $data['description'] : the description (text) for specific rate_plan.
+* $data['company_id'] : the company_id (integer) for specific rate_plan.
+* $data['base_rate_id'] : the base_rate_id (integer) for specific rate_plan.
+* $data['parent_rate_plan_id'] : the parent_rate_plan_id (integer) for specific rate_plan.
+* $data['policy_code'] : the policy_code (character) for specific rate_plan.
+* $data['date_time'] : the date_time (date_time )for specific rate_plan.
+* $data['is_selectable'] : the is_selectable (integer) for specific rate_plan.
+* $data['number_of_adults_included_for_base_rate'] : the number_of_adults_included_for_base_rate (integer) for specific rate_plan.
 * and many more attributes for table rate plan.
 * @return $response: array value of the rate_plan data. A value of any type may be returned, If there  
    is no rate_plan in the database, boolean false is returned
@@ -187,7 +188,7 @@ function get_rate_plans(array $filter = null )
 
 }
 
-/* update a rate plan in rate_plan table.
+/* update a rate plan details in rate_plan table.
 * Supported hooks:
 * before_update_rate_plan: the filter executed before update rate_plan
 * should_update_rate_plan: the filter executed to check update rate_plan.
@@ -195,12 +196,17 @@ function get_rate_plans(array $filter = null )
 * post.update.rate_plan: the hook executed after update rate_plan.
 * @param array $rate_plan (Required) includes following attributes:
 * @param int $rate_plan_id The id of the rate plan corresponds to the rate_plan data.
-* $data['rate_plan_name'] : the rate_plan_name of specific rate_plan.
-* $data['room_type_id'] : the room_type_id for specific rate_plan.
-* $data['charge_type_id'] : the charge_type_id for specific rate_plan.
-* $data['description'] : the description for specific rate_plan.
-* $data['company_id'] : the company_id for specific rate_plan.
-* $data['is_shown_in_online_booking_engine'] : the is_shown_in_online_booking_engine  for specific rate_plan.
+* $data['rate_plan_name'] : the rate_plan_name (character) of specific rate_plan.
+* $data['room_type_id'] : the room_type_id (integer) for specific rate_plan.
+* $data['charge_type_id'] : the charge_type_id (integer) for specific rate_plan.
+* $data['description'] : the description (text) for specific rate_plan.
+* $data['company_id'] : the company_id (integer) for specific rate_plan.
+* $data['base_rate_id'] : the base_rate_id (integer) for specific rate_plan.
+* $data['parent_rate_plan_id'] : the parent_rate_plan_id (integer) for specific rate_plan.
+* $data['policy_code'] : the policy_code (character) for specific rate_plan.
+* $data['date_time'] : the date_time (date_time )for specific rate_plan.
+* $data['is_selectable'] : the is_selectable (integer) for specific rate_plan.
+* $data['number_of_adults_included_for_base_rate'] : the number_of_adults_included_for_base_rate (integer) for specific rate_plan.
 * and many more attributes for table rate_plan.
 * @return mixed Either true or null, if rate_plan data is updated then true else null.
 *

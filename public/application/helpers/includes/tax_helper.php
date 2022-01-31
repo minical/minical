@@ -6,16 +6,16 @@
 * pre.add.tax: the hook executed before add tax. 
 * post.add.tax: the hook executed after added tax.
 * @param array $tax (Required) includes following attributes:
-* $data['tax_type'] : the tax_type of specific tax.
-* $data['tax_rate'] : the tax_rate for specific tax .
-* $data['is_percentage'] : the is_percentage for specific tax.
-* $data['company_id'] : the company_id for specific tax.
-* $data['is_brackets_active'] : the is_brackets_active for specific tax.
-* $data['is_tax_inclusive'] : the is_tax_inclusive for specific tax.
-* $data['start_range'] : the start_range for specific tax price_bracket.
-* $data['end_range'] : the end_range for specific tax price_bracket.
-* $data['tax_rate_price_bracket'] : the tax_rate for specific tax price_bracket.
-* $data['is_percentage_price_bracket'] : the is_percentage for specific tax price_bracket.
+* $data['tax_type'] : the tax_type (character) of specific tax.
+* $data['tax_rate'] : the tax_rate (decimal  integer) for specific tax .
+* $data['is_percentage'] : the is_percentage ( integer) for specific tax.
+* $data['company_id'] : the company_id (integer) for specific tax.
+* $data['is_brackets_active'] : the is_brackets_active (integer) for specific tax.
+* $data['is_tax_inclusive'] : the is_tax_inclusive (integer) for specific tax.
+* $data['start_range'] : the start_range (integer) for specific tax price_bracket.
+* $data['end_range'] : the end_range (integer) for specific tax price_bracket.
+* $data['tax_rate_price_bracket'] : the tax_rate (integer) for specific tax price_bracket.
+* $data['is_percentage_price_bracket'] : the is_percentage (integer) for specific tax price_bracket.
 * @return $response: array value of the tax data. A value of any type may be returned, If there  
    is no tax in the database, boolean false is returned
 * $response array includes following attributes:
@@ -201,12 +201,12 @@ function get_taxes(array $filter = null)
 * post.update.tax: the hook executed after update tax.
 * @param array $tax (Required) includes following attributes:
 * @param int $tax_id The id of the tax corresponds to the tax data.
-* $data['tax_type'] : the tax_type of specific tax.
-* $data['tax_rate'] : the tax_rate for specific tax .
-* $data['is_percentage'] : the is_percentage for specific tax.
-* $data['company_id'] : the company_id for specific tax.
-* $data['is_brackets_active'] : the is_brackets_active for specific tax.
-* $data['is_tax_inclusive'] : the is_tax_inclusive for specific tax.
+* $data['tax_type'] : the tax_type (character) of specific tax.
+* $data['tax_rate'] : the tax_rate (decimal integer) for specific tax .
+* $data['is_percentage'] : the is_percentage (integer) for specific tax.
+* $data['company_id'] : the company_id (integer) for specific tax.
+* $data['is_brackets_active'] : the is_brackets_active (integer) for specific tax.
+* $data['is_tax_inclusive'] : the is_tax_inclusive (integer) for specific tax.
 * @return mixed Either true or null, if tax data is updated then true else null.
 *
 */
