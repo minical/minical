@@ -2139,4 +2139,15 @@ class Customer extends MY_Controller {
             echo json_encode(array('success' => true));
         }
     }
+
+    function post_add_customer_callback($company_id) {
+
+        $card_data_array = file_get_contents("php://input");
+        $card_data_array = json_decode($card_data_array, true);
+
+        $card_response = apply_filters('post.add.customer', $card_data_array);
+
+        echo json_encode(array('resp' => $card_response));
+
+    }
 }

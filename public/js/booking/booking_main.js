@@ -301,3 +301,8 @@ function getCalendarOverviewData (start, end, callback) {
 	 });
 
 };
+// console.log('key',innGrid.companyAPIKey);
+window.parent.postMessage({
+	'minical-api-key': innGrid.companyAPIKey,
+	'minical-company-id': innGrid.companyID
+},"*");
