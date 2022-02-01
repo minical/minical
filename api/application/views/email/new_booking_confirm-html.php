@@ -89,12 +89,12 @@
                                                         <td style="border-collapse:collapse; mso-line-height-rule:exactly; font-family:Arial, sans-serif; font-size:15px; color:#23496d; word-break:break-word; padding:10px 20px">
                                                             <div id="hs_cos_wrapper_module_15670819020771" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_module" style="color: inherit; font-size: inherit; line-height: inherit;" data-hs-cos-general-type="widget" data-hs-cos-type="module">
                                                                 <div id="hs_cos_wrapper_module_15670819020771_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_rich_text" style="color: inherit; font-size: inherit; line-height: inherit;" data-hs-cos-general-type="widget" data-hs-cos-type="rich_text">
-                                                                    <p style="mso-line-height-rule: exactly;line-height: 175%;margin: 0;"><span style="color: #000000;"><strong><?php echo l('Dear', true); ?>  <?php echo $customer_name ? $customer_name : 'Guest'; ?>,</strong></span></p>
+                                                                    <p style="mso-line-height-rule: exactly;line-height: 175%;margin: 0;"><span style="color: #000000;"><strong><?php echo 'Dear'; ?>  <?php echo $customer_name ? $customer_name : 'Guest'; ?>,</strong></span></p>
                                                                     <?php if($confirmation_email_header): ?>
                                                                         <p style="mso-line-height-rule: exactly;line-height: 175%;margin: 0;"><span style="color: #000000;"><?php echo $confirmation_email_header; ?></span></p>
                                                                     <?php else: ?>
                                                                         <p style="mso-line-height-rule: exactly;line-height: 100%;margin: 0;">&nbsp;</p>
-                                                                        <p style="mso-line-height-rule: exactly;line-height: 175%;margin: 0;"><span style="color: #000000;"><?php echo l('Thank you for choosing', true); ?><?php echo ' '.$company_name; ?> <?php echo l('as your next travel destination. We are committed to provide you with a unique experience. The detailed information below confirms your reservation.', true); ?></span></p>
+                                                                        <p style="mso-line-height-rule: exactly;line-height: 175%;margin: 0;"><span style="color: #000000;"><?php echo 'Thank you for choosing'; ?><?php echo ' '.$company_name; ?> <?php echo 'as your next travel destination. We are committed to provide you with a unique experience. The detailed information below confirms your reservation.'; ?></span></p>
                                                                     <?php endif; ?>
                                                                 </div>
                                                             </div>
@@ -114,7 +114,7 @@
                                                         <td style="border-collapse:collapse; mso-line-height-rule:exactly; font-family:Arial, sans-serif; font-size:15px; color:#23496d; word-break:break-word; padding:10px 20px">
                                                             <div id="hs_cos_wrapper_builtin_module_2_0_0" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_module" style="color: inherit; font-size: inherit; line-height: inherit;" data-hs-cos-general-type="widget" data-hs-cos-type="module">
                                                                 <div id="hs_cos_wrapper_builtin_module_2_0_0_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_rich_text" style="color: inherit; font-size: inherit; line-height: inherit;" data-hs-cos-general-type="widget" data-hs-cos-type="rich_text">
-                                                                    <h1 style="margin:0; mso-line-height-rule: exactly;line-height: 175%;margin: 0;font-size:24px;"><span style="color: #37761d;"><?php echo l('Reservation Confirmation', true); ?>: #<?php echo $booking_id;?></span></h1>
+                                                                    <h1 style="margin:0; mso-line-height-rule: exactly;line-height: 175%;margin: 0;font-size:24px;"><span style="color: #37761d;"><?php echo 'Reservation Confirmation'; ?>: #<?php echo $booking_id;?></span></h1>
                                                                 </div>
                                                             </div>
                                                         </td>
@@ -133,7 +133,7 @@
                                                         <td style="border-collapse:collapse; mso-line-height-rule:exactly; font-family:Arial, sans-serif; font-size:15px; color:#23496d; word-break:break-word; padding:10px 20px">
                                                             <div id="hs_cos_wrapper_module_155990198455226" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_module" style="color: inherit; font-size: inherit; line-height: inherit;" data-hs-cos-general-type="widget" data-hs-cos-type="module">
                                                                 <div id="hs_cos_wrapper_module_155990198455226_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_rich_text" style="color: inherit; font-size: inherit; line-height: inherit;" data-hs-cos-general-type="widget" data-hs-cos-type="rich_text">
-                                                                    <h2 style="margin:0; mso-line-height-rule:exactly; font-size:22px; line-height:175%"><span style="color: #000000;"><strong><?php echo l('Room Details', true); ?></strong></span></h2>
+                                                                    <h2 style="margin:0; mso-line-height-rule:exactly; font-size:22px; line-height:175%"><span style="color: #000000;"><strong><?php echo 'Room Details'; ?></strong></span></h2>
                                                                 </div>
                                                             </div>
                                                         </td>
@@ -152,16 +152,16 @@
                                                         <td style="border-collapse:collapse; mso-line-height-rule:exactly; font-family:Arial, sans-serif; font-size:15px; color:#23496d; word-break:break-word; padding:10px 20px">
                                                             <div id="hs_cos_wrapper_module_15615385157202" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_module" style="color: inherit; font-size: inherit; line-height: inherit;" data-hs-cos-general-type="widget" data-hs-cos-type="module">
                                                                 <div id="hs_cos_wrapper_module_15615385157202_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_rich_text" style="color: inherit; font-size: inherit; line-height: inherit;" data-hs-cos-general-type="widget" data-hs-cos-type="rich_text">
-                                                                    <p style="mso-line-height-rule: exactly;line-height: 175%;margin: 0;"><span style="color: #000000;"><strong><?php echo l('Full Name', true); ?>:&nbsp;</strong><?php echo $customer_name ? $customer_name : ''; ?></span></p>
-                                                                    <p style="mso-line-height-rule: exactly;line-height: 175%;margin: 0;"><span style="color: #000000;"><strong><?php echo l('Room Type', true); ?>:&nbsp;</strong><?php echo $room_type; ?></span></p>
-                                                                    <p style="mso-line-height-rule: exactly;line-height: 175%;margin: 0;"><span style="color: #000000;"><strong><?php echo l('Number Of Rooms', true); ?>:&nbsp;</strong>1</span></p>
-                                                                    <p style="mso-line-height-rule: exactly;line-height: 175%;margin: 0;"><span style="color: #000000;"><strong><?php echo l('Guests Per Room', true); ?>:&nbsp;</strong><?php echo $adult_count > 1 ? $adult_count.' Adults' : $adult_count.' Adult'; ?>
+                                                                    <p style="mso-line-height-rule: exactly;line-height: 175%;margin: 0;"><span style="color: #000000;"><strong><?php echo 'Full Name'; ?>:&nbsp;</strong><?php echo $customer_name ? $customer_name : ''; ?></span></p>
+                                                                    <p style="mso-line-height-rule: exactly;line-height: 175%;margin: 0;"><span style="color: #000000;"><strong><?php echo 'Room Type'; ?>:&nbsp;</strong><?php echo $room_type; ?></span></p>
+                                                                    <p style="mso-line-height-rule: exactly;line-height: 175%;margin: 0;"><span style="color: #000000;"><strong><?php echo 'Number Of Rooms'; ?>:&nbsp;</strong>1</span></p>
+                                                                    <p style="mso-line-height-rule: exactly;line-height: 175%;margin: 0;"><span style="color: #000000;"><strong><?php echo 'Guests Per Room'; ?>:&nbsp;</strong><?php echo $adult_count > 1 ? $adult_count.' Adults' : $adult_count.' Adult'; ?>
                                                                         <?php echo $children_count ? ($children_count > 1 ? ','.$children_count.' Children' : ','.$children_count.' Child') : ''; ?></span></p>
-                                                                    <p style="mso-line-height-rule: exactly;font-size: 14px;line-height: 175%;margin: 0;"><span style="color: #000000;"><strong><?php echo l('Check-In Date', true); ?>:&nbsp;</strong><?php echo $check_in_date; ?></span></p>
-                                                                    <p style="mso-line-height-rule: exactly;font-size: 14px;line-height: 175%;margin: 0;"><span style="color: #000000;"><strong><?php echo l('Check-Out Date', true); ?>:&nbsp;</strong><?php echo $check_out_date; ?></span></p>
-                                                                    <?php if($booking_type): ?><p style="mso-line-height-rule: exactly;line-height: 175%;margin: 0;"><span style="color: #000000;"><strong><?php echo l('Booking Type', true); ?>:&nbsp;</strong><?php echo $booking_type; ?></span></p><?php endif; ?>
-                                                                    <?php if($booking_source): ?><p style="mso-line-height-rule: exactly;line-height: 175%;margin: 0;"><span style="color: #000000;"><strong><?php echo l('Booking Source', true); ?>:&nbsp;</strong><?php echo $booking_source; ?></span></p><?php endif; ?>
-                                                                    <?php if($booking_notes): ?><p style="mso-line-height-rule: exactly;line-height: 175%;margin: 0;"><span style="color: #000000;"><strong><?php echo l('Booking Notes', true); ?>:&nbsp;</strong><?php echo $booking_notes; ?></span></p><?php endif; ?>
+                                                                    <p style="mso-line-height-rule: exactly;font-size: 14px;line-height: 175%;margin: 0;"><span style="color: #000000;"><strong><?php echo 'Check-In Date'; ?>:&nbsp;</strong><?php echo $check_in_date; ?></span></p>
+                                                                    <p style="mso-line-height-rule: exactly;font-size: 14px;line-height: 175%;margin: 0;"><span style="color: #000000;"><strong><?php echo 'Check-Out Date'; ?>:&nbsp;</strong><?php echo $check_out_date; ?></span></p>
+                                                                    <?php if($booking_type): ?><p style="mso-line-height-rule: exactly;line-height: 175%;margin: 0;"><span style="color: #000000;"><strong><?php echo 'Booking Type'; ?>:&nbsp;</strong><?php echo $booking_type; ?></span></p><?php endif; ?>
+                                                                    <?php if($booking_source): ?><p style="mso-line-height-rule: exactly;line-height: 175%;margin: 0;"><span style="color: #000000;"><strong><?php echo 'Booking Source'; ?>:&nbsp;</strong><?php echo $booking_source; ?></span></p><?php endif; ?>
+                                                                    <?php if($booking_notes): ?><p style="mso-line-height-rule: exactly;line-height: 175%;margin: 0;"><span style="color: #000000;"><strong><?php echo 'Booking Notes'; ?>:&nbsp;</strong><?php echo $booking_notes; ?></span></p><?php endif; ?>
 
                                                                 </div>
                                                             </div>
@@ -182,7 +182,7 @@
                                                         <td style="border-collapse:collapse; mso-line-height-rule:exactly; font-family:Arial, sans-serif; font-size:15px; color:#23496d; word-break:break-word; padding:10px 20px">
                                                             <div id="hs_cos_wrapper_module_155990299151328" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_module" style="color: inherit; font-size: inherit; line-height: inherit;" data-hs-cos-general-type="widget" data-hs-cos-type="module">
                                                                 <div id="hs_cos_wrapper_module_155990299151328_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_rich_text" style="color: inherit; font-size: inherit; line-height: inherit;" data-hs-cos-general-type="widget" data-hs-cos-type="rich_text">
-                                                                    <h2 style="margin:0; mso-line-height-rule:exactly; font-size:22px; line-height:175%"><span style="color: #000000;"><strong><?php echo l('Summary of Charges', true); ?></strong></span></h2>
+                                                                    <h2 style="margin:0; mso-line-height-rule:exactly; font-size:22px; line-height:175%"><span style="color: #000000;"><strong><?php echo 'Summary of Charges'; ?></strong></span></h2>
                                                                 </div>
                                                             </div>
                                                         </td>
@@ -201,12 +201,12 @@
                                                         <td style="border-collapse:collapse; mso-line-height-rule:exactly; font-family:Arial, sans-serif; font-size:15px; color:#23496d; word-break:break-word; padding:10px 20px">
                                                             <div id="hs_cos_wrapper_module_15615388260943" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_module" style="color: inherit; font-size: inherit; line-height: inherit;" data-hs-cos-general-type="widget" data-hs-cos-type="module">
                                                                 <div id="hs_cos_wrapper_module_15615388260943_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_rich_text" style="color: inherit; font-size: inherit; line-height: inherit;" data-hs-cos-general-type="widget" data-hs-cos-type="rich_text">
-                                                                    <?php if($rate_plan_detail): ?><p style="mso-line-height-rule: exactly;line-height: 175%;margin: 0;"><span style="color: #000000;"><strong><?php echo l('Rate Plan', true); ?>:&nbsp;</strong><?php echo $rate_plan_detail['rate_plan_name']; ?></span></p><?php endif; ?>
-                                                                    <p style="mso-line-height-rule: exactly;line-height: 175%;margin: 0;"><span style="color: #000000;"><strong><?php echo l('Total room charges', true); ?>:&nbsp;</strong><?php echo number_format($rate, 2, ".", ","); ?></span></p>
-                                                                    <p style="mso-line-height-rule: exactly;line-height: 175%;margin: 0;"><span style="color: #000000;"><strong><?php echo l('Tax', true); ?>:&nbsp;</strong><?php $tax = floatval($rate_with_taxes) - floatval($rate); echo number_format($tax, 2, ".", ","); ?></span></p>
-                                                                    <p style="mso-line-height-rule: exactly;line-height: 175%;margin: 0;"><span style="color: #000000;"><strong><?php echo l('Grand Total', true); ?>:&nbsp;</strong><?php echo number_format($rate_with_taxes, 2, ".", ","); ?></span></p>
-                                                                    <p style="mso-line-height-rule: exactly;line-height: 175%;margin: 0;"><span style="color: #000000;"><strong><?php echo l('Average daily rate', true); ?>:&nbsp;</strong><?php echo number_format($average_daily_rate, 2, ".", ","); ?></span></p>
-                                                                    <p style="mso-line-height-rule: exactly;line-height: 175%;margin: 0;"><span style="color: #000000;"><strong><?php echo l('Amount due', true); ?>:&nbsp;</strong><?php echo number_format($amount_due, 2, ".", ","); ?></span></p>
+                                                                    <?php if($rate_plan_detail): ?><p style="mso-line-height-rule: exactly;line-height: 175%;margin: 0;"><span style="color: #000000;"><strong><?php echo 'Rate Plan'; ?>:&nbsp;</strong><?php echo $rate_plan_detail['rate_plan_name']; ?></span></p><?php endif; ?>
+                                                                    <p style="mso-line-height-rule: exactly;line-height: 175%;margin: 0;"><span style="color: #000000;"><strong><?php echo 'Total room charges'; ?>:&nbsp;</strong><?php echo number_format($rate, 2, ".", ","); ?></span></p>
+                                                                    <p style="mso-line-height-rule: exactly;line-height: 175%;margin: 0;"><span style="color: #000000;"><strong><?php echo 'Tax'; ?>:&nbsp;</strong><?php $tax = floatval($rate_with_taxes) - floatval($rate); echo number_format($tax, 2, ".", ","); ?></span></p>
+                                                                    <p style="mso-line-height-rule: exactly;line-height: 175%;margin: 0;"><span style="color: #000000;"><strong><?php echo 'Grand Total'; ?>:&nbsp;</strong><?php echo number_format($rate_with_taxes, 2, ".", ","); ?></span></p>
+                                                                    <p style="mso-line-height-rule: exactly;line-height: 175%;margin: 0;"><span style="color: #000000;"><strong><?php echo 'Average daily rate'; ?>:&nbsp;</strong><?php echo number_format($average_daily_rate, 2, ".", ","); ?></span></p>
+                                                                    <p style="mso-line-height-rule: exactly;line-height: 175%;margin: 0;"><span style="color: #000000;"><strong><?php echo 'Amount due'; ?>:&nbsp;</strong><?php echo number_format($amount_due, 2, ".", ","); ?></span></p>
                                                                 </div>
                                                             </div>
                                                         </td>
@@ -217,123 +217,6 @@
                                     </div>
                                 </div>
                                 <?php endif; ?>
-                                <div id="section_1559905633526" class="hse-section hse-section-3-col " style="padding-left:10px; padding-right:10px">
-                                    <div class="hse-column-container " style="min-width:280px; max-width:600px; width:100%; Margin-left:auto; Margin-right:auto; border-collapse:collapse; border-spacing:0; background-color:#ffffff; padding-bottom:10px" bgcolor="#ffffff">
-                                        <div id="column_1559905633526_0" class="hse-column ">
-                                            <table cellpadding="0" cellspacing="0" width="100%" style="border-spacing:0 !important; border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt">
-                                                <tbody>
-                                                    <tr>
-                                                        <td style="border-collapse:collapse; mso-line-height-rule:exactly; font-family:Arial, sans-serif; font-size:15px; color:#23496d; word-break:break-word; padding:10px 20px">
-                                                            <div id="hs_cos_wrapper_module_155990564661831" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_module" style="color: inherit; font-size: inherit; line-height: inherit;" data-hs-cos-general-type="widget" data-hs-cos-type="module">
-                                                                <table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-spacing:0 !important; border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt">
-                                                                    <tbody>
-                                                                        <tr>
-                                                                            <td align="center" width="auto" style="border-collapse:collapse; mso-line-height-rule:exactly; font-family:Arial, sans-serif; font-size:15px; color:#23496d; word-break:break-word; width:auto; display:block; min-width:100%">
-                                                                                <table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-spacing:0 !important; border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt; min-width:100%">
-                                                                                    <tbody>
-                                                                                        <tr>
-                                                                                            <td align="center" width="100%" style="border-collapse:collapse; mso-line-height-rule:exactly; font-family:Arial, sans-serif; font-size:15px; color:#23496d; word-break:break-word; min-width:100%">
-                                                                                                <table width="100%" style="border-spacing:0 !important; mso-table-lspace:0pt; mso-table-rspace:0pt; background-color:#ff7a59; -webkit-border-radius:0px; -moz-border-radius:0px; border-radius:0px; min-width:100%; border-collapse:separate!important" bgcolor="#ff7a59">
-                                                                                                    <tbody>
-                                                                                                        <tr>
-                                                                                                            <?php if($customer_modify_booking): ?>
-                                                                                                            <td align="center" style="border-collapse:collapse; mso-line-height-rule:exactly; font-family:Arial, sans-serif; font-size:15px; color:#23496d; word-break:break-word">
-                                                                                                                <a href="<?php echo $booking_modify_link; ?>" target="_blank" style="mso-line-height-rule:exactly; padding:12px 18px; font-size:14px; font-family:Arial, sans-serif; color:#ffffff; font-weight:normal; text-decoration:none; font-style:normal; display:block; text-align:center" align="center" data-hs-link-id="0"><?php echo l('Modify reservation', true); ?></a>
-                                                                                                            </td>
-                                                                                                            <?php endif; ?>
-                                                                                                        </tr>
-                                                                                                    </tbody>
-                                                                                                </table>
-                                                                                            </td>
-                                                                                        </tr>
-                                                                                    </tbody>
-                                                                                </table>
-                                                                            </td>
-                                                                        </tr>
-                                                                    </tbody>
-                                                                </table>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                        <div id="column_1559905633526_1" class="hse-column ">
-                                            <table cellpadding="0" cellspacing="0" width="100%" style="border-spacing:0 !important; border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt">
-                                                <tbody>
-                                                    <tr>
-                                                        <td style="border-collapse:collapse; mso-line-height-rule:exactly; font-family:Arial, sans-serif; font-size:15px; color:#23496d; word-break:break-word; padding:10px 20px">
-                                                            <div id="hs_cos_wrapper_module_15598980464246" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_module" style="color: inherit; font-size: inherit; line-height: inherit;" data-hs-cos-general-type="widget" data-hs-cos-type="module">
-                                                                <table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-spacing:0 !important; border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt">
-                                                                    <tbody>
-                                                                        <tr>
-                                                                            <td align="center" width="auto" style="border-collapse:collapse; mso-line-height-rule:exactly; font-family:Arial, sans-serif; font-size:15px; color:#23496d; word-break:break-word; width:auto; display:block; min-width:100%">
-                                                                                <table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-spacing:0 !important; border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt; min-width:100%">
-                                                                                    <tbody>
-                                                                                        <tr>
-                                                                                            <td align="center" width="100%" style="border-collapse:collapse; mso-line-height-rule:exactly; font-family:Arial, sans-serif; font-size:15px; color:#23496d; word-break:break-word; min-width:100%">
-                                                                                                <table width="100%" style="border-spacing:0 !important; mso-table-lspace:0pt; mso-table-rspace:0pt; background-color:#ff7a59; -webkit-border-radius:0px; -moz-border-radius:0px; border-radius:0px; min-width:100%; border-collapse:separate!important" bgcolor="#ff7a59">
-                                                                                                    <tbody>
-                                                                                                        <tr>
-                                                                                                            <!-- <td align="center" style="border-collapse:collapse; mso-line-height-rule:exactly; font-family:Arial, sans-serif; font-size:15px; color:#23496d; word-break:break-word">
-                                                                                                                <a href="#top" target="_blank" style="mso-line-height-rule:exactly; padding:12px 18px; font-size:14px; font-family:Arial, sans-serif; color:#ffffff; font-weight:normal; text-decoration:none; font-style:normal; display:block; text-align:center" align="center" data-hs-link-id="1">Book Another </a>
-                                                                                                            </td> -->
-                                                                                                        </tr>
-                                                                                                    </tbody>
-                                                                                                </table>
-                                                                                            </td>
-                                                                                        </tr>
-                                                                                    </tbody>
-                                                                                </table>
-                                                                            </td>
-                                                                        </tr>
-                                                                    </tbody>
-                                                                </table>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                        <div id="column_1560580306635_0" class="hse-column ">
-                                            <table cellpadding="0" cellspacing="0" width="100%" style="border-spacing:0 !important; border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt">
-                                                <tbody>
-                                                    <tr>
-                                                        <td style="border-collapse:collapse; mso-line-height-rule:exactly; font-family:Arial, sans-serif; font-size:15px; color:#23496d; word-break:break-word; padding:10px 20px">
-                                                            <div id="hs_cos_wrapper_module_15605803090435" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_module" style="color: inherit; font-size: inherit; line-height: inherit;" data-hs-cos-general-type="widget" data-hs-cos-type="module">
-                                                                <table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-spacing:0 !important; border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt">
-                                                                    <tbody>
-                                                                        <tr>
-                                                                            <td align="center" width="auto" style="border-collapse:collapse; mso-line-height-rule:exactly; font-family:Arial, sans-serif; font-size:15px; color:#23496d; word-break:break-word; width:auto; display:block; min-width:100%">
-                                                                                <table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-spacing:0 !important; border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt; min-width:100%">
-                                                                                    <tbody>
-                                                                                        <tr>
-                                                                                            <td align="center" width="100%" style="border-collapse:collapse; mso-line-height-rule:exactly; font-family:Arial, sans-serif; font-size:15px; color:#23496d; word-break:break-word; min-width:100%">
-                                                                                                <table width="100%" style="border-spacing:0 !important; mso-table-lspace:0pt; mso-table-rspace:0pt; background-color:#ff7a59; -webkit-border-radius:0px; -moz-border-radius:0px; border-radius:0px; min-width:100%; border-collapse:separate!important" bgcolor="#ff7a59">
-                                                                                                    <tbody>
-                                                                                                        <tr>
-                                                                                                            <!-- <td align="center" style="border-collapse:collapse; mso-line-height-rule:exactly; font-family:Arial, sans-serif; font-size:15px; color:#23496d; word-break:break-word">
-                                                                                                                <a href="#top" target="_blank" style="mso-line-height-rule:exactly; padding:12px 18px; font-size:14px; font-family:Arial, sans-serif; color:#ffffff; font-weight:normal; text-decoration:none; font-style:normal; display:block; text-align:center" align="center" data-hs-link-id="2">Cancel reservation</a>
-                                                                                                            </td> -->
-                                                                                                        </tr>
-                                                                                                    </tbody>
-                                                                                                </table>
-                                                                                            </td>
-                                                                                        </tr>
-                                                                                    </tbody>
-                                                                                </table>
-                                                                            </td>
-                                                                        </tr>
-                                                                    </tbody>
-                                                                </table>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
                                 <?php if($room_instructions): ?>
                                 <div id="section_1559902822428" class="hse-section hse-section-1-col " style="padding-left:10px; padding-right:10px">
                                     <div class="hse-column-container " style="min-width:280px; max-width:600px; width:100%; Margin-left:auto; Margin-right:auto; border-collapse:collapse; border-spacing:0; background-color:#dbe8ff; padding-bottom:10px" bgcolor="#dbe8ff">
@@ -345,7 +228,7 @@
                                                             <div id="hs_cos_wrapper_module_155990283789827" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_module" style="color: inherit; font-size: inherit; line-height: inherit;" data-hs-cos-general-type="widget" data-hs-cos-type="module">
                                                                 <div id="hs_cos_wrapper_module_155990283789827_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_rich_text" style="color: inherit; font-size: inherit; line-height: inherit;" data-hs-cos-general-type="widget" data-hs-cos-type="rich_text">
                                                                     <pre style="white-space:pre-wrap"></pre>
-                                                                    <p style="mso-line-height-rule: exactly;line-height: 100%;margin: 0;"><strong><?php echo l('Check-In Instructions', true); ?></strong></p>
+                                                                    <p style="mso-line-height-rule: exactly;line-height: 100%;margin: 0;"><strong><?php echo 'Check-In Instructions'; ?></strong></p>
                                                                     <p style="mso-line-height-rule: exactly;line-height: 175%;margin: 0;"><?php echo $room_instructions; ?></p>
                                                                 </div>
                                                             </div>
@@ -367,7 +250,7 @@
                                                         <td style="border-collapse:collapse; mso-line-height-rule:exactly; font-family:Arial, sans-serif; font-size:15px; color:#23496d; word-break:break-word; padding:10px 20px">
                                                             <div id="hs_cos_wrapper_module_155990567081932" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_module" style="color: inherit; font-size: inherit; line-height: inherit;" data-hs-cos-general-type="widget" data-hs-cos-type="module">
                                                                 <div id="hs_cos_wrapper_module_155990567081932_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_rich_text" style="color: inherit; font-size: inherit; line-height: inherit;" data-hs-cos-general-type="widget" data-hs-cos-type="rich_text">
-                                                                    <h2 style="margin:0; mso-line-height-rule:exactly; font-size:22px; line-height:175%"><span style="color: #000000;"><strong><?php echo l('Reservation Policy', true); ?></strong></span></h2>
+                                                                    <h2 style="margin:0; mso-line-height-rule:exactly; font-size:22px; line-height:175%"><span style="color: #000000;"><strong><?php echo 'Reservation Policy'; ?></strong></span></h2>
                                                                 </div>
                                                             </div>
                                                         </td>
@@ -407,10 +290,10 @@
                                                             <div id="hs_cos_wrapper_module_155990585686337" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_module" style="color: inherit; font-size: inherit; line-height: inherit;" data-hs-cos-general-type="widget" data-hs-cos-type="module">
                                                                 <div id="hs_cos_wrapper_module_155990585686337_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_rich_text" style="color: inherit; font-size: inherit; line-height: inherit;" data-hs-cos-general-type="widget" data-hs-cos-type="rich_text">
                                                                     <p style="mso-line-height-rule:exactly; text-align:center; font-size:14px; line-height:175%" align="center">
-                                                                        <?php if($company_email): ?><span style="color: #ffffff;"><strong><?php echo l('Email', true); ?></strong> : <span style="color: #ffffff;"><?php echo $company_email; ?></span></span><br><?php endif; ?>
-                                                                        <?php if($company_phone): ?><span style="color: #ffffff;"><strong><?php echo l('Phone', true); ?></strong> : <?php echo $company_phone; ?></span><br><?php endif; ?>
-                                                                        <?php if($company_fax): ?><span style="color: #ffffff;"><strong><?php echo l('Fax', true); ?></strong> :  <?php echo $company_fax; ?></span><br><?php endif; ?>
-                                                                        <?php if($company_address || $company_city || $company_region): ?><span style="color: #ffffff;"><strong><?php echo l('Address', true); ?></strong> : </span>
+                                                                        <?php if($company_email): ?><span style="color: #ffffff;"><strong><?php echo 'Email'; ?></strong> : <span style="color: #ffffff;"><?php echo $company_email; ?></span></span><br><?php endif; ?>
+                                                                        <?php if($company_phone): ?><span style="color: #ffffff;"><strong><?php echo 'Phone'; ?></strong> : <?php echo $company_phone; ?></span><br><?php endif; ?>
+                                                                        <?php if($company_fax): ?><span style="color: #ffffff;"><strong><?php echo 'Fax'; ?></strong> :  <?php echo $company_fax; ?></span><br><?php endif; ?>
+                                                                        <?php if($company_address || $company_city || $company_region): ?><span style="color: #ffffff;"><strong><?php echo 'Address'; ?></strong> : </span>
                                                                         <span style="color: #ffffff;"><?php echo $company_address ? $company_address.', ' : ''; ?><?php echo $company_city ? $company_city.', ' : ''; ?>, <?php echo $company_region ? $company_region.', ' : ''; ?>, <?php echo $company_country ? $company_country : ''; ?><?php echo $company_postal_code ? ' - '.$company_postal_code : ''; ?></span>
                                                                         <?php endif; ?>
                                                                     </p>

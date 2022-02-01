@@ -92,6 +92,8 @@
     innGrid.isChannePCIEnabled = parseInt('<?=(($this->is_channex_pci_enabled) ? 1 : 0)?>');
     innGrid.featureSettings.cuurentLanguage = "<?=$this->session->userdata('language') ? $this->session->userdata('language') : ''?>";
     innGrid.imageUrl = "<?= $this->image_url; ?>";
+    innGrid.companyAPIKey = "<?=(isset($this->company_api_key) ? $this->company_api_key : '')?>";
+    innGrid.companyID = $('#currentCompanyId').val();
 
     // subscription plans
     var STARTER = "<?php echo STARTER; ?>";

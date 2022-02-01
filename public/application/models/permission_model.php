@@ -49,6 +49,13 @@ class Permission_model extends CI_Model {
                 (
                     $function_name === 'forward_encrypt_card'
                 )
+            ) ||
+
+            (
+                $controller_name === "customer" && 
+                (
+                    $function_name === 'post_add_customer_callback'
+                )
             )
 
         ) {
