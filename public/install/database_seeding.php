@@ -53,11 +53,19 @@ while ($deadline > time() AND ($line = fgets($fp, 102400))) {
     $query .= $line;
     if (substr(trim($query), -1) == ';') {
         if (!mysqli_query($mysqli_connection, $query)) {
-
+            // error;
         }
         $query = '';
-        if(mysqli_query($mysqli_connection, "SELECT 1 FROM minical_installation_meta LIMIT 1") == TRUE)
+
+        if(mysqli_query($mysqli_connection, "SELECT * FROM minical_installation_meta LIMIT 1") == TRUE)
         {
+            if ($result = mysqli_query($mysqli_connection, "SELECT pointer FROM minical_installation_meta")) {
+                if (!mysqli_fetch_row($result)) {
+                    mysqli_query($mysqli_connection, "INSERT INTO minical_installation_meta (pointer, error) VALUES(0, 'no')");
+                }
+                mysqli_free_result($result);
+            }
+
             $file_position = ftell($fp);
             mysqli_query($mysqli_connection, "UPDATE minical_installation_meta SET pointer = $file_position");
             $modal_flag = 0;
@@ -74,6 +82,7 @@ while ($deadline > time() AND ($line = fgets($fp, 102400))) {
         $queryCount++;
     }
 }
+
 if (feof($fp)) {
 
     $project_url = getenv('PROJECT_URL');
