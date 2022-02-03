@@ -74,24 +74,33 @@ $mysqli_connection = @mysqli_connect("$dbHost", "$dbUser", "$dbPass", "$dbName")
                                 ?>
                             </td>
                         </tr>
-                        <tr>
+                        <!--tr>
                             <td>MySQL</td>
-                            <td><?php echo mysqli_get_client_info(); ?></td>
-                            <td>5.0.4</td>
+                            <td><?php
+                                $mysql_version = null;
+//                                if($mysqli_connection && $result = mysqli_query($mysqli_connection, "select @@version")) {
+//                                    $row = mysqli_fetch_row($result);
+//                                    if ($row) {
+//                                        $mysql_version = $row[0];
+//                                    }
+//                                }
+                                echo $mysql_version;
+                                ?></td>
+                            <td>MySql 5.6 and above</td>
                             <td>
                                 <?php
-                                if (mysqli_get_client_info() == null) {
-                                    $check = false;
-                                    echo '<p class="error">Require MySql version is not installed</p>';
-                                } elseif (mysqli_get_client_info() < '5.4') {
-                                    $check = false;
-                                    echo '<p class="error">Not compatible with this installed MySql version</p>';
-                                } else {
-                                    echo '<i class="fas fa-check-circle" style="font-size:24px;color:green"></i>';
-                                }
+//                                if ($mysql_version == null) {
+//                                    $check = false;
+//                                    echo '<p class="error">Required MySql version is not installed</p>';
+//                                } elseif ($mysql_version < '5.6') {
+//                                    $check = false;
+//                                    echo '<p class="error">Not compatible with this version of MySql</p>';
+//                                } else {
+//                                    echo '<i class="fas fa-check-circle" style="font-size:24px;color:green"></i>';
+//                                }
                                 ?>
                             </td>
-                        </tr>
+                        </tr-->
                         <!-- <tr>
                             <td>Server</td>
                             <td><?php print_r($_SERVER['SERVER_NAME']); ?></td>
@@ -172,7 +181,7 @@ $mysqli_connection = @mysqli_connect("$dbHost", "$dbUser", "$dbPass", "$dbName")
                                         echo '<i class="fas fa-check-circle" style="font-size:24px;color:green"></i>';
                                     } else {
                                         $check = false;
-                                        echo '<p class="error">Database user name is not configure</p>';
+                                        echo '<p class="error">Database user name is not configured</p>';
                                     }
                                     ?></td>
                             </tr>
@@ -190,7 +199,7 @@ $mysqli_connection = @mysqli_connect("$dbHost", "$dbUser", "$dbPass", "$dbName")
                                     // if (isset($dbPass) && $dbPass != null) {
                                     echo '<i class="fas fa-check-circle" style="font-size:24px;color:green"></i>';
                                     // }else{
-                                    //     echo "Database password name is not configure";
+                                    //     echo "Database password name is not configured";
                                     // }
                                     ?></td>
                             </tr>
@@ -209,7 +218,7 @@ $mysqli_connection = @mysqli_connect("$dbHost", "$dbUser", "$dbPass", "$dbName")
                                         echo '<i class="fas fa-check-circle" style="font-size:24px;color:green"></i>';
                                     } else {
                                         $check = false;
-                                        echo '<p class="error">Databse name for miniCal is not configure</p>';
+                                        echo '<p class="error">Database name is not configured</p>';
                                     }
                                     ?></td>
                             </tr>
@@ -230,7 +239,7 @@ $mysqli_connection = @mysqli_connect("$dbHost", "$dbUser", "$dbPass", "$dbName")
                                         echo '<i class="fas fa-check-circle" style="font-size:24px;color:green"></i>';
                                     } else {
                                         $check = false;
-                                        echo '<p class="error">Project URL is not configudre</p>';
+                                        echo '<p class="error">Project URL is not configured</p>';
                                     }
                                     ?></td>
                             </tr>
@@ -293,7 +302,7 @@ $mysqli_connection = @mysqli_connect("$dbHost", "$dbUser", "$dbPass", "$dbName")
                         <thead>
                         <tr style="font-size: initial;">
                             <th>Setting</th>
-                            <th>Current Setting</th>
+                            <th>Message</th>
                             <th>Status</th>
                         </tr>
                         </thead>

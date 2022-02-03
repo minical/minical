@@ -220,11 +220,11 @@ class Sqltoci {
                 $column_default = $column['Default'];
                 $column_unsigned = FALSE;
                 $unsigned = 'unsigned';
-                
-                //si tiene constraint
+
+                //if it has constraint
                 if ( strpos($column['Type'], '(') )
                 {
-                    //verificar si tiene 'unsigned'
+                    //check if it has 'unsigned'
                     if( strpos($column['Type'], $unsigned) )
                     {
                         $column_unsigned = $unsigned;
@@ -233,7 +233,7 @@ class Sqltoci {
 
                     $column_type = strtoupper( substr($column['Type'], 0, strpos($column['Type'], '(') ) );
 
-                    //si tiene un valores enum o set
+                    //if it has an enum or set value
                     if( $column_type == 'ENUM' || $column_type == 'SET' )
                     {
                         //reemplazamos comilla simple por doole
@@ -254,8 +254,8 @@ class Sqltoci {
                     $column_type = strtoupper( $column['Type'] );
                     $column_constraint = FALSE;
                 }
-                
-                //si tiene DEAFAULT generar  sql texto plano para escapar el strin en caso e.g. CURRENT_TIMESTAMP
+
+                // if DEFAULT generate plaintext sql to escape the strin in case e.g. CURRENT_TIMESTAMP
                 if( $column_default == 'CURRENT_TIMESTAMP' or $column_default == 'current_timestamp()')
                 {
                     $up .= PHP_EOL."\t\t\t"."'`$column[Field]` $column[Type] " . ($column['Null'] == 'NO' ? 'NOT NULL' : 'NULL') .

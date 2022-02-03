@@ -7,9 +7,7 @@ class Migration_create_base extends CI_Migration {
 		## Create Table booking
 		$this->dbforge->add_field(array(
 			'booking_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
@@ -20,20 +18,17 @@ class Migration_create_base extends CI_Migration {
 			),
 			'adult_count' => array(
 				'type' => 'TINYINT',
-				'constraint' => 4,
 				'null' => TRUE,
 
 			),
 			'children_count' => array(
 				'type' => 'TINYINT',
-				'constraint' => 4,
 				'null' => FALSE,
 				'default' => '0',
 
 			),
 			'state' => array(
 				'type' => 'INT',
-				'constraint' => 2,
 				'null' => FALSE,
 				'default' => '0',
 
@@ -44,22 +39,17 @@ class Migration_create_base extends CI_Migration {
 
 			),
 			'company_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => TRUE,
 
 			),
 			'booking_customer_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => TRUE,
 
 			),
 			'booked_by' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => TRUE,
 
 			),
@@ -89,9 +79,7 @@ class Migration_create_base extends CI_Migration {
 
 			),
 			'rate_plan_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => TRUE,
 
 			),
@@ -108,9 +96,7 @@ class Migration_create_base extends CI_Migration {
 
 			),
 			'charge_type_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => TRUE,
 
 			),
@@ -129,7 +115,6 @@ class Migration_create_base extends CI_Migration {
 			),
 			'source' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 				'default' => '0',
 
@@ -163,7 +148,6 @@ class Migration_create_base extends CI_Migration {
 			),
 			'residual_rate' => array(
 				'type' => 'INT',
-				'constraint' => 10,
 				'null' => TRUE,
 
 			),
@@ -182,23 +166,17 @@ class Migration_create_base extends CI_Migration {
 		## Create Table booking_block
 		$this->dbforge->add_field(array(
 			'booking_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 
 			),
 			'room_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 
 			),
 			'room_type_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => TRUE,
 
 			),
@@ -213,9 +191,7 @@ class Migration_create_base extends CI_Migration {
 
 			),
 			'booking_room_history_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
@@ -228,7 +204,6 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
@@ -240,27 +215,23 @@ class Migration_create_base extends CI_Migration {
 			),
 			'company_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => TRUE,
 
 			),
 			'show_on_booking_form' => array(
 				'type' => 'INT',
-				'constraint' => 4,
 				'null' => FALSE,
 				'default' => '1',
 
 			),
 			'show_on_registration_card' => array(
 				'type' => 'TINYINT',
-				'constraint' => 4,
 				'null' => FALSE,
 				'default' => '1',
 
 			),
 			'show_on_in_house_report' => array(
 				'type' => 'TINYINT',
-				'constraint' => 4,
 				'null' => FALSE,
 				'default' => '1',
 
@@ -274,14 +245,12 @@ class Migration_create_base extends CI_Migration {
 			),
 			'is_required' => array(
 				'type' => 'TINYINT',
-				'constraint' => 4,
 				'null' => FALSE,
 				'default' => '0',
 
 			),
 			'is_deleted' => array(
 				'type' => 'TINYINT',
-				'constraint' => 4,
 				'null' => FALSE,
 				'default' => '0',
 
@@ -295,7 +264,6 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
@@ -313,9 +281,7 @@ class Migration_create_base extends CI_Migration {
 		## Create Table booking_log
 		$this->dbforge->add_field(array(
 			'booking_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 
 			),
@@ -325,9 +291,7 @@ class Migration_create_base extends CI_Migration {
 
 			),
 			'user_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => TRUE,
 
 			),
@@ -338,7 +302,6 @@ class Migration_create_base extends CI_Migration {
 			),
 			'log_type' => array(
 				'type' => 'INT',
-				'constraint' => 2,
 				'null' => TRUE,
 				'default' => '0',
 
@@ -357,19 +320,16 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 
 			),
 			'booking_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 
 			),
 			'customer_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 
 			),
@@ -397,7 +357,6 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'id' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
@@ -415,7 +374,6 @@ class Migration_create_base extends CI_Migration {
 			),
 			'company_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 
 			),
@@ -435,7 +393,6 @@ class Migration_create_base extends CI_Migration {
 			),
 			'sort_order' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 				'default' => '0',
 
@@ -448,22 +405,17 @@ class Migration_create_base extends CI_Migration {
 		## Create Table booking_staying_customer_list
 		$this->dbforge->add_field(array(
 			'booking_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 
 			),
 			'customer_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 
 			),
 			'company_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 
 			),
@@ -476,13 +428,11 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'booking_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 
 			),
 			'booking_field_id' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 
 			),
@@ -501,13 +451,11 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'booking_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => TRUE,
 
 			),
 			'booking_group_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => TRUE,
 
 			),
@@ -520,14 +468,11 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'booking_extra_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
 			'extra_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 
 			),
@@ -542,9 +487,7 @@ class Migration_create_base extends CI_Migration {
 
 			),
 			'quantity' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 
 			),
@@ -562,9 +505,7 @@ class Migration_create_base extends CI_Migration {
 
 			),
 			'booking_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => TRUE,
 
 			),
@@ -576,16 +517,12 @@ class Migration_create_base extends CI_Migration {
 		## Create Table booking_x_group
 		$this->dbforge->add_field(array(
 			'booking_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 
 			),
 			'group_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 
 			),
@@ -597,16 +534,12 @@ class Migration_create_base extends CI_Migration {
 		## Create Table booking_x_invoice
 		$this->dbforge->add_field(array(
 			'booking_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 
 			),
 			'invoice_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 
 			),
@@ -618,16 +551,12 @@ class Migration_create_base extends CI_Migration {
 		## Create Table booking_x_statement
 		$this->dbforge->add_field(array(
 			'booking_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 
 			),
 			'statement_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 
 			),
@@ -639,9 +568,7 @@ class Migration_create_base extends CI_Migration {
 		## Create Table charge
 		$this->dbforge->add_field(array(
 			'charge_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
@@ -657,9 +584,7 @@ class Migration_create_base extends CI_Migration {
 
 			),
 			'booking_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => TRUE,
 
 			),
@@ -677,9 +602,7 @@ class Migration_create_base extends CI_Migration {
 
 			),
 			'charge_type_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => TRUE,
 
 			),
@@ -689,15 +612,12 @@ class Migration_create_base extends CI_Migration {
 
 			),
 			'user_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => TRUE,
 
 			),
 			'customer_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => TRUE,
 
 			),
@@ -723,19 +643,16 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
 			'charge_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 
 			),
 			'folio_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 
 			),
@@ -747,9 +664,7 @@ class Migration_create_base extends CI_Migration {
 		## Create Table charge_type
 		$this->dbforge->add_field(array(
 			'id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
@@ -760,9 +675,7 @@ class Migration_create_base extends CI_Migration {
 
 			),
 			'company_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => TRUE,
 
 			),
@@ -802,16 +715,12 @@ class Migration_create_base extends CI_Migration {
 		## Create Table charge_type_tax_list
 		$this->dbforge->add_field(array(
 			'tax_type_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 
 			),
 			'charge_type_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 
 			),
@@ -824,13 +733,11 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'booking_source_id' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 
 			),
 			'company_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 
 			),
@@ -842,7 +749,6 @@ class Migration_create_base extends CI_Migration {
 			),
 			'sort_order' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 
 			),
@@ -861,19 +767,16 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'customer_field_id' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 
 			),
 			'company_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 
 			),
 			'show_on_customer_form' => array(
 				'type' => 'TINYINT',
-				'constraint' => 4,
 				'null' => FALSE,
 				'default' => '1',
 
@@ -926,19 +829,16 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'customer_type_id' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 
 			),
 			'company_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 
 			),
 			'sort_order' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 				'default' => '0',
 
@@ -951,9 +851,7 @@ class Migration_create_base extends CI_Migration {
 		## Create Table company
 		$this->dbforge->add_field(array(
 			'company_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
@@ -1008,9 +906,7 @@ class Migration_create_base extends CI_Migration {
 
 			),
 			'nightly_audit_charge_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => TRUE,
 
 			),
@@ -1032,7 +928,6 @@ class Migration_create_base extends CI_Migration {
 			),
 			'is_daily_rate_including_tax' => array(
 				'type' => 'INT',
-				'constraint' => 1,
 				'null' => FALSE,
 				'default' => '0',
 
@@ -1046,7 +941,6 @@ class Migration_create_base extends CI_Migration {
 			),
 			'number_of_rooms' => array(
 				'type' => 'INT',
-				'constraint' => 3,
 				'null' => FALSE,
 				'default' => '0',
 
@@ -1090,7 +984,6 @@ class Migration_create_base extends CI_Migration {
 			),
 			'require_paypal_payment' => array(
 				'type' => 'TINYINT',
-				'constraint' => 4,
 				'null' => FALSE,
 				'default' => '0',
 
@@ -1103,7 +996,6 @@ class Migration_create_base extends CI_Migration {
 			),
 			'percentage_of_required_paypal_payment' => array(
 				'type' => 'INT',
-				'constraint' => 2,
 				'null' => FALSE,
 				'default' => '50',
 
@@ -1123,7 +1015,6 @@ class Migration_create_base extends CI_Migration {
 			),
 			'housekeeping_day_interval_for_full_cleaning' => array(
 				'type' => 'INT',
-				'constraint' => 2,
 				'null' => FALSE,
 				'default' => '4',
 
@@ -1136,9 +1027,7 @@ class Migration_create_base extends CI_Migration {
 
 			),
 			'default_currency_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => TRUE,
 
 			),
@@ -1156,8 +1045,7 @@ class Migration_create_base extends CI_Migration {
 
 			),
 			'property_type' => array(
-				'type' => 'INT',
-				'unsigned' => TRUE,
+				'type' => 'INT UNSIGNED',
 				'null' => FALSE,
 				'default' => '0',
 
@@ -1291,30 +1179,22 @@ class Migration_create_base extends CI_Migration {
 
 			),
 			'logo_image_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => TRUE,
 
 			),
 			'logo_image_group_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => TRUE,
 
 			),
 			'gallery_image_group_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => TRUE,
 
 			),
 			'slideshow_image_group_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => TRUE,
 
 			),
@@ -1377,7 +1257,6 @@ class Migration_create_base extends CI_Migration {
 			),
 			'statement_number' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 				'default' => '1',
 
@@ -1412,7 +1291,6 @@ class Migration_create_base extends CI_Migration {
 			),
 			'partner_id' => array(
 				'type' => 'INT',
-				'constraint' => 50,
 				'null' => FALSE,
 				'default' => '0',
 
@@ -1439,7 +1317,6 @@ class Migration_create_base extends CI_Migration {
 			),
 			'maximum_no_of_blocks' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 				'default' => '2',
 
@@ -1651,14 +1528,12 @@ class Migration_create_base extends CI_Migration {
 			),
 			'restrict_booking_dates_modification' => array(
 				'type' => 'TINYINT',
-				'constraint' => 4,
 				'null' => TRUE,
 				'default' => '0',
 
 			),
 			'restrict_checkout_with_balance' => array(
 				'type' => 'TINYINT',
-				'constraint' => 4,
 				'null' => TRUE,
 				'default' => '0',
 
@@ -1700,7 +1575,6 @@ class Migration_create_base extends CI_Migration {
 			),
 			'default_language' => array(
 				'type' => 'INT',
-				'constraint' => 10,
 				'null' => FALSE,
 				'default' => '1',
 
@@ -1760,9 +1634,7 @@ class Migration_create_base extends CI_Migration {
 		## Create Table company_admin_panel_info
 		$this->dbforge->add_field(array(
 			'company_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 
 			),
@@ -1804,7 +1676,6 @@ class Migration_create_base extends CI_Migration {
 			),
 			'lead_source_id' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => TRUE,
 
 			),
@@ -1832,16 +1703,12 @@ class Migration_create_base extends CI_Migration {
 		## Create Table company_charge
 		$this->dbforge->add_field(array(
 			'company_charge_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
 			'company_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => TRUE,
 
 			),
@@ -1884,9 +1751,7 @@ class Migration_create_base extends CI_Migration {
 		## Create Table company_payment_gateway
 		$this->dbforge->add_field(array(
 			'company_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 
 			),
@@ -1950,7 +1815,6 @@ class Migration_create_base extends CI_Migration {
 			),
 			'store_cc_in_booking_engine' => array(
 				'type' => 'INT',
-				'constraint' => 1,
 				'null' => FALSE,
 				'default' => '0',
 
@@ -1963,9 +1827,7 @@ class Migration_create_base extends CI_Migration {
 		## Create Table company_subscription
 		$this->dbforge->add_field(array(
 			'company_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 
 			),
@@ -2078,16 +1940,12 @@ class Migration_create_base extends CI_Migration {
 		## Create Table company_x_currency
 		$this->dbforge->add_field(array(
 			'company_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 
 			),
 			'currency_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 
 			),
@@ -2100,7 +1958,6 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'company_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 
 			),
@@ -2118,9 +1975,7 @@ class Migration_create_base extends CI_Migration {
 		## Create Table cron_email_log
 		$this->dbforge->add_field(array(
 			'company_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 
 			),
@@ -2149,9 +2004,7 @@ class Migration_create_base extends CI_Migration {
 		## Create Table cron_log
 		$this->dbforge->add_field(array(
 			'id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
@@ -2173,9 +2026,7 @@ class Migration_create_base extends CI_Migration {
 		## Create Table currency
 		$this->dbforge->add_field(array(
 			'currency_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
@@ -2206,7 +2057,6 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'customer_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
@@ -2264,9 +2114,7 @@ class Migration_create_base extends CI_Migration {
 
 			),
 			'company_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => TRUE,
 
 			),
@@ -2315,7 +2163,6 @@ class Migration_create_base extends CI_Migration {
 			),
 			'customer_type_id' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => TRUE,
 				'default' => '1',
 
@@ -2352,19 +2199,16 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
 			'is_primary' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 
 			),
 			'evc_card_status' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => TRUE,
 
 			),
@@ -2376,7 +2220,6 @@ class Migration_create_base extends CI_Migration {
 			),
 			'customer_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => TRUE,
 
 			),
@@ -2388,7 +2231,6 @@ class Migration_create_base extends CI_Migration {
 			),
 			'company_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => TRUE,
 
 			),
@@ -2424,7 +2266,6 @@ class Migration_create_base extends CI_Migration {
 			),
 			'is_card_deleted' => array(
 				'type' => 'INT',
-				'constraint' => 10,
 				'null' => FALSE,
 				'default' => '0',
 
@@ -2443,7 +2284,6 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'id' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
@@ -2455,7 +2295,6 @@ class Migration_create_base extends CI_Migration {
 			),
 			'company_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => TRUE,
 
 			),
@@ -2503,7 +2342,6 @@ class Migration_create_base extends CI_Migration {
 			),
 			'room_type_id' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => TRUE,
 
 			),
@@ -2516,7 +2354,6 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
@@ -2528,7 +2365,6 @@ class Migration_create_base extends CI_Migration {
 			),
 			'company_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 
 			),
@@ -2541,7 +2377,6 @@ class Migration_create_base extends CI_Migration {
 			),
 			'sort_order' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 				'default' => '0',
 
@@ -2555,13 +2390,11 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'customer_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 
 			),
 			'customer_field_id' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 
 			),
@@ -2580,7 +2413,6 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
@@ -2608,19 +2440,16 @@ class Migration_create_base extends CI_Migration {
 			),
 			'company_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 
 			),
 			'user_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => TRUE,
 
 			),
 			'is_deleted' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 				'default' => '0',
 
@@ -2645,9 +2474,7 @@ class Migration_create_base extends CI_Migration {
 		## Create Table date_range
 		$this->dbforge->add_field(array(
 			'date_range_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
@@ -2720,16 +2547,12 @@ class Migration_create_base extends CI_Migration {
 		## Create Table date_range_x_extra_rate
 		$this->dbforge->add_field(array(
 			'extra_rate_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 
 			),
 			'date_range_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 
 			),
@@ -2741,29 +2564,23 @@ class Migration_create_base extends CI_Migration {
 		## Create Table date_range_x_rate
 		$this->dbforge->add_field(array(
 			'rate_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 
 			),
 			'date_range_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 
 			),
 			'minimum_length_of_stay' => array(
 				'type' => 'INT',
-				'constraint' => 4,
 				'null' => FALSE,
 				'default' => '1',
 
 			),
 			'maximum_length_of_stay' => array(
 				'type' => 'INT',
-				'constraint' => 4,
 				'null' => FALSE,
 				'default' => '365',
 
@@ -2790,22 +2607,18 @@ class Migration_create_base extends CI_Migration {
 
 			),
 			'date_range_x_rate_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
 			'minimum_length_of_stay_arrival' => array(
 				'type' => 'INT',
-				'constraint' => 4,
 				'null' => FALSE,
 				'default' => '1',
 
 			),
 			'maximum_length_of_stay_arrival' => array(
 				'type' => 'INT',
-				'constraint' => 4,
 				'null' => FALSE,
 				'default' => '365',
 
@@ -2819,26 +2632,22 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'rate_plan_id' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 
 			),
 			'date_range_id' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 
 			),
 			'minimum_length_of_stay' => array(
 				'type' => 'INT',
-				'constraint' => 4,
 				'null' => FALSE,
 				'default' => '1',
 
 			),
 			'maximum_length_of_stay' => array(
 				'type' => 'INT',
-				'constraint' => 4,
 				'null' => FALSE,
 				'default' => '999',
 
@@ -2873,19 +2682,16 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'date_range_x_rate_supplied_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
 			'rate_supplied_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 
 			),
 			'date_range_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 
 			),
@@ -2897,23 +2703,17 @@ class Migration_create_base extends CI_Migration {
 		## Create Table date_range_x_room_type
 		$this->dbforge->add_field(array(
 			'date_range_x_room_type_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
 			'room_type_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 
 			),
 			'date_range_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 
 			),
@@ -2933,19 +2733,16 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'date_range_x_room_type_id' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 
 			),
 			'channel_id' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 
 			),
 			'availability' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 
 			),
@@ -2958,13 +2755,11 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'date_range_x_room_type_id' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 
 			),
 			'channel_id' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 
 			),
@@ -2984,7 +2779,6 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'user_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 
 			),
@@ -3013,7 +2807,6 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
@@ -3025,21 +2818,18 @@ class Migration_create_base extends CI_Migration {
 			),
 			'company_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 				'default' => '0',
 
 			),
 			'vendor_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 				'default' => '0',
 
 			),
 			'user_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 				'default' => '0',
 
@@ -3070,7 +2860,6 @@ class Migration_create_base extends CI_Migration {
 			),
 			'company_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 
 			),
@@ -3103,7 +2892,6 @@ class Migration_create_base extends CI_Migration {
 			),
 			'vendor_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 
 			),
@@ -3123,7 +2911,6 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'extra_id' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
@@ -3140,16 +2927,12 @@ class Migration_create_base extends CI_Migration {
 
 			),
 			'charge_type_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => TRUE,
 
 			),
 			'company_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => TRUE,
 
 			),
@@ -3183,7 +2966,6 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'extra_rate_id' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
@@ -3201,16 +2983,12 @@ class Migration_create_base extends CI_Migration {
 
 			),
 			'currency_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => TRUE,
 
 			),
 			'extra_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => TRUE,
 
 			),
@@ -3223,13 +3001,11 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'feature_id' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
 			'company_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 
 			),
@@ -3262,7 +3038,6 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'id' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
@@ -3274,7 +3049,6 @@ class Migration_create_base extends CI_Migration {
 			),
 			'company_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 
 			),
@@ -3293,13 +3067,11 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'id' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
 			'booking_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 
 			),
@@ -3311,14 +3083,16 @@ class Migration_create_base extends CI_Migration {
 			),
 			'customer_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 
 			),
-			'`created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP',
+			'created' => array(
+				'type' => 'TIMESTAMP',
+				'null' => TRUE,
+
+			),
 			'is_deleted' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 				'default' => '0',
 
@@ -3331,9 +3105,7 @@ class Migration_create_base extends CI_Migration {
 		## Create Table group
 		$this->dbforge->add_field(array(
 			'group_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
@@ -3352,7 +3124,6 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'guider_id' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 
 			),
@@ -3394,13 +3165,11 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
 			'company_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 
 			),
@@ -3424,19 +3193,16 @@ class Migration_create_base extends CI_Migration {
 			),
 			'agency' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => TRUE,
 
 			),
 			'bank_account_number' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => TRUE,
 
 			),
 			'bank_account_digit' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => TRUE,
 
 			),
@@ -3478,13 +3244,11 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'id' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
 			'image_group_id' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => TRUE,
 
 			),
@@ -3496,7 +3260,6 @@ class Migration_create_base extends CI_Migration {
 			),
 			'image_order' => array(
 				'type' => 'INT',
-				'constraint' => 3,
 				'null' => TRUE,
 				'default' => '0',
 
@@ -3514,16 +3277,12 @@ class Migration_create_base extends CI_Migration {
 		## Create Table image_group
 		$this->dbforge->add_field(array(
 			'id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
 			'image_type_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => TRUE,
 
 			),
@@ -3536,7 +3295,6 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'id' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
@@ -3548,13 +3306,11 @@ class Migration_create_base extends CI_Migration {
 			),
 			'width' => array(
 				'type' => 'INT',
-				'constraint' => 5,
 				'null' => TRUE,
 
 			),
 			'height' => array(
 				'type' => 'INT',
-				'constraint' => 5,
 				'null' => TRUE,
 
 			),
@@ -3567,25 +3323,21 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'id' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
 			'new_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => TRUE,
 
 			),
 			'old_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => TRUE,
 
 			),
 			'company_id' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => TRUE,
 
 			),
@@ -3600,55 +3352,15 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->create_table("import_mapping", TRUE);
 		$this->db->query('ALTER TABLE  `import_mapping` ENGINE = InnoDB');
 
-		## Create Table import_mapping_backup
-		$this->dbforge->add_field(array(
-			'id' => array(
-				'type' => 'INT',
-				'constraint' => 11,
-				'null' => FALSE,
-				'auto_increment' => TRUE
-			),
-			'new_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 20,
-				'null' => TRUE,
-
-			),
-			'old_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 20,
-				'null' => TRUE,
-
-			),
-			'company_id' => array(
-				'type' => 'INT',
-				'constraint' => 11,
-				'null' => TRUE,
-
-			),
-			'type' => array(
-				'type' => 'VARCHAR',
-				'constraint' => 230,
-				'null' => TRUE,
-
-			),
-		));
-		$this->dbforge->add_key("id",true);
-		$this->dbforge->create_table("import_mapping_backup", TRUE);
-		$this->db->query('ALTER TABLE  `import_mapping_backup` ENGINE = InnoDB');
-
 		## Create Table invoice
 		$this->dbforge->add_field(array(
 			'invoice_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
 			'invoice_number' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => TRUE,
 
 			),
@@ -3661,7 +3373,6 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'booking_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => TRUE,
 
 			),
@@ -3672,13 +3383,11 @@ class Migration_create_base extends CI_Migration {
 			),
 			'user_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => TRUE,
 
 			),
 			'action_id' => array(
 				'type' => 'INT',
-				'constraint' => 2,
 				'null' => TRUE,
 
 			),
@@ -3689,7 +3398,6 @@ class Migration_create_base extends CI_Migration {
 			),
 			'charge_or_payment_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => TRUE,
 
 			),
@@ -3708,7 +3416,6 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
@@ -3720,7 +3427,6 @@ class Migration_create_base extends CI_Migration {
 			),
 			'level' => array(
 				'type' => 'INT',
-				'constraint' => 2,
 				'null' => FALSE,
 
 			),
@@ -3745,13 +3451,11 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'key_id' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 
 			),
 			'company_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 
 			),
@@ -3764,7 +3468,6 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'id' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
@@ -3789,12 +3492,15 @@ class Migration_create_base extends CI_Migration {
 			),
 			'version' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 				'default' => '1',
 
 			),
-			'`created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP',
+			'created_at' => array(
+				'type' => 'TIMESTAMP',
+				'null' => TRUE,
+
+			),
 			'flag' => array(
 				'type' => 'VARCHAR',
 				'constraint' => 255,
@@ -3810,7 +3516,6 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'id' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
@@ -3819,7 +3524,11 @@ class Migration_create_base extends CI_Migration {
 				'null' => FALSE,
 
 			),
-			'`created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP',
+			'created_at' => array(
+				'type' => 'TIMESTAMP',
+				'null' => TRUE,
+
+			),
 		));
 		$this->dbforge->add_key("id",true);
 		$this->dbforge->create_table("language_phrase", TRUE);
@@ -3829,19 +3538,16 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'id' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
 			'phrase_id' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 
 			),
 			'language_id' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 
 			),
@@ -3850,7 +3556,11 @@ class Migration_create_base extends CI_Migration {
 				'null' => FALSE,
 
 			),
-			'`created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP',
+			'created_at' => array(
+				'type' => 'TIMESTAMP',
+				'null' => TRUE,
+
+			),
 		));
 		$this->dbforge->add_key("id",true);
 		$this->dbforge->create_table("language_translation", TRUE);
@@ -3859,9 +3569,7 @@ class Migration_create_base extends CI_Migration {
 		## Create Table login_attempt
 		$this->dbforge->add_field(array(
 			'id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
@@ -3877,7 +3585,11 @@ class Migration_create_base extends CI_Migration {
 				'null' => FALSE,
 
 			),
-			'`time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP',
+			'time' => array(
+				'type' => 'TIMESTAMP',
+				'null' => TRUE,
+
+			),
 		));
 		$this->dbforge->add_key("id",true);
 		$this->dbforge->create_table("login_attempt", TRUE);
@@ -3887,7 +3599,6 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'id' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
@@ -3910,13 +3621,11 @@ class Migration_create_base extends CI_Migration {
 			),
 			'parent_id' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 
 			),
 			'partner_type_id' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 
 			),
@@ -3929,7 +3638,6 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'pointer' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 
 			),
@@ -3946,9 +3654,7 @@ class Migration_create_base extends CI_Migration {
 		## Create Table night_audit_log
 		$this->dbforge->add_field(array(
 			'company_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 
 			),
@@ -3963,9 +3669,7 @@ class Migration_create_base extends CI_Migration {
 
 			),
 			'user_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => TRUE,
 
 			),
@@ -3983,13 +3687,11 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 
 			),
 			'company_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 
 			),
@@ -4015,15 +3717,12 @@ class Migration_create_base extends CI_Migration {
 		## Create Table options
 		$this->dbforge->add_field(array(
 			'option_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
 			'company_id' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 
 			),
@@ -4054,7 +3753,6 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'id' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
@@ -4083,7 +3781,6 @@ class Migration_create_base extends CI_Migration {
 			),
 			'pms_booking_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 
 			),
@@ -4111,13 +3808,11 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
 			'ota_id' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => TRUE,
 
 			),
@@ -4140,7 +3835,6 @@ class Migration_create_base extends CI_Migration {
 			),
 			'company_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 
 			),
@@ -4158,18 +3852,16 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'ota_manager_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 
 			),
 			'company_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 
 			),
 			'channex_property_data' => array(
-				'type' => 'LONGTEXT',
+				'type' => 'TEXT',
 				'null' => FALSE,
 
 			),
@@ -4182,7 +3874,6 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'ota_x_company_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 
 			),
@@ -4194,7 +3885,6 @@ class Migration_create_base extends CI_Migration {
 			),
 			'minical_rate_plan_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => TRUE,
 
 			),
@@ -4212,7 +3902,6 @@ class Migration_create_base extends CI_Migration {
 			),
 			'company_id' => array(
 				'type' => 'INT',
-				'constraint' => 10,
 				'null' => TRUE,
 
 			),
@@ -4225,7 +3914,6 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'ota_x_company_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 
 			),
@@ -4237,13 +3925,11 @@ class Migration_create_base extends CI_Migration {
 			),
 			'minical_room_type_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => TRUE,
 
 			),
 			'company_id' => array(
 				'type' => 'INT',
-				'constraint' => 10,
 				'null' => TRUE,
 
 			),
@@ -4256,26 +3942,23 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'ota_x_company_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
 			'company_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 
 			),
 			'ota_manager_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 
 			),
 			'rate_update_type' => array(
 				'type' => 'VARCHAR',
 				'constraint' => 255,
-				'null' => TRUE,
+				'null' => FALSE,
 
 			),
 			'ota_property_id' => array(
@@ -4299,7 +3982,6 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'xml_log_id' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
@@ -4313,7 +3995,11 @@ class Migration_create_base extends CI_Migration {
 				'null' => TRUE,
 
 			),
-			'`datetime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP',
+			'datetime' => array(
+				'type' => 'TIMESTAMP',
+				'null' => TRUE,
+
+			),
 			'request_type' => array(
 				'type' => 'TINYINT',
 				'constraint' => 1,
@@ -4328,7 +4014,6 @@ class Migration_create_base extends CI_Migration {
 			),
 			'ota_id' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => TRUE,
 
 			),
@@ -4347,7 +4032,6 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'id' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
@@ -4371,9 +4055,7 @@ class Migration_create_base extends CI_Migration {
 		## Create Table payment
 		$this->dbforge->add_field(array(
 			'payment_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
@@ -4389,9 +4071,7 @@ class Migration_create_base extends CI_Migration {
 
 			),
 			'booking_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => TRUE,
 
 			),
@@ -4402,15 +4082,12 @@ class Migration_create_base extends CI_Migration {
 
 			),
 			'payment_type_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => TRUE,
 
 			),
 			'credit_card_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => TRUE,
 
 			),
@@ -4427,15 +4104,12 @@ class Migration_create_base extends CI_Migration {
 
 			),
 			'user_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => TRUE,
 
 			),
 			'customer_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => TRUE,
 
 			),
@@ -4453,7 +4127,6 @@ class Migration_create_base extends CI_Migration {
 			),
 			'read_only' => array(
 				'type' => 'INT',
-				'constraint' => 1,
 				'null' => TRUE,
 
 			),
@@ -4496,13 +4169,11 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'payment_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 
 			),
 			'folio_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 
 			),
@@ -4514,9 +4185,7 @@ class Migration_create_base extends CI_Migration {
 		## Create Table payment_type
 		$this->dbforge->add_field(array(
 			'payment_type_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
@@ -4527,9 +4196,7 @@ class Migration_create_base extends CI_Migration {
 
 			),
 			'company_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => TRUE,
 
 			),
@@ -4555,16 +4222,12 @@ class Migration_create_base extends CI_Migration {
 		## Create Table postmeta
 		$this->dbforge->add_field(array(
 			'meta_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
 			'post_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 				'default' => '0',
 
@@ -4588,30 +4251,24 @@ class Migration_create_base extends CI_Migration {
 		## Create Table posts
 		$this->dbforge->add_field(array(
 			'post_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
 			'company_id' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 
 			),
 			'user_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 				'default' => '0',
 
 			),
 			'post_date' => array(
 				'type' => 'DATETIME',
-				'null' => FALSE,
-				'default' => '0000-00-00 00:00:00',
+				'null' => TRUE,
 
 			),
 			'post_content' => array(
@@ -4633,14 +4290,11 @@ class Migration_create_base extends CI_Migration {
 			),
 			'post_modified' => array(
 				'type' => 'DATETIME',
-				'null' => FALSE,
-				'default' => '0000-00-00 00:00:00',
+				'null' => TRUE,
 
 			),
 			'post_parent' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 				'default' => '0',
 
@@ -4653,7 +4307,6 @@ class Migration_create_base extends CI_Migration {
 			),
 			'sort_order' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 				'default' => '0',
 
@@ -4673,7 +4326,6 @@ class Migration_create_base extends CI_Migration {
 			),
 			'is_deleted' => array(
 				'type' => 'INT',
-				'constraint' => 4,
 				'null' => FALSE,
 				'default' => '0',
 
@@ -4687,13 +4339,11 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'id' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 
 			),
 			'property_id' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 
 			),
@@ -4721,16 +4371,12 @@ class Migration_create_base extends CI_Migration {
 		## Create Table rate
 		$this->dbforge->add_field(array(
 			'rate_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
 			'rate_plan_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 
 			),
@@ -4784,25 +4430,21 @@ class Migration_create_base extends CI_Migration {
 			),
 			'minimum_length_of_stay' => array(
 				'type' => 'INT',
-				'constraint' => 4,
 				'null' => TRUE,
 
 			),
 			'maximum_length_of_stay' => array(
 				'type' => 'INT',
-				'constraint' => 4,
 				'null' => TRUE,
 
 			),
 			'minimum_length_of_stay_arrival' => array(
 				'type' => 'INT',
-				'constraint' => 4,
 				'null' => TRUE,
 
 			),
 			'maximum_length_of_stay_arrival' => array(
 				'type' => 'INT',
-				'constraint' => 4,
 				'null' => TRUE,
 
 			),
@@ -4833,9 +4475,7 @@ class Migration_create_base extends CI_Migration {
 		## Create Table rate_plan
 		$this->dbforge->add_field(array(
 			'rate_plan_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
@@ -4846,16 +4486,12 @@ class Migration_create_base extends CI_Migration {
 
 			),
 			'room_type_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => TRUE,
 
 			),
 			'charge_type_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => TRUE,
 
 			),
@@ -4873,22 +4509,17 @@ class Migration_create_base extends CI_Migration {
 			),
 			'number_of_adults_included_for_base_rate' => array(
 				'type' => 'INT',
-				'constraint' => 1,
 				'null' => FALSE,
 				'default' => '4',
 
 			),
 			'currency_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => TRUE,
 
 			),
 			'base_rate_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => TRUE,
 
 			),
@@ -4900,9 +4531,7 @@ class Migration_create_base extends CI_Migration {
 
 			),
 			'image_group_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => TRUE,
 
 			),
@@ -4915,13 +4544,11 @@ class Migration_create_base extends CI_Migration {
 			),
 			'company_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => TRUE,
 
 			),
 			'parent_rate_plan_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => TRUE,
 
 			),
@@ -4931,7 +4558,11 @@ class Migration_create_base extends CI_Migration {
 				'null' => TRUE,
 
 			),
-			'`date_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ',
+			'date_time' => array(
+				'type' => 'DATETIME',
+				'null' => TRUE,
+
+			),
 		));
 		$this->dbforge->add_key("rate_plan_id",true);
 		$this->dbforge->create_table("rate_plan", TRUE);
@@ -4941,19 +4572,16 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'room_type_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 
 			),
 			'extra_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 
 			),
 			'rate_plan_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 
 			),
@@ -4965,22 +4593,17 @@ class Migration_create_base extends CI_Migration {
 		## Create Table rate_supplied
 		$this->dbforge->add_field(array(
 			'rate_supplied_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
 			'rate_plan_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 
 			),
 			'room_type_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 
 			),
@@ -5017,19 +4640,16 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'id' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
 			'company_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 
 			),
 			'ota_id' => array(
 				'type' => 'INT',
-				'constraint' => 10,
 				'null' => FALSE,
 
 			),
@@ -5052,9 +4672,7 @@ class Migration_create_base extends CI_Migration {
 
 			),
 			'room_type_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => TRUE,
 
 			),
@@ -5071,9 +4689,7 @@ class Migration_create_base extends CI_Migration {
 
 			),
 			'room_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
@@ -5085,9 +4701,7 @@ class Migration_create_base extends CI_Migration {
 
 			),
 			'company_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => TRUE,
 
 			),
@@ -5099,37 +4713,31 @@ class Migration_create_base extends CI_Migration {
 
 			),
 			'group_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 				'default' => '0',
 
 			),
 			'floor_id' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 				'default' => '0',
 
 			),
 			'location_id' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 				'default' => '0',
 
 			),
 			'sort_order' => array(
 				'type' => 'INT',
-				'constraint' => 10,
 				'null' => FALSE,
 				'default' => '0',
 
 			),
 			'is_hidden' => array(
 				'type' => 'TINYINT',
-				'constraint' => 4,
 				'null' => FALSE,
 				'default' => '0',
 
@@ -5153,9 +4761,7 @@ class Migration_create_base extends CI_Migration {
 		## Create Table room_location
 		$this->dbforge->add_field(array(
 			'id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
@@ -5167,7 +4773,6 @@ class Migration_create_base extends CI_Migration {
 			),
 			'company_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 
 			),
@@ -5185,9 +4790,7 @@ class Migration_create_base extends CI_Migration {
 		## Create Table room_type
 		$this->dbforge->add_field(array(
 			'id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
@@ -5198,9 +4801,7 @@ class Migration_create_base extends CI_Migration {
 
 			),
 			'company_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => TRUE,
 
 			),
@@ -5219,36 +4820,30 @@ class Migration_create_base extends CI_Migration {
 			),
 			'max_occupancy' => array(
 				'type' => 'INT',
-				'constraint' => 10,
 				'null' => FALSE,
 				'default' => '0',
 
 			),
 			'min_occupancy' => array(
 				'type' => 'INT',
-				'constraint' => 10,
 				'null' => FALSE,
 				'default' => '0',
 
 			),
 			'max_adults' => array(
 				'type' => 'INT',
-				'constraint' => 2,
 				'null' => TRUE,
 				'default' => '4',
 
 			),
 			'max_children' => array(
 				'type' => 'INT',
-				'constraint' => 2,
 				'null' => TRUE,
 				'default' => '4',
 
 			),
 			'image_group_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => TRUE,
 
 			),
@@ -5266,21 +4861,18 @@ class Migration_create_base extends CI_Migration {
 			),
 			'ota_close_out_threshold' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 				'default' => '1',
 
 			),
 			'sort' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 				'default' => '0',
 
 			),
 			'default_room_charge' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => TRUE,
 
 			),
@@ -5319,9 +4911,7 @@ class Migration_create_base extends CI_Migration {
 
 			),
 			'last_activity' => array(
-				'type' => 'INT',
-				'constraint' => 1,
-				'unsigned' => TRUE,
+				'type' => 'INT UNSIGNED',
 				'null' => FALSE,
 				'default' => '0',
 
@@ -5340,13 +4930,11 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'statement_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
 			'statement_number' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => TRUE,
 
 			),
@@ -5377,7 +4965,6 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 
 			),
@@ -5408,25 +4995,21 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
 			'tax_type_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => TRUE,
 
 			),
 			'start_range' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => TRUE,
 
 			),
 			'end_range' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => TRUE,
 
 			),
@@ -5444,7 +5027,6 @@ class Migration_create_base extends CI_Migration {
 			),
 			'is_deleted' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => TRUE,
 
 			),
@@ -5469,16 +5051,12 @@ class Migration_create_base extends CI_Migration {
 
 			),
 			'company_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => TRUE,
 
 			),
 			'tax_type_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
@@ -5524,9 +5102,7 @@ class Migration_create_base extends CI_Migration {
 
 			),
 			'user_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 				'default' => '0',
 
@@ -5543,7 +5119,11 @@ class Migration_create_base extends CI_Migration {
 				'null' => FALSE,
 
 			),
-			'`last_login` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP',
+			'last_login' => array(
+				'type' => 'TIMESTAMP',
+				'null' => TRUE,
+
+			),
 		));
 
 		$this->dbforge->create_table("user_autologin", TRUE);
@@ -5552,23 +5132,17 @@ class Migration_create_base extends CI_Migration {
 		## Create Table user_permissions
 		$this->dbforge->add_field(array(
 			'permission_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
 			'company_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 
 			),
 			'user_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 
 			),
@@ -5586,23 +5160,17 @@ class Migration_create_base extends CI_Migration {
 		## Create Table user_profiles
 		$this->dbforge->add_field(array(
 			'id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
 			'user_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 
 			),
 			'current_company_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => TRUE,
 
 			),
@@ -5627,7 +5195,6 @@ class Migration_create_base extends CI_Migration {
 			),
 			'language_id' => array(
 				'type' => 'INT',
-				'constraint' => 4,
 				'null' => FALSE,
 				'default' => '0',
 
@@ -5640,22 +5207,17 @@ class Migration_create_base extends CI_Migration {
 		## Create Table user_roles
 		$this->dbforge->add_field(array(
 			'user_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 
 			),
 			'company_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 
 			),
 			'role' => array(
 				'type' => 'INT',
-				'constraint' => 1,
 				'null' => FALSE,
 				'default' => '0',
 
@@ -5669,13 +5231,11 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'user_id' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 
 			),
 			'current_guider_id' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 
 			),
@@ -5692,15 +5252,12 @@ class Migration_create_base extends CI_Migration {
 		## Create Table users
 		$this->dbforge->add_field(array(
 			'id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 2,
-				'unsigned' => TRUE,
+				'type' => 'BIGINT UNSIGNED',
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
 			'partner_id' => array(
 				'type' => 'INT',
-				'constraint' => 50,
 				'null' => FALSE,
 				'default' => '0',
 
@@ -5782,7 +5339,11 @@ class Migration_create_base extends CI_Migration {
 				'null' => FALSE,
 
 			),
-			'`modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP',
+			'modified' => array(
+				'type' => 'TIMESTAMP',
+				'null' => TRUE,
+
+			),
 			'accepted_TOS' => array(
 				'type' => 'TINYINT',
 				'constraint' => 1,
@@ -5831,13 +5392,11 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'id' => array(
 				'type' => 'INT',
-				'constraint' => 50,
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
 			'type_id' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 				'default' => '1',
 
@@ -5862,7 +5421,6 @@ class Migration_create_base extends CI_Migration {
 			),
 			'admin_user_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 255,
 				'null' => FALSE,
 
 			),
@@ -5899,7 +5457,6 @@ class Migration_create_base extends CI_Migration {
 			),
 			'currency_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => FALSE,
 
 			),
@@ -5936,7 +5493,6 @@ class Migration_create_base extends CI_Migration {
 			),
 			'logo_image_group_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => TRUE,
 
 			),
@@ -5955,7 +5511,6 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'id' => array(
 				'type' => 'INT',
-				'constraint' => 11,
 				'null' => FALSE,
 				'auto_increment' => TRUE
 			),
@@ -5986,13 +5541,11 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->add_field(array(
 			'partner_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => TRUE,
 
 			),
 			'admin_id' => array(
 				'type' => 'BIGINT',
-				'constraint' => 20,
 				'null' => TRUE,
 
 			),
@@ -6127,8 +5680,6 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->drop_table("image_type", TRUE);
 		### Drop table import_mapping ##
 		$this->dbforge->drop_table("import_mapping", TRUE);
-		### Drop table import_mapping_backup ##
-		$this->dbforge->drop_table("import_mapping_backup", TRUE);
 		### Drop table invoice ##
 		$this->dbforge->drop_table("invoice", TRUE);
 		### Drop table invoice_log ##
