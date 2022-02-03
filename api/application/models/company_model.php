@@ -171,6 +171,26 @@ class Company_model extends CI_Model {
 
         return count($result) > 0 ? $result : NULL;
     }
+
+    function get_ota_id($ota_key){
+        $this->db->from('otas');
+        $this->db->where('key', $ota_key);
+
+        $query = $this->db->get();
+
+        $result = $query->row_array();
+        
+        if ($this->db->_error_message())
+        {
+            show_error($this->db->_error_message());
+        }
+        
+        if ($query->num_rows >= 1)
+        {
+            return $result['id'];
+        }
+        return null;
+    }
 		
 }
 ?>
