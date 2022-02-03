@@ -93,7 +93,7 @@
     innGrid.featureSettings.cuurentLanguage = "<?=$this->session->userdata('language') ? $this->session->userdata('language') : ''?>";
     innGrid.imageUrl = "<?= $this->image_url; ?>";
     innGrid.companyAPIKey = "<?=(isset($this->company_api_key) ? $this->company_api_key : '')?>";
-    innGrid.companyID = $('#currentCompanyId').val();
+    innGrid.companyID = "<?=(isset($this->company_id) ? $this->company_id : '')?>";
 
     // subscription plans
     var STARTER = "<?php echo STARTER; ?>";
