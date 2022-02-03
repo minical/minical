@@ -317,7 +317,7 @@ $mysqli_connection = @mysqli_connect("$dbHost", "$dbUser", "$dbPass", "$dbName")
                                     echo 'Connection Failed.';
                                 } else {
                                     $connectionFlag = true;
-                                    echo '<div id="database-connection-status-loader" class="loader"></div><span id="database-connection-status" style="display:none;">Connected successfully</span>';
+                                    echo '<div class="database-connection-status-loader loader"></div><span class="database-connection-status" style="display:none;">Connected successfully</span>';
                                 }
                                 ?>
                             </td>
@@ -326,12 +326,43 @@ $mysqli_connection = @mysqli_connect("$dbHost", "$dbUser", "$dbPass", "$dbName")
                                 if (!$mysqli_connection) {
                                     echo '<p class="error">' . mysqli_connect_error() . '</p>';
                                 } else {
-                                    echo '<i id="database-connection-status-icon" class="fas fa-check-circle" style="font-size:24px;color:green;display:none;"></i>';
+                                    echo '<i class="database-connection-status-icon fas fa-check-circle" style="font-size:24px;color:green;display:none;"></i>';
                                 }
                                 ?>
                             </td>
                         </tr>
-                        <?php ?>
+                        <tr>
+                            <td>Database Version</td>
+                            <td>
+                                <span class="database-connection-status" style="display:none;">
+                                <?php
+                                $mysql_version = null;
+                                $mysql_type = 'mysql';
+                                if($mysqli_connection && $result = mysqli_query($mysqli_connection, "select @@version")) {
+                                    $row = mysqli_fetch_row($result);
+                                    if ($row) {
+                                        $mysql_type = strpos($row[0], 'MariaDB') ? 'MariaDB' : 'MySql';
+                                        $mysql_version = (float) $row[0];
+                                    }
+                                }
+                                echo $mysql_type. ' ' .$mysql_version;
+                                ?>
+                                </span>
+                            </td>
+                            <td>
+                                <?php
+                                if ($mysql_version == null) {
+                                    $check = false;
+                                    echo '<p class="error">Connection Failed</p>';
+                                } elseif ($mysql_version < 5.6) {
+                                    $check = false;
+                                    echo '<p class="error">Not compatible with this version of MySql</p>';
+                                } else {
+                                    echo '<i class="database-connection-status-icon fas fa-check-circle" style="display:none;font-size:24px;color:green"></i>';
+                                }
+                                ?>
+                            </td>
+                        </tr>
                         <tr>
                             <td>Install Database Schema</td>
                             <td class="db_schema">
@@ -353,7 +384,6 @@ $mysqli_connection = @mysqli_connect("$dbHost", "$dbUser", "$dbPass", "$dbName")
                                 <i class="fas fa-check-circle install_status" style="font-size:24px;color:green"></i>
                             </td>
                         </tr>
-                        <?php ?>
                         <tr>
                             <td>Database Seeding</td>
                             <td class="db_seeding">
@@ -512,9 +542,9 @@ $mysqli_connection = @mysqli_connect("$dbHost", "$dbUser", "$dbPass", "$dbName")
     function initializeDatabaseSetup() {
         if (connectionFlag != undefined && connectionFlag) {
 
-            $('#database-connection-status-loader').hide();
-            $('#database-connection-status-icon').show();
-            $('#database-connection-status').show();
+            $('.database-connection-status-loader').hide();
+            $('.database-connection-status-icon').show();
+            $('.database-connection-status').show();
 
             $(".db_schema_loader").show();
             $(".db_schema_pending").show();
