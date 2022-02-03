@@ -1,14 +1,14 @@
 innGrid.reloadBookings = function () {
 	if(innGrid.isOverviewCalendar) {
-		if (window.parent.$('#overview_calendar').is('*')) {
-			window.parent.$('#overview_calendar').fullCalendar( 'refetchEvents' );
+		if (window.$('#overview_calendar').is('*')) {
+			window.$('#overview_calendar').fullCalendar( 'refetchEvents' );
 		}
 	} else {
-		if (window.parent.$('#calendar').is('*')) {
+		if (window.$('#calendar').is('*')) {
 			if(innGrid.calendar && innGrid.calendar.refetchEvents) {
 				innGrid.calendar.refetchEvents();
 			} else {
-				window.parent.$('#calendar').fullCalendar( 'refetchEvents' );
+				window.$('#calendar').fullCalendar( 'refetchEvents' );
 			}
 		}
 	}
@@ -18,12 +18,12 @@ innGrid.reloadCalendar = function () {
 	// reload calendar
 	// if calendar exists (It doesn't exist in Show All... page)
 	if(innGrid.isOverviewCalendar) {
-		if (window.parent.$('#overview_calendar').is('*')) {
-			//window.parent.$('#overview_calendar').fullCalendar( 'refetchEvents' );
+		if (window.$('#overview_calendar').is('*')) {
+			//window.$('#overview_calendar').fullCalendar( 'refetchEvents' );
 			innGrid.getRooms(innGrid.buildOverViewCalendar);
 		}
 	} else {
-		if (window.parent.$('#calendar').is('*')) {
+		if (window.$('#calendar').is('*')) {
 			if(innGrid.calendar && innGrid.calendar.destroy) {
 				innGrid.calendar.destroy();
 				$('#calendar').text(l('Loading', true)+'...');
