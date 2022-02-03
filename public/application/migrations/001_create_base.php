@@ -4610,9 +4610,8 @@ class Migration_create_base extends CI_Migration {
 			),
 			'post_date' => array(
 				'type' => 'DATETIME',
-				'null' => FALSE,
-				'default' => '0000-00-00 00:00:00',
-
+				'null' => TRUE,
+                
 			),
 			'post_content' => array(
 				'type' => 'LONGTEXT',
@@ -4633,8 +4632,7 @@ class Migration_create_base extends CI_Migration {
 			),
 			'post_modified' => array(
 				'type' => 'DATETIME',
-				'null' => FALSE,
-				'default' => '0000-00-00 00:00:00',
+				'null' => TRUE,
 
 			),
 			'post_parent' => array(
