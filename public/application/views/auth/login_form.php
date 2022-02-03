@@ -15,7 +15,7 @@ class="text-center"
         if(isset($whitelabel_detail) && $whitelabel_detail && $whitelabel_detail['logo']) {
             $image_url = $this->image_url . $whitelabel_detail['logo'];
             if (strpos($whitelabel_detail['logo'], '.')) {
-                $image_url = '/images/' . $whitelabel_detail['logo'];
+                $image_url = base_url(). 'images/' . $whitelabel_detail['logo'];
             }
             echo '<img src="'.$image_url.'" style="max-width: 200px;">';
         }
