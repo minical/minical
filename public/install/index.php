@@ -324,7 +324,7 @@ $mysqli_connection = @mysqli_connect("$dbHost", "$dbUser", "$dbPass", "$dbName")
                             <td>
                                 <?php
                                 if (!$mysqli_connection) {
-                                    echo '<p class="error">' . mysqli_connect_error() . '</p>';
+                                    echo '<p class="error database-connection-status" style="display:none;">' . mysqli_connect_error() . '</p>';
                                 } else {
                                     echo '<i class="database-connection-status-icon fas fa-check-circle" style="font-size:24px;color:green;display:none;"></i>';
                                 }
@@ -351,12 +351,17 @@ $mysqli_connection = @mysqli_connect("$dbHost", "$dbUser", "$dbPass", "$dbName")
                             </td>
                             <td>
                                 <?php
+                                $mysqli_compatible = true;
                                 if ($mysql_version == null) {
                                     $check = false;
-                                    echo '<p class="error">Connection Failed</p>';
-                                } elseif ($mysql_version < 5.6) {
+                                    echo '<p class="error database-connection-status" style="display:none;">Connection Failed</p>';
+                                    $mysqli_compatible = false;
+                                    $mysqli_connection = false;
+                                } elseif ($mysql_version <= 5.5) {
                                     $check = false;
-                                    echo '<p class="error">Not compatible with this version of MySql</p>';
+                                    echo '<p class="error database-connection-status" style="display:none;">Not compatible with this version of '.($mysql_type ? $mysql_type : 'MySql').' <br/>Minical supports Mysql/MariaDB 5.5 and above.</p>';
+                                    $mysqli_compatible = false;
+                                    $mysqli_connection = false;
                                 } else {
                                     echo '<i class="database-connection-status-icon fas fa-check-circle" style="display:none;font-size:24px;color:green"></i>';
                                 }
@@ -376,11 +381,11 @@ $mysqli_connection = @mysqli_connect("$dbHost", "$dbUser", "$dbPass", "$dbName")
                             <td>
                                 <?php
                                 if (!$mysqli_connection && $mysqli_connection == null) {
-                                    echo '<p class="error">Database schema installation failed with error "Connection Failed"</p>';
+                                    echo '<p class="error">Database schema installation failed.</p>';
                                 }
                                 ?>
                                 <!-- <p class="error db_schema_error">Database schema not installed due to "Connection Failed".</p> -->
-                                <p class="error db_schema_pending">The database schema installation is pending.</p>
+                                <p class="error db_schema_pending"></p>
                                 <i class="fas fa-check-circle install_status" style="font-size:24px;color:green"></i>
                             </td>
                         </tr>
@@ -398,11 +403,11 @@ $mysqli_connection = @mysqli_connect("$dbHost", "$dbUser", "$dbPass", "$dbName")
                             <td>
                                 <?php
                                 if (!$mysqli_connection && $mysqli_connection == null) {
-                                    echo '<p class="error">Database seeding failed with error "Connection Failed"</p>';
+                                    echo '<p class="error">Database seeding failed.</p>';
                                 }
                                 ?>
-                                <p class="error db_seeding_error">Database seeding failed with error "Connection Failed".</p>
-                                <p class="error db_seeding_pending">Database seeding is pending.</p>
+                                <p class="error db_seeding_error">Database seeding failed.</p>
+                                <p class="error db_seeding_pending"></p>
                                 <i class="fas fa-check-circle db_seeding_status" style="font-size:24px;color:green"></i>
                             </td>
                         </tr>
@@ -421,7 +426,7 @@ $mysqli_connection = @mysqli_connect("$dbHost", "$dbUser", "$dbPass", "$dbName")
                             <td>
                                 <?php
                                 if ($mysqli_connection == null) {
-                                    echo '<p class="error">Database installation failed with error "Connection Failed"</p>';
+                                    echo '<p class="error">Database installation failed.</p>';
                                 }
                                 ?>
                                 <i class="fas fa-check-circle db_verify" style="font-size:24px;color:green"></i>
@@ -504,6 +509,11 @@ $mysqli_connection = @mysqli_connect("$dbHost", "$dbUser", "$dbPass", "$dbName")
 
 <script type="text/javascript">
 
+    var ajax_interval;
+    var proUrl = "<?php echo $projectUrl ?? '';?>";
+    var connectionFlag = "<?php echo $connectionFlag ?? false;?>";
+    var mysqlCompatible = "<?php echo $mysqli_compatible ?? false;?>";
+
     $(".register-btn").hide();
 
     $(".db_verify").hide();
@@ -528,19 +538,17 @@ $mysqli_connection = @mysqli_connect("$dbHost", "$dbUser", "$dbPass", "$dbName")
         $(".pre_installation").remove();
         $(".database_connection").show();
 
-
-        setTimeout(function () {
-            initializeDatabaseSetup();
-        }, 2000)
+        if (connectionFlag != undefined && connectionFlag && mysqlCompatible != undefined && mysqlCompatible) {
+            setTimeout(function () {
+                initializeDatabaseSetup();
+            }, 2000);
+        } else {
+            $('.database-connection-status-loader').hide();
+            $('.database-connection-status').show();
+        }
     });
 
-    var ajax_interval;
-    var proUrl = "<?php echo $projectUrl ?? '';?>";
-    var connectionFlag = "<?php echo $connectionFlag ?? false;?>";
-
-
     function initializeDatabaseSetup() {
-        if (connectionFlag != undefined && connectionFlag) {
 
             $('.database-connection-status-loader').hide();
             $('.database-connection-status-icon').show();
@@ -636,7 +644,6 @@ $mysqli_connection = @mysqli_connect("$dbHost", "$dbUser", "$dbPass", "$dbName")
 
                 });
             }
-        }
     }
 
 

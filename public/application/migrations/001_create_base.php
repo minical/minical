@@ -4931,7 +4931,7 @@ class Migration_create_base extends CI_Migration {
 				'null' => TRUE,
 
 			),
-			'`date_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ',
+			'`date_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ',
 		));
 		$this->dbforge->add_key("rate_plan_id",true);
 		$this->dbforge->create_table("rate_plan", TRUE);
