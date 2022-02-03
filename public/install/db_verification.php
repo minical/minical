@@ -6,7 +6,6 @@ if (file_exists($file)) {
 }
 
 $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__ . '/../../')->load();
-$filename = "minical-seed.sql";
 
 $dbHost = getenv("DATABASE_HOST");
 $dbUser = getenv("DATABASE_USER");

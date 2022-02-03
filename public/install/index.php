@@ -280,8 +280,8 @@ $mysqli_connection = @mysqli_connect("$dbHost", "$dbUser", "$dbPass", "$dbName")
                         </tbody>
                     </table>
                     <div class="pull-right btn-element">
-                        <a class="btn btn-default btncss refresh" type="button" role="button">Refresh</a>
-                        <a class="btn btn-primary btncss <?php if ($check) {
+                        <a class="btn btn-default refresh" type="button" role="button">Refresh</a>
+                        <a class="btn btn-primary <?php if ($check) {
                             echo 'next';
                         } ?>" role="button">Next</a>
                     </div>
@@ -336,7 +336,7 @@ $mysqli_connection = @mysqli_connect("$dbHost", "$dbUser", "$dbPass", "$dbName")
                             <td>
                                 <?php
                                 if (!$mysqli_connection && $mysqli_connection == null) {
-                                    echo '<p class="error">Database schema not installed due to "Connection Failed"</p>';
+                                    echo '<p class="error">Database schema installation failed with error "Connection Failed"</p>';
                                 }
                                 ?>
                                 <!-- <p class="error db_schema_error">Database schema not installed due to "Connection Failed".</p> -->
@@ -359,10 +359,10 @@ $mysqli_connection = @mysqli_connect("$dbHost", "$dbUser", "$dbPass", "$dbName")
                             <td>
                                 <?php
                                 if (!$mysqli_connection && $mysqli_connection == null) {
-                                    echo '<p class="error">Database not seeded due to "Connection Failed"</p>';
+                                    echo '<p class="error">Database seeding failed with error "Connection Failed"</p>';
                                 }
                                 ?>
-                                <p class="error db_seeding_error">Database not seeded due to "Connection Failed".</p>
+                                <p class="error db_seeding_error">Database seeding failed with error "Connection Failed".</p>
                                 <p class="error db_seeding_pending">Database seeding is pending.</p>
                                 <i class="fas fa-check-circle db_seeding_status" style="font-size:24px;color:green"></i>
                             </td>
@@ -374,7 +374,7 @@ $mysqli_connection = @mysqli_connect("$dbHost", "$dbUser", "$dbPass", "$dbName")
                                 if ($mysqli_connection == null) {
                                     echo 'Connection Failed.';
                                 } else {
-                                    echo '<p class="db_verify">Installation Verified</p>';
+                                    echo '<p class="db_verify">Installation Verified.</p>';
                                 }
                                 ?>
                                 <p class="db_verify_status"></p>
@@ -382,7 +382,7 @@ $mysqli_connection = @mysqli_connect("$dbHost", "$dbUser", "$dbPass", "$dbName")
                             <td>
                                 <?php
                                 if ($mysqli_connection == null) {
-                                    echo '<p class="error">Database installation Failed due to "Connection Failed"</p>';
+                                    echo '<p class="error">Database installation failed with error "Connection Failed"</p>';
                                 }
                                 ?>
                                 <i class="fas fa-check-circle db_verify" style="font-size:24px;color:green"></i>
@@ -393,8 +393,11 @@ $mysqli_connection = @mysqli_connect("$dbHost", "$dbUser", "$dbPass", "$dbName")
                     </table>
 
                     <div class="row pull-right btn-element register-btn">
-                        <b class="size">miniCal installation has been completed. Proceed with account setup:&nbsp;</b>
-                        <a type="button" class="btn btn-primary btncss" href="<?php echo $projectUrl; ?>/auth/register">Create
+                        <b class="size">
+                            <span style="color: #259326;">Minical installation has been completed.</span>
+                            <br/><br/>
+                            Proceed with account setup:&nbsp;</b>
+                        <a type="button" class="btn btn-primary" href="<?php echo $projectUrl; ?>/auth/register">Create
                             Admin Account</a>
                     </div>
                 </div>
@@ -546,14 +549,14 @@ $mysqli_connection = @mysqli_connect("$dbHost", "$dbUser", "$dbPass", "$dbName")
                                 $(".db_seeding_loader").hide();
                                 $(".db_seeding_pending").hide();
                                 $(".db_seeding_status").show();
-                                $(".db_seeding").html('Database Seeding done successfully');
+                                $(".db_seeding").html('Database seeding done successfully');
                                 db_validation();
                             }
                         },
                         error: function (error) {
                             stopinterval();
                             $(".db_seeding_error").show();
-                            $(".db_seeding").html('Database Seeding failed!');
+                            $(".db_seeding").html('Database seeding failed!');
                         }
 
                     });
@@ -578,9 +581,9 @@ $mysqli_connection = @mysqli_connect("$dbHost", "$dbUser", "$dbPass", "$dbName")
                         if (resp.success) {
                             if (resp.message < 112) {
                                 $(".db_verify_status").show();
-                                $(".db_verify_status").html('Only ' + resp.message + ' table migrated.');
+                                $(".db_verify_status").html('Only ' + resp.message + ' tables migrated.');
                                 $(".db_verify_error").show();
-                                $(".db_verify_error").html('Database validation failed');
+                                $(".db_verify_error").html('Database verification failed! Please contact support.');
                             } else {
                                 $(".register-btn").show();
                                 $(".db_verify").show();
