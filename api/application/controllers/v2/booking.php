@@ -1290,7 +1290,7 @@ class Booking extends MY_Controller
         $company_key_data = $this->Company_model->get_company_api_permission($company_id);
         $company_access_key = isset($company_key_data[0]['key']) && $company_key_data[0]['key'] ? $company_key_data[0]['key'] : null;
 
-        $ota_id = 9;
+        $ota_id = $this->Company_model->get_ota_id('obe');
         $ota_id = $ota_id ? $ota_id : SOURCE_ONLINE_WIDGET;
 
         //$available_room_types = $this->Room_type_model->get_room_type_availability($company_id, $ota_id, $check_in_date, $check_out_date, $adult_count, $children_count, true, null, true, true, true, true, $company_access_key, 'obe');
