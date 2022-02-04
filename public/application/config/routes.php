@@ -63,11 +63,6 @@ foreach($modules as $module)
                 $route[$key] = $module . '/' . $extension_route_item;
                 $module_permission[$key] = $module . '/' . $extension_route_item;
             }
-//            $module_permission = $route;
-        }
-        else
-        {
-            continue;
         }
     }
 }

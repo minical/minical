@@ -76,10 +76,6 @@ class MY_Controller extends CI_Controller {
                     }
 
                 }
-                else
-                {
-                    continue;
-                }
             }
         }
 
@@ -142,10 +138,6 @@ class MY_Controller extends CI_Controller {
                     require($files_path);
                     $this->module_assets_files[$value['extension_name']] = $config;
                 }
-                else
-                {
-                    continue;
-                }
             }
         }
 
@@ -160,10 +152,6 @@ class MY_Controller extends CI_Controller {
                 {
                     require($module_file);
                     $this->module_menus[$value['extension_name']] = $module_menu;
-                }
-                else
-                {
-                    continue;
                 }
             }
         }
@@ -238,10 +226,6 @@ class MY_Controller extends CI_Controller {
                                 }
                             }
                         }
-                    }
-                    else
-                    {
-                        continue;
                     }
                 }
             }
