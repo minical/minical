@@ -105,6 +105,12 @@ class MY_Controller extends CI_Controller {
             $company_id = $this->company_id;
         }
 
+        if($company_id){
+            $this->session->set_userdata('anonymous_company_id', $company_id);
+        } else {
+            $company_id = $this->session->userdata('anonymous_company_id');
+        }
+
         $all_modules = $get_active_modules = array();
 
         foreach($modules as $module)
@@ -166,31 +172,30 @@ class MY_Controller extends CI_Controller {
 
         if (isset($module_permission) && count($module_permission) > 0) {
             foreach ($module_permission as $key => $module) {
-                if(
-                    strpos($key, 'cron') &&
-                    (
-                        isset($this->company_id) &&
-                        $this->company_id != '' &&
-                        $this->router->fetch_module() != '' &&
-                        !strpos($module, $this->router->fetch_module()) &&
-                        !($this->permission->is_extension_active($this->router->fetch_module(), $this->company_id))
-                    )
-                ){
-                    show_404();
+
+                if ($this->router->fetch_module() && strpos($module, $this->router->fetch_module()) !== FALSE) {
+                    if (
+                        isset($company_id) &&
+                        $company_id &&
+                        (strpos($key, 'cron') == 0 || strpos($key, 'public') == 0) &&
+                        ($this->permission->is_extension_active($this->router->fetch_module(), $company_id))
+                    ) {
+                        // let it run
+                    } else {
+                        if(
+                            isset($company_id) &&
+                            $company_id &&
+                            ($this->permission->is_extension_active($this->router->fetch_module(), $company_id))
+                        ){
+                            // let it run
+                        } else {
+                            show_404();
+                        }
+                    }
+                } else {
+                    // continue with loop
                 }
             }
-        }
-
-        if($this->uri->segment(3) != ''){
-            $company_id = $this->uri->segment(3);
-        } else {
-            $company_id = $this->company_id;
-        }
-
-        if($company_id){
-            $this->session->set_userdata('anonymous_company_id', $company_id);
-        } else {
-            $company_id = $this->session->userdata('anonymous_company_id');
         }
 
         $active_extensions = $this->Extension_model->get_active_extensions($company_id);
@@ -398,6 +403,11 @@ class MY_Controller extends CI_Controller {
             // if user is not logged-in, but the controller & function combination is publicly accessible
 
             if ($this->permission->is_function_public($this->controller_name, $this->function_name)) 
+            {
+                return;
+            }
+
+            if ($this->permission->is_route_public($this->uri->segment(1)))
             {
                 return;
             }
