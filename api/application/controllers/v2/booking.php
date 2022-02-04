@@ -1543,6 +1543,7 @@ class Booking extends MY_Controller
         if (!is_null($selected_rooms))
         {
             $customer_data['company_id']    = $company_id;
+            $cc_number = $cc_expiry = $cvc = null;
 
             if(isset($customer_data['cc_number']) && $customer_data['cc_number']){
                 $cc_number = $customer_data['cc_number'];
@@ -1726,7 +1727,7 @@ class Booking extends MY_Controller
                     $new_rate_plan = array(
                         "rate_plan_name" => $rate_plan_data['rate_plan_name']." #".$booking_id,
                         "number_of_adults_included_for_base_rate" => $booking_data['adult_count'],
-                        "rates" => $this->get_array_with_range_of_dates($rate_array),
+                        "rates" => $this->get_array_with_range_of_dates($rate_array, SOURCE_ONLINE_WIDGET),
                         "currency_id" => $curreny_data['currency_id'],
                         "charge_type_id" => $rate_plan_data['charge_type_id'],
                         "company_id" => $company_id,
