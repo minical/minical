@@ -6,11 +6,11 @@
  * This is an example of a few basic user interaction methods you could use
  * all done with a hardcoded array.
  *
- * @package		CodeIgniter
- * @subpackage	Rest Server
- * @category	Controller
- * @author		Phil Sturgeon
- * @link		http://philsturgeon.co.uk/code/
+ * @package     CodeIgniter
+ * @subpackage  Rest Server
+ * @category    Controller
+ * @author      Phil Sturgeon
+ * @link        http://philsturgeon.co.uk/code/
 */
 
 // This can be removed if you use __autoload() in config.php OR use Modular Extensions
@@ -1659,7 +1659,6 @@ class Booking extends MY_Controller
             //Create Booking(s)
             $bookings = array();
 
-            $booking_source = isset($this->session->userdata['view_data']['booking_source']) ? $this->session->userdata['view_data']['booking_source'] : "";
             foreach ($selected_rooms as $selected_room_index => $selected_room)
             {
                 $booking_data['rate_plan_id']  = $rate_plan_id;
@@ -1671,7 +1670,7 @@ class Booking extends MY_Controller
                 $booking_data['children_count'] = $view_data['children_count'];
 
                 $booking_data['state']               = $booking_engine_booking_status ? RESERVATION : UNCONFIRMED_RESERVATION;
-                $booking_data['source']              = ($booking_source && $booking_source == 'seasonal.io') ? SOURCE_SEASONAL : SOURCE_ONLINE_WIDGET;
+                $booking_data['source']              = SOURCE_ONLINE_WIDGET;
                 $booking_data['company_id']          = $company_id;
                 $booking_data['booking_customer_id'] = $customer_id;
                 $booking_data['booking_notes']       = $special_requests;
@@ -1696,7 +1695,6 @@ class Booking extends MY_Controller
 
                 if(isset($booking_data['use_rate_plan']) && $booking_data['use_rate_plan'])
                 {
-                    $this->load->helper('MY_date_helper');
                     $start_date = date('Y-m-d', strtotime($booking_history['check_in_date']));
                     $end_date = date('Y-m-d', strtotime($booking_history['check_out_date']));
 
@@ -1728,7 +1726,7 @@ class Booking extends MY_Controller
                     $new_rate_plan = array(
                         "rate_plan_name" => $rate_plan_data['rate_plan_name']." #".$booking_id,
                         "number_of_adults_included_for_base_rate" => $booking_data['adult_count'],
-                        "rates" => get_array_with_range_of_dates($rate_array, SOURCE_ONLINE_WIDGET),
+                        "rates" => $this->get_array_with_range_of_dates($rate_array, SOURCE_ONLINE_WIDGET),
                         "currency_id" => $curreny_data['currency_id'],
                         "charge_type_id" => $rate_plan_data['charge_type_id'],
                         "company_id" => $company_id,
@@ -2037,5 +2035,90 @@ class Booking extends MY_Controller
         curl_close($curl);
         
         return $response;
+    }
+
+    // Convert $change's date intervals of changes into a range of dates in the correct format
+    function get_array_with_range_of_dates($changes, $ota_id)
+    {
+        $date_ranges = array();
+        switch ($ota_id) {
+            case SOURCE_ONLINE_WIDGET: // Minical's Online Booking Engine
+                $date_ranges = $this->get_array_with_range_of_dates_iso8601($changes, FALSE);break;
+            case SOURCE_BOOKING_DOT_COM: // Booking.com
+                $date_ranges = $this->get_array_with_range_of_dates_iso8601($changes, FALSE);break;
+            case SOURCE_EXPEDIA: // Expedia
+                $date_ranges = $this->get_array_with_range_of_dates_iso8601($changes, TRUE);break;
+            case SOURCE_MYALLOCATOR:
+                $date_ranges = $this->get_array_with_range_of_dates_iso8601($changes, FALSE);break;
+            case SOURCE_AGODA:
+                $date_ranges = $this->get_array_with_range_of_dates_iso8601($changes, FALSE);break;
+            case SOURCE_SITEMINDER:
+                $date_ranges = $this->get_array_with_range_of_dates_iso8601($changes, TRUE);break;
+            default:
+                $date_ranges = $this->get_array_with_range_of_dates_iso8601($changes, FALSE);break;
+        }
+        return $date_ranges;
+    }
+
+    // Convert $change's date intervals of changes into a range of dates in ISO 8601 format
+    function get_array_with_range_of_dates_iso8601($changes, $end_date_inclusive)
+    {
+        if (!isset($changes))
+        {
+            return null;
+            
+        } elseif (sizeof($changes) < 1)
+        {
+            return null;
+        }
+        
+        $changes_indexed_by_date = array(); 
+        $date_start = null;
+        $last_change = null;
+        foreach ($changes as $change)
+        {   
+            
+            if ($last_change != null)
+            {
+                $change_detected = false;
+                foreach ($change as $key => $value)
+                {
+                    if ($key != 'date')
+                    {
+                            // compare the actual number value to 2 decimal digits.
+                            $change_in_two_decimal_digits = number_format(floatval($change[$key]), 2, ".", "");
+                            $last_change_in_two_decimal_digits = number_format(floatval($last_change[$key]), 2, ".", "");
+                            if ($change_in_two_decimal_digits != $last_change_in_two_decimal_digits) 
+                            {
+                                $change_detected = true;
+                            }
+                        
+                    }
+                }
+                if (    !$change_detected   &&
+                        $change['date'] == Date('Y-m-d', strtotime("+1 day", strtotime($last_change['date'])))
+                )
+                {
+                    $last_change = $change;
+                    continue;
+                }
+            }
+            
+            if ($date_start == null)
+            {
+                $date_start = $change['date'];
+            }
+            else
+            {
+                $changes_indexed_by_date[] = array('date_start'=>$date_start, 'date_end'=> $change['date']) + $last_change;
+                $date_start = $change['date'];
+                
+            }
+            $last_change = $change;     
+            
+        }
+        $changes_indexed_by_date[] = array('date_start'=>$date_start, 'date_end'=> $last_change['date'])+$last_change ;
+
+        return $changes_indexed_by_date;    
     }
 }
