@@ -677,7 +677,7 @@ function extension_install_log ($data) {
     if ($data['is_installed'] == 1) {
         $CI = &get_instance();
         $CI->load->model('Extension_log_model');
-        //prx($data);
+        
         $log_data = array(
 
             'extension_name' => $data['extension_name'],
@@ -698,7 +698,7 @@ function extension_uninstall_log ($data) {
     if ($data['is_installed'] == 0) {
         $CI = &get_instance();
         $CI->load->model('Extension_log_model');
-        //prx($data);
+        
         $log_data = array(
 
             'extension_name' => $data['extension_name'],
@@ -717,13 +717,13 @@ function extension_deactivated_log ($data) {
     if ($data['is_active'] == 0) {
         $CI = &get_instance();
         $CI->load->model('Extension_log_model');
-        //prx($data);
+        
         $log_data = array(
 
             'extension_name' => $data['extension_name'],
             'vendor_id' => $data['vendor_id'],
             'company_id' => $data['company_id'],
-            'user_id' =>$CI->user_id,
+            'user_id' => $CI->user_id,
             'status' => 'Deactivated',
             'date_time' =>  gmdate('Y-m-d H:i:s')
         );
@@ -737,7 +737,6 @@ function extension_activated_log ($data) {
     if ($data['is_active'] == 1) {
         $CI = &get_instance();
         $CI->load->model('Extension_log_model');
-        //prx($data);
         $log_data = array(
 
             'extension_name' => $data['extension_name'],
