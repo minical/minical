@@ -1660,6 +1660,41 @@ class Booking extends MY_Controller
             //Create Booking(s)
             $bookings = array();
 
+            $common_booking_sources = json_decode(COMMON_BOOKING_SOURCES, true);
+            
+            $booking['source'] = SOURCE_ONLINE_WIDGET;
+            $booking['sub_source'] = 'WP Booking Engine';
+
+            $source_id = $booking['source'];
+            $is_new_source = null;
+            if($booking['source'] == SOURCE_ONLINE_WIDGET){
+                
+                $source = isset($booking['sub_source']) && $booking['sub_source'] ? $booking['sub_source'] : "";
+                $parent_source = "Expedia";
+                if($source) {
+                    $is_new_source = true;
+                    if(strcmp($parent_source, trim($source)) == 0) {
+                        $source_id = SOURCE_ONLINE_WIDGET;
+                        $is_new_source = false;
+                    } else {
+                        $source_ids = $this->Booking_model->get_booking_source_detail($company_id);
+                        if($source_ids){
+                            foreach($source_ids as $ids){
+                                if(strcmp($ids['name'], $source) == 0)
+                                {   
+                                    $source_id = $ids['id'];
+                                    $is_new_source = false;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if($is_new_source) {
+                $source_id = $this->Booking_model->create_booking_source($company_id, $source);
+            }
+
             foreach ($selected_rooms as $selected_room_index => $selected_room)
             {
                 $booking_data['rate_plan_id']  = $rate_plan_id;
@@ -1671,7 +1706,7 @@ class Booking extends MY_Controller
                 $booking_data['children_count'] = $view_data['children_count'];
 
                 $booking_data['state']               = $booking_engine_booking_status ? RESERVATION : UNCONFIRMED_RESERVATION;
-                $booking_data['source']              = SOURCE_ONLINE_WIDGET;
+                $booking_data['source']              = $source_id;
                 $booking_data['company_id']          = $company_id;
                 $booking_data['booking_customer_id'] = $customer_id;
                 $booking_data['booking_notes']       = $special_requests;
