@@ -29,7 +29,7 @@
 				<?php echo l('Loading', true); ?>...
 			</div>
 			<div class="modal-footer image-modal-footer">
-				<button type="button" class="btn btn-light" data-dismiss="modal"><?php echo l('close'); ?></button>
+				<button type="button" class="btn btn-light image_edit_modal_close_btn" data-dismiss="modal"><?php echo l('close'); ?></button>
 			</div>
 		</div>
 	</div>
@@ -40,15 +40,16 @@
 	<div class="card-body">
 		
 		<form class="" 
-		id="basic-form"method="post"
+		id="basic-form"
+        method="post"
 		action="<?php echo base_url();?>settings/company/general"
 		enctype="multipart/form-data" >
 		<div class="form-row">
 			<div class="col-md-2">
-				<div class="position-relative form-group  image-group" id="<?php echo $company['logo_image_group_id']; ?> ">
+				<div class="position-relative form-group  image-group" id="<?php echo $company['logo_image_group_id']; ?>">
 					<div> <label for="examplelogo11" class=""><?php echo l('company_logo'); ?></label></div>
 					<div id="examplelogo11" class="btn btn-primary form-group add-image"
-					data-toggle="modal" 
+					data-toggle="modal"
 					data-target="#image_edit_modal"
 					>
 					<?php echo l('add_image'); ?>
@@ -56,7 +57,7 @@
 			</div>
 		</div>
 		<div class="col-md-10">
-			<div class="position-relative form-group" >
+			<div class="position-relative form-group logo-image-thumbnails" >
 				<?php
 				if (isset($logo_images)):
 					foreach ($logo_images as $image):
@@ -113,7 +114,7 @@
 		<div class="col-md-6">
 			<div class="position-relative form-group">
 				<label for="default_currency" class=""><?php echo l('default_currency'); ?><span style="color: red;">*</span></label>
-				<select name="default_currency" id="default_currency"class="form-control">
+				<select name="default_currency" id="default_currency" class="form-control">
 					<?php	foreach ($available_currencies as $available_currency): ?>
 						<option 
 						value="<?php echo $available_currency['currency_id']; ?>"

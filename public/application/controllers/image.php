@@ -173,8 +173,8 @@ class Image extends MY_Controller
 
 	function delete_file_AJAX()
 	{
-		$src = $_POST['src'];
-		$image_group_id = $_POST['image_group_id'];
+		$src = isset($_POST['src']) ? $_POST['src'] : null;
+		$image_group_id = isset($_POST['image_group_id']) ? $_POST['image_group_id'] : null;
 		$filename = basename($src);
 		$this->_delete_in_s3($filename);
 		$this->Image_model->delete_image($filename, $image_group_id);
@@ -187,7 +187,7 @@ class Image extends MY_Controller
 
 	function get_dimensions_AJAX()
 	{
-		$image_group_id = $_POST['image_group_id'];
+		$image_group_id = isset ($_POST['image_group_id']) ? $_POST['image_group_id'] : null;
 		$dimensions = $this->Image_model->get_dimensions($image_group_id);
 		if($dimensions && isset($dimensions['width']) && isset($dimensions['height']))
 		{

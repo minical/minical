@@ -14,7 +14,7 @@ innGrid.deleteImage = function(thumbnail) {
 		dataType: "json",
 		success: function( data ) {
 			thumbnail.remove();
-			//location.reload(); // temporary fix to refresh cache of the recently uploaded image
+			location.reload(); // temporary fix to refresh cache of the recently uploaded image
 		}
 	});
 
@@ -27,7 +27,9 @@ innGrid.insertImage = function(imageGroupID, imageSrc) {
 	    'data-toggle': "modal",
 	    'data-target': "#image_edit_modal"
 	});
-    if($('#'+imageGroupID).find('img.thumbnail.add-image').length > 0) {
+    if ($('.logo-image-thumbnails').length) {
+		$('.logo-image-thumbnails').append(img);
+	} else if($('#'+imageGroupID).find('img.thumbnail.add-image').length > 0) {
         img.insertAfter('#'+imageGroupID+' img.thumbnail.add-image:last');
     } else {
         img.appendTo('#'+imageGroupID);
@@ -210,6 +212,7 @@ $(function (){
 				}
 
 				$('#image_edit_modal').modal('toggle'); // close bootstrap modal
+				location.reload(); // temporary fix to modal close issue
 			}
 		});
 	});
