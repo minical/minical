@@ -62,8 +62,9 @@ class Room_model extends CI_Model {
 
     function get_rooms_data($filter)
     {
-        $this->db->select("r.*");
+        
         $this->db->from("room as r");
+        $this->db->join("room_type as rt","rt.id = r.room_type_id", "left"); 
         $this->db->where("r.is_deleted != '1'");
 
         if($filter && isset($filter['room_name'])) {

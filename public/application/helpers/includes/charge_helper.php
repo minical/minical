@@ -146,7 +146,7 @@ function get_charge(int $charge_id = null )
     $get_charge_data = $CI->Charge_model->get_charge($charge_id);
 
     // after getting charge
-    do_action('post.get.charge', $charge_id, $charge_id, $CI->input->post());
+    do_action('post.get.charge',$charge_id, $CI->input->post());
      
     return $get_charge_data;
 
@@ -154,10 +154,10 @@ function get_charge(int $charge_id = null )
 
 /* Retrieves a charge value based on a filter.
 * Supported hooks:
-* before_get_charge: the filter executed before get charge
-* should_get_charge: the filter executed to check get charge.
-* pre.get.charge: the hook executed before getting charge. 
-* post.get.charge: the hook executed after getting charge
+* before_get_charges: the filter executed before get charge
+* should_get_charges: the filter executed to check get charge.
+* pre.get.charges: the hook executed before getting charge. 
+* post.get.charges: the hook executed after getting charge
 * @param array $filter (Required) The data for charge table
 * you can filter charges base on description , booking id ,customer id , user id charge type id. 
 * @return $response: array value of the charge data. A value of any type may be returned, If there  
@@ -180,8 +180,8 @@ function get_charges(array $filter = null)
     $CI->load->model('Charge_model');
 
     // filters
-    $data = apply_filters( 'before_get_charge', $filter, $CI->input->post());
-    $should_get_charge = apply_filters( 'should_get_charge', $filter, $CI->input->post());
+    $data = apply_filters( 'before_get_charges', $filter, $CI->input->post());
+    $should_get_charge = apply_filters( 'should_get_charges', $filter, $CI->input->post());
 
     if (!$should_get_charge) {
         return;
@@ -192,12 +192,12 @@ function get_charges(array $filter = null)
     }
 
     // before getting charge 
-    do_action('pre.get.charge', $filter, $CI->input->post());
+    do_action('pre.get.charges', $filter, $CI->input->post());
 
     $get_charge_data = $CI->Charge_model->get_charges_data($filter);
 
     // after getting charge
-    do_action('post.get.charge',$filter,$filter, $CI->input->post());
+    do_action('post.get.charges',$filter, $CI->input->post());
      
     return $get_charge_data;
 

@@ -144,7 +144,7 @@ function get_room(int $room_id = null )
     $get_room_data = $CI->Room_model->get_room($room_id);
 
     // after getting room
-    do_action('post.get.room', $room_id, $room_id, $CI->input->post());
+    do_action('post.get.room', $room_id, $CI->input->post());
      
     return $get_room_data;
 
@@ -152,10 +152,10 @@ function get_room(int $room_id = null )
 
 /* Retrieves a room value based on a filter.
 * Supported hooks:
-* before_get_room: the filter executed before get room
-* should_get_room: the filter executed to check get room.
-* pre.get.room: the hook executed before getting room. 
-* post.get.room: the hook executed after getting room
+* before_get_rooms: the filter executed before get room
+* should_get_rooms: the filter executed to check get room.
+* pre.get.rooms: the hook executed before getting room. 
+* post.get.rooms: the hook executed after getting room
 * @param array $filter (Required) The data for room table
 *
 * @return $response: array value of the room data. A value of any type may be returned, If there  
@@ -178,8 +178,8 @@ function get_rooms(array $filter = null)
     $CI->load->model('Room_model');
 
     // filters
-    $data = apply_filters( 'before_get_room', $filter, $CI->input->post());
-    $should_get_room = apply_filters( 'should_get_room', $filter, $CI->input->post());
+    $data = apply_filters( 'before_get_rooms', $filter, $CI->input->post());
+    $should_get_room = apply_filters( 'should_get_rooms', $filter, $CI->input->post());
 
     if (!$should_get_room) {
         return;
@@ -190,12 +190,12 @@ function get_rooms(array $filter = null)
     }
 
     // before getting room 
-    do_action('pre.get.room', $filter, $CI->input->post());
+    do_action('pre.get.rooms', $filter, $CI->input->post());
 
     $get_room_data = $CI->Room_model->get_rooms_data($filter);
 
     // after getting room
-    do_action('post.get.room',$filter,$filter, $CI->input->post());
+    do_action('post.get.rooms',$filter, $CI->input->post());
      
     return $get_room_data;
 

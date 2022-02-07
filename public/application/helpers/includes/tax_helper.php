@@ -141,10 +141,10 @@ function get_tax(int $tax_type_id = null )
 
 /* Retrieves a tax value based on a filter.
 * Supported hooks:
-* before_get_tax: the filter executed before get tax
-* should_get_tax: the filter executed to check get tax.
-* pre.get.tax: the hook executed before getting tax. 
-* post.get.tax: the hook executed after getting tax
+* before_get_taxes: the filter executed before get tax
+* should_get_taxes: the filter executed to check get tax.
+* pre.get.taxes: the hook executed before getting tax. 
+* post.get.taxes: the hook executed after getting tax
 * @param array $filter (Required) The data for tax table
 * you can filter data base on tax type id, company id and tax type.
 * @return $response: array value of the tax data. A value of any type may be returned, If there  
@@ -170,8 +170,8 @@ function get_taxes(array $filter = null)
     $CI->load->model('Tax_model');
 
     // filters
-    $data = apply_filters( 'before_get_tax', $filter, $CI->input->post());
-    $should_get_tax = apply_filters( 'should_get_tax', $filter, $CI->input->post());
+    $data = apply_filters( 'before_get_taxes', $filter, $CI->input->post());
+    $should_get_tax = apply_filters( 'should_get_taxes', $filter, $CI->input->post());
 
     if (!$should_get_tax) {
         return;
@@ -182,12 +182,12 @@ function get_taxes(array $filter = null)
     }
 
     // before getting tax 
-    do_action('pre.get.tax', $filter, $CI->input->post());
+    do_action('pre.get.taxes', $filter, $CI->input->post());
 
     $get_tax_data = $CI->Tax_model->get_taxes($filter);
 
     // after getting tax
-    do_action('post.get.tax',$filter,$filter, $CI->input->post());
+    do_action('post.get.taxes',$filter,$filter, $CI->input->post());
      
     return $get_tax_data;
 

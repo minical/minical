@@ -525,10 +525,10 @@ class Tax_model extends CI_Model {
         	$this->db->where('bs.tax_type', $filter['tax_type']);
         }
         if($filter && isset($filter['company_id'])) {
-        	$this->db->where('s.company_id', $filter['company_id']);
+        	$this->db->where('tt.company_id', $filter['company_id']);
         }
         if($filter && isset($filter['tax_type_id'])) {
-			$this->db->where("tt.tax_type_id", $tax_type_id);
+			$this->db->where("tt.tax_type_id", $filter['tax_type_id']);
 		}
 		$query = $this->db->get();
 		//echo $this->db->last_query();

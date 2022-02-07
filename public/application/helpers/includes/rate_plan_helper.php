@@ -130,7 +130,7 @@ function get_rate_plan(int $rate_plan_id = null )
     $get_rate_plan_data = $CI->Rate_plan_model->get_rate_plan($rate_plan_id);
 
     // after getting rate_plan
-    do_action('post.get.rate_plan', $rate_plan_id, $rate_plan_id, $CI->input->post());
+    do_action('post.get.rate_plan', $rate_plan_id, $CI->input->post());
      
     return $get_rate_plan_data;
 
@@ -139,10 +139,10 @@ function get_rate_plan(int $rate_plan_id = null )
 
 /* Retrieves a rate_plan value based on a filter.
 * Supported hooks:
-* before_get_rate_plan: the filter executed before get rate_plan
-* should_get_rate_plan: the filter executed to check get rate_plan.
-* pre.get.rate_plan: the hook executed before getting rate_plan. 
-* post.get.rate_plan: the hook executed after getting rate_plan
+* before_get_rate_plans: the filter executed before get rate_plan
+* should_get_rate_plans: the filter executed to check get rate_plan.
+* pre.get.rate_plans: the hook executed before getting rate_plan. 
+* post.get.rate_plans: the hook executed after getting rate_plan
 * @param array $filter (Required) The data for rate_plan table
 *
 * @return $response: array value of the rate_plan data. A value of any type may be returned, If there  
@@ -165,8 +165,8 @@ function get_rate_plans(array $filter = null )
     $CI->load->model('Rate_plan_model');
 
     // filters
-    $data = apply_filters( 'before_get_rate_plan', $filter, $CI->input->post());
-    $should_get_rate_plan = apply_filters( 'should_get_rate_plan', $filter, $CI->input->post());
+    $data = apply_filters( 'before_get_rate_plans', $filter, $CI->input->post());
+    $should_get_rate_plan = apply_filters( 'should_get_rate_plans', $filter, $CI->input->post());
 
     if (!$should_get_rate_plan) {
         return;
@@ -177,12 +177,12 @@ function get_rate_plans(array $filter = null )
     }
 
     // before getting rate_plan 
-    do_action('pre.get.rate_plan', $filter, $CI->input->post());
+    do_action('pre.get.rate_plans', $filter, $CI->input->post());
 
     $get_rate_plan_data = $CI->Rate_plan_model->get_rate_plans_data($filter);
 
     // after getting rate_plan
-    do_action('post.get.rate_plan', $filter, $filter, $CI->input->post());
+    do_action('post.get.rate_plans', $filter, $CI->input->post());
 
     return $get_rate_plan_data;
 

@@ -104,7 +104,7 @@ function get_statement(int $statement_id = null )
     $get_statement_data = $CI->Statement_model->get_bookings_by_statement_id($statement_id);
 
     // after getting statement
-    do_action('post.get.statement', $statement_id, $statement_id, $CI->input->post());
+    do_action('post.get.statement', $statement_id, $CI->input->post());
      
     return $get_statement_data;
 
@@ -152,7 +152,7 @@ function get_statements(array $filter = null)
     $get_statement_data = $CI->Statement_model->get_statements_data($filter);
 
     // after getting statement
-    do_action('post.get.statements',$filter,$filter, $CI->input->post());
+    do_action('post.get.statements',$filter, $CI->input->post());
      
     return $get_statement_data;
 

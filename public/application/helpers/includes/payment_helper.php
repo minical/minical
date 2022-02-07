@@ -12,11 +12,10 @@
 * $data['selling_date'] : the selling_date (date) for specific payment.
 * $data['company_id'] : the company_id (integer) for specific payment.
 * $data['amount'] : the amount (decimal integer) for specific payment.
-* $data['cvc'] : the cvc (integer) for specific payment.
 * $data['customer_id'] : the customer_id (integer) for specific payment.
 * $data['payment_type_id'] : the payment_type_id (integer) for specific payment.
 * $data['description'] : the description (character) for specific payment.
-* $data['payment_status'] : the payment_status (character) for specific payment.
+* $data['payment_gateway_used'] : the payment_gateway_used (character) for specific payment.
 * $data['parent_charge_id'] : the parent_charge_id (character) for specific payment.
 * $data['is_captured'] : the is_captured (integer) for specific payment.
 * $data['selected_gateway'] : the selected_gateway for specific payment.
@@ -60,7 +59,8 @@ function add_payment($payment)
         "customer_id" => isset($payment['customer_id']) ? $payment['customer_id'] : 0,
         "payment_type_id" => isset($payment['payment_type_id']) ? $payment['payment_type_id'] : 0 ,
         "description" => isset($payment['description']) ? $payment['description'] : null,
-        "payment_status" => isset($payment['payment_status']) ? $payment['payment_status'] : null,
+        "payment_gateway_used" => isset($payment['payment_gateway_used']) ? $payment['payment_gateway_used'] : null,
+        "gateway_charge_id" => isset($payment['gateway_charge_id']) ? $payment['gateway_charge_id'] : null,
         "parent_charge_id" => isset($payment['parent_charge_id']) ? $payment['parent_charge_id'] : null,
         "is_captured" => isset($payment['is_captured']) ? $payment['is_captured'] : 0,
         "date_time" => gmdate("Y-m-d H:i:s"),
@@ -78,7 +78,7 @@ function add_payment($payment)
     $company_data =  $CI->Company_model->get_company($company_id);
     $capture_payment_type = $company_data['manual_payment_capture'];
     $capture_payment_type = ($payment['capture_payment_type'] != 'authorize_only') ? false : true;
-    $cvc = $payment['cvc'];
+    $cvc = isset($payment['cvc']) ? $payment['cvc'] : null;
     unset($payment['capture_payment_type']);
 
     do_action('pre.add.payment', $payment_data, $CI->input->post());
@@ -116,16 +116,16 @@ function add_payment($payment)
 * @return $response: array value of the payment data. A value of any type may be returned, If there  
    is no payment in the database, boolean false is returned
 * $response array includes following attributes:
-* $data['user_id'] : the user_id of specific payment.
-* $data['booking_id'] : the booking_id for specific payment .
-* $data['selling_date'] : the selling_date for specific payment.
-* $data['company_id'] : the company_id for specific payment.
-* $data['amount'] : the amount for specific payment.
-* $data['customer_id'] : the customer_id for specific payment.
-* $data['payment_type_id'] : the payment_type_id for specific payment.
-* $data['description'] : the description for specific payment.
-* $data['selected_gateway'] : the selected_gateway for specific payment.
-* $data['capture_payment_type'] : the capture_payment_type for specific payment.
+* $response['user_id'] : the user_id of specific payment.
+* $response['booking_id'] : the booking_id for specific payment .
+* $response['selling_date'] : the selling_date for specific payment.
+* $response['company_id'] : the company_id for specific payment.
+* $response['amount'] : the amount for specific payment.
+* $response['customer_id'] : the customer_id for specific payment.
+* $response['payment_type_id'] : the payment_type_id for specific payment.
+* $response['description'] : the description for specific payment.
+* $response['selected_gateway'] : the selected_gateway for specific payment.
+* $response['capture_payment_type'] : the capture_payment_type for specific payment.
 * and many more attributes for table payment.
 */
 
@@ -153,7 +153,7 @@ function get_payment(int $payment_id = null )
     $get_payment_data = $CI->Payment_model->get_payment($payment_id);
 
     // after getting payment
-    do_action('post.get.payment', $payment_id, $payment_id, $CI->input->post());
+    do_action('post.get.payment', $payment_id, $CI->input->post());
      
     return $get_payment_data;
 
@@ -161,10 +161,10 @@ function get_payment(int $payment_id = null )
 
 /* Retrieves a payment value based on a payment filter.
 * Supported hooks:
-* before_get_payment: the filter executed before get payment
-* should_get_payment: the filter executed to check get payment.
-* pre.get.payment: the hook executed before getting payment. 
-* post.get.payment: the hook executed after getting payment
+* before_get_payments: the filter executed before get payment
+* should_get_payments: the filter executed to check get payment.
+* pre.get.payments: the hook executed before getting payment. 
+* post.get.payments: the hook executed after getting payment
 * @param array $filter (Required) The data for payment table
 * you can filter data base on customer id ,booking id,payment id and folio id.
 * @return $response: array value of the payment data. A value of any type may be returned, If there  
@@ -193,8 +193,8 @@ function get_payments(array $filter = null)
     $CI->load->model('Payment_model');
 
     // filters
-    $data = apply_filters( 'before_get_payment', $filter, $CI->input->post());
-    $should_get_payment = apply_filters( 'should_get_payment', $filter, $CI->input->post());
+    $data = apply_filters( 'before_get_payments', $filter, $CI->input->post());
+    $should_get_payment = apply_filters( 'should_get_payments', $filter, $CI->input->post());
 
     if (!$should_get_payment) {
         return;
@@ -205,12 +205,12 @@ function get_payments(array $filter = null)
     }
 
     // before getting payment 
-    do_action('pre.get.payment', $filter, $CI->input->post());
+    do_action('pre.get.payments', $filter, $CI->input->post());
 
     $get_payment_data = $CI->Payment_model->get_payments_data($filter);
 
     // after getting payment
-    do_action('post.get.payment',$filter,$filter, $CI->input->post());
+    do_action('post.get.payments',$filter, $CI->input->post());
      
     return $get_payment_data;
 

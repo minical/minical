@@ -58,13 +58,13 @@ function get_availability(array $filter = null)
     if(empty($filter)){
         return null;
     }
-    $company_id = $filter['company_id']; 
+    $company_id = isset($filter['company_id']) ? $filter['company_id'] : null ; 
 
-    $ota_id = $filter['ota_id'];
+    $ota_id = isset($filter['ota_id']) ? $filter['ota_id'] : null;
 
-    $start_date = $filter['start_date'];
+    $start_date = isset($filter['start_date']) ? $filter['start_date'] : null ;
 
-    $end_date = $filter['end_date'];
+    $end_date = isset($filter['end_date']) ? $filter['end_date'] : null ;
 
     $adult_count = isset($filter['adult_count']) ?  $filter['adult_count'] : null; 
 

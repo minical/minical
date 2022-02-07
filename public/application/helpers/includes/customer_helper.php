@@ -202,7 +202,7 @@ function get_customer(int $customer_id = null )
     $get_customer_data = $CI->Customer_model->get_customer($customer_id);
 
     // after getting customer
-    do_action('post.get.customer', $customer_id, $customer_id, $CI->input->post());
+    do_action('post.get.customer',$customer_id, $CI->input->post());
      
     return $get_customer_data;
 
@@ -210,10 +210,10 @@ function get_customer(int $customer_id = null )
 
 /* Retrieves a customer value based on a filter.
 * Supported hooks:
-* before_get_customer: the filter executed before get customer.
-* should_get_customer: the filter executed to check get customer.
-* pre.get.customer: the hook executed before getting customer. 
-* post.get.customer: the hook executed after getting customer.
+* before_get_customers: the filter executed before get customer.
+* should_get_customers: the filter executed to check get customer.
+* pre.get.customers: the hook executed before getting customer. 
+* post.get.customers: the hook executed after getting customer.
 * @param array $filter (Required) The data for customer table
 * you can filter customer base on customer name  , customer email ,customer id , company id . 
 * @return $response: array value of the customer data. A value of any type may be returned, If there  
@@ -247,8 +247,8 @@ function get_customers(array $filter = null )
     $CI->load->model('Customer_model');
 
     // filters
-    $data = apply_filters( 'before_get_customer', $filter, $CI->input->post());
-    $should_get_customer = apply_filters( 'should_get_customer', $filter, $CI->input->post());
+    $data = apply_filters( 'before_get_customers', $filter, $CI->input->post());
+    $should_get_customer = apply_filters( 'should_get_customers', $filter, $CI->input->post());
 
     if (!$should_get_customer) {
         return;
@@ -260,12 +260,12 @@ function get_customers(array $filter = null )
 
 
     // before getting customer 
-    do_action('pre.get.customer', $filter, $CI->input->post());
+    do_action('pre.get.customers', $filter, $CI->input->post());
 
     $get_customer_data = $CI->Customer_model->get_customers_data($filter);
 
     // after getting customer
-    do_action('post.get.customer', $filter, $filter, $CI->input->post());
+    do_action('post.get.customers', $filter, $CI->input->post());
      
     return $get_customer_data;
 

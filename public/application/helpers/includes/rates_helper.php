@@ -121,7 +121,7 @@ function get_rate(int $rate_id = null )
     $get_rate_data = $CI->Rate_model->get_rate_by_rate_id($rate_id);
 
     // after getting rate
-    do_action('post.get.rate', $rate_id, $rate_id, $CI->input->post());
+    do_action('post.get.rate', $rate_id, $CI->input->post());
      
     return $get_rate_data;
 
@@ -129,14 +129,12 @@ function get_rate(int $rate_id = null )
 
 /* Retrieves a rate value based on a filter.
 * Supported hooks:
-* before_get_rate: the filter executed before get rate.
-* should_get_rate: the filter executed to check get rate.
-* pre.get.rate: the hook executed before getting rate. 
-* post.get.rate: the hook executed after getting rate.
+* before_get_rates: the filter executed before get rate.
+* should_get_rates: the filter executed to check get rate.
+* pre.get.rates: the hook executed before getting rate. 
+* post.get.rates: the hook executed after getting rate.
 * @param array $filter (Required) The data for rate table
 * you can filter data base on rate id or rate plan id.
-* @return $response: array value of the rate data. A value of any type may be returned, If there  
-   is no rate in the database, boolean false is returned
 * $response array includes following attributes:
 * $response['rate_plan_id'] : the rate_plan_id of specific rate.
 * $response['base_rate'] : the base_rate for specific rate.
@@ -157,8 +155,8 @@ function get_rates(array $filter = null )
     $CI->load->model('Rate_model');
 
     // filters
-    $data = apply_filters( 'before_get_rate', $filter, $CI->input->post());
-    $should_get_rate = apply_filters( 'should_get_rate', $filter, $CI->input->post());
+    $data = apply_filters( 'before_get_rates', $filter, $CI->input->post());
+    $should_get_rate = apply_filters( 'should_get_rates', $filter, $CI->input->post());
 
     if (!$should_get_rate) {
         return;
@@ -169,12 +167,12 @@ function get_rates(array $filter = null )
     }
 
     // before getting rate 
-    do_action('pre.get.rate', $filter, $CI->input->post());
+    do_action('pre.get.rates', $filter, $CI->input->post());
 
     $get_rate_data = $CI->Rate_model->get_rates($filter);
 
     // after getting rate
-    do_action('post.get.rate', $filter, $filter, $CI->input->post());
+    do_action('post.get.rates', $filter, $CI->input->post());
 
     return $get_rate_data;
 

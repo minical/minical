@@ -20,7 +20,7 @@
 * $data['children_count'] : the children_count (integer) for specific booking.
 * $data['company_id'] : the company_id (integer) for specific booking.
 * $data['state'] : the state (integer) for specific booking (must required).
-* $data['booking_notes'] : the booking_notes for specific booking.
+* $data['booking_notes'] : the booking_notes (text) for specific booking.
 * $data['booking_customer_id'] : the booking_customer_id (integer) for specific booking.
 * $data['booked_by'] : the booked_by for specific booking.
 * $data['balance'] : the balance (integer) for specific booking.
@@ -65,7 +65,7 @@ function add_booking($booking)
         "adult_count" => isset($booking['adult_count']) ? $booking['adult_count'] : null ,
         "children_count" => isset($booking['children_count']) ? $booking['children_count'] : null,
         "state" => isset($booking['state']) ?  $booking['state'] : 0,
-        "booking_notes" => isset($booking['booking_notes']) ? $booking['booking_notes'] : 0,
+        "booking_notes" => isset($booking['booking_notes']) ? $booking['booking_notes'] : null,
         "company_id" => $company_id ,
         "booking_customer_id" => isset($booking['booking_customer_id']) ? $booking['booking_customer_id'] : null,
         "booked_by" => isset($booking['booked_by']) ? $booking['booked_by'] : 0,
@@ -119,24 +119,32 @@ function add_booking($booking)
 * Supported hooks:
 * before_get_booking: the filter executed before get booking
 * should_get_booking: the filter executed to check get booking.
-* pre.get.booking: the hook executed before getting booking. 
-* post.get.booking: the hook executed after getting booking.
-* @param string $booking_id (Required) The primary id for booking table
+* pre.get.booking: the hook executed before get booking. 
+* post.get.booking: the hook executed after get booking.
+* @param int $booking_id (Required) The primary id for booking table
 *
 * @return $response: array value of the booking data. A value of any type may be returned, If there  
    is no booking in the database, boolean false is returned
 * $response array includes following attributes:
-* $data['user_id'] : the user_id of specific payment.
-* $data['booking_id'] : the booking_id for specific payment .
-* $data['selling_date'] : the selling_date for specific payment.
-* $data['company_id'] : the company_id for specific payment.
-* $data['amount'] : the amount for specific payment.
-* $data['customer_id'] : the customer_id for specific payment.
-* $data['payment_type_id'] : the payment_type_id for specific payment.
-* $data['description'] : the description for specific payment.
-* $data['selected_gateway'] : the selected_gateway for specific payment.
-* $data['capture_payment_type'] : the capture_payment_type for specific payment.
-* and many more attributes for table booking.
+* $response['booking_type'] : the booking_type of specific booking.
+* $response['booking_from'] : the booking_from of specific booking.
+* $response['rate'] : the rate (integer) of specific booking.
+* $response['adult_count'] : the adult_count (integer) for specific booking (must required).
+* $response['children_count'] : the children_count (integer) for specific booking.
+* $response['company_id'] : the company_id (integer) for specific booking.
+* $response['state'] : the state (integer) for specific booking (must required).
+* $response['booking_notes'] : the booking_notes for specific booking.
+* $response['booking_customer_id'] : the booking_customer_id (integer) for specific booking.
+* $response['booked_by'] : the booked_by for specific booking.
+* $response['balance'] : the balance (integer) for specific booking.
+* $response['use_rate_plan'] : the use_rate_plan (integer) for specific booking (must required).
+* $response['rate_plan_id'] : the rate_plan_id (integer) for specific booking.
+* $response['charge_type_id'] : the charge_type_id (integer) for specific booking.
+* $response['source'] : the source for specific booking.
+* $response['is_ota_booking'] : the is_ota_booking (integer) for specific booking.
+* $response['pay_period'] : the pay_period (integer) for specific booking.
+* $response['room_type_id'] : the room_type_id (integer) for specific booking block.
+* and many more attributes from table booking and join with booking block and customer table.
 */
 
 function get_booking(int $booking_id = null )
@@ -163,7 +171,7 @@ function get_booking(int $booking_id = null )
     $get_booking_data = $CI->Booking_model->get_booking($booking_id);
 
     // after getting booking
-    do_action('post.get.booking', $booking_id, $booking_id, $CI->input->post());
+    do_action('post.get.booking', $booking_id, $CI->input->post());
      
     return $get_booking_data;
 
