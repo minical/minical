@@ -14,7 +14,7 @@ innGrid.deleteImage = function(thumbnail) {
 		dataType: "json",
 		success: function( data ) {
 			thumbnail.remove();
-			location.reload(); // temporary fix to refresh cache of the recently uploaded image
+			// location.reload(); // temporary fix to refresh cache of the recently uploaded image
 		}
 	});
 
@@ -24,8 +24,8 @@ innGrid.insertImage = function(imageGroupID, imageSrc) {
     var img = jQuery('<img/>', {
 	    src: imageSrc ? imageSrc : $(".croppedImg").prop("src"),
 	    class: 'thumbnail col-md-3 add-image',
-	    'data-toggle': "modal",
-	    'data-target': "#image_edit_modal"
+	    // 'data-toggle': "modal",
+	    // 'data-target': "#image_edit_modal"
 	});
     if ($('.logo-image-thumbnails').length) {
 		$('.logo-image-thumbnails').append(img);
@@ -42,6 +42,7 @@ var imgGroupID = null;
 $(function (){
 
 	$(document).on('click', '.add-image', function() {
+		$('#image_edit_modal').modal('show');
 
 		// A modal frame that will be used to crop & resize the uploaded image
 		// This is a bit of a hack job. 
@@ -97,7 +98,7 @@ $(function (){
 						var r = confirm(l("Are you use you want to delete this Image?"));
 						if (r == true) {
 						    innGrid.deleteImage(thumbnail);
-						    $('#image_edit_modal').modal('toggle'); // close bootstrap modal
+						    $('#image_edit_modal').modal('hide'); // close bootstrap modal
 						}
 					});
 
@@ -214,8 +215,8 @@ $(function (){
 					alert(l('some error occurred!'));
 				}
 
-				$('#image_edit_modal').modal('toggle'); // close bootstrap modal
-				location.reload(); // temporary fix to modal close issue
+				$('#image_edit_modal').modal('hide'); // close bootstrap modal
+				// location.reload(); // temporary fix to modal close issue
 			}
 		});
 	});

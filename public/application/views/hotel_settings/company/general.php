@@ -48,10 +48,7 @@
 			<div class="col-md-2">
 				<div class="position-relative form-group  image-group" id="<?php echo $company['logo_image_group_id']; ?>">
 					<div> <label for="examplelogo11" class=""><?php echo l('company_logo'); ?></label></div>
-					<div id="examplelogo11" class="btn btn-primary form-group add-image"
-					data-toggle="modal"
-					data-target="#image_edit_modal"
-					>
+					<div id="examplelogo11" class="btn btn-primary form-group add-image">
 					<?php echo l('add_image'); ?>
 				</div>
 			</div>
@@ -66,9 +63,7 @@
 						<img 
 						class="thumbnail col-md-3 add-image img-0345" 
 						src="<?php echo $image_url; ?>" 
-						title="<?php echo $image['filename']; ?>" 
-						data-toggle="modal" 
-						data-target="#image_edit_modal" 
+						title="<?php echo $image['filename']; ?>"
 						/>
 
 						<?php
