@@ -74,6 +74,14 @@ class Permission {
 			return false;
 	}
 
+    public function is_route_public($route_name)
+    {
+        if ($this->ci->Permission_model->is_route_public($route_name))
+            return true;
+        else
+            return false;
+    }
+
 	public function is_extension_active($extension_name, $company_id, $is_array = false)
 	{
 		if ($modules = $this->ci->Permission_model->is_extension_active($extension_name, $company_id, $is_array)) {
