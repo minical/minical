@@ -195,6 +195,9 @@ $(function (){
 		var formDataToUpload = new FormData();
 		formDataToUpload.append("file", blob);
 
+		var imageGroupID = $('.image-group').prop('id');
+		imgGroupID = imageGroupID;
+
 		$.ajax({
 			url: getBaseURL() + "image/upload_to_s3/"+imgGroupID,
 			data: formDataToUpload,// Add as Data the Previously create formData
