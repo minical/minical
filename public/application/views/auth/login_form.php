@@ -69,23 +69,23 @@ class="text-center"
         
         <br/>
         <br/>
-        <!-- <div style="font-size: 13px;"> 
+        <div style="font-size: 13px;"> 
             <?php echo "By logging in, you accept our "; ?>
 
             <?php if(isset($whitelabel_detail['terms_of_service']) && $whitelabel_detail['terms_of_service']) { ?>
 		        <a href="<?php echo $whitelabel_detail['terms_of_service']; ?>" target="_blank">Terms of Use</a>
 		    <?php } else { ?>
-		        <a href="<?php echo base_url();?>auth/terms_of_service" target="_blank">Terms Of Use</a>
+		        <a href="<?php echo base_url();?>auth/show_terms_of_service" target="_blank">Terms Of Use</a>
 		    <?php } ?>
 		    <?php echo " and " ?>
 
 		    <?php if(isset($whitelabel_detail['privacy_policy']) && $whitelabel_detail['privacy_policy']) { ?>
 		        <a href="<?php echo $whitelabel_detail['privacy_policy']; ?>" target="_blank">Privacy Policy</a>
 		    <?php } else { ?>
-		        <a href="<?php echo base_url();?>auth/privacy_policy" target="_blank">Privacy Policy</a>
+		        <a href="<?php echo base_url();?>auth/show_privacy_policy" target="_blank">Privacy Policy</a>
 		    <?php } ?>
 
-        </div> -->
+        </div>
 	<!--
 	<a href="https://www.google.com/intl/en/chrome/browser/" style="text-decoration:none;">
 		<img src="../images/chrome-logo.gif" /><br/>
