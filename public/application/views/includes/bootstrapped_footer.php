@@ -52,14 +52,14 @@
      if(isset($whitelabelinfo['terms_of_service']) && $whitelabelinfo['terms_of_service']) { ?>
         <a href="<?php echo $whitelabelinfo['terms_of_service']; ?>" target="_blank"><?php echo l('Terms Of Service', true); ?></a>
     <?php } else { ?>
-        <a href="<?php echo base_url();?>auth/terms_of_service" target="_blank"><?php echo l('Terms Of Service', true); ?></a>
+        <a href="<?php echo base_url();?>auth/show_terms_of_service" target="_blank"><?php echo l('Terms Of Service', true); ?></a>
     <?php } ?>
     <?php echo " and " ?>
 
     <?php if(isset($whitelabelinfo['privacy_policy']) && $whitelabelinfo['privacy_policy']) { ?>
         <a href="<?php echo $whitelabelinfo['privacy_policy']; ?>" target="_blank"><?php echo l('Privacy Policy', true); ?></a>
     <?php } else { ?>
-        <a href="<?php echo base_url();?>auth/privacy_policy" target="_blank"><?php echo l('Privacy Policy', true); ?></a>
+        <a href="<?php echo base_url();?>auth/show_privacy_policy" target="_blank"><?php echo l('Privacy Policy', true); ?></a>
     <?php } //}?>
 </div>
 

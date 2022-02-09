@@ -69,7 +69,7 @@ class="text-center"
         
         <br/>
         <br/>
-        <div style="font-size: 13px;"> 
+        <!-- <div style="font-size: 13px;"> 
             <?php echo "By logging in, you accept our "; ?>
 
             <?php if(isset($whitelabel_detail['terms_of_service']) && $whitelabel_detail['terms_of_service']) { ?>
@@ -85,7 +85,7 @@ class="text-center"
 		        <a href="<?php echo base_url();?>auth/privacy_policy" target="_blank">Privacy Policy</a>
 		    <?php } ?>
 
-        </div>
+        </div> -->
 	<!--
 	<a href="https://www.google.com/intl/en/chrome/browser/" style="text-decoration:none;">
 		<img src="../images/chrome-logo.gif" /><br/>
