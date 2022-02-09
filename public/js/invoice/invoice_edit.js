@@ -1941,7 +1941,7 @@ function _populateHistoryModal(logs) {
             }).append(
                 $("<div/>", {
                     class: "panel-body",
-                    html: log.date_time + " by " + log.first_name + " " + log.last_name + " - " + log.log + log_amount
+                    html: log.date_time + " "+l('by')+" " + (log.user_id == '0' && !log.first_name && !log.last_name && !log.email ? l('System') : (log.user_id == '-1' ? l('Guest') : (log.first_name + " " + log.last_name))) + " - " + log.log + log_amount
                 })
             )
         )
