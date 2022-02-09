@@ -141,7 +141,7 @@
 			//Load Menu
 			
 			$company_id = $this->session->userdata('current_company_id');
-
+           
 			$data['my_companies'] = $this->Company_model->get_companies($this->user_id);
 
 			$language = $this->session->userdata('language');
@@ -167,17 +167,25 @@
 
 		
 				<div class="app-main">
-					
+					<?php if($company_id) {?>
+					<div class="openbtn">
+            	     <button type="button" id="hamburger-02" class="hamburger hamburger--elastic desktop-toggle-nav">
+                       <i class="fa fa-bars" style="font-size: 26px;color: #3f6ad8;"></i>
+            	     </button>
+        		      </div>
+        		      <?php }?>
 					<div class="app-header__mobile-menu">
 					<div>
                     	<button type="button" id="hamburger-01" class="hamburger hamburger--elastic mobile-toggle-nav">
                         <i class="fa fa-bars" style="font-size: 26px;color: #3f6ad8;"></i>
                     	</button>
                 		</div>
+
             		</div>
+            	   
 					<?php if(isset($menu_on) && $menu_on && current_url() != $protocol . $_SERVER['HTTP_HOST'].'/auth/register' && current_url() != $protocol . $_SERVER['HTTP_HOST'].'/auth/login' && current_url() != $protocol . $_SERVER['HTTP_HOST'].'/auth/forgot_password'){?>
 						<div  >
-
+                            
 							<?php 
 
 							$this->load->view('includes/bootstrapped_sidebar');
@@ -202,6 +210,7 @@
                         <div class="app_outer main" > <div class="app_inner"><?php }?>
                             <?php } else { ?>
                             <div class="main" >
+                            	
                                 <div class="">
                                     <?php }
                                     $this->load->view($main_content);
