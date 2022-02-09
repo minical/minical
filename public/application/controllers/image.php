@@ -35,8 +35,8 @@ class Image extends MY_Controller
 			}
 			else
 			{
-                                $filename = $_FILES["img"]["tmp_name"];
-                                list($width, $height) = getimagesize( $filename );
+                $filename = $_FILES["img"]["tmp_name"];
+                list($width, $height) = getimagesize( $filename );
 				
 				$this->_upload_to_s3($_FILES["img"]["tmp_name"], "temp_image.".$extension);
 				$response = array(

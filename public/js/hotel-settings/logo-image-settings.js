@@ -180,7 +180,6 @@ $(function (){
 
 	$(document).on('click', '#savebutton', function () {
 		var ImageURL = cropper.getCroppedImageSrc();
-		console.log('img', ImageURL);
 		$('#image_edit_modal_body').html('Processing...');
 
 		var block = ImageURL.split(";");

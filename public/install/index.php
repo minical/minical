@@ -24,13 +24,13 @@ $mysqli_connection = @mysqli_connect("$dbHost", "$dbUser", "$dbPass", "$dbName")
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Minical Installation</title>
+    <title>Minical Installation Wizard</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
 </head>
 <body>
 <div class="container">
@@ -69,7 +69,7 @@ $mysqli_connection = @mysqli_connect("$dbHost", "$dbUser", "$dbPass", "$dbName")
                                     $check = false;
                                     echo '<p class="error">Not compatible with this installed PHP version</p>';
                                 } else {
-                                    echo '<i class="fas fa-check-circle" style="font-size:24px;color:green"></i>';
+                                    echo '<i class="fa fa-check-circle" style="font-size:24px;color:green"></i>';
                                 }
                                 ?>
                             </td>
@@ -96,7 +96,7 @@ $mysqli_connection = @mysqli_connect("$dbHost", "$dbUser", "$dbPass", "$dbName")
 //                                    $check = false;
 //                                    echo '<p class="error">Not compatible with this version of MySql</p>';
 //                                } else {
-//                                    echo '<i class="fas fa-check-circle" style="font-size:24px;color:green"></i>';
+//                                    echo '<i class="fa fa-check-circle" style="font-size:24px;color:green"></i>';
 //                                }
                                 ?>
                             </td>
@@ -105,7 +105,7 @@ $mysqli_connection = @mysqli_connect("$dbHost", "$dbUser", "$dbPass", "$dbName")
                             <td>Server</td>
                             <td><?php print_r($_SERVER['SERVER_NAME']); ?></td>
                             <td>-</td>
-                            <td><i class="fas fa-check-circle" style="font-size:24px;color:green"></i></td>
+                            <td><i class="fa fa-check-circle" style="font-size:24px;color:green"></i></td>
                         </tr> -->
                         <tr>
                             <td>Composer</td>
@@ -117,7 +117,7 @@ $mysqli_connection = @mysqli_connect("$dbHost", "$dbUser", "$dbPass", "$dbName")
                                     $check = false;
                                     echo '<p class="error">composer is not installed</p>';
                                 } else {
-                                    echo '<i class="fas fa-check-circle" style="font-size:24px;color:green"></i>';
+                                    echo '<i class="fa fa-check-circle" style="font-size:24px;color:green"></i>';
                                 }
                                 ?>
                             </td>
@@ -131,7 +131,7 @@ $mysqli_connection = @mysqli_connect("$dbHost", "$dbUser", "$dbPass", "$dbName")
                                     $check = false;
                                     echo '<p class="error">.env file does not exist</p>';
                                 } else {
-                                    echo '<i class="fas fa-check-circle" style="font-size:24px;color:green"></i>';
+                                    echo '<i class="fa fa-check-circle" style="font-size:24px;color:green"></i>';
                                 }
                                 ?></td>
                         </tr>
@@ -159,7 +159,7 @@ $mysqli_connection = @mysqli_connect("$dbHost", "$dbUser", "$dbPass", "$dbName")
                                 </td>
                                 <td><?php
                                     if (isset($dbHost) && $dbHost != null) {
-                                        echo '<i class="fas fa-check-circle" style="font-size:24px;color:green"></i>';
+                                        echo '<i class="fa fa-check-circle" style="font-size:24px;color:green"></i>';
                                     } else {
                                         $check = false;
                                         echo '<p class="error">Database host name is not configure</p>';
@@ -178,7 +178,7 @@ $mysqli_connection = @mysqli_connect("$dbHost", "$dbUser", "$dbPass", "$dbName")
                                 <td>Database User Name</td>
                                 <td><?php
                                     if (isset($dbUser) && $dbUser != null) {
-                                        echo '<i class="fas fa-check-circle" style="font-size:24px;color:green"></i>';
+                                        echo '<i class="fa fa-check-circle" style="font-size:24px;color:green"></i>';
                                     } else {
                                         $check = false;
                                         echo '<p class="error">Database user name is not configured</p>';
@@ -197,7 +197,7 @@ $mysqli_connection = @mysqli_connect("$dbHost", "$dbUser", "$dbPass", "$dbName")
                                 <td>Database User Password</td>
                                 <td><?php
                                     // if (isset($dbPass) && $dbPass != null) {
-                                    echo '<i class="fas fa-check-circle" style="font-size:24px;color:green"></i>';
+                                    echo '<i class="fa fa-check-circle" style="font-size:24px;color:green"></i>';
                                     // }else{
                                     //     echo "Database password name is not configured";
                                     // }
@@ -215,7 +215,7 @@ $mysqli_connection = @mysqli_connect("$dbHost", "$dbUser", "$dbPass", "$dbName")
                                 <td>Database Name</td>
                                 <td><?php
                                     if (isset($dbName) && $dbName != null) {
-                                        echo '<i class="fas fa-check-circle" style="font-size:24px;color:green"></i>';
+                                        echo '<i class="fa fa-check-circle" style="font-size:24px;color:green"></i>';
                                     } else {
                                         $check = false;
                                         echo '<p class="error">Database name is not configured</p>';
@@ -236,7 +236,7 @@ $mysqli_connection = @mysqli_connect("$dbHost", "$dbUser", "$dbPass", "$dbName")
                                 </td>
                                 <td><?php
                                     if (isset($projectUrl) && $projectUrl !== '') {
-                                        echo '<i class="fas fa-check-circle" style="font-size:24px;color:green"></i>';
+                                        echo '<i class="fa fa-check-circle" style="font-size:24px;color:green"></i>';
                                     } else {
                                         $check = false;
                                         echo '<p class="error">Project URL is not configured</p>';
@@ -257,7 +257,7 @@ $mysqli_connection = @mysqli_connect("$dbHost", "$dbUser", "$dbPass", "$dbName")
                                 </td>
                                 <td><?php
                                     if (isset($apiUrl) && $apiUrl !== '') {
-                                        echo '<i class="fas fa-check-circle" style="font-size:24px;color:green"></i>';
+                                        echo '<i class="fa fa-check-circle" style="font-size:24px;color:green"></i>';
                                     } else {
                                         $check = false;
                                         echo '<p class="error">API URL is not configured</p>';
@@ -276,7 +276,7 @@ $mysqli_connection = @mysqli_connect("$dbHost", "$dbUser", "$dbPass", "$dbName")
                                 <td>Set it to 'production' or 'development'</td>
                                 <td><?php
                                     if (isset($environment) && $environment !== '') {
-                                        echo '<i class="fas fa-check-circle" style="font-size:24px;color:green"></i>';
+                                        echo '<i class="fa fa-check-circle" style="font-size:24px;color:green"></i>';
                                     } else {
                                         $check = false;
                                         echo '<p class="error">ENVIRONMENT is not configured</p>';
@@ -326,7 +326,7 @@ $mysqli_connection = @mysqli_connect("$dbHost", "$dbUser", "$dbPass", "$dbName")
                                 if (!$mysqli_connection) {
                                     echo '<p class="error database-connection-status" style="display:none;">' . mysqli_connect_error() . '</p>';
                                 } else {
-                                    echo '<i class="database-connection-status-icon fas fa-check-circle" style="font-size:24px;color:green;display:none;"></i>';
+                                    echo '<i class="database-connection-status-icon fa fa-check-circle" style="font-size:24px;color:green;display:none;"></i>';
                                 }
                                 ?>
                             </td>
@@ -363,7 +363,7 @@ $mysqli_connection = @mysqli_connect("$dbHost", "$dbUser", "$dbPass", "$dbName")
                                     $mysqli_compatible = false;
                                     $mysqli_connection = false;
                                 } else {
-                                    echo '<i class="database-connection-status-icon fas fa-check-circle" style="display:none;font-size:24px;color:green"></i>';
+                                    echo '<i class="database-connection-status-icon fa fa-check-circle" style="display:none;font-size:24px;color:green"></i>';
                                 }
                                 ?>
                             </td>
@@ -386,7 +386,7 @@ $mysqli_connection = @mysqli_connect("$dbHost", "$dbUser", "$dbPass", "$dbName")
                                 ?>
                                 <!-- <p class="error db_schema_error">Database schema not installed due to "Connection Failed".</p> -->
                                 <p class="error db_schema_pending"></p>
-                                <i class="fas fa-check-circle install_status" style="font-size:24px;color:green"></i>
+                                <i class="fa fa-check-circle install_status" style="font-size:24px;color:green"></i>
                             </td>
                         </tr>
                         <tr>
@@ -408,7 +408,7 @@ $mysqli_connection = @mysqli_connect("$dbHost", "$dbUser", "$dbPass", "$dbName")
                                 ?>
                                 <p class="error db_seeding_error">Database seeding failed.</p>
                                 <p class="error db_seeding_pending"></p>
-                                <i class="fas fa-check-circle db_seeding_status" style="font-size:24px;color:green"></i>
+                                <i class="fa fa-check-circle db_seeding_status" style="font-size:24px;color:green"></i>
                             </td>
                         </tr>
                         <tr>
@@ -429,7 +429,7 @@ $mysqli_connection = @mysqli_connect("$dbHost", "$dbUser", "$dbPass", "$dbName")
                                     echo '<p class="error">Database installation failed.</p>';
                                 }
                                 ?>
-                                <i class="fas fa-check-circle db_verify" style="font-size:24px;color:green"></i>
+                                <i class="fa fa-check-circle db_verify" style="font-size:24px;color:green"></i>
                                 <p class="db_verify_error error"></p>
                             </td>
                         </tr>
