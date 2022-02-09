@@ -138,11 +138,23 @@ $('body').on('click', '.btn_calendar_view_overview', function () {
 	$('#overview_calendar').show();
 	$('#calendar').hide();
 	innGrid.isOverviewCalendar = true;
+	// innGrid.inventoryData();
 	innGrid.buildOverViewCalendar();
 	$('.btn_calendar_view').removeClass('active');
 	$('.btn_calendar_view.btn_calendar_view_overview').addClass('active');
 
 	window.history.pushState({calendar: 'booking-calendar-state'},"",getBaseURL()+'booking/overview')
+});
+
+$('body').on('click', '.fc-inventoryCalendar-button', function () {
+	$('#overview_calendar').hide();
+	$('#calendar').hide();
+	$('#inventory_rate_calendar').show();
+	innGrid.isInventoryCalendar = true;
+	innGrid.buildInventoryRateCalendar();
+	$('.btn_calendar_view').removeClass('active');
+	$('.fc-inventoryCalendar-button').addClass('active');
+	window.history.pushState({ calendar: 'booking-calendar-state' }, "", getBaseURL() + 'booking')
 });
 
 window.onpopstate = function(e){

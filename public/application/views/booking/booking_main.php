@@ -81,6 +81,7 @@
 <!--<input name="create_new_booking" type="hidden" value="<?php //echo l('create_new_booking'); ?>" />-->
 <div id="calendar" class="tab_btn_calendar"><?php echo l('Loading', true); ?>...</div>
 <div id="overview_calendar" class="tab_btn_calendar"></div>
+<div id="inventoryRateCalendar"></div>
 <div id="notification-drag-box">
     <p><?php echo l('from'); ?>: <span class="from"></span></p>
 	<p><?php echo l('to'); ?>: <span class="to"></span></p>

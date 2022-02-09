@@ -14,6 +14,7 @@ class Room extends MY_Controller
 		$this->load->model('Date_range_model');
         $this->load->model('Date_color_model');
         $this->load->model('Employee_log_model');
+		$this->load->model('Rate_plan_model');
         
 		$global_data['menu_on'] = true;			
 		$global_data['submenu'] = 'includes/submenu.php';
@@ -226,6 +227,51 @@ class Room extends MY_Controller
 		echo json_encode($res, true);
 	}
        
+	// net availability
+	function get_roomtype_availability_with_rates()
+	{
+			$channel = sqli_clean($this->security->xss_clean($this->input->get('channel')));
+			$channel_key = sqli_clean($this->security->xss_clean($this->input->get('channel_key')));
+			$start_date = sqli_clean($this->security->xss_clean($this->input->get('start_date')));
+			$end_date = sqli_clean($this->security->xss_clean($this->input->get('end_date')));
+			$filter_can_be_sold_online = $this->input->get('filter_can_be_sold_online') == 'true' ? true : false;
+			$res = $this->Room_type_model->get_room_type_availability($this->company_id, $channel, $start_date, $end_date, null, null, $filter_can_be_sold_online, null, true, true, true, true, null, $channel_key);
+			$data_ar = array();
+
+			$resource = array();
+			$ratePlanData = array();
+			$i = 0;
+			foreach($res as $roomType){
+				$res[$roomType['id']]['rate_plan_name'][] = 'AVL';
+				$ratePlanData[] = $this->Rate_plan_model->get_rate_plans_by_room_type_id($roomType['id']);
+				foreach($ratePlanData as $ratePlans){
+					foreach($ratePlans as $rate){
+						if($rate['room_type_id'] == $roomType['id']){
+							// $res[$roomType['id']]['rate_plan_name'][] = 'AVL';
+							$res[$roomType['id']]['rate_plan_name'][] = $rate['rate_plan_name'];
+						}
+						$rateData[] = $this->Rate_model->get_daily_rates($rate['rate_plan_id'],$start_date,$end_date,$roomType['id']);
+						// if($rate['room_type_id'] == $rateData['id']){
+						$res[$roomType['id']]['rates'] = $rateData;
+						// }					
+					}				
+				}
+				
+			}
+			// prx($res);
+			$isThresholdEnabled = true;
+			$isThresholdEnabled = apply_filters('is_threshold_enabled', array('ota_key' => $channel_key, 'isThresholdEnabled' => $isThresholdEnabled));
+	
+			if(!empty($res)){
+				foreach($res as $key => $r){
+					$result = $this->Room_model->get_room_count_by_room_type_id($r['id']); //  get rooms in particular room type
+					$res[$key]['room_count'] = $result['room_count'];
+					$res[$key]['is_threshold_enabled'] = $isThresholdEnabled;
+				}
+			}
+			echo json_encode($res, true);
+	}
+
     function get_rooms_available_AJAX()
 	{
 		$channel = sqli_clean($this->security->xss_clean($this->input->get('channel', TRUE)));

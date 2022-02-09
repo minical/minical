@@ -1,8 +1,12 @@
 // It all starts here!
+
+var resource = new Array();
+var eventData = new Array();
 $(function () {
     $('#overview_calendar').hide();
     $('#calendar').show();
     innGrid.getRooms(innGrid.buildCalendar);
+    innGrid.inventoryData();
 
     $("#room-edit-modal")
         .modal({show: false})
@@ -115,6 +119,455 @@ innGrid.getRooms = function (callback) {
     });
 }
 
+innGrid.inventoryData = function () {
+
+    var sellingDate = moment($("#sellingDate").val()).toDate();
+
+    var width = $("body").width();
+    var daysBeforeToday = Math.round(width / 400);
+    var daysAfterToday = Math.round(width / 60);
+
+    var calStartDate = moment(sellingDate).subtract(daysBeforeToday, 'days').toDate();
+    var calEndDate = moment(sellingDate).add(daysAfterToday, 'days').toDate();
+
+    var channel = -1;
+    var start_date = calStartDate.getFullYear() + '-' + ("0" + (calStartDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (calStartDate.getDate())).slice(-2);
+    var end_date = calEndDate.getFullYear() + '-' + ("0" + (calEndDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (calEndDate.getDate())).slice(-2);
+    var param = {
+        channel: channel,
+        start_date: start_date,
+        end_date: end_date,
+        filter_can_be_sold_online: false
+    };
+
+    $.ajax({
+        type: "GET",
+        url: getBaseURL() + 'room/get_roomtype_availability_with_rates',
+        dataType: "json",
+        data: param,
+        success: function (data) {
+            console.log(data);
+            $.each(data, function (index, element) {
+                var reference_id;
+                var rateGroup;
+                $.each(element.rate_plan_name, function (resource_index, resource_el) {
+                    reference_id = index + '_' + resource_index;
+
+                    if (resource_el != 'AVL') {
+                        resource.push({
+                            "id": index + '_' + resource_index,//4_0
+                            "room": element.name,
+                            "children": [
+                                {
+                                    id: 'CTA_' + index + '_' + resource_index,
+                                    title: 'Closed To Arrival'
+                                }, {
+                                    id: 'CTD_' + index + '_' + resource_index,
+                                    title: 'Closed To Departure'
+                                }, {
+                                    id: 'MXS_' + index + '_' + resource_index,
+                                    title: 'Max Stay'
+                                }, {
+                                    id: 'MSA_' + index + '_' + resource_index,
+                                    title: 'Min Stay Arrival'
+                                }, {
+                                    id: 'SS_' + index + '_' + resource_index,
+                                    title: 'Sell Online'
+                                }, {
+                                    id: 'AR1_' + index + '_' + resource_index,
+                                    title: 'Adult 1 Rate'
+                                }, {
+                                    id: 'AR2_' + index + '_' + resource_index,
+                                    title: 'Adult 2 Rate'
+                                }, {
+                                    id: 'AR3_' + index + '_' + resource_index,
+                                    title: 'Adult 3 Rate'
+                                }, {
+                                    id: 'AR4_' + index + '_' + resource_index,
+                                    title: 'Adult 4 Rate'
+                                }, {
+                                    id: 'BSR_' + index + '_' + resource_index,
+                                    title: 'Base Rate'
+                                }, {
+                                    id: 'AAR_' + index + '_' + resource_index,
+                                    title: 'Additional Adult Rate'
+                                }, {
+                                    id: 'ACR_' + index + '_' + resource_index,
+                                    title: 'Additional Child Rate'
+                                }
+                            ],
+                            "title": resource_el,
+                        });
+                    } else {
+                        resource.push({
+                            "id": index + '_' + resource_index,//4_0
+                            "room": element.name,
+                            "title": resource_el,
+                        });
+                    }
+
+                    // resource creation 
+
+                    // rate event data
+                    if (resource_el !== 'AVL') {
+                        $.each(element.rates, function (i, e) {
+                            $.each(e, function (rate_index, rate_el) {
+                                if (resource_el == rate_el.rate_plan_name) {
+
+                                    if (rate_el.adult_1_rate) {
+                                        var el_backgroundColor = '#f1f8ff';
+                                    } else {
+                                        var el_backgroundColor = '#ffccc7';
+                                    }
+                                    // rate event data 
+                                    eventData.push({
+                                        resourceId: reference_id,
+                                        title: rate_el.adult_1_rate ? rate_el.adult_1_rate : 0,
+                                        start: rate_el.date,
+                                        backgroundColor: el_backgroundColor,
+                                        classNames: ['event_height'],
+                                        textColor: "black",
+                                        eventDisplay: 'block',
+                                    });
+                                    eventData.push({
+                                        resourceId: 'CTA_' + reference_id,
+                                        title: rate_el.closed_to_arrival ? rate_el.closed_to_arrival : '0',
+                                        start: rate_el.date,
+                                        textColor: "black",
+                                        eventDisplay: 'block',
+                                    });
+                                    eventData.push({
+                                        resourceId: 'CTD_' + reference_id,
+                                        title: rate_el.closed_to_departure ? rate_el.closed_to_departure : '0',
+                                        start: rate_el.date,
+                                        textColor: "black",
+                                        eventDisplay: 'block',
+                                    });
+                                    eventData.push({
+                                        resourceId: 'MXS_' + reference_id,
+                                        title: rate_el.maximum_length_of_stay ? rate_el.maximum_length_of_stay : 'N/A',
+                                        start: rate_el.date,
+                                        textColor: "black",
+                                        eventDisplay: 'block',
+                                    });
+                                    eventData.push({
+                                        resourceId: 'MSA_' + reference_id,
+                                        title: rate_el.minimum_length_of_stay ? rate_el.minimum_length_of_stay : 'N/A',
+                                        start: rate_el.date,
+                                        textColor: "black",
+                                        eventDisplay: 'block',
+                                    });
+                                    eventData.push({
+                                        resourceId: 'SS_' + reference_id,
+                                        title: element.can_be_sold_online ? 'Yes' : 'NO',
+                                        start: rate_el.date,
+                                        textColor: "black",
+                                        eventDisplay: 'block',
+                                    });
+                                    eventData.push({
+                                        resourceId: 'AR1_' + reference_id,
+                                        title: rate_el.adult_1_rate ? rate_el.adult_1_rate : '0',
+                                        start: rate_el.date,
+                                        textColor: "black",
+                                        eventDisplay: 'block',
+                                    });
+                                    eventData.push({
+                                        resourceId: 'AR2_' + reference_id,
+                                        title: rate_el.adult_2_rate ? rate_el.adult_2_rate : '0',
+                                        start: rate_el.date,
+                                        textColor: "black",
+                                        eventDisplay: 'block',
+                                    });
+                                    eventData.push({
+                                        resourceId: 'AR3_' + reference_id,
+                                        title: rate_el.adult_3_rate ? rate_el.adult_3_rate : '0',
+                                        start: rate_el.date,
+                                        textColor: "black",
+                                        eventDisplay: 'block',
+                                    });
+                                    eventData.push({
+                                        resourceId: 'AR4_' + reference_id,
+                                        title: rate_el.adult_4_rate ? rate_el.adult_4_rate : '0',
+                                        start: rate_el.date,
+                                        textColor: "black",
+                                        eventDisplay: 'block',
+                                    });
+                                    eventData.push({
+                                        resourceId: 'BSR_' + reference_id,
+                                        title: rate_el.base_rate ? rate_el.base_rate : '0',
+                                        start: rate_el.date,
+                                        textColor: "black",
+                                        eventDisplay: 'block',
+                                    });
+                                    eventData.push({
+                                        resourceId: 'AAR_' + reference_id,
+                                        title: rate_el.additional_adult_rate ? rate_el.additional_adult_rate : '0',
+                                        start: rate_el.date,
+                                        textColor: "black",
+                                        eventDisplay: 'block',
+                                    });
+                                    eventData.push({
+                                        resourceId: 'ACR_' + reference_id,
+                                        title: rate_el.additional_child_rate ? rate_el.additional_child_rate : '0',
+                                        start: rate_el.date,
+                                        textColor: "black",
+                                        eventDisplay: 'block',
+                                    });
+                                }
+                            });
+                        })
+                    }
+
+                    // availability data event
+                    if (resource_el == 'AVL') {
+                        $.each(element.availability, function (avl_index, avl_el) {
+
+                            const firstDate = new Date(avl_el.date_start);
+                            const secondDate = new Date(avl_el.date_end);
+                            for (var d = firstDate; d < secondDate; d.setDate(d.getDate() + 1)) {
+                                let date = d.getFullYear() + '-' + ("0" + (d.getMonth() + 1)).slice(-2) + '-' + ("0" + (d.getDate())).slice(-2);
+                                eventData.push({
+                                    resourceId: reference_id,
+                                    title: avl_el.availability ? avl_el.availability : 'N/A',
+                                    start: date,
+                                    // backgroundColor: 'white',
+                                    classNames: ['event_height'],
+                                    textColor: "black",
+                                    eventDisplay: 'block'
+                                });
+                            }
+                        })
+                    }
+                })
+
+            });
+        },
+        error: function (error) {
+            console.log(error)
+        }
+    });
+    setTimeout(innGrid.buildInventoryRateCalendar, 20000);
+
+    return resource;
+}
+
+//buildInventoryRateCalendar
+innGrid.buildInventoryRateCalendar = function () {
+
+    $('#inventoryRateCalendar').html('');
+    var sellingDate = moment($("#sellingDate").val()).toDate();
+
+    var width = $("body").width();
+    var daysBeforeToday = Math.round(width / 400);
+    var daysAfterToday = Math.round(width / 60);
+
+    var calStartDate = moment(sellingDate).subtract(daysBeforeToday, 'days').toDate();
+    var calEndDate = moment(sellingDate).add(daysAfterToday - 1, 'days').toDate();
+
+    var calResourceAreaWidth = localStorage.getItem('resourceAreaWidth');
+    var currentLanguageCode = 'en';
+
+    if (innGrid.featureSettings.cuurentLanguage == 'korean') {
+        currentLanguageCode = 'ko';
+    } else if (innGrid.featureSettings.cuurentLanguage == 'portuguese') {
+        currentLanguageCode = 'pt';
+    } else if (innGrid.featureSettings.cuurentLanguage == 'spanish') {
+        currentLanguageCode = 'es';
+    } else if (innGrid.featureSettings.cuurentLanguage == 'vietnamese') {
+        currentLanguageCode = 'vi';
+    } else if (innGrid.featureSettings.cuurentLanguage == 'french') {
+        currentLanguageCode = 'fr';
+    }
+
+    var calendar_options = {
+        editable: false,
+        contentHeight: 'auto',
+        lazyFetching: true,
+        aspectRatio: 1,
+        locale: currentLanguageCode,
+        plugins: ['resourceTimeline', 'interaction'],
+        initialView: 'resourceTimeline',
+        resourceGroupField: ['room'],
+        resourceColumns: [
+            {
+                group: true,
+                labelText: 'Room Type',
+                field: 'room',
+                headerContent: 'room'
+            },
+            {
+                labelText: 'Title',
+                field: 'title',
+                headerContent: 'title'
+            }
+        ],
+        resources: resource,
+        events: eventData,
+        resourceOrder: 'sort_order, name',
+        selectable: true,
+        selectHelper: true,
+        handleWindowResize: true,
+
+        resourceAreaWidth: calResourceAreaWidth ? calResourceAreaWidth + 'px' : '15%',
+        scrollTime: '00:00',
+        header: {
+            left: (innGrid.enableHourlyBooking ? 'inventoryCalendar,customCreateBooking, customDayView,customMonthView, prev,customToday,next,customRestrictions' : 'inventoryCalendar, customCreateBooking, prev,customToday,next, customRestrictions'),
+            right: null,
+            center: null
+        },
+        buttonText: {
+            prev: ' ◄ ',
+            next: ' ► '
+        },
+
+        defaultView: 'customMonthView',
+        views: {
+            customMonthView: {
+                type: 'resourceTimeline', /* 'basicWeek' ?? */
+                duration: { weeks: 2 },
+                slotDuration: '24:00:00',
+                buttonText: l('Monthly View', true),
+                columnHeader: false,
+                slotLabelFormat: [
+                    { month: 'long', year: 'numeric' }, // top level of text
+                    { day: 'numeric' },
+                    { weekday: 'short' },
+                ],
+            }
+        },
+        customButtons: {
+            // Add custom datepicker
+            customToday: {
+                text: l('Today', true),
+                click: function (e) {
+                    if (innGrid.calendar.view.type === "customMonthView") {
+                        if (innGrid.calendar.view.activeStart < calStartDate && calStartDate < innGrid.calendar.view.activeEnd) {
+                            // date is between start and end hence gotodate won't work, so move calendar to future date and switch back to new date
+                            innGrid.calendar.gotoDate(innGrid.calendar.view.activeEnd);
+                            innGrid.calendar.gotoDate(calStartDate);
+                        } else if (innGrid.calendar.view.activeStart == calStartDate) {
+                            // do nothing as date is already set
+                        } else {
+                            innGrid.calendar.gotoDate(calStartDate);
+                        }
+                    } else {
+                        innGrid.calendar.gotoDate(sellingDate);
+                    }
+                }
+            },
+            customCreateBooking: {
+                text: l('Create New Booking', true),
+                click: function () {
+                    if (typeof $(this).openBookingModal !== 'undefined' && $.isFunction($(this).openBookingModal)) {
+                        $(this).openBookingModal();
+                    }
+                }
+            },
+            // customRestrictions: {
+            //     '<select name="cars" id="cars"><option value="volvo">Volvo</option><option value="saab">Saab</option><option value="mercedes">Mercedes</option></select>'
+            //     // text: l('All Restrictions', true),
+            //     // options: ['ok', "not"]
+
+            // },
+            customRestrictions: {
+                text: l('All Restrictions', true) + ' ▼',
+                click: function () {
+
+                    $("#hidden-start-date-picker").datepicker({
+                        dateFormat: 'yy-mm-dd',
+                        onSelect: function (date, startDatePicker) {
+                            date = new Date(date);
+                            if (innGrid.calendar.view.type === "customMonthView" && innGrid.calendar.view.activeStart < date && date < innGrid.calendar.view.activeEnd) {
+                                // date is between start and end hence gotodate won't work, so move calendar to future date and switch back to new date
+                                innGrid.calendar.gotoDate(innGrid.calendar.view.activeEnd);
+                                innGrid.calendar.gotoDate(date);
+                            } else if (innGrid.calendar.view.activeStart == date) {
+                                // do nothing as date is already set
+                            } else {
+                                innGrid.calendar.gotoDate(date);
+                            }
+                        },
+                        beforeShow: function (event, ui) {
+                            setTimeout(function () {
+                                ui.dpDiv.css({ left: left, top: top });
+                            }, 5);
+                        }
+                    });
+                    $("#hidden-start-date-picker").datepicker("setDate", calStartDate);
+                }
+            },
+        },
+        viewSkeletonRender: function () {
+            if (innGrid.calendar.view.type === "customMonthView") {
+                innGrid.calendar.gotoDate(calStartDate);
+            } else {
+                innGrid.calendar.gotoDate(sellingDate);
+            }
+
+            setTimeout(function () {
+                var date = moment(innGrid.calendar.getDate()).format('YYYY-MM-DD');
+                $('.fc-customStartDatePicker-button').text(l('Start date', true) + ': ' + date + ' ▼');
+                $("#hidden-start-date-picker").val(date);
+
+                addCalendarHeaderFilters();
+            }, 500);
+
+            if ($(".fc-customMonthView-view > table, .fc-customDayView-view > table").length) {
+                $(".fc-customMonthView-view > table, .fc-customDayView-view > table").stickyTableHeaders();
+            }
+        },
+        datesRender: function (renderInfo) {
+            var date = moment(innGrid.calendar.getDate()).format('YYYY-MM-DD');
+            $('.fc-customStartDatePicker-button').text(l('Start date', true) + ': ' + date + ' ▼');
+            $("#hidden-start-date-picker").val(date);
+
+            addCalendarHeaderFilters();
+        },
+        dayRender: function (info) {
+            if (innGrid.color && innGrid.color.length) {
+                for (var i = 0; i < innGrid.color.length; i++) {
+                    var date = moment(info.date).format('YYYY-MM-DD');
+                    if (date >= innGrid.color[i]['start_date'] && date <= innGrid.color[i]['end_date']) {
+                        if ($(info.el).hasClass("fc-today") && info.view.type === "customMonthView") {
+                            var gradiant_color = 'linear-gradient(to left, #FFFF00,#FFFF00 50%,' + innGrid.color[i]['color_code'] + ' 50%)';
+                            info.el.style.background = gradiant_color;
+                            $('.fc-time-area.fc-widget-header').find('tr:not(:first-child)').find('th.fc-widget-header[data-date="' + date + '"]').css("background", gradiant_color);
+                        } else {
+                            info.el.style.backgroundColor = innGrid.color[i]['color_code'];
+                            $('.fc-time-area.fc-widget-header').find('tr:not(:first-child)').find('th.fc-widget-header[data-date="' + date + '"]').css("background-color", innGrid.color[i]['color_code']);
+                        }
+                        break;
+                    }
+                }
+            }
+        },
+
+        dragOpacity: .5,
+        dragRevertDuration: 100,
+        selectMinDistance: 3,
+        eventResizableFromStart: false,
+        selectOverlap: true,
+        defaultDate: calStartDate,
+        now: sellingDate,
+
+        // eventClick: innGrid.bookingEventClicked,
+        // eventResize: innGrid.bookingResized,
+        // eventDrop: occupacyMoved,
+    };
+
+    console.log(calendar_options);
+
+    var calendarEl = document.getElementById('inventoryRateCalendar');
+
+    innGrid.calendar = new FullCalendar.Calendar(calendarEl, calendar_options);
+
+    innGrid.calendar.render();
+
+    if (innGrid.hasBookingPermission == '0') {
+        $('.fc-customCreateBooking-button').prop('disabled', true);
+    }
+}
+
 //Creates calendar
 innGrid.buildCalendar = function (rooms) {
 
@@ -171,7 +624,7 @@ innGrid.buildCalendar = function (rooms) {
         contentHeight: "auto",
 
         header: {
-            left: (innGrid.enableHourlyBooking ? 'customCreateBooking, customDayView,customMonthView, prev,customToday,next, customStartDatePicker' : 'customCreateBooking, prev,customToday,next, customStartDatePicker'),
+            left: (innGrid.enableHourlyBooking ? 'inventoryCalendar,customCreateBooking, customDayView,customMonthView, prev,customToday,next, customStartDatePicker' : 'inventoryCalendar, customCreateBooking, prev,customToday,next, customStartDatePicker'),
             right: null,
             center: null
         },
@@ -269,6 +722,15 @@ innGrid.buildCalendar = function (rooms) {
                         $(this).openBookingModal();
                     }
                 }
+            },
+            inventoryCalendar: {
+                text: l('Inventory Calendar', true),
+                class: 'btn_calendar_view_inventory',
+                // click: function () {
+                //     if (typeof $(this).openBookingModal !== 'undefined' && $.isFunction($(this).openBookingModal)) {
+                //         $(this).openBookingModal();
+                //     }
+                // }
             }
         },
         viewSkeletonRender: function () {
@@ -863,7 +1325,7 @@ innGrid.bookingResized = function (info) {
 
         base.updateOptions = function (options) {
             base.options = $.extend({}, defaults, options);
-            base.updateWidth();
+            // base.updateWidth();
             base.toggleHeaders();
         };
 
