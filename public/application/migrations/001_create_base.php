@@ -3600,43 +3600,6 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->create_table("import_mapping", TRUE);
 		$this->db->query('ALTER TABLE  `import_mapping` ENGINE = InnoDB');
 
-		## Create Table import_mapping_backup
-		$this->dbforge->add_field(array(
-			'id' => array(
-				'type' => 'INT',
-				'constraint' => 11,
-				'null' => FALSE,
-				'auto_increment' => TRUE
-			),
-			'new_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 20,
-				'null' => TRUE,
-
-			),
-			'old_id' => array(
-				'type' => 'BIGINT',
-				'constraint' => 20,
-				'null' => TRUE,
-
-			),
-			'company_id' => array(
-				'type' => 'INT',
-				'constraint' => 11,
-				'null' => TRUE,
-
-			),
-			'type' => array(
-				'type' => 'VARCHAR',
-				'constraint' => 230,
-				'null' => TRUE,
-
-			),
-		));
-		$this->dbforge->add_key("id",true);
-		$this->dbforge->create_table("import_mapping_backup", TRUE);
-		$this->db->query('ALTER TABLE  `import_mapping_backup` ENGINE = InnoDB');
-
 		## Create Table invoice
 		$this->dbforge->add_field(array(
 			'invoice_id' => array(
@@ -6125,8 +6088,6 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->drop_table("image_type", TRUE);
 		### Drop table import_mapping ##
 		$this->dbforge->drop_table("import_mapping", TRUE);
-		### Drop table import_mapping_backup ##
-		$this->dbforge->drop_table("import_mapping_backup", TRUE);
 		### Drop table invoice ##
 		$this->dbforge->drop_table("invoice", TRUE);
 		### Drop table invoice_log ##
