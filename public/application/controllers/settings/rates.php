@@ -314,7 +314,7 @@ class Rates extends MY_Controller
                 if ($extras) {
                     $old_extra_ids_array = $this->Extra_model->get_rate_plan_extras($new_rate_plan_id, $rate_plan_data['room_type_id']);
 
-                    if (count($old_extra_ids_array) > 0) {
+                    if (isset($old_extra_ids_array) && count($old_extra_ids_array) > 0) {
                         foreach ($old_extra_ids_array as $key => $value) {
                             $this->Extra_model->delete_rate_plan_etras($new_rate_plan_id, $rate_plan_data['room_type_id'], $value['extra_id']);
                         }
