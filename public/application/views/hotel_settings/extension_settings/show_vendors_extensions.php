@@ -40,7 +40,11 @@
                             <div class="extension_block">
                                 <div class="main-extension">
                                     <div class="icon">
-                                        <img src="<?php echo (isset($extension['image_name']) && $extension['image_name']) ?  base_url().'/images/'.$extension['image_name'] : '';?>" style="width: 30px;height: 30px">
+                                        <img src="<?php echo (isset($extension['image_name']) && $extension['image_name']) ?   (
+                                            file_exists(APPPATH.'extensions/'.$extension['extension_folder_name'].'/'.$extension['image_name']) ? 
+                                            base_url().'application/extensions/'.$extension['extension_folder_name'].'/'.$extension['image_name'] :
+                                            base_url().'/images/'. $extension['image_name']
+                                        ) : '' ?>" style="width: 30px;height: 30px">
                                     </div>
                                     <div class="extension-content">
                                         <b style="font-size: 12px;">
@@ -108,7 +112,9 @@
                                 <div class="extension_block">
                                     <div class="main-extension">
                                         <div class="icon">
-                                            <img src="<?php echo (isset($extension['image_name']) && $extension['image_name']) ?  base_url().'/images/'.$extension['image_name'] : '';?>" style="width: 30px;height: 30px">
+                                        <img src="<?php echo (isset($extension['image_name']) && $extension['image_name']) ?  (
+                                            (file_exists(APPPATH.'extensions/'.$extension['extension_folder_name'].'/'.$extension['image_name'])) ? base_url().'application/extensions/'.$extension['extension_folder_name'].'/'.$extension['image_name'] : base_url().'/images/'. $extension['image_name']
+                                        ) : '' ?>" style="width: 30px;height: 30px">
                                         </div>
                                         <div class="extension-content">
                                             <b style="font-size: 12px;">
