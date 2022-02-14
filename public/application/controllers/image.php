@@ -230,7 +230,7 @@ class Image extends MY_Controller
 		$this->_delete_in_s3($output_filename);
 		
 		// upload/update the s3 file with new GUID
-		if ($this->s3->putObjectFile($source_image, $_SERVER["AWS_S3_BUCKET"], $this->company_id."/".$output_filename, S3::ACL_PUBLIC_READ)) 
+		if ($this->s3->putObjectFile($source_image, getenv("AWS_S3_BUCKET"), $this->company_id."/".$output_filename, S3::ACL_PUBLIC_READ)) 
 		{
 			return true;
 		}
@@ -239,8 +239,8 @@ class Image extends MY_Controller
 	}
 
 	function _delete_in_s3($filename) {
-		$this->s3->putBucket($_SERVER["AWS_S3_BUCKET"], S3::ACL_PUBLIC_READ);
-		$this->s3->deleteObject($_SERVER["AWS_S3_BUCKET"], $this->company_id."/".$filename);					
+		$this->s3->putBucket(getenv("AWS_S3_BUCKET"), S3::ACL_PUBLIC_READ);
+		$this->s3->deleteObject(getenv("AWS_S3_BUCKET"), $this->company_id."/".$filename);					
 	}
 
     function upload_to_s3 ($myId) {
