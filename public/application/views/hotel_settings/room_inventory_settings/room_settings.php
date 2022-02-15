@@ -75,7 +75,7 @@
                     if (isset($room_types)):
                         ?>
                         <select name="room-type" class="form-control">
-                            <option><?php echo l('Not selected', true); ?></option>
+                            <option value="0"><?php echo l('Not selected', true); ?></option>
                             <?php
                             foreach($room_types as $room_type)
                             {
@@ -111,7 +111,7 @@
                     if (isset($location)):
                 ?>
                         <select name="room-location" class="form-control">
-                            <option><?php echo l('Not selected', true); ?></option>
+                            <option value="0"><?php echo l('Not selected', true); ?></option>
                             <?php
                                 foreach($location as $key => $locations)
                                 {
@@ -134,7 +134,7 @@
                     if (isset($floor)):
                 ?>
                         <select name="room-floor" class="form-control">
-                            <option><?php echo l('Not selected', true); ?></option>
+                            <option value="0"><?php echo l('Not selected', true); ?></option>
                             <?php
                                 foreach($floor as $key => $floors)
                                 {
