@@ -36,7 +36,7 @@ We see hundreds of PMS companies developing the same features and integrations a
 
 
 ## Documentation
-miniCal documentation is available here [minical.doc](https://github.com/minical/minical/wiki).
+miniCal documentation is available here [minical.doc](https://docs.minical.io/).
 
 ## Features
 * <b>Online Booking Engine&nbsp;:</b>&nbsp;Accept online bookings from 3rd party websites.
