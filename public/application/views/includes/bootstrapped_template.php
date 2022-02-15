@@ -167,13 +167,6 @@
 
 		
 				<div class="app-main">
-					<?php if($company_id) {?>
-					<div class="openbtn">
-            	     <button type="button" id="hamburger-02" class="hamburger hamburger--elastic desktop-toggle-nav">
-                       <i class="fa fa-bars" style="font-size: 26px;color: #3f6ad8;"></i>
-            	     </button>
-        		      </div>
-        		      <?php }?>
 					<div class="app-header__mobile-menu">
 					<div>
                     	<button type="button" id="hamburger-01" class="hamburger hamburger--elastic mobile-toggle-nav">
