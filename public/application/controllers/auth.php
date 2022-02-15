@@ -1019,10 +1019,10 @@ class Auth extends MY_Controller
             foreach ($active_extensions as $extension) {
                 if(isset($extension['extension_name']) && $extension['extension_name'] != 'reseller_package'){
                     $new_extensions[] = array(
-                                                'extension_name' => $extension['extension_name'],
-                                                'company_id' => $company_id,
-                                                'is_active' => 1
-                                            );
+                        'extension_name' => $extension['extension_name'],
+                        'company_id' => $company_id,
+                        'is_active' => 1
+                    );
                 }
             }
 

@@ -9,6 +9,7 @@ class Email_template
         
 		$this->ci->load->model('Booking_model');
 		$this->ci->load->model('Booking_room_history_model');
+		$this->ci->load->model('Booking_source_model');
 		$this->ci->load->model('Room_model');
 		$this->ci->load->model('Room_type_model');
 		$this->ci->load->model('Rate_model');
@@ -50,6 +51,8 @@ class Email_template
 
             $charge_type_id = $rate_plan['charge_type_id'];
 
+            $total_charges = $total_charges_with_taxes = 0;
+
             foreach ($rate_array as $index => $rate)
             {
                 $tax_total = 0;
@@ -74,6 +77,89 @@ class Email_template
 
 		$customer_info = $this->ci->Customer_model->get_customer($booking_data['booking_customer_id']);				
 		$room_type = $this->ci->Room_type_model->get_room_type($room_data['room_type_id']);	
+
+		$booking_types = Array(UNCONFIRMED_RESERVATION, RESERVATION, INHOUSE, CHECKOUT, OUT_OF_ORDER);
+        $booking_type = "";
+
+        switch($booking_data['state']) {
+            case UNCONFIRMED_RESERVATION:
+                $booking_type = 'Unconfirmed Reservation';
+                break;
+            case RESERVATION:
+                $booking_type = 'Reservation';
+                break;
+            case INHOUSE:
+                $booking_type = 'Checked-In';
+                break;
+            case CHECKOUT:
+                $booking_type = 'Checked-Out';
+                break;
+            case CANCELLED:
+                $booking_type = 'Cancelled';
+                break;
+            case OUT_OF_ORDER:
+                $booking_type = 'Out of order';
+                break;
+        }
+
+        $booking_notes = "";
+        if($company['send_booking_notes'])
+        {
+            $booking_notes = $booking_data['booking_notes'];
+        }
+
+        $common_booking_sources = json_decode(COMMON_BOOKING_SOURCES, true);
+        $coomon_sources_setting = $this->ci->Booking_source_model->get_common_booking_sources_settings($company_id);
+        $sort_order = 0;
+        foreach($common_booking_sources as $id => $name)
+        {
+            if(!(isset($coomon_sources_setting[$id]) && $coomon_sources_setting[$id]['is_hidden'] == 1))
+            {
+                $source_data[] = array(
+                    'id' => $id,
+                    'name' => $name,
+                    'sort_order' => isset($coomon_sources_setting[$id]) ? $coomon_sources_setting[$id]['sort_order'] : $sort_order
+                );
+            }
+            $sort_order++;
+        }
+
+        $booking_sources = $this->ci->Booking_source_model->get_booking_source($company_id);
+        if (!empty($booking_sources)) {
+            foreach ($booking_sources as $booking_source) {
+                if($booking_source['is_hidden'] != 1)
+                {
+                    $source_data[] = array(
+                        'id' => $booking_source['id'],
+                        'name' => $booking_source['name'],
+                        'sort_order' => $booking_source['sort_order']
+                    );
+                }
+            }
+        }
+        usort($source_data, function($a, $b) {
+            return $a['sort_order'] - $b['sort_order'];
+        });
+
+        $booking_sources = $source_data;
+
+        $booking_source = '';
+
+        if($booking_sources) {
+            foreach ($booking_sources as $key => $value) {
+                if($value['id'] == $booking_data['source'])
+                {
+                    $booking_source = $value['name'];
+                    break;
+                }
+            }
+        }
+
+        $room_instructions = "";
+        if(isset($room_data['instructions']) && $room_data['instructions'])
+        {
+            $room_instructions = $room_data['instructions'];
+        }
 
 		//Send confirmation email
 		$email_data = array (					
@@ -106,16 +192,21 @@ class Email_template
 			'company_region' => $company['region'],
 			'company_country' => $company['country'],
 			'company_postal_code' => $company['postal_code'],
-			
+			'adult_count' => $booking_data['adult_count'],
+            'children_count' => $booking_data['children_count'],
 			'company_phone' => $company['phone'],
 			'company_email' => $company['email'],
 			'company_website' => $company['website'],
 			'company_fax' => $company['fax'],
+			'booking_type' => $booking_type,
 			'reservation_policies' => $company['reservation_policies'],
-			'booking_confirmation_email_header' => $company['booking_confirmation_email_header'],
+			'confirmation_email_header' => $company['booking_confirmation_email_header'],
 			'amount_due' => $booking_data['balance'],
             'rate_plan_detail' => $rate_plan,
-            'rate_with_taxes' => $rate_with_taxes
+            'rate_with_taxes' => $rate_with_taxes,
+            'room_instructions' => $room_instructions,
+            'booking_source' => $booking_source,
+            'booking_notes' => $booking_notes
 		);
 
 		// customer doesn't have email entered
@@ -184,6 +275,8 @@ class Email_template
             $tax_rates = $this->ci->Charge_type_model->get_taxes($rate_plan['charge_type_id']);
 
             $charge_type_id = $rate_plan['charge_type_id'];
+
+            $total_charges = $total_charges_with_taxes = 0;
 
             foreach ($rate_array as $index => $rate)
             {

@@ -49,6 +49,13 @@ class Permission_model extends CI_Model {
                 (
                     $function_name === 'forward_encrypt_card'
                 )
+            ) ||
+
+            (
+                $controller_name === "customer" && 
+                (
+                    $function_name === 'post_add_customer_callback'
+                )
             )
 
         ) {
@@ -57,6 +64,16 @@ class Permission_model extends CI_Model {
         return false;
     }
 
+
+    function is_route_public($route_name) {
+        if (
+            ($route_name === 'cron') ||
+            ($route_name === 'public')
+        ) {
+            return true; // let em access the page!
+        }
+        return false;
+    }
 
     // this is the new, better way to control user access (2015-01-30)
     function has_access_to_function($user_id, $company_id, $controller_name, $function_name)

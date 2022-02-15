@@ -61,4 +61,10 @@ class Migrate extends CI_Controller
             print_r($this->migration->error_string());
         }
     }
+
+    function generate_migrations() {
+        $this->load->library('ci_migrations_generator/Sqltoci');
+
+        $this->sqltoci->generate();
+    }
 }

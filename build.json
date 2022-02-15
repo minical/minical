@@ -1,13 +1,7 @@
 {
    "name": "Hotel",
    "version": "1.0.0",
-   "dependencies": {
-      "todays_panel" : "1.0.0",
-      "online-booking-engine" : "1.0.0",
-      "advance_deposit_report" : "1.0.0",
-      "invoice_email" : "1.0.0",
-      "automated_night_audit" : "1.0.0"
-   },
+   "dependencies": {},
    "settings": {
       "unit_name":{
          "singular": "room", 

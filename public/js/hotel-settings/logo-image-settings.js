@@ -14,7 +14,7 @@ innGrid.deleteImage = function(thumbnail) {
 		dataType: "json",
 		success: function( data ) {
 			thumbnail.remove();
-			//location.reload(); // temporary fix to refresh cache of the recently uploaded image
+			// location.reload(); // temporary fix to refresh cache of the recently uploaded image
 		}
 	});
 
@@ -24,10 +24,12 @@ innGrid.insertImage = function(imageGroupID, imageSrc) {
     var img = jQuery('<img/>', {
 	    src: imageSrc ? imageSrc : $(".croppedImg").prop("src"),
 	    class: 'thumbnail col-md-3 add-image',
-	    'data-toggle': "modal",
-	    'data-target': "#image_edit_modal"
+	    // 'data-toggle': "modal",
+	    // 'data-target': "#image_edit_modal"
 	});
-    if($('#'+imageGroupID).find('img.thumbnail.add-image').length > 0) {
+    if ($('.logo-image-thumbnails').length) {
+		$('.logo-image-thumbnails').append(img);
+	} else if($('#'+imageGroupID).find('img.thumbnail.add-image').length > 0) {
         img.insertAfter('#'+imageGroupID+' img.thumbnail.add-image:last');
     } else {
         img.appendTo('#'+imageGroupID);
@@ -40,6 +42,7 @@ var imgGroupID = null;
 $(function (){
 
 	$(document).on('click', '.add-image', function() {
+		$('#image_edit_modal').modal('show');
 
 		// A modal frame that will be used to crop & resize the uploaded image
 		// This is a bit of a hack job. 
@@ -95,7 +98,7 @@ $(function (){
 						var r = confirm(l("Are you use you want to delete this Image?"));
 						if (r == true) {
 						    innGrid.deleteImage(thumbnail);
-						    $('#image_edit_modal').modal('toggle'); // close bootstrap modal
+						    $('#image_edit_modal').modal('hide'); // close bootstrap modal
 						}
 					});
 
@@ -177,7 +180,6 @@ $(function (){
 
 	$(document).on('click', '#savebutton', function () {
 		var ImageURL = cropper.getCroppedImageSrc();
-		console.log('img', ImageURL);
 		$('#image_edit_modal_body').html('Processing...');
 
 		var block = ImageURL.split(";");
@@ -192,6 +194,9 @@ $(function (){
 		// Create a FormData and append the file with "image" as parameter name
 		var formDataToUpload = new FormData();
 		formDataToUpload.append("file", blob);
+
+		var imageGroupID = $('.image-group').prop('id');
+		imgGroupID = imageGroupID;
 
 		$.ajax({
 			url: getBaseURL() + "image/upload_to_s3/"+imgGroupID,
@@ -209,7 +214,8 @@ $(function (){
 					alert(l('some error occurred!'));
 				}
 
-				$('#image_edit_modal').modal('toggle'); // close bootstrap modal
+				$('#image_edit_modal').modal('hide'); // close bootstrap modal
+				// location.reload(); // temporary fix to modal close issue
 			}
 		});
 	});

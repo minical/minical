@@ -69,7 +69,12 @@ class CI_Migration {
 		$this->load->dbforge();
 
 		// If the migrations table is missing, make it
-		if ( ! $this->db->table_exists('migrations'))
+		if ( ! $this->db->table_exists('migrations')
+            && (
+                (isset($this->user_id) && isset($this->company_id) && $this->user_id && $this->company_id)
+                || (isset($_GET['MIGRATION_REQUEST']) && $_GET['MIGRATION_REQUEST'])
+            )
+        )
 		{
 			$this->dbforge->add_field(array(
 				'version' => array('type' => 'INT', 'constraint' => 3),
@@ -81,7 +86,7 @@ class CI_Migration {
 		}
 
         // Do we auto migrate to the latest migration?
-        if ($this->_migration_auto_latest === TRUE && ! $this->latest())
+        if (isset($this->user_id) && isset($this->company_id) && $this->user_id && $this->company_id && $this->_migration_auto_latest === TRUE && ! $this->latest())
         {
             show_error($this->error_string());
         }

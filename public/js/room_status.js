@@ -34,7 +34,7 @@ $(function(){
 			dataType: "json",
 			success: function( data ) {
 				$('#room_notes_modal').modal('hide');
-				window.parent.location.reload();
+				window.location.reload();
 			}
 		});
 	});
@@ -68,7 +68,7 @@ $(function(){
 			dataType: "json",
 			success: function( data ) {
 				$('#room_instructions_modal').modal('hide');
-				window.parent.location.reload();
+				window.location.reload();
 			}
 		});
 	});
@@ -140,7 +140,7 @@ $(function(){
 			return;
 
 		$.post(baseURL + 'room/set_rooms_clean', function(results) {	
-			window.parent.location.reload();
+			window.location.reload();
 		});		
 		return false; // prevent default click action from happening!
      
