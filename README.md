@@ -82,7 +82,7 @@ Any contribution for a new feature or an improvement will be appreciated.
 
 ## How to develop an extension
 Do you have an idea of an extension that might be a great addon to the miniCal community?
-Follow [Extension development guide](https://github.com/minical/minical/wiki).
+Follow [Extension development guide](https://docs.minical.io/build-an-extension/build-your-first-extension).
 
 ## Join the Community
 Get support. exchange ideas with our growing dev community. Join us on [Discord](https://discord.gg/a7B7RXZ3w5).
