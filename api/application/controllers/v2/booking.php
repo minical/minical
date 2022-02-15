@@ -1522,6 +1522,8 @@ class Booking extends MY_Controller
         $average_daily_rate = $this->post('average_daily_rate');
         $send_confirmation_email = $this->post('send_confirmation_email');
         $booking_engine_booking_status = $this->post('booking_engine_booking_status');
+        
+        $public_url = $this->post('public_url');
 
         $special_requests = $customer_data['special_requests'];
         unset($customer_data['special_requests']);
@@ -1606,8 +1608,8 @@ class Booking extends MY_Controller
                         $customer_data['customer_id'] = $customer_id;
                         $card_data_array['customer_data'] = $customer_data;
 
-                        $api_url = 'http://localhost/minical_local';
-                        $method = '/public/customer/post_add_customer_callback/'.$company_id;
+                        $api_url = $public_url;
+                        $method = '/customer/post_add_customer_callback/'.$company_id;
                         $method_type = 'POST';
                         $data = $card_data_array;
 
