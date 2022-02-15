@@ -919,9 +919,9 @@ class Auth extends MY_Controller
         }
         $subscription_level = BASIC;
         $signup_minical_plan = isset($_COOKIE['signup-minical-plan']) ? $_COOKIE['signup-minical-plan'] : strtolower($subscription_type);
-        $subscription_level = $signup_minical_plan == "basic" ? BASIC : $subscription_level;
+        $subscription_level = $signup_minical_plan == "minimal" ? BASIC : $subscription_level;
         $subscription_level = $signup_minical_plan == "premium" ? PREMIUM : $subscription_level;
-        $subscription_level = $signup_minical_plan == "elite" ? ELITE : $subscription_level;
+        // $subscription_level = $signup_minical_plan == "elite" ? ELITE : $subscription_level;
 
         $subscription_type = $this->_process_subscription_type($subscription_type, $company_id, $region, $subscription_level);
         
@@ -1054,7 +1054,7 @@ class Auth extends MY_Controller
         $company_subscription_array = array(
             'company_id'         => $company_id,
             'subscription_type'  => $subscription_type,
-            'subscription_state' => "trialing",
+            'subscription_state' => "active",
             'renewal_period'     => $renewal_period,
             'region' => $region,
             'subscription_level'  => $subscription_level
