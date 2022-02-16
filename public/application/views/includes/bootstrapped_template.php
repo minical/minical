@@ -4,7 +4,7 @@
 <?php
  $phptoggle = '';
  $classtoggle ='';
- $phptoggle = $_COOKIE['sidebartogglevalue'];
+ $phptoggle = isset($_COOKIE['sidebartogglevalue']) ? $_COOKIE['sidebartogglevalue'] : true;
  
  if(isset($phptoggle) &&  $phptoggle === "false"){
  	$classtoggle = 'closed-sidebar-mobile closed-sidebar';
