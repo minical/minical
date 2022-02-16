@@ -1212,10 +1212,10 @@
     height: 100vh;
   }
   .app-sidebar.sidebar-shadow {
-    box-shadow: 7px 0 60px rgba(0,0,0,0.05);
+    box-shadow: 7px 0 60px rgb(0 0 0 / 12%);
   }
   .app-sidebar {
-    width: 220px;
+    width: 230px;
     display: flex;
     z-index: 11;
     overflow: hidden;
@@ -1258,7 +1258,7 @@
   }
   
   .app-sidebar .scrollbar-sidebar {
-    z-index: 15;
+   /* z-index: 15;*/
     width: 100%;
   }
   .scrollbar-sidebar, .scrollbar-container {
@@ -1274,7 +1274,7 @@
   }
   
   .app-sidebar .scrollbar-sidebar {
-    z-index: 15;
+    /*z-index: 15;*/
     width: 100%;
   }
   .scrollbar-sidebar, .scrollbar-container {
@@ -1427,6 +1427,7 @@
     font-size: 1.5rem;
     opacity: .3;
     transition: color 300ms;
+    font-weight: bold;
   }
   
   .vertical-nav-menu {
@@ -1495,7 +1496,8 @@
     margin-top:-17px;
     font-size:1.5rem;
     opacity:.3;
-    transition:color 300ms
+    transition:color 300ms;
+    font-weight: bold;
   }
   .vertical-nav-menu i.metismenu-state-icon{
     transition:transform 300ms;
@@ -3089,7 +3091,7 @@
       }
       .m-001{
           float: left!important;
-          width: 100%;	
+          width: 100%;  
       }
       .colors-wep{
           width: 100%!important;
@@ -3519,9 +3521,9 @@
   }
   .closed-sidebar .app-sidebar{
       transition:all .3s ease;
-      width:80px;
-      min-width:80px;
-      flex:0 0 80px;
+      width:50px;
+      min-width:50px;
+      flex:0 0 50px;
       z-index:13
   }
   .closed-sidebar .app-sidebar .app-sidebar__inner .app-sidebar__heading{
@@ -3541,6 +3543,7 @@
       text-indent:-99rem;
       padding:0
   }
+ 
   .closed-sidebar .app-sidebar .app-sidebar__inner .metismenu-icon{
       text-indent:0;
       left:50%;
@@ -3563,15 +3566,31 @@
   .closed-sidebar .app-sidebar .app-sidebar__inner ul.mm-show>li>a{
       height:0
   }
-  .closed-sidebar .app-sidebar:hover{
-      flex:0 0 280px !important;
-      width:280px !important
+  .closed-sidebar .app-sidebar .sidebar__logo ul{
+  
+   visibility: hidden;
   }
+
+  .closed-sidebar:not(.sidebar-mobile-open) .app-sidebar .ui-theme-settings {
+    padding: 0;
+    text-indent: 0;
+    left: 40%;
+    margin-left: -17px;
+    z-index: 13;
+  }
+  
+  .closed-sidebar:not(.sidebar-mobile-open) .app-sidebar .ui-theme-settings .menu-title{
+     visibility: hidden;
+  }
+  .closed-sidebar:not(.sidebar-mobile-open) .openbtn{
+      margin-left:15px !important;    
+  }
+ 
   .closed-sidebar .app-sidebar:hover .app-sidebar__inner .app-sidebar__heading{
       text-indent:initial
   }
   .closed-sidebar .app-sidebar:hover .app-sidebar__inner .app-sidebar__heading::before{
-      display:none
+      display:block
   }
   .closed-sidebar .app-sidebar:hover .app-sidebar__inner ul::before{
       display:block
@@ -3597,15 +3616,37 @@
   .closed-sidebar .app-sidebar:hover .app-sidebar__inner ul ul li a{
       padding-left:1em
   }
+  
+  .closed-sidebar .app-sidebar:hover .sidebar__logo ul{
+    visibility: inherit !important;
+  }
+  .closed-sidebar:not(.sidebar-mobile-open) .app-sidebar:hover .openbtn{
+    margin-left:190px !important;
+  }
+
+  .closed-sidebar:not(.sidebar-mobile-open) .app-sidebar:hover .ui-theme-settings{
+    text-indent:initial;
+    left: 10% !important;
+  }
+  .closed-sidebar:not(.sidebar-mobile-open) .app-sidebar:hover .ui-theme-settings .menu-title{
+    text-indent:initial;
+    visibility: inherit !important;
+  }
+  .closed-sidebar .app-sidebar:hover{
+      flex:0 0 230px !important;
+      width:230px !important
+  }
+  
+
   .closed-sidebar:not(.sidebar-mobile-open) .app-sidebar .scrollbar-sidebar{
       position:static;
       height:auto;
-      overflow:initial !important
+      /*overflow:initial !important*/
   }
   .closed-sidebar:not(.sidebar-mobile-open) .app-sidebar:hover .scrollbar-sidebar{
       position:absolute;
       height:100%;
-      overflow:hidden !important
+      /*overflow:hidden !important*/
   }
   .closed-sidebar:not(.closed-sidebar-mobile) .app-header .app-header__logo{
       width:80px
@@ -3619,6 +3660,15 @@
   .closed-sidebar.fixed-sidebar .app-main__outer{
       padding-left:80px
   }
+  .closed-sidebar.fixed-sidebar .app_outer{
+      padding-left:80px;
+      /*padding-top: 25px !important;*/
+  }
+ /* .closed-sidebar.fixed-sidebar .fc-left{
+  
+    margin-left: 35px !important;
+  }*/
+  
   .closed-sidebar.fixed-header:not(.fixed-sidebar) .app-sidebar .app-header__logo{
       visibility:hidden
   }
@@ -3649,7 +3699,6 @@
       width:97px;
       margin:0
   }
-  
   
   .fixed-sidebar:not(.fixed-header) .app-sidebar .sidebar__logo {
       display: flex;
@@ -3995,9 +4044,6 @@
   }
   
   
-  
-  
-  
   .app-header__menu,.app-header__mobile-menu{
       display:none;
       padding:2px 1.5rem;
@@ -4039,7 +4085,7 @@
       margin-right:auto
   }
   .closed-sidebar.fixed-sidebar .app-main__outer{
-      padding-left:40px
+      padding-left:80px
   }
   .closed-sidebar.fixed-header:not(.fixed-sidebar) .app-sidebar .app-header__logo{
       visibility:hidden
@@ -4065,7 +4111,7 @@
       display:none
   }
   .closed-sidebar.closed-sidebar-mobile .app-sidebar:hover .app-header__logo{
-      width:280px
+      width:270px
   }
   .closed-sidebar.closed-sidebar-mobile .app-sidebar:hover .app-header__logo .logo-src{
       width:97px;
@@ -4074,6 +4120,8 @@
   .closed-sidebar.closed-sidebar-mobile .app-header{
       margin-left:0 !important
   }
+  
+  
   .mobile-app-menu-btn{
       display:none;
       margin:3px 1.5rem 0 0
@@ -4095,9 +4143,10 @@
   .fa-mobile-alt:before{
       content:"\f3cd"
   }
+  
    .sidebar-mobile-open .app-sidebar{
-          transform:translateX(0)
-      }
+      transform:translateX(0);
+    }
       .sidebar-mobile-open .app-sidebar .app-sidebar__inner .app-sidebar__heading{
           text-indent:initial
       }
@@ -4193,17 +4242,7 @@
       z-index:11
   }
   
-  .closed-sidebar:not(.sidebar-mobile-open) .ui-theme-settings {
-    padding: 0;
-    text-indent: 0;
-    left: 40%;
-    margin-left: -17px;
-    z-index: 13;
-  }
   
-  .closed-sidebar:not(.sidebar-mobile-open) .ui-theme-settings .menu-title{
-     visibility: hidden;
-  }
   
   .closed-sidebar .sidebar__logo  .logo{
      display:flex;
@@ -4227,6 +4266,13 @@
       .open-mobile-menu .app-inner-layout__sidebar{
           display:block !important
       }
+      .openbtn{
+        display: none;
+      }
+      .closed-sidebar .app-sidebar .sidebar__logo ul{
+        visibility: visible !important;
+      }
+
   }
   
   @media (max-width: 991.98px){
@@ -4522,7 +4568,7 @@
           margin-left: 20px!important;
       }
       .fc-customCreateBooking-button{
-          /* margin-left: 16px !important;*/
+          /* margin-left: 25px !important;*/
           margin-right: 0px !important; 
           margin-top: 52px !important;
           margin-left: 0px!important;
@@ -4632,4 +4678,25 @@
 .topnav a.active {
     background-color: #ddd;
     color: black;
+}
+
+.openbtn{
+  position: absolute;
+  z-index: 20;
+  margin-top: 18px;
+  margin-left: 190px;
+}
+
+.pe-7s-date:before{
+  color: black;
+  font-weight: bold;
+}
+
+.pe-7s-users:before{
+  color: black;
+  font-weight: bold; 
+}
+.pe-7s-home:before, .pe-7s-graph1:before, .pe-7s-menu:before, .pe-7s-keypad:before, .pe-7s-settings:before{
+  color: black;
+  font-weight: bold; 
 }

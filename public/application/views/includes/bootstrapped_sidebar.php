@@ -20,6 +20,13 @@
     
     ?>
 <div class="app-sidebar sidebar-shadow m-038">
+    <?php if($menus) {?>
+    <div class="openbtn">
+     <button type="button" id="hamburger-02" class="hamburger hamburger--elastic desktop-toggle-nav">
+       <i class="fa fa-bars" style="font-size: 26px;color: #3f6ad8;"></i>
+     </button>
+    </div>
+    <?php }?>
     <div class="scrollbar-sidebar ps ps--active-y">
         <div class="sidebar__logo ">
 
