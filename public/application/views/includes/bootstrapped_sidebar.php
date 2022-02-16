@@ -427,7 +427,7 @@
 
 
         <li class="dropdown d-inline-block">
-            <a type="button" id="myAccountMenu" aria-haspopup="true" aria-expanded="true" data-toggle="dropdown" class="m-2"><span id="user_email" class="profile-setting"><?php echo strtoupper(substr($this->session->userdata('first_name'),0,1).substr($this->session->userdata('last_name'),0,1)); ?></span>
+            <a type="button" id="myAccountMenu" aria-haspopup="true" aria-expanded="true" data-toggle="dropdown" class="m-2 my-account-dropdown-menu"><span id="user_email" class="profile-setting"><?php echo strtoupper(substr($this->session->userdata('first_name'),0,1).substr($this->session->userdata('last_name'),0,1)); ?></span>
                 <input id='user_id' class="" value='<?php echo $this->user_id; ?>' style='display:none;' />
                 <span class="menu-title ml-2"><?php echo($this->session->userdata('email'));?></span>
             </a>
