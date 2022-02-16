@@ -1212,7 +1212,7 @@
     height: 100vh;
   }
   .app-sidebar.sidebar-shadow {
-    box-shadow: 7px 0 60px rgba(0,0,0,0.05);
+    box-shadow: 7px 0 60px rgb(0 0 0 / 12%);
   }
   .app-sidebar {
     width: 230px;
@@ -1427,6 +1427,7 @@
     font-size: 1.5rem;
     opacity: .3;
     transition: color 300ms;
+    font-weight: bold;
   }
   
   .vertical-nav-menu {
@@ -1495,7 +1496,8 @@
     margin-top:-17px;
     font-size:1.5rem;
     opacity:.3;
-    transition:color 300ms
+    transition:color 300ms;
+    font-weight: bold;
   }
   .vertical-nav-menu i.metismenu-state-icon{
     transition:transform 300ms;
@@ -3519,9 +3521,9 @@
   }
   .closed-sidebar .app-sidebar{
       transition:all .3s ease;
-      width:80px;
-      min-width:80px;
-      flex:0 0 80px;
+      width:50px;
+      min-width:50px;
+      flex:0 0 50px;
       z-index:13
   }
   .closed-sidebar .app-sidebar .app-sidebar__inner .app-sidebar__heading{
@@ -3581,7 +3583,7 @@
      visibility: hidden;
   }
   .closed-sidebar:not(.sidebar-mobile-open) .openbtn{
-      margin-left:30px !important;    
+      margin-left:15px !important;    
   }
  
   .closed-sidebar .app-sidebar:hover .app-sidebar__inner .app-sidebar__heading{
@@ -3631,8 +3633,8 @@
     visibility: inherit !important;
   }
   .closed-sidebar .app-sidebar:hover{
-      flex:0 0 270px !important;
-      width:270px !important
+      flex:0 0 230px !important;
+      width:230px !important
   }
   
 
@@ -3659,13 +3661,13 @@
       padding-left:80px
   }
   .closed-sidebar.fixed-sidebar .app_outer{
-      padding-left:90px;
+      padding-left:80px;
       /*padding-top: 25px !important;*/
   }
-  .closed-sidebar.fixed-sidebar .fc-left{
+ /* .closed-sidebar.fixed-sidebar .fc-left{
   
     margin-left: 35px !important;
-  }
+  }*/
   
   .closed-sidebar.fixed-header:not(.fixed-sidebar) .app-sidebar .app-header__logo{
       visibility:hidden
@@ -4683,4 +4685,18 @@
   z-index: 20;
   margin-top: 18px;
   margin-left: 190px;
+}
+
+.pe-7s-date:before{
+  color: black;
+  font-weight: bold;
+}
+
+.pe-7s-users:before{
+  color: black;
+  font-weight: bold; 
+}
+.pe-7s-home:before, .pe-7s-graph1:before, .pe-7s-menu:before, .pe-7s-keypad:before, .pe-7s-settings:before{
+  color: black;
+  font-weight: bold; 
 }

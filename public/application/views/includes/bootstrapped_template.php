@@ -1,10 +1,18 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
-
+<?php
+ $phptoggle = '';
+ $classtoggle ='';
+ $phptoggle = $_COOKIE['sidebartogglevalue'];
+ 
+ if(isset($phptoggle) &&  $phptoggle === "false"){
+ 	$classtoggle = 'closed-sidebar-mobile closed-sidebar';
+ }
+?>
 
 <body class="theme-<?=isset($this->company_ui_theme) ? $this->company_ui_theme : 0;?>">
-	<div class="app-container  app-theme-white body-tabs-shadow fixed-header fixed-sidebar">
+	<div class="app-container  app-theme-white body-tabs-shadow fixed-header fixed-sidebar <?= $classtoggle;?>">
 
 
 		<?php 
