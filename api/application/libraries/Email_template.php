@@ -445,7 +445,7 @@ class Email_template
 
 		$this->ci->email->reply_to('support@minical.com');
 		
-		$this->ci->email->subject('Overbooking alert | ' . $email_data['company_name']);
+		$this->ci->email->subject('Room allocation conflict alert | ' . $email_data['company_name']);
 		$this->ci->email->message($this->ci->load->view('email/overbooking-html', $email_data, true));
 
 		$this->ci->email->send();
