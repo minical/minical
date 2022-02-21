@@ -87,7 +87,12 @@ class CI_Email {
 	{
 		if (count($config) > 0)
 		{
-			$this->initialize($config);
+			if($config['smtp_user'] == 'ENTER YOUR SMTP USER HERE'){
+				// echo 'Please remove default values for SMTP environment variables.'; die;
+			} else {
+				$this->initialize($config);
+			}
+			
 		}
 		else
 		{
