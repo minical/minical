@@ -134,7 +134,7 @@ class Extensions extends MY_Controller
                         $extension['marketplace_product_link']= isset($module['marketplace_product_link'])?$module['marketplace_product_link']:"";
                         $extension['is_vendor_module'] = isset($module['is_vendor_module']) && $module['is_vendor_module'] ? true : false;
                         $extension['is_admin_module'] = isset($module['is_admin_module']) && $module['is_admin_module'] ? true : false;
-                        $extension['is_open_source'] = isset($module['is_open_source']) && $module['is_open_source'] ? true : false;
+                        $extension['supported_in_minimal'] = isset($module['supported_in_minimal']) && $module['supported_in_minimal'] ? true : false;
 
                         $final_modules[] = $extension;
                         $flag = false;
