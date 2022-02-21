@@ -106,7 +106,7 @@ if($is_favourite) { ?>
 
                                         <a href="<?php if(isset( $extension['view_link']) && $extension['view_link'] ){
                                             echo $extension['view_link'];
-                                        }else{
+                                        } else {
                                             echo '';}?>"
                                            class=""
                                            style="font-size: 25px;"
@@ -119,9 +119,13 @@ if($is_favourite) { ?>
                                         </a>
                                         <label class="extension-box" style="padding-right: 1.5rem !important;">
                                             <input type="checkbox" class="extension-status-button" data-status="<?php echo $extension['is_active']; ?>" name="<?php echo $extension['extension_folder_name']; ?>"
-                                                <?= $extension['is_active'] ? 'checked=checked' : ''; ?>/>
+                                                <?= $extension['is_active'] ? 'checked=checked' : ''; ?> <?php if((isset($extension['is_open_source']) && $extension['is_open_source'] == 1) || $this->company_subscription_level == 1) {} else { echo "disabled"; } ?>/>
                                             <?php if($this->user_permission != 'is_employee'){ ?>
-                                                <span></span>
+                                                <?php if((isset($extension['is_open_source']) && $extension['is_open_source'] == 1) || $this->company_subscription_level == 1) { ?>
+                                                    <span></span>
+                                                <?php } else { ?>
+                                                    <span style="background-color: darkgrey;"></span>
+                                                <?php } ?>
                                             <?php } ?>
                                         </label>
                                     </div>
@@ -177,6 +181,16 @@ if($is_favourite) { ?>
     </div>
 </div>
 
+<?php if($this->company_subscription_level == 0) { ?>
+    <div class="alert alert-danger" role="alert">
+        <div style="font-size: 15px;">
+            You are currently on a <b>Minimal</b> plan, please upgrade to a <b>Premium</b> plan to get access to all extensions.
+            <a href="javascript:">
+                Click here to upgrade
+            </a>
+        </div>
+    </div>
+<?php } ?>
 
 <div class="main-card mb-3">
     <div class="extension-card">
@@ -245,7 +259,7 @@ if($is_favourite) { ?>
                                     <div class="checkbox checbox-switch switch-primary" style="margin-bottom: 5px;margin-top: 5px">
                                         <a href="<?php if(isset( $extension['setting_link']) && $extension['setting_link'] ){
                                             echo $extension['setting_link'];
-                                        }else{
+                                        } else {
                                             echo '';}?>"
                                            class="ml-4"
                                            style="font-size: 25px;"
@@ -254,14 +268,14 @@ if($is_favourite) { ?>
 
                                             <?php if($extension['is_active'] == 1 && $extension['setting_link'] !=null && $this->user_permission != 'is_employee'){
                                                 echo '<i class="pe-7s-config text-primary"></i>';
-                                            }else{
+                                            } else {
                                                 echo '';
                                             } ?>
                                         </a>
 
                                         <a href="<?php if(isset( $extension['view_link']) && $extension['view_link'] ){
                                             echo $extension['view_link'];
-                                        }else{
+                                        } else {
                                             echo '';}?>"
                                            class=""
                                            style="font-size: 25px;"
@@ -274,9 +288,13 @@ if($is_favourite) { ?>
                                         </a>
                                         <label class="extension-box" style="padding-right: 1.5rem !important;">
                                             <input type="checkbox" class="extension-status-button" data-status="<?php echo $extension['is_active']; ?>" name="<?php echo $extension['extension_folder_name']; ?>"
-                                                <?= $extension['is_active'] ? 'checked=checked' : ''; ?>/>
+                                                <?= $extension['is_active'] ? 'checked=checked' : ''; ?> <?php if((isset($extension['is_open_source']) && $extension['is_open_source'] == 1) || $this->company_subscription_level == 1) {} else { echo "disabled"; } ?>/>
                                             <?php if($this->user_permission != 'is_employee'){ ?>
-                                                <span></span>
+                                                <?php if((isset($extension['is_open_source']) && $extension['is_open_source'] == 1) || $this->company_subscription_level == 1) { ?>
+                                                    <span></span>
+                                                <?php } else { ?>
+                                                    <span style="background-color: darkgrey;"></span>
+                                                <?php } ?>
                                             <?php } ?>
                                         </label>
                                     </div>
