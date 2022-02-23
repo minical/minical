@@ -51,10 +51,20 @@ if($is_favourite) { ?>
                                 <div class="main-extension">
                                     <div class="icon">
                                         <img src="<?php  if(isset($extension['logo']) && $extension['logo']){
-                                        echo base_url().'application/extensions/'.$extension['extension_folder_name'].'/'.$extension['logo'];
-                                }elseif(isset($extension['image_name']) && $extension['image_name']){
-                                    echo base_url().'/images/'. $extension['image_name'];
-                                }else{
+                                            if(strpos($extension['logo'], 'http')  !== false){
+                                                echo $extension['logo'];
+                                            } else{
+                                                echo base_url().'application/extensions/'.$extension['extension_folder_name'].'/'.$extension['logo'];
+                                            }
+                                        
+                                } elseif(isset($extension['image_name']) && $extension['image_name']){
+                                    if(strpos($extension['image_name'], 'http')  !== false){
+                                        echo $extension['image_name'];
+                                    } else {
+                                        echo base_url().'/images/'. $extension['image_name'];
+                                    }
+                                    
+                                } else {
                                     echo '';
                                 } ?>" style="width: 30px;height: 30px">
                                     </div>
@@ -211,10 +221,20 @@ if($is_favourite) { ?>
                                 <div class="main-extension">
                                     <div class="icon">
                                         <img src="<?php  if(isset($extension['logo']) && $extension['logo']){
-                                        echo base_url().'application/extensions/'.$extension['extension_folder_name'].'/'.$extension['logo'];
-                                }elseif(isset($extension['image_name']) && $extension['image_name']){
-                                    echo base_url().'/images/'. $extension['image_name'];
-                                }else{
+                                            if(strpos($extension['logo'], 'http')  !== false){
+                                                echo $extension['logo'];
+                                            } else{
+                                                echo base_url().'application/extensions/'.$extension['extension_folder_name'].'/'.$extension['logo'];
+                                            }
+                                        
+                                } elseif(isset($extension['image_name']) && $extension['image_name']){
+                                    if(strpos($extension['image_name'], 'http')  !== false){
+                                        echo $extension['image_name'];
+                                    } else {
+                                        echo base_url().'/images/'. $extension['image_name'];
+                                    }
+                                    
+                                } else {
                                     echo '';
                                 } ?>" style="width: 30px;height: 30px">
                                     </div>
