@@ -242,7 +242,7 @@ class Room extends MY_Controller
 			$ratePlanData = array();
 			$i = 0;
 			foreach($res as $roomType){
-				$res[$roomType['id']]['rate_plan_name'][] = 'AVL';
+				$res[$roomType['id']]['rate_plan_name'][] = 'Availability';
 				$ratePlanData[] = $this->Rate_plan_model->get_rate_plans_by_room_type_id($roomType['id']);
 				foreach($ratePlanData as $ratePlans){
 					foreach($ratePlans as $rate){
@@ -271,6 +271,7 @@ class Room extends MY_Controller
 			}
 			echo json_encode($res, true);
 	}
+
 
     function get_rooms_available_AJAX()
 	{

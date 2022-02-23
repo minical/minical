@@ -146,3 +146,21 @@
 .vip :hover {
     background-color: #DAA520;
 }
+
+#inventoryRateCalendar .fc-event {
+    background-color: none !important;
+    border: none !important;
+    /* left: 464px !important;
+    right: -537px !important; */
+}
+
+/* .fc-event .fc-event-dot  {
+    background-color: none !important;
+} */
+
+.modal-center{
+    margin: auto;
+    width: 90%;
+    padding: 10px;
+}
+

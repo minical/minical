@@ -472,6 +472,191 @@
   </div><!-- /.modal-dialog -->
 </div>
 
+<!-- start inventory cal modal -->
+<div class="modal" id="inventoryModal" tabindex="-1" role="dialog"><div class="modal-dialog" role="document"> 
+                <div class="modal-content"><div class="modal-header"> 
+                <h5 class="modal-title" >Update Inventory</h5> 
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" > 
+                <span aria-hidden="true">&times;</span> 
+                </button> 
+                </div > 
+                <div class="modal-body"> 
+                <div class="modal-center"> 
+                <form id="myForm"> 
+                <div class="form-group row"> 
+                <label for="roomtype" class="col-sm-3 col-form-label">Room Type</label> 
+                <div class="col-sm-9"> 
+                       <input type="text" class="form-control" id="roomtype" value=""> 
+                       </div> 
+                      </div> 
+                 <div class="form-group row"> 
+                   <label for="rateplan" class="col-sm-3 col-form-label">Rate Plan</label> 
+                    <div class="col-sm-9"> 
+                      <input type="text"  class="form-control" id="rateplan" value=""> 
+                      <input type="hidden" id="rateplanId" >
+                    </div> 
+                  </div> 
+                  <div class="form-group row"> 
+                    <label for="daterange" class="col-sm-3 col-form-label">Date Range</label> 
+                    <div class="col-sm-9"> 
+                      <input type="text"  class="form-control" id="daterange" value=""> 
+                    </div> 
+                  </div> <div class="form-group row"> 
+                    <label for="restriction" class="col-sm-3 col-form-label">Restriction</label> 
+                    <div class="col-sm-9"> 
+                      <input type="text"  class="form-control" id="restriction" value=""> 
+                    </div> 
+                  </div> <div class="form-group row"> 
+                    <label for="value" class="col-sm-3 col-form-label">Value</label> 
+                    <div class="col-sm-9"> 
+                      <input type="text"  class="form-control" id="value" value=""> 
+                    </div> 
+                  </div> 
+                </form> 
+                </div> 
+                </div> 
+                <div class="modal-footer"> 
+                <button type="button" id="updateInventory"class="btn btn-primary">Update</button> 
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" >Close</button> 
+                </div> 
+                </div > 
+                </div > 
+</div >
+<!-- end inventory cal modal -->
+<!-- inventory bulk update modal start-->
+<div class="modal" id="inventoryBulkModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-center">
+            <form>
+                <div class="form-group row">
+                    <label for="from" class="col-sm-2 col-form-label">From :</label>
+                    <div class="row col-sm-10">
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control" id="from" name="from">
+                        </div>
+                        <div class="col-sm-5">
+                            <input type="text"class="form-control" id="to" name="to">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="restrictions" class="col-sm-2 col-form-label">Restrictions :</label>
+                    <div class="col-sm-10">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                            <label class="form-check-label" for="defaultCheck1">
+                                Rate
+                            </label>
+                            <input type="text" class="form-control" id="rate" value="">
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck2">
+                            <label class="form-check-label" for="defaultCheck2">
+                                Stop Sell
+                            </label>
+                            <div class="btn-group" data-toggle="buttons">
+                                <label class="openBTN btn btn-primary active">
+                                    <input type="radio" checked name="can_be_sold_online" class="form-control modifiable default_radio" value="1" autocomplete="off"><?php echo l('Yes', true); ?>                                        
+                                </label>
+                                <label class="closeBTN btn btn-primary">                                                            
+                                    <input type="radio" name="can_be_sold_online" class="form-control modifiable" value="0" autocomplete="off"><?php echo l('No', true); ?>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck2">
+                            <label class="form-check-label" for="defaultCheck2">
+                                Closed To Arrival
+                            </label>
+                            <div class="btn-group" data-toggle="buttons">
+                                <label class="openBTN btn btn-primary active">
+                                    <input type="radio" checked name="can_be_sold_online" class="form-control modifiable default_radio" value="1" autocomplete="off"><?php echo l('Yes', true); ?>                                        
+                                </label>
+                                <label class="closeBTN btn btn-primary">                                                            
+                                    <input type="radio" name="can_be_sold_online" class="form-control modifiable" value="0" autocomplete="off"><?php echo l('No', true); ?>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck2">
+                            <label class="form-check-label" for="defaultCheck2">
+                                Closed To Departure
+                            </label>
+                            <div class="btn-group" data-toggle="buttons">
+                                <label class="openBTN btn btn-primary active">
+                                    <input type="radio" checked name="can_be_sold_online" class="form-control modifiable default_radio" value="1" autocomplete="off"><?php echo l('Yes', true); ?>                                        
+                                </label>
+                                <label class="closeBTN btn btn-primary">                                                            
+                                    <input type="radio" name="can_be_sold_online" class="form-control modifiable" value="0" autocomplete="off"><?php echo l('No', true); ?>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck2">
+                            <label class="form-check-label" for="defaultCheck2">
+                                Min Stay Arrival
+                            </label>
+                            <input type="text" class="form-control" id="rate" value="">
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck2">
+                            <label class="form-check-label" for="defaultCheck2">
+                                Min Stay Through
+                            </label>
+                            <input type="text" class="form-control" id="rate" value="">
+                        </div> 
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck2">
+                            <label class="form-check-label" for="defaultCheck2">
+                                Max Stay
+                            </label>
+                            <input type="text" class="form-control"  id="rate" value="">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="restrictions" class="col-sm-2 col-form-label">Affected Rooms :</label>
+                    <div class="col-sm-10">
+                    <select class="form-control form-select" multiple aria-label="multiple select example">
+                        <option selected>Open this select menu</option>
+                        <optgroup label="Options 1" value="e">
+                            <option>Option 1.1</option>
+                            <option>Option 1.2</option>
+                        </optgroup>
+                        <optgroup label="Options 2">
+                            <option>Option 2.1</option>
+                            <option>Option 2.2</option>
+                        </optgroup>
+                    </select>
+                    </div>
+                </div>
+                <!-- <div class="form-group row">
+                    <label for="restrictions" class="col-sm-2 col-form-label">Restrictions</label>
+                    <div class="col-sm-10">
+                    <input type="text" class="form-control" id="restrictions" placeholder="">
+                    </div>
+                </div> -->
+            </form>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- inventory bulk update modal end -->
+
+
 <?php if ($this->session->userdata('is_registration_page') != '') { ?>
 <div class="modal" id="tutorial-video-modal" tabindex="-1" role="dialog" aria-labelledby="tutorial-video-modal" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -575,4 +760,36 @@
         endif; 
         ?>
 	});
+
+    $( function() {
+    var dateFormat = "mm/dd/yy",
+      from = $( "#from" )
+        .datepicker({
+          defaultDate: "+1w",
+          changeMonth: true,
+          numberOfMonths: 2
+        })
+        .on( "change", function() {
+          to.datepicker( "option", "minDate", getDate( this ) );
+        }),
+      to = $( "#to" ).datepicker({
+        defaultDate: "+1w",
+        changeMonth: true,
+        numberOfMonths: 2
+      })
+      .on( "change", function() {
+        from.datepicker( "option", "maxDate", getDate( this ) );
+      });
+ 
+    function getDate( element ) {
+      var date;
+      try {
+        date = $.datepicker.parseDate( dateFormat, element.value );
+      } catch( error ) {
+        date = null;
+      }
+ 
+      return date;
+    }
+  } );
 </script>

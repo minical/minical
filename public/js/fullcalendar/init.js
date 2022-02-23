@@ -147,13 +147,14 @@ innGrid.inventoryData = function () {
         data: param,
         success: function (data) {
             console.log(data);
+            var roomType;
             $.each(data, function (index, element) {
                 var reference_id;
                 var rateGroup;
+                roomType = element.name;
                 $.each(element.rate_plan_name, function (resource_index, resource_el) {
                     reference_id = index + '_' + resource_index;
-
-                    if (resource_el != 'AVL') {
+                    if (resource_el != 'Availability') {
                         resource.push({
                             "id": index + '_' + resource_index,//4_0
                             "room": element.name,
@@ -209,11 +210,10 @@ innGrid.inventoryData = function () {
                     // resource creation 
 
                     // rate event data
-                    if (resource_el !== 'AVL') {
+                    if (resource_el !== 'Availability') {
                         $.each(element.rates, function (i, e) {
                             $.each(e, function (rate_index, rate_el) {
                                 if (resource_el == rate_el.rate_plan_name) {
-
                                     if (rate_el.adult_1_rate) {
                                         var el_backgroundColor = '#f1f8ff';
                                     } else {
@@ -222,96 +222,123 @@ innGrid.inventoryData = function () {
                                     // rate event data 
                                     eventData.push({
                                         resourceId: reference_id,
-                                        title: rate_el.adult_1_rate ? rate_el.adult_1_rate : 0,
+                                        title: rate_el.adult_1_rate ? rate_el.adult_1_rate : 'null',
                                         start: rate_el.date,
                                         backgroundColor: el_backgroundColor,
                                         classNames: ['event_height'],
                                         textColor: "black",
                                         eventDisplay: 'block',
+                                        border: "none!important",
+                                        type: { 'room': roomType, 'rate_plan': rate_el.rate_plan_name, 'rateplanId': rate_el.rate_plan_id, 'date': rate_el.date, 'restriction': 'Adult 1 Rate' }
                                     });
                                     eventData.push({
                                         resourceId: 'CTA_' + reference_id,
-                                        title: rate_el.closed_to_arrival ? rate_el.closed_to_arrival : '0',
+                                        title: rate_el.closed_to_arrival ? 'Close' : 'Open',
                                         start: rate_el.date,
+                                        backgroundColor: 'white',
                                         textColor: "black",
                                         eventDisplay: 'block',
+                                        border: "none!important",
+                                        type: { 'room': roomType, 'rate_plan': rate_el.rate_plan_name, 'date': rate_el.date, 'rateplanId': rate_el.rate_plan_id, 'restriction': 'Closed To Arrival' }
                                     });
                                     eventData.push({
                                         resourceId: 'CTD_' + reference_id,
-                                        title: rate_el.closed_to_departure ? rate_el.closed_to_departure : '0',
+                                        title: rate_el.closed_to_departure ? 'Close' : 'Open',
                                         start: rate_el.date,
+                                        backgroundColor: 'white',
                                         textColor: "black",
                                         eventDisplay: 'block',
+                                        type: { 'room': roomType, 'rate_plan': rate_el.rate_plan_name, 'date': rate_el.date, 'rateplanId': rate_el.rate_plan_id, 'restriction': 'Closed To Departure' }
                                     });
                                     eventData.push({
                                         resourceId: 'MXS_' + reference_id,
                                         title: rate_el.maximum_length_of_stay ? rate_el.maximum_length_of_stay : 'N/A',
                                         start: rate_el.date,
+                                        backgroundColor: 'white',
                                         textColor: "black",
                                         eventDisplay: 'block',
+                                        type: { 'room': roomType, 'rate_plan': rate_el.rate_plan_name, 'date': rate_el.date, 'rateplanId': rate_el.rate_plan_id, 'restriction': 'Max Stay' }
                                     });
                                     eventData.push({
                                         resourceId: 'MSA_' + reference_id,
                                         title: rate_el.minimum_length_of_stay ? rate_el.minimum_length_of_stay : 'N/A',
                                         start: rate_el.date,
+                                        backgroundColor: 'white',
                                         textColor: "black",
                                         eventDisplay: 'block',
+                                        type: { 'room': roomType, 'rate_plan': rate_el.rate_plan_name, 'date': rate_el.date, 'rateplanId': rate_el.rate_plan_id, 'restriction': 'Min Stay Arrival' }
                                     });
                                     eventData.push({
                                         resourceId: 'SS_' + reference_id,
                                         title: element.can_be_sold_online ? 'Yes' : 'NO',
                                         start: rate_el.date,
+                                        backgroundColor: 'white',
                                         textColor: "black",
                                         eventDisplay: 'block',
+                                        type: { 'room': roomType, 'rate_plan': rate_el.rate_plan_name, 'date': rate_el.date, 'rateplanId': rate_el.rate_plan_id, 'restriction': 'Sell Online' }
                                     });
                                     eventData.push({
                                         resourceId: 'AR1_' + reference_id,
-                                        title: rate_el.adult_1_rate ? rate_el.adult_1_rate : '0',
+                                        title: rate_el.adult_1_rate ? rate_el.adult_1_rate : 'null',
                                         start: rate_el.date,
+                                        backgroundColor: 'white',
                                         textColor: "black",
                                         eventDisplay: 'block',
+                                        type: { 'room': roomType, 'rate_plan': rate_el.rate_plan_name, 'date': rate_el.date, 'rateplanId': rate_el.rate_plan_id, 'restriction': 'Adult 1 Rate' }
                                     });
                                     eventData.push({
                                         resourceId: 'AR2_' + reference_id,
-                                        title: rate_el.adult_2_rate ? rate_el.adult_2_rate : '0',
+                                        title: rate_el.adult_2_rate ? rate_el.adult_2_rate : 'null',
                                         start: rate_el.date,
+                                        backgroundColor: 'white',
                                         textColor: "black",
                                         eventDisplay: 'block',
+                                        type: { 'room': roomType, 'rate_plan': rate_el.rate_plan_name, 'date': rate_el.date, 'rateplanId': rate_el.rate_plan_id, 'restriction': 'Adult 2 Rate' }
                                     });
                                     eventData.push({
                                         resourceId: 'AR3_' + reference_id,
-                                        title: rate_el.adult_3_rate ? rate_el.adult_3_rate : '0',
+                                        title: rate_el.adult_3_rate ? rate_el.adult_3_rate : 'null',
                                         start: rate_el.date,
+                                        backgroundColor: 'white',
                                         textColor: "black",
                                         eventDisplay: 'block',
+                                        type: { 'room': roomType, 'rate_plan': rate_el.rate_plan_name, 'date': rate_el.date, 'rateplanId': rate_el.rate_plan_id, 'restriction': 'Adult 3 Rate' }
                                     });
                                     eventData.push({
                                         resourceId: 'AR4_' + reference_id,
-                                        title: rate_el.adult_4_rate ? rate_el.adult_4_rate : '0',
+                                        title: rate_el.adult_4_rate ? rate_el.adult_4_rate : 'null',
                                         start: rate_el.date,
+                                        backgroundColor: 'white',
                                         textColor: "black",
                                         eventDisplay: 'block',
+                                        type: { 'room': roomType, 'rate_plan': rate_el.rate_plan_name, 'date': rate_el.date, 'rateplanId': rate_el.rate_plan_id, 'restriction': 'Adult 4 Rate' }
                                     });
                                     eventData.push({
                                         resourceId: 'BSR_' + reference_id,
-                                        title: rate_el.base_rate ? rate_el.base_rate : '0',
+                                        title: rate_el.base_rate ? rate_el.base_rate : 'null',
                                         start: rate_el.date,
+                                        backgroundColor: 'white',
                                         textColor: "black",
                                         eventDisplay: 'block',
+                                        type: { 'room': roomType, 'rate_plan': rate_el.rate_plan_name, 'date': rate_el.date, 'rateplanId': rate_el.rate_plan_id, 'restriction': 'Base Rate' }
                                     });
                                     eventData.push({
                                         resourceId: 'AAR_' + reference_id,
-                                        title: rate_el.additional_adult_rate ? rate_el.additional_adult_rate : '0',
+                                        title: rate_el.additional_adult_rate ? rate_el.additional_adult_rate : 'null',
                                         start: rate_el.date,
+                                        backgroundColor: 'white',
                                         textColor: "black",
                                         eventDisplay: 'block',
+                                        type: { 'room': roomType, 'rate_plan': rate_el.rate_plan_name, 'date': rate_el.date, 'rateplanId': rate_el.rate_plan_id, 'restriction': 'Additional Adult Rate' }
                                     });
                                     eventData.push({
                                         resourceId: 'ACR_' + reference_id,
-                                        title: rate_el.additional_child_rate ? rate_el.additional_child_rate : '0',
+                                        title: rate_el.additional_child_rate ? rate_el.additional_child_rate : 'null',
                                         start: rate_el.date,
+                                        backgroundColor: 'white',
                                         textColor: "black",
                                         eventDisplay: 'block',
+                                        type: { 'room': roomType, 'rate_plan': rate_el.rate_plan_name, 'date': rate_el.date, 'rateplanId': rate_el.rate_plan_id, 'restriction': 'Additional Child Rate' }
                                     });
                                 }
                             });
@@ -319,7 +346,7 @@ innGrid.inventoryData = function () {
                     }
 
                     // availability data event
-                    if (resource_el == 'AVL') {
+                    if (resource_el == 'Availability') {
                         $.each(element.availability, function (avl_index, avl_el) {
 
                             const firstDate = new Date(avl_el.date_start);
@@ -330,10 +357,11 @@ innGrid.inventoryData = function () {
                                     resourceId: reference_id,
                                     title: avl_el.availability ? avl_el.availability : 'N/A',
                                     start: date,
-                                    // backgroundColor: 'white',
+                                    backgroundColor: 'white',
                                     classNames: ['event_height'],
                                     textColor: "black",
-                                    eventDisplay: 'block'
+                                    eventDisplay: 'block',
+                                    type: { 'room': roomType, 'date': date, 'restriction': 'Availability' }
                                 });
                             }
                         })
@@ -464,38 +492,12 @@ innGrid.buildInventoryRateCalendar = function () {
                 }
             },
             // customRestrictions: {
-            //     '<select name="cars" id="cars"><option value="volvo">Volvo</option><option value="saab">Saab</option><option value="mercedes">Mercedes</option></select>'
-            //     // text: l('All Restrictions', true),
-            //     // options: ['ok', "not"]
-
+            //     text: l('All Restrictions', true) + ' ▼',
+            //     click: function () {
+            //         var $btnCustomStartDate = $('.fc-customStartDatePicker-button');
+            //         $btnCustomStartDate.after('<div style="width: 1px;height: 1px;opacity: 0;"><select id="multiselect" multiple="multiple">< option value = "1" > Option 1</option ><option value="2">Option 2</option><option value="3">Option 3</option></select ></div > ');
+            //     }
             // },
-            customRestrictions: {
-                text: l('All Restrictions', true) + ' ▼',
-                click: function () {
-
-                    $("#hidden-start-date-picker").datepicker({
-                        dateFormat: 'yy-mm-dd',
-                        onSelect: function (date, startDatePicker) {
-                            date = new Date(date);
-                            if (innGrid.calendar.view.type === "customMonthView" && innGrid.calendar.view.activeStart < date && date < innGrid.calendar.view.activeEnd) {
-                                // date is between start and end hence gotodate won't work, so move calendar to future date and switch back to new date
-                                innGrid.calendar.gotoDate(innGrid.calendar.view.activeEnd);
-                                innGrid.calendar.gotoDate(date);
-                            } else if (innGrid.calendar.view.activeStart == date) {
-                                // do nothing as date is already set
-                            } else {
-                                innGrid.calendar.gotoDate(date);
-                            }
-                        },
-                        beforeShow: function (event, ui) {
-                            setTimeout(function () {
-                                ui.dpDiv.css({ left: left, top: top });
-                            }, 5);
-                        }
-                    });
-                    $("#hidden-start-date-picker").datepicker("setDate", calStartDate);
-                }
-            },
         },
         viewSkeletonRender: function () {
             if (innGrid.calendar.view.type === "customMonthView") {
@@ -551,22 +553,65 @@ innGrid.buildInventoryRateCalendar = function () {
         now: sellingDate,
 
         // eventClick: innGrid.bookingEventClicked,
+        eventClick: function (event) {
+            console.log(event.event)
+            $('#roomtype').val(event.event.extendedProps.type.room);
+            $('#rateplan').val(event.event.extendedProps.type.rate_plan);
+            $('#daterange').val(event.event.extendedProps.type.date);
+            $('#restriction').val(event.event.extendedProps.type.restriction);
+            $('#rateplanId').val(event.event.extendedProps.type.rateplanId);
+            $('#value').val(event.event.title);
+            $('#inventoryModal').modal('show');
+        },
         // eventResize: innGrid.bookingResized,
         // eventDrop: occupacyMoved,
     };
-
-    console.log(calendar_options);
 
     var calendarEl = document.getElementById('inventoryRateCalendar');
 
     innGrid.calendar = new FullCalendar.Calendar(calendarEl, calendar_options);
 
     innGrid.calendar.render();
-
+    $(".fc-left").append('<select class="form-select" size="1">< option selected > Open this select menu</option ><option value="1">One</option><option value="2">Two</option><option value="3">Three</option></select > ');
+    $(".fc-left").append(
+        $("<button/>", {
+            href: '#',
+            class: 'btn btn-primary bulk-update',
+            style: 'margin-left:10px',
+            text: l('Bulk Update', true)
+        }).on('click', function () {
+            $('#inventoryBulkModal').modal('show');
+        })
+    )
     if (innGrid.hasBookingPermission == '0') {
         $('.fc-customCreateBooking-button').prop('disabled', true);
     }
 }
+
+// inventory Update Ajax call
+$('#updateInventory').click(function () {
+
+    var restriction = $('#restriction').val().toLowerCase().replace(/ /g, "_");
+    var inventoryData = {
+        date_start: $('#daterange').val(),
+        date_end: $('#daterange').val(),
+        rate_plan_id: $('#rateplanId').val(),
+        tab_identification: 1,
+        [restriction]: $('#value').val()
+    };
+    console.log(inventoryData)
+
+    $.ajax({
+        type: "POST",
+        url: getBaseURL() + 'settings/rates/create_rate_AJAX',
+        dataType: "json",
+        data: inventoryData,
+        success: function (data) {
+            console.log(data);
+        }
+
+    });
+});
 
 //Creates calendar
 innGrid.buildCalendar = function (rooms) {
