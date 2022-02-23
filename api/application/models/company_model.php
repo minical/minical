@@ -155,6 +155,42 @@ class Company_model extends CI_Model {
         }
         return $response;
     }
+
+    function get_company_api_permission($company_id, $key = null)
+    {
+        $is_key_avail = $key ? "k.key = '$key' AND" : '';
+
+        $sql = "SELECT  k.*, kxc.* FROM  `key` as k
+                LEFT JOIN key_x_company as kxc ON kxc.key_id = k.id
+                WHERE 
+                    $is_key_avail 
+                    kxc.company_id = '$company_id' ";
+
+        $query = $this->db->query($sql);
+        $result = $query->result_array();
+
+        return count($result) > 0 ? $result : NULL;
+    }
+
+    function get_ota_id($ota_key){
+        $this->db->from('otas');
+        $this->db->where('key', $ota_key);
+
+        $query = $this->db->get();
+
+        $result = $query->row_array();
+        
+        if ($this->db->_error_message())
+        {
+            show_error($this->db->_error_message());
+        }
+        
+        if ($query->num_rows >= 1)
+        {
+            return $result['id'];
+        }
+        return null;
+    }
 		
 }
 ?>

@@ -241,22 +241,29 @@ class Room extends MY_Controller
 			$resource = array();
 			$ratePlanData = array();
 			$i = 0;
-			foreach($res as $roomType){
-				$res[$roomType['id']]['rate_plan_name'][] = 'Availability';
-				$ratePlanData[] = $this->Rate_plan_model->get_rate_plans_by_room_type_id($roomType['id']);
-				foreach($ratePlanData as $ratePlans){
-					foreach($ratePlans as $rate){
-						if($rate['room_type_id'] == $roomType['id']){
-							// $res[$roomType['id']]['rate_plan_name'][] = 'AVL';
-							$res[$roomType['id']]['rate_plan_name'][] = $rate['rate_plan_name'];
+
+			if ($res && count($res) > 0) {
+				foreach($res as $roomType){
+					$res[$roomType['id']]['rate_plan_name'][] = 'Availability';
+					$ratePlanData[] = $this->Rate_plan_model->get_rate_plans_by_room_type_id($roomType['id']);
+					if ($ratePlanData && count($ratePlanData) > 0) {
+						foreach ($ratePlanData as $ratePlans) {
+							if ($ratePlans && count($ratePlans) > 0) {
+								foreach ($ratePlans as $rate) {
+									if ($rate['room_type_id'] == $roomType['id']) {
+										// $res[$roomType['id']]['rate_plan_name'][] = 'AVL';
+										$res[$roomType['id']]['rate_plan_name'][] = $rate['rate_plan_name'];
+									}
+									$rateData[] = $this->Rate_model->get_daily_rates($rate['rate_plan_id'], $start_date, $end_date, $roomType['id']);
+									// if($rate['room_type_id'] == $rateData['id']){
+									$res[$roomType['id']]['rates'] = $rateData;
+									// }
+								}
+							}
 						}
-						$rateData[] = $this->Rate_model->get_daily_rates($rate['rate_plan_id'],$start_date,$end_date,$roomType['id']);
-						// if($rate['room_type_id'] == $rateData['id']){
-						$res[$roomType['id']]['rates'] = $rateData;
-						// }					
-					}				
+					}
+
 				}
-				
 			}
 			// prx($res);
 			$isThresholdEnabled = true;

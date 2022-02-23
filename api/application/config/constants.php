@@ -53,21 +53,23 @@ define('GALLERY', '4');
 |*/
 
 define('SOURCE_WALK_IN', '0');
-define('SOURCE_ONLINE_WIDGET', '1');
-define('SOURCE_BOOKING_DOT_COM', '2');
-define('SOURCE_EXPEDIA', '3');
-define('SOURCE_AGODA', '4');
-define('SOURCE_TRIPCONNECT', '5');
-define('SOURCE_AIRBNB', '6');
-define('SOURCE_HOSTELWORLD', '7');
-define('SOURCE_MYALLOCATOR', '8');
-define('SOURCE_COMPANY', '9');
-define('SOURCE_GUEST_MEMBER', '10');
-define('SOURCE_OWNER', '11');
-define('SOURCE_RETURNING_GUEST', '12');
-define('SOURCE_APARTMENT', '13');
-define('SOURCE_SITEMINDER', '14');
-define('SOURCE_OTHER_TRAVEL_AGENCY', '20');
+define('SOURCE_ONLINE_WIDGET', '-1');
+define('SOURCE_BOOKING_DOT_COM', '-2');
+define('SOURCE_EXPEDIA', '-3');
+define('SOURCE_AGODA', '-4');
+define('SOURCE_TRIPCONNECT', '-5');
+define('SOURCE_AIRBNB', '-6');
+define('SOURCE_HOSTELWORLD', '-7');
+define('SOURCE_MYALLOCATOR', '-8');
+define('SOURCE_COMPANY', '-9');
+define('SOURCE_GUEST_MEMBER', '-10');
+define('SOURCE_OWNER', '-11');
+define('SOURCE_RETURNING_GUEST', '-12');
+define('SOURCE_APARTMENT', '-13');
+define('SOURCE_SITEMINDER', '-14');
+define('SOURCE_SEASONAL', '-15');
+define('SOURCE_OTHER_TRAVEL_AGENCY', '-20');
+define('SOURCE_CHANNEX', '-16');
 
 // these booking sources are hardcoded and common for each user
 define('COMMON_BOOKING_SOURCES', 
@@ -87,7 +89,9 @@ define('COMMON_BOOKING_SOURCES',
             SOURCE_RETURNING_GUEST => 'Returning Guest',
             SOURCE_APARTMENT => 'Apartment',
             SOURCE_OTHER_TRAVEL_AGENCY => 'Other Travel Agency',
-            SOURCE_SITEMINDER => 'Site Minder'
+            SOURCE_SITEMINDER => 'Siteminder',
+            SOURCE_SEASONAL => 'seasonal.io',
+            SOURCE_CHANNEX => 'Channex'
         ))
     );
 

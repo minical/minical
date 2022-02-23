@@ -93,6 +93,18 @@ class CI_DB_driver {
 
 	// --------------------------------------------------------------------
 
+    function debug_on()
+    {
+        $this->db_debug = TRUE;
+        return TRUE;
+    }
+
+    function debug_off()
+    {
+        $this->db_debug = FALSE;
+        return FALSE;
+    }
+
 	/**
 	 * Initialize Database Settings
 	 *

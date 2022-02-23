@@ -169,7 +169,7 @@ class Room_model extends CI_Model {
 
 	}
 
-    function get_housekeeping_report($company_id, $date, $display_all_rooms = false, $start_date = null, $end_date = null, $selling_date)
+    function get_housekeeping_report($company_id, $date, $display_all_rooms = false, $start_date = null, $end_date = null, $selling_date = null)
 	{
 		$result = array();
         $this->load->model("Company_model");

@@ -15,7 +15,7 @@ class="text-center"
         if(isset($whitelabel_detail) && $whitelabel_detail && $whitelabel_detail['logo']) {
             $image_url = $this->image_url . $whitelabel_detail['logo'];
             if (strpos($whitelabel_detail['logo'], '.')) {
-                $image_url = '/images/' . $whitelabel_detail['logo'];
+                $image_url = base_url(). 'images/' . $whitelabel_detail['logo'];
             }
             echo '<img src="'.$image_url.'" style="max-width: 200px;">';
         }
@@ -75,14 +75,14 @@ class="text-center"
             <?php if(isset($whitelabel_detail['terms_of_service']) && $whitelabel_detail['terms_of_service']) { ?>
 		        <a href="<?php echo $whitelabel_detail['terms_of_service']; ?>" target="_blank">Terms of Use</a>
 		    <?php } else { ?>
-		        <a href="<?php echo base_url();?>auth/terms_of_service" target="_blank">Terms Of Use</a>
+		        <a href="<?php echo base_url();?>auth/show_terms_of_service" target="_blank">Terms Of Use</a>
 		    <?php } ?>
 		    <?php echo " and " ?>
 
 		    <?php if(isset($whitelabel_detail['privacy_policy']) && $whitelabel_detail['privacy_policy']) { ?>
 		        <a href="<?php echo $whitelabel_detail['privacy_policy']; ?>" target="_blank">Privacy Policy</a>
 		    <?php } else { ?>
-		        <a href="<?php echo base_url();?>auth/privacy_policy" target="_blank">Privacy Policy</a>
+		        <a href="<?php echo base_url();?>auth/show_privacy_policy" target="_blank">Privacy Policy</a>
 		    <?php } ?>
 
         </div>

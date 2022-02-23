@@ -153,6 +153,14 @@ function &DB($params = '', $active_record_override = NULL)
 		$DB->query('SET SESSION sql_mode="STRICT_ALL_TABLES"');
 	}
 
+	// Remove ONLY_FULL_GROUP_BY SQL Mode
+    $DB->query('SET SESSION sql_mode =
+                  REPLACE(REPLACE(REPLACE(
+                  @@sql_mode,
+                  "ONLY_FULL_GROUP_BY,", ""),
+                  ",ONLY_FULL_GROUP_BY", ""),
+                  "ONLY_FULL_GROUP_BY", "")');
+
 	return $DB;
 }
 
