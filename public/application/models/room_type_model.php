@@ -508,5 +508,20 @@ class Room_type_model extends CI_Model {
             show_error($this->db->_error_message());
         }
     }
+
+    function get_all_roomtype($company_id){
+        $this->db->where('is_deleted',0);
+        $this->db->where('company_id', $company_id);
+        $query = $this->db->get('room_type');
+        if ($query->num_rows() > 0)
+        {
+            $result = $query->result_array(0);
+            return $result;
+        }
+        else
+        {
+            return NULL;
+        }
+    }
         
 }

@@ -572,7 +572,7 @@ innGrid.buildInventoryRateCalendar = function () {
     innGrid.calendar = new FullCalendar.Calendar(calendarEl, calendar_options);
 
     innGrid.calendar.render();
-    $(".fc-left").append('<select class="form-select" size="1">< option selected > Open this select menu</option ><option value="1">One</option><option value="2">Two</option><option value="3">Three</option></select > ');
+    $(".fc-left").append('<select class="form-control form-select" style="width: 173px;display: initial;" size="1"><option selected>Select Restrictions</option><option value="1">All Restrictions</option><option value="1">Adult 1 Rate</option>< option value = "1" > Adult 2 Rate</option ><option value="1">Adult 3 Rate</option><option value="1">Adult 4 Rate</option><option value="1">Closed To Arrival</option><option value="1">Closed To Departure</option><option value="1">Max Stay</option><option value="1">Min Stay Arrival</option><option value="1">Sell Online</option><option value="1">Base Rate</option><option value="1">Additional Adult Rate</option><option value="1">Additional Child Rate</option></select>');
     $(".fc-left").append(
         $("<button/>", {
             href: '#',
@@ -580,13 +580,40 @@ innGrid.buildInventoryRateCalendar = function () {
             style: 'margin-left:10px',
             text: l('Bulk Update', true)
         }).on('click', function () {
-            $('#inventoryBulkModal').modal('show');
+            getRoomTypeData();
         })
     )
     if (innGrid.hasBookingPermission == '0') {
         $('.fc-customCreateBooking-button').prop('disabled', true);
     }
 }
+
+function getRoomTypeData() {
+    var optionEl = '';
+    $.ajax({
+        type: "POST",
+        url: getBaseURL() + 'room/get_roomtype_and_rateplan',
+        dataType: "json",
+        data: '',
+        success: function (data) {
+            optionEl += '<select multiple="multiple" class="multiple-select" style="width:100%">';
+            $.each(data, function (index, element) {
+                optionEl += '<optgroup label="' + index + '">' + index;
+                $.each(element, function (rateIndex, rateElement) {
+                    optionEl += '<option value="' + rateElement.rate_id + '">' + rateElement.rate_plan_name + '</option>';
+                });
+                optionEl += '</optgroup>';
+            });
+            optionEl += '</select>';
+            console.log(optionEl);
+            // $('.room-select').html(optionEl);
+
+
+        }
+    });
+    $('#inventoryBulkModal').modal('show');
+}
+
 
 // inventory Update Ajax call
 $('#updateInventory').click(function () {

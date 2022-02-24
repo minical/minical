@@ -164,3 +164,7 @@
     padding: 10px;
 }
 
+#inventoryRateCalendar .fc-right {
+  display: none;
+}
+

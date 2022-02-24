@@ -526,7 +526,7 @@
 <!-- inventory bulk update modal start-->
 <div class="modal" id="inventoryBulkModal" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
-    <div class="modal-content">
+    <div class="modal-content" style="width:700px">
       <div class="modal-header">
         <h5 class="modal-title">Modal title</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -537,113 +537,127 @@
         <div class="modal-center">
             <form>
                 <div class="form-group row">
-                    <label for="from" class="col-sm-2 col-form-label">From :</label>
-                    <div class="row col-sm-10">
-                        <div class="col-sm-5">
-                            <input type="text" class="form-control" id="from" name="from">
+                    <label for="from" class="col-sm-2 col-form-label">From </label>
+                    <div class="col-sm-10">
+                        <div class="row">
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="from" name="from" placeholder="Start Date">
                         </div>
-                        <div class="col-sm-5">
-                            <input type="text"class="form-control" id="to" name="to">
+                        <div class="col-sm-6">
+                            <input type="text"class="form-control" id="to" name="to" placeholder="End Date">
+                        </div>
                         </div>
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="restrictions" class="col-sm-2 col-form-label">Restrictions :</label>
+                    <label for="restrictions" class="col-sm-2 col-form-label">Restrictions </label>
                     <div class="col-sm-10">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                            <label class="form-check-label" for="defaultCheck1">
-                                Rate
-                            </label>
+                       <div class="form-check row margin-fix-in">
+                            <div class="col-sm-6">
+                                <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                                <label class="form-check-label" for="defaultCheck1">
+                                    Rate
+                                </label>
+                            </div>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" id="rate" value="">
+                            </div>
+                        </div>
+                        <div class="form-check row margin-fix-in">
+                            <div class="col-sm-6">
+                                <input class="form-check-input" type="checkbox" value="" id="defaultCheck2">
+                                <label class="form-check-label" for="defaultCheck2">
+                                    Stop Sell
+                                </label>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="btn-group" data-toggle="buttons">
+                                    <label class="openBTN btn btn-primary active">
+                                        <input type="radio" checked name="can_be_sold_online" class="form-control modifiable default_radio" value="1" autocomplete="off"><?php echo l('Yes', true); ?>                                        
+                                    </label>
+                                    <label class="closeBTN btn btn-primary">                                                            
+                                        <input type="radio" name="can_be_sold_online" class="form-control modifiable" value="0" autocomplete="off"><?php echo l('No', true); ?>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-check row margin-fix-in">  
+                            <div class="col-sm-6">
+                                <input class="form-check-input" type="checkbox" value="" id="defaultCheck2">
+                                <label class="form-check-label" for="defaultCheck2">
+                                    Closed To Arrival
+                                </label>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="btn-group" data-toggle="buttons">
+                                    <label class="openBTN btn btn-primary active">
+                                        <input type="radio" checked name="can_be_sold_online" class="form-control modifiable default_radio" value="1" autocomplete="off"><?php echo l('Yes', true); ?>                                        
+                                    </label>
+                                    <label class="closeBTN btn btn-primary">                                                            
+                                        <input type="radio" name="can_be_sold_online" class="form-control modifiable" value="0" autocomplete="off"><?php echo l('No', true); ?>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-check row margin-fix-in">
+                            <div class="col-sm-6">
+                                <input class="form-check-input" type="checkbox" value="" id="defaultCheck2">
+                                <label class="form-check-label" for="defaultCheck2">
+                                    Closed To Departure
+                                </label>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="btn-group" data-toggle="buttons">
+                                    <label class="openBTN btn btn-primary active">
+                                        <input type="radio" checked name="can_be_sold_online" class="form-control modifiable default_radio" value="1" autocomplete="off"><?php echo l('Yes', true); ?>                                        
+                                    </label>
+                                    <label class="closeBTN btn btn-primary">                                                            
+                                        <input type="radio" name="can_be_sold_online" class="form-control modifiable" value="0" autocomplete="off"><?php echo l('No', true); ?>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-check row margin-fix-in">
+                            <div class="col-sm-6">
+                                <input class="form-check-input" type="checkbox" value="" id="defaultCheck2">
+                                <label class="form-check-label" for="defaultCheck2">
+                                    Min Stay Arrival
+                                </label>
+                            </div>
+                            <div class="col-sm-6">
                             <input type="text" class="form-control" id="rate" value="">
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck2">
-                            <label class="form-check-label" for="defaultCheck2">
-                                Stop Sell
-                            </label>
-                            <div class="btn-group" data-toggle="buttons">
-                                <label class="openBTN btn btn-primary active">
-                                    <input type="radio" checked name="can_be_sold_online" class="form-control modifiable default_radio" value="1" autocomplete="off"><?php echo l('Yes', true); ?>                                        
-                                </label>
-                                <label class="closeBTN btn btn-primary">                                                            
-                                    <input type="radio" name="can_be_sold_online" class="form-control modifiable" value="0" autocomplete="off"><?php echo l('No', true); ?>
-                                </label>
                             </div>
                         </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck2">
-                            <label class="form-check-label" for="defaultCheck2">
-                                Closed To Arrival
-                            </label>
-                            <div class="btn-group" data-toggle="buttons">
-                                <label class="openBTN btn btn-primary active">
-                                    <input type="radio" checked name="can_be_sold_online" class="form-control modifiable default_radio" value="1" autocomplete="off"><?php echo l('Yes', true); ?>                                        
-                                </label>
-                                <label class="closeBTN btn btn-primary">                                                            
-                                    <input type="radio" name="can_be_sold_online" class="form-control modifiable" value="0" autocomplete="off"><?php echo l('No', true); ?>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck2">
-                            <label class="form-check-label" for="defaultCheck2">
-                                Closed To Departure
-                            </label>
-                            <div class="btn-group" data-toggle="buttons">
-                                <label class="openBTN btn btn-primary active">
-                                    <input type="radio" checked name="can_be_sold_online" class="form-control modifiable default_radio" value="1" autocomplete="off"><?php echo l('Yes', true); ?>                                        
-                                </label>
-                                <label class="closeBTN btn btn-primary">                                                            
-                                    <input type="radio" name="can_be_sold_online" class="form-control modifiable" value="0" autocomplete="off"><?php echo l('No', true); ?>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck2">
-                            <label class="form-check-label" for="defaultCheck2">
-                                Min Stay Arrival
-                            </label>
-                            <input type="text" class="form-control" id="rate" value="">
-                        </div>
-                        <div class="form-check">
+                        <div class="form-check row margin-fix-in">
+                        <div class="col-sm-6">
                             <input class="form-check-input" type="checkbox" value="" id="defaultCheck2">
                             <label class="form-check-label" for="defaultCheck2">
                                 Min Stay Through
                             </label>
+                            </div>
+                            <div class="col-sm-6">
                             <input type="text" class="form-control" id="rate" value="">
+                            </div>
                         </div> 
-                        <div class="form-check">
+                        <div class="form-check row margin-fix-in">
+                        <div class="col-sm-6">
                             <input class="form-check-input" type="checkbox" value="" id="defaultCheck2">
                             <label class="form-check-label" for="defaultCheck2">
                                 Max Stay
                             </label>
+                            </div>
+                            <div class="col-sm-6">
                             <input type="text" class="form-control"  id="rate" value="">
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="restrictions" class="col-sm-2 col-form-label">Affected Rooms :</label>
-                    <div class="col-sm-10">
-                    <select class="form-control form-select" multiple aria-label="multiple select example">
-                        <option selected>Open this select menu</option>
-                        <optgroup label="Options 1" value="e">
-                            <option>Option 1.1</option>
-                            <option>Option 1.2</option>
-                        </optgroup>
-                        <optgroup label="Options 2">
-                            <option>Option 2.1</option>
-                            <option>Option 2.2</option>
-                        </optgroup>
-                    </select>
+                    <label for="restrictions" class="col-sm-2 col-form-label">Affected Rooms </label>
+                    <div class="col-sm-10 room-select">
+                    <select multiple="multiple" class="multiple-select" style="width:100%"><optgroup label="Sample Room Type">Sample Room Type<option value="1">New Rate Plan</option><option value="8">100 rate</option><option value="9">testing</option><option value="10">New Rate Plan1</option><option value="11">New Rate Plan2</option><option value="12">New Rate Plan3</option><option value="13">New Rate Plan4</option><option value="14">New Rate Plan22</option></optgroup><optgroup label="test Room Type">test Room Type<option value="2">test Rate Plan</option></optgroup></select>
                     </div>
                 </div>
-                <!-- <div class="form-group row">
-                    <label for="restrictions" class="col-sm-2 col-form-label">Restrictions</label>
-                    <div class="col-sm-10">
-                    <input type="text" class="form-control" id="restrictions" placeholder="">
-                    </div>
-                </div> -->
             </form>
         </div>
       </div>
@@ -678,17 +692,28 @@
 <input type="hidden" id="subscription_state" value="<?php echo $company_data['subscription_state']; ?>"/>
 <input type="hidden" id="support_email" value="<?php echo $support_email; ?>"/>
 
+<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/multi-select/0.9.12/css/multi-select.css"> -->
 <style>
 	.group_booking_confirm_dialog{
 		z-index: 11111 !important;
 		top: 30px !important;
 		left: 460px !important;
 	}
+    .margin-fix-in{
+        margin-top: 4px !important;
+        margin-bottom: 4px !important;
+    }
 </style>
-<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<link href="https://unpkg.com/multiple-select@1.5.2/dist/multiple-select.min.css" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+<script src="https://unpkg.com/multiple-select@1.5.2/dist/multiple-select.min.js"></script>
+
+<!-- JS & CSS library of MultiSelect plugin -->
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/multi-select/0.9.12/js/jquery.multi-select.min.js"></script> -->
 <script>
 	$(document).ready(function(){
-            var registration_session = $('#registration_session').val();
+          var registration_session = $('#registration_session').val();
             if(registration_session!=''){
                 $('#update-property-modal').modal({
                         backdrop: 'static',
@@ -759,8 +784,7 @@
             setcookie("is_shown_tutorial_popover", true, time()+60*60*24*365*10, "minical.io"); // 86400 = 1 day
         endif; 
         ?>
-	});
-
+	});      
     $( function() {
     var dateFormat = "mm/dd/yy",
       from = $( "#from" )
@@ -792,4 +816,5 @@
       return date;
     }
   } );
+  $('.multiple-select').multipleSelect()
 </script>

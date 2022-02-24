@@ -279,6 +279,29 @@ class Room extends MY_Controller
 			echo json_encode($res, true);
 	}
 
+	function get_roomtype_and_rateplan()
+	{
+		$roomType= $this->Room_type_model->get_all_roomtype($this->company_id);
+		$data = array();
+		
+		if($roomType && count($roomType) >0 ){
+			foreach($roomType as $room){
+				$i =0;
+				$rateData = $this->Rate_plan_model->get_rate_plans_by_room_type_id($room['id']);
+				if($rateData && count($rateData) >0 ){
+					foreach($rateData as $rate){
+						$data[$room['name']][$i]['rate_id'] = $rate['rate_plan_id'];
+						$data[$room['name']][$i]['rate_plan_name'] = $rate['rate_plan_name'];
+						$i++;
+					}
+
+				}
+
+			}
+		}
+		echo json_encode($data, true);
+		
+	}
 
     function get_rooms_available_AJAX()
 	{
