@@ -32,4 +32,4 @@ docker/ $ cp .env.example ../.env
 ```
 
 When everything is started, and the `.env` file exists in the Minical root directory, you can simply
-visit http://localhost:8080/public/install.php to continue with the Minical installation and setup.
+visit http://localhost:8080/public/install/index.php to continue with the Minical installation and setup.
