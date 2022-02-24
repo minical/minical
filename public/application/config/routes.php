@@ -42,6 +42,7 @@ $route['default_controller'] = "auth";
 $route['404_override'] = '';
 
 $route['invoice/(:num)'] = 'invoice/index/$1';
+$route['settings/translation/(:num)'] = 'settings/translation/index/$1';
 
 
 $module_permission = array();
