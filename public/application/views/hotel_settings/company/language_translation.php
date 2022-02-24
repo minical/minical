@@ -71,7 +71,7 @@ $lang_id = $this->uri->segment(3);
                         
                         <?php if(isset($translationRecords) && $translationRecords): ?>
                         <div class="col-sm-4">
-                            <label for="language_enable" class="col-sm-4 control-label" style="font-size: 20px;"><?php echo l('Enable');?></label>
+                            <label for="language_enable" class="col-sm-4 control-label" style="font-size: 19px;"><?php echo l('Enable');?></label>
                             <div class="col-sm-8">
                                 <select class="form-control " name="language_enable" id="language_enable" onchange="changeLanguageStatus(this.value)" >
                                     <option value="1" language_id="<?php echo $language_id; ?>" <?php if($is_enable==1) { ?>selected="selected"<?php } ?> >Yes</option>
