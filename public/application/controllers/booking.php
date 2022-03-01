@@ -1441,8 +1441,7 @@ class Booking extends MY_Controller
 
         $post_booking_data = $booking_data;
         $post_booking_data['booking_id'] = $booking_id;
-
-      
+        $post_booking_data['company_id'] = $this->company_id;
 
         $response = array();
 
@@ -1505,6 +1504,7 @@ class Booking extends MY_Controller
 
             $post_booking_data = array('rate_plan_id' => $rate_plan_id);
             $post_booking_data['booking_id'] = $booking_id;
+            $post_booking_data['company_id'] = $this->company_id;
 
             do_action('post.update.booking', $post_booking_data);
 
@@ -1562,6 +1562,7 @@ class Booking extends MY_Controller
         $post_booking_data['check_out_date'] = $room['check_out_date'];
         $post_booking_data['room_id'] = $room['room_id'];
         $post_booking_data['room_type_id'] =  $room['room_type_id'];
+        $post_booking_data['company_id'] = $this->company_id;
         do_action('post.create.booking', $post_booking_data);
 
         if (isset($customer_data['staying_customers'])) {
