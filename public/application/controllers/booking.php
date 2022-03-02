@@ -2562,6 +2562,10 @@ class Booking extends MY_Controller
             }
         }
 
+        if (isset($new_data['rooms'][0]['room_id']) && $new_data['rooms'][0]['room_id'] == '') {
+            $errors[] = l('Room selection is required', true);
+        }
+
         // validation for existing booking (not new booking)
         if (isset($new_data['booking']['state']) &&
             isset($old_data['booking_block']['check_in_date']) &&
