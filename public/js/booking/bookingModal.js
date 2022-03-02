@@ -6062,7 +6062,7 @@ var bookingModalInvoker = function ($) {
                     // this prevents room type going resetting to the first one in the list whenever checkin/checkout dates change
                     if (!innGrid.isShowUnassignedRooms && !isShowUnassignedRooms) {
                         var option = $("<option/>", {
-                            value: '',
+                            value: '0',
                             text: l('Not Assigned')
                         });
 
