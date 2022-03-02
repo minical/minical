@@ -395,4 +395,26 @@ class Card_model extends CI_Model {
             return false;
         }
     }
+
+    function get_card_details($customer_id, $company_id)
+    {
+        $this->db->where('customer_id', $customer_id);
+        $this->db->where('company_id', $company_id);
+        $this->db->where('is_card_deleted', 0);
+        $this->db->from('customer_card_detail');
+        $query = $this->db->get();
+        $result = $query->result_array();
+        
+        if ($this->db->_error_message())
+        {
+            show_error($this->db->_error_message());
+        }
+        $customer = "";
+        if ($query->num_rows >= 1)
+        {
+            $customer = $result[0];
+        }
+
+        return $customer;
+    }
 }
