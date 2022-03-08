@@ -97,7 +97,6 @@ class Permission_model extends CI_Model {
                 ($controller_name === "wizard") ||
                 ($controller_name === "menu") ||
                 ($controller_name === "account_settings") ||
-                ($controller_name === "calendar") ||
                 ($controller_name === "rate_plan") ||
                 ($controller_name === "booking" &&
                     (
@@ -140,6 +139,21 @@ class Permission_model extends CI_Model {
             ) {
                 return true;
             }
+
+            if(
+                $controller_name === "calendar" &&
+                !in_array('bookings_view_only', $user_permissions)                        
+            ) {
+                return true;
+            } else
+                if(
+                    $controller_name === "calendar" && 
+                    $function_name !== "move_booking_room_history" && 
+                    $function_name !== "resize_booking_room_history"
+                )
+                {
+                    return true;
+                }
 		}
         
         // Permission-specific access grants
@@ -186,6 +200,13 @@ class Permission_model extends CI_Model {
                         ) ||
                         (
                             $controller_name == 'booking' && $function_name != 'update_booking_AJAX'
+                        ) ||
+                        (
+                            $controller_name == "calendar" && 
+                            (
+                                $function_name != "move_booking_room_history" && 
+                                $function_name != "resize_booking_room_history"
+                            )
                         ) ||
                         (
                             $controller_name == 'extra'
