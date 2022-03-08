@@ -1017,12 +1017,23 @@ class Auth extends MY_Controller
         if($active_extensions && count($active_extensions) > 0){
             $new_extensions = array();
             foreach ($active_extensions as $extension) {
-                if(isset($extension['extension_name']) && $extension['extension_name'] != 'reseller_package'){
-                    $new_extensions[] = array(
-                        'extension_name' => $extension['extension_name'],
-                        'company_id' => $company_id,
-                        'is_active' => 1
-                    );
+
+                if($this->is_super_admin == 1){
+                    if(isset($extension['extension_name'])){
+                        $new_extensions[] = array(
+                            'extension_name' => $extension['extension_name'],
+                            'company_id' => $company_id,
+                            'is_active' => 1
+                        );
+                    }
+                } else {
+                    if(isset($extension['extension_name']) && $extension['extension_name'] != 'reseller_package'){
+                        $new_extensions[] = array(
+                            'extension_name' => $extension['extension_name'],
+                            'company_id' => $company_id,
+                            'is_active' => 1
+                        );
+                    }
                 }
             }
 
