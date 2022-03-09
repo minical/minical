@@ -146,17 +146,6 @@ $('body').on('click', '.btn_calendar_view_overview', function () {
 	window.history.pushState({calendar: 'booking-calendar-state'},"",getBaseURL()+'booking/overview')
 });
 
-$('body').on('click', '.fc-inventoryCalendar-button', function () {
-	$('#overview_calendar').hide();
-	$('#calendar').hide();
-	$('#inventory_rate_calendar').show();
-	innGrid.isInventoryCalendar = true;
-	innGrid.buildInventoryRateCalendar();
-	$('.btn_calendar_view').removeClass('active');
-	$('.fc-inventoryCalendar-button').addClass('active');
-	window.history.pushState({ calendar: 'booking-calendar-state' }, "", getBaseURL() + 'booking')
-});
-
 window.onpopstate = function(e){
 	if(e.state && e.state.calendar === 'booking-calendar-state') { // state data available
 		window.location.reload();

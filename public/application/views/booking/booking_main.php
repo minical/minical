@@ -81,7 +81,6 @@
 <!--<input name="create_new_booking" type="hidden" value="<?php //echo l('create_new_booking'); ?>" />-->
 <div id="calendar" class="tab_btn_calendar"><?php echo l('Loading', true); ?>...</div>
 <div id="overview_calendar" class="tab_btn_calendar"></div>
-<div id="inventoryRateCalendar"></div>
 <div id="notification-drag-box">
     <p><?php echo l('from'); ?>: <span class="from"></span></p>
 	<p><?php echo l('to'); ?>: <span class="to"></span></p>
@@ -523,6 +522,7 @@
                 </div > 
 </div >
 <!-- end inventory cal modal -->
+
 <!-- inventory bulk update modal start-->
 <div class="modal" id="inventoryBulkModal" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
@@ -554,8 +554,8 @@
                     <div class="col-sm-10">
                        <div class="form-check row margin-fix-in">
                             <div class="col-sm-6">
-                                <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                                <label class="form-check-label" for="defaultCheck1">
+                                <input class="form-check-input" type="checkbox" value="" id="rate_checkbox" onChange="enableInputBox(this.id);">
+                                <label class="form-check-label" for="rate_checkbox">
                                     Rate
                                 </label>
                             </div>
@@ -565,89 +565,89 @@
                         </div>
                         <div class="form-check row margin-fix-in">
                             <div class="col-sm-6">
-                                <input class="form-check-input" type="checkbox" value="" id="defaultCheck2">
-                                <label class="form-check-label" for="defaultCheck2">
+                                <input class="form-check-input" type="checkbox" value="" id="stopsell_checkbox" onChange="enableInputBox(this.id);">
+                                <label class="form-check-label" for="stopsell_checkbox">
                                     Stop Sell
                                 </label>
                             </div>
                             <div class="col-sm-6">
                                 <div class="btn-group" data-toggle="buttons">
                                     <label class="openBTN btn btn-primary active">
-                                        <input type="radio" checked name="can_be_sold_online" class="form-control modifiable default_radio" value="1" autocomplete="off"><?php echo l('Yes', true); ?>                                        
+                                        <input type="radio" checked name="stopsell_ture" class="form-control modifiable default_radio" value="1" autocomplete="off" id="stopsell"><?php echo l('Yes', true); ?>                                        
                                     </label>
                                     <label class="closeBTN btn btn-primary">                                                            
-                                        <input type="radio" name="can_be_sold_online" class="form-control modifiable" value="0" autocomplete="off"><?php echo l('No', true); ?>
+                                        <input type="radio" name="stopsell_false" class="form-control modifiable" value="0" autocomplete="off" id="stopsell"><?php echo l('No', true); ?>
                                     </label>
                                 </div>
                             </div>
                         </div>
                         <div class="form-check row margin-fix-in">  
                             <div class="col-sm-6">
-                                <input class="form-check-input" type="checkbox" value="" id="defaultCheck2">
-                                <label class="form-check-label" for="defaultCheck2">
+                                <input class="form-check-input" type="checkbox"  onChange="enableInputBox(this.id);" value="" id="closed_to_arrival_checkbox">
+                                <label class="form-check-label" for="closed_to_arrival_checkbox">
                                     Closed To Arrival
                                 </label>
                             </div>
                             <div class="col-sm-6">
-                                <div class="btn-group" data-toggle="buttons">
+                                <div class="btn-group" data-toggle="buttons" >
                                     <label class="openBTN btn btn-primary active">
-                                        <input type="radio" checked name="can_be_sold_online" class="form-control modifiable default_radio" value="1" autocomplete="off"><?php echo l('Yes', true); ?>                                        
+                                        <input type="radio" checked name="closed_to_arrival_true" class="form-control modifiable default_radio" value="1" autocomplete="off" id="closed_to_arrival"><?php echo l('Yes', true); ?>                                        
                                     </label>
                                     <label class="closeBTN btn btn-primary">                                                            
-                                        <input type="radio" name="can_be_sold_online" class="form-control modifiable" value="0" autocomplete="off"><?php echo l('No', true); ?>
+                                        <input type="radio" name="closed_to_arrival_false" class="form-control modifiable" value="0" autocomplete="off" id="closed_to_arrival"><?php echo l('No', true); ?>
                                     </label>
                                 </div>
                             </div>
                         </div>
                         <div class="form-check row margin-fix-in">
                             <div class="col-sm-6">
-                                <input class="form-check-input" type="checkbox" value="" id="defaultCheck2">
-                                <label class="form-check-label" for="defaultCheck2">
+                                <input class="form-check-input" type="checkbox" onChange="enableInputBox(this.id);" value="" id="closed_to_departure_checkbox">
+                                <label class="form-check-label" for="closed_to_departure_checkbox">
                                     Closed To Departure
                                 </label>
                             </div>
                             <div class="col-sm-6">
-                                <div class="btn-group" data-toggle="buttons">
+                                <div class="btn-group" data-toggle="buttons" >
                                     <label class="openBTN btn btn-primary active">
-                                        <input type="radio" checked name="can_be_sold_online" class="form-control modifiable default_radio" value="1" autocomplete="off"><?php echo l('Yes', true); ?>                                        
+                                        <input type="radio" checked name="closed_to_departure_true" id="closed_to_departure" class="form-control modifiable default_radio" value="1" autocomplete="off"><?php echo l('Yes', true); ?>                                        
                                     </label>
                                     <label class="closeBTN btn btn-primary">                                                            
-                                        <input type="radio" name="can_be_sold_online" class="form-control modifiable" value="0" autocomplete="off"><?php echo l('No', true); ?>
+                                        <input type="radio" name="closed_to_departure_false"  id="closed_to_departure" class="form-control modifiable" value="0" autocomplete="off"><?php echo l('No', true); ?>
                                     </label>
                                 </div>
                             </div>
                         </div>
                         <div class="form-check row margin-fix-in">
                             <div class="col-sm-6">
-                                <input class="form-check-input" type="checkbox" value="" id="defaultCheck2">
-                                <label class="form-check-label" for="defaultCheck2">
+                                <input class="form-check-input" type="checkbox" onChange="enableInputBox(this.id);" value="" id="min_stay_arrival_checkbox">
+                                <label class="form-check-label" for="min_stay_arrival_checkbox">
                                     Min Stay Arrival
                                 </label>
                             </div>
                             <div class="col-sm-6">
-                            <input type="text" class="form-control" id="rate" value="">
+                            <input type="text" class="form-control" id="min_stay_arrival" value="">
                             </div>
                         </div>
                         <div class="form-check row margin-fix-in">
                         <div class="col-sm-6">
-                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck2">
-                            <label class="form-check-label" for="defaultCheck2">
+                            <input class="form-check-input" type="checkbox" onChange="enableInputBox(this.id);" value="" id="min_stay_through_checkbox">
+                            <label class="form-check-label" for="min_stay_through_checkbox">
                                 Min Stay Through
                             </label>
                             </div>
                             <div class="col-sm-6">
-                            <input type="text" class="form-control" id="rate" value="">
+                            <input type="text" class="form-control" id="min_stay_through" value="">
                             </div>
                         </div> 
                         <div class="form-check row margin-fix-in">
                         <div class="col-sm-6">
-                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck2">
-                            <label class="form-check-label" for="defaultCheck2">
+                            <input class="form-check-input" type="checkbox" onChange="enableInputBox(this.id);" value="" id="max_stay_checkbox">
+                            <label class="form-check-label" for="max_stay_checkbox">
                                 Max Stay
                             </label>
                             </div>
                             <div class="col-sm-6">
-                            <input type="text" class="form-control"  id="rate" value="">
+                            <input type="text" class="form-control"  id="max_stay" value="">
                             </div>
                         </div>
                     </div>
@@ -655,14 +655,15 @@
                 <div class="form-group row">
                     <label for="restrictions" class="col-sm-2 col-form-label">Affected Rooms </label>
                     <div class="col-sm-10 room-select">
-                    <select multiple="multiple" class="multiple-select" style="width:100%"><optgroup label="Sample Room Type">Sample Room Type<option value="1">New Rate Plan</option><option value="8">100 rate</option><option value="9">testing</option><option value="10">New Rate Plan1</option><option value="11">New Rate Plan2</option><option value="12">New Rate Plan3</option><option value="13">New Rate Plan4</option><option value="14">New Rate Plan22</option></optgroup><optgroup label="test Room Type">test Room Type<option value="2">test Rate Plan</option></optgroup></select>
+                    <select multiple="multiple" id="dta" placeholder="Please select the room type and rate plan" class="multiple-select" style="width:100%">    
+                    </select>
                     </div>
                 </div>
             </form>
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="button" class="btn btn-primary bulk_update">Save changes</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
     </div>
@@ -691,8 +692,6 @@
 <input type="hidden" id="trial_expiry_date" value="<?php echo $company_data['trial_expiry_date']; ?>"/>
 <input type="hidden" id="subscription_state" value="<?php echo $company_data['subscription_state']; ?>"/>
 <input type="hidden" id="support_email" value="<?php echo $support_email; ?>"/>
-
-<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/multi-select/0.9.12/css/multi-select.css"> -->
 <style>
 	.group_booking_confirm_dialog{
 		z-index: 11111 !important;
@@ -708,9 +707,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
 <script src="https://unpkg.com/multiple-select@1.5.2/dist/multiple-select.min.js"></script>
-
-<!-- JS & CSS library of MultiSelect plugin -->
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/multi-select/0.9.12/js/jquery.multi-select.min.js"></script> -->
 <script>
 	$(document).ready(function(){
           var registration_session = $('#registration_session').val();
@@ -816,5 +812,4 @@
       return date;
     }
   } );
-  $('.multiple-select').multipleSelect()
 </script>

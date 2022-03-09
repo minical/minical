@@ -1,3 +1,4 @@
+var checkIfRoomInventroyIsON = false;
 $(function () {
 
     $("#from_date, #to_date").datepicker({ dateFormat: 'yy-mm-dd' });
