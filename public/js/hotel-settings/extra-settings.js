@@ -34,6 +34,7 @@ innGrid.saveAllExtraFields = function () { console.log('here');
     var extrasData = updatedExtraFields;
     var data = {};
     var count = 0;
+    var total = true;
     for(var key in extrasData) {
             
         if (count == 100) {
@@ -56,6 +57,7 @@ innGrid.saveAllExtraFields = function () { console.log('here');
             
             data = {}; // reset data
             count = 0; // reset counter
+            total = false;
         }
         
         data[key] = extrasData[key];
@@ -69,7 +71,8 @@ innGrid.saveAllExtraFields = function () { console.log('here');
         }, function (result) {
             if(result.success)
             {
-                //alert(l('All Products saved'));
+                if(total)
+                    alert(l('All Products saved'));
             }
             else
             {
