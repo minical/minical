@@ -46,11 +46,13 @@ class Company_model extends CI_Model {
 	function get_company_id_from_api_key($api_key)
 	{
 		$sql = "SELECT 
-                    k.*, kxc.*
+                    k.*, kxc.*,c.name
                 FROM 
                     `key` as k
                 LEFT JOIN 
                     key_x_company as kxc ON kxc.key_id = k.id
+                LEFT JOIN 
+                    company as c ON c.company_id = kxc.company_id
                 WHERE 
                     k.key = '$api_key'";
         
@@ -59,7 +61,7 @@ class Company_model extends CI_Model {
         if ($query->num_rows >= 1)
 		{
 			$result = $query->result_array();
-			return $result[0]['company_id'];
+			return array('company_id' =>$result[0]['company_id'], 'company_name' =>$result[0]['name']);
 		}
 		
 		return NULL;
