@@ -96,7 +96,11 @@ $(function() {
 	});
 	
 	$("#close_button").on('click', function() {	
-		window.jQuery('#edit_availabilities_dialog').dialog('close');
+		var isInIframe = (window.location != window.parent.location) ? true : false;
+		if(isInIframe)
+			window.parent.jQuery('#edit_availabilities_dialog').dialog('close');
+		else
+			window.jQuery('#edit_availabilities_dialog').dialog('close');
 	});
 });
 
@@ -112,10 +116,18 @@ innGrid.updateAvailabilities = function(start_date, end_date, room_type_id, chan
 	    },
 	    dataType: "json",
 	    success: function (data) {
-                window.jQuery('#edit_availabilities_dialog').dialog('close');
+            var isInIframe = (window.location != window.parent.location) ? true : false;
+			if(isInIframe)
+				window.parent.jQuery('#edit_availabilities_dialog').dialog('close');
+			else
+				window.jQuery('#edit_availabilities_dialog').dialog('close');
 	    },
-            error: function(e){
-                window.jQuery('#edit_availabilities_dialog').dialog('close');
-            }
+        error: function(e){
+            var isInIframe = (window.location != window.parent.location) ? true : false;
+			if(isInIframe)
+				window.parent.jQuery('#edit_availabilities_dialog').dialog('close');
+			else
+				window.jQuery('#edit_availabilities_dialog').dialog('close');
+        }
 	});
 }

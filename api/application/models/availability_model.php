@@ -189,7 +189,9 @@ class Availability_model extends CI_Model {
 									".(($ota_id == -1) ? "" : "b.source IN (".$ota_id.") AND")."
 									r.room_type_id = rt.id AND
 									brh.room_id = r.room_id AND
-									r.is_deleted = '0' $can_be_sold_online_filter
+									r.is_deleted = '0' AND 
+									c.company_id = ".$company_id." AND 
+									b.company_id = ".$company_id." $can_be_sold_online_filter
 							) + (
 								SELECT
 									count(DISTINCT b.booking_id)
@@ -206,6 +208,8 @@ class Availability_model extends CI_Model {
 									b.is_deleted = '0' AND
 									".(($ota_id == -1) ? "" : "b.source IN (".$ota_id.") AND")."
 									brh.room_type_id = rt.id AND
+									c.company_id = ".$company_id." AND 
+									b.company_id = ".$company_id." AND
 									(brh.room_id IS NULL OR brh.room_id = 0)
 							)
                     ) AS inventory_sold,";
