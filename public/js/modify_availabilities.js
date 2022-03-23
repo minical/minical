@@ -62,9 +62,11 @@ innGrid.setAvailabilities = function() {
 	$.post(getBaseURL() + 'room/modify_availabilities_POST',
 		otaAvailabilityArray,
 		function(data){
-			if (data.status === 'error')
+			console.log('data',data[0]);
+			if (data[0].status === 'error')
 			{
-                alert(data.message.replace(/<p>/g,'').replace(/<\/p>/g,''));
+                alert(data[0].message.replace(/<p>/g,'').replace(/<\/p>/g,''));
+                $("#loading_avail_img").hide();
 			}
 			else
 			{
