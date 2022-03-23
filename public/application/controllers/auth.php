@@ -917,7 +917,15 @@ class Auth extends MY_Controller
                 $this->Room_model->create_room(null, null, null, $rooms);
             }
         }
-        $subscription_level = BASIC;
+
+        $is_hosted_prod_service = getenv('IS_HOSTED_PROD_SERVICE');
+
+        if(!$is_hosted_prod_service) {
+            $subscription_level = PREMIUM;
+        } else {
+            $subscription_level = BASIC;
+        }
+        
         $signup_minical_plan = isset($_COOKIE['signup-minical-plan']) ? $_COOKIE['signup-minical-plan'] : strtolower($subscription_type);
         $subscription_level = $signup_minical_plan == "minimal" ? BASIC : $subscription_level;
         $subscription_level = $signup_minical_plan == "premium" ? PREMIUM : $subscription_level;
