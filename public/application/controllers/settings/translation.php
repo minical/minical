@@ -132,8 +132,7 @@ class Translation extends MY_Controller
         $view_data['language_id'] = $language_id;
          
          $view_data['css_files'] = array(
-            'https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css',
-            base_url() . auto_version('css/language_translation.css')
+            'https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css'
         );
          $view_data['js_files'] = array(
             'https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js',
