@@ -358,18 +358,28 @@
                                                 <?php } $sidebar_menus = array(); ?>
                                             </ul>
                                         </li>
-                                    <?php } else { ?>
+                                    <?php } else { 
 
-                                        <li class="<?php if ($first_segment.'/'.$second_segment == $m_menu_one['link']) echo 'mm-active'; ?>">
+                                        if(isset($m_menu_one['name']) && $m_menu_one['name'] == "Translation"){
+                                                    if($this->is_super_admin == 1){ ?>
+
+                                            <li class="<?php if ($first_segment.'/'.$second_segment == $m_menu_one['link']) echo 'mm-active'; ?>">
                                             <a class="<?php if ($first_segment.'/'.$second_segment ==  $m_menu_one['link']) echo 'mm-active'; ?>" href="<?php echo base_url().$m_menu_one['link']; ?>">
-                                                <i class="<?php echo $m_menu_one['icon']; ?>"></i>
-                                                <?php
-                                                echo ucwords(l($m_menu_one['name']));
-                                                ?>
-                                            </a>
-                                        </li>
+                                                <i class="<?php echo $m_menu_one['icon']; ?>"></i>    
+                                                    <?php echo ucwords(l($m_menu_one['name'])); ?>
+                                                   </a>
+                                                   </li>
 
-                                    <?php } } ?>
+                                                 <?php }
+                                                }else{ ?>
+                                                <li class="<?php if ($first_segment.'/'.$second_segment == $m_menu_one['link']) echo 'mm-active'; ?>">
+                                                <a class="<?php if ($first_segment.'/'.$second_segment ==  $m_menu_one['link']) echo 'mm-active'; ?>" href="<?php echo base_url().$m_menu_one['link']; ?>">
+                                                <i class="<?php echo $m_menu_one['icon']; ?>"></i> 
+                                                  <?php echo ucwords(l($m_menu_one['name'])); ?>
+                                                </a>
+                                                   </li>   
+                                             <?php   }
+                                        } } ?>
                             </ul>
                         </li>
                     <?php } elseif($m_menu['link'] == 'extensions') { ?>
