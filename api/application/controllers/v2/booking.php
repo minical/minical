@@ -1492,7 +1492,8 @@ class Booking extends MY_Controller
         
         $data['view_data'] = $this->post('data');
         $rate_plan_id = $this->post('rate_plan_id');
-        
+        unset($data['view_data']['ID']);
+        unset($data['view_data']['filter']);
         $data['view_data']['number_of_nights'] = (strtotime($data['view_data']['check_out_date']) - strtotime($data['view_data']['check_in_date'])) / (60 * 60 * 24);
 
         $sub_total = 0;
@@ -1527,6 +1528,12 @@ class Booking extends MY_Controller
 
         $special_requests = $customer_data['special_requests'];
         unset($customer_data['special_requests']);
+        unset($customer_data['ID']);
+        unset($customer_data['filter']);
+        unset($view_data['ID']);
+        unset($view_data['filter']);
+        unset($company_data['ID']);
+        unset($company_data['filter']);
 
         $selected_rate_plans = array();
 
