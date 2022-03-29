@@ -4170,7 +4170,7 @@ class Migration_create_base extends CI_Migration {
 			'rate_update_type' => array(
 				'type' => 'VARCHAR',
 				'constraint' => 255,
-				'null' => FALSE,
+				'null' => TRUE,
 
 			),
 			'company_id' => array(
