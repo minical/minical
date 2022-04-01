@@ -225,3 +225,9 @@ $(document).ready(function(){
     });
 });
 </script>
+
+<?php 
+	echo "<script>
+    COUNTRIES_OBJ = JSON.parse('".(COUNTRIES)."');
+        </script>";
+?>
