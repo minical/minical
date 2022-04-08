@@ -49,6 +49,31 @@ class Company_model extends CI_Model {
 		return NULL;
 	}
 
+function get_total_companies($extension_name = null, $is_extension_active = false){
+
+		$this->db->select('c.company_id, c.name');
+		$this->db->from('company as c');
+
+		if($is_extension_active){
+			$this->db->join('extensions_x_company as exc','exc.company_id=c.company_id','left');
+			$this->db->where('exc.extension_name', $extension_name);
+			$this->db->where('exc.is_active', 1);
+		}
+		
+		$this->db->where('c.is_deleted', 0);
+		$this->db->group_by('c.company_id');
+        
+		$query = $this->db->get();
+        
+		if($query->num_rows() >= 1)
+		{
+			return $query->result_array();
+		}
+        
+		return NULL;
+
+	}
+	
 	function get_ota_x_company_data($company_ids)
 	{
 		$this->db->from('ota_x_company as oxc');
