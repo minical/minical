@@ -2446,6 +2446,12 @@ var bookingModalInvoker = function ($) {
                         )
                         .append(
                             $("<div/>", {
+                                'id': 'payment_reminder',
+                                'class': "tab-pane",
+                            })
+                        )
+                        .append(
+                            $("<div/>", {
                                 'id': 'housekeeping',
                                 'class': "tab-pane"
                             }).append(

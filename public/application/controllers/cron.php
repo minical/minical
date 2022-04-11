@@ -312,4 +312,70 @@ class Cron extends CI_Controller
 		$data = array();
 		do_action('daily-cron', $data);
 	}
+
+	function send_payment_reminder()
+	{
+		$this->load->model('Company_model');
+
+		
+        $all_active_modules = array();
+        $module_name ='';
+        $modules_path = $this->config->item('module_location');
+        $modules = scandir($modules_path);
+        // $extensions = $this->session->userdata('all_active_modules');
+        foreach($modules as $module)
+        {
+            if($module === '.' || $module === '..') continue;
+            if(is_dir($modules_path) . '/' . $module)
+            {
+                $config = array();
+                $module_config = $modules_path . $module . '/config/config.php';
+                if(file_exists($module_config))
+                {
+                    require($module_config);
+                    $config['extension_folder_name'] = $module;
+                    $all_active_modules[$module] = $config;
+                  
+                }
+            }
+        }
+        if($all_active_modules){
+            foreach($all_active_modules as $key => $mod)
+            {
+                $name = strtolower($mod['extension_folder_name']);
+                $all_active_modules[$key]['extension_folder_name'] = str_replace(" ","_",$name);
+            }
+        }
+        //prx($all_active_modules);
+        foreach ($all_active_modules as $key => $value) {
+                if($value['name'] == 'Payment reminder'){
+                    $module_name = $key;
+                    break;
+                }
+            }
+        //echo $module_name; die('module_name');
+		//$companies = $this->Company_model->get_all_companies(false);
+		$companies = $this->Company_model->get_total_companies($module_name , true);
+		
+		foreach ($companies as $company)
+		{
+			$company_id = $company['company_id'];
+
+		    $url = base_url()."cron/send_payment_reminder_cron/".$company_id;
+		    
+		    $ch = curl_init();
+		    curl_setopt($ch, CURLOPT_URL, $url);
+		    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		    curl_setopt($ch, CURLOPT_AUTOREFERER, false);
+		    curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+		    curl_setopt($ch, CURLOPT_HEADER, 0);
+		    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+		    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+		    $result = curl_exec($ch);
+		    curl_close($ch);
+
+		    echo $company_id. ' => '; prx($result, 1);
+
+		}
+	}
 }
