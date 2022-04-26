@@ -229,7 +229,7 @@
 </div>
 
 <input type="hidden" name="pos_booking_id" class="pos_booking_id" value="<?php echo $booking_detail['booking_id']; ?>">
-
+<input type="hidden" name="default_charge_name" class="default_charge_name" value="<?php echo $company['default_charge_name']; ?>">
 
 
 <!--bootstrap popover-->

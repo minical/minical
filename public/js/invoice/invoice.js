@@ -222,18 +222,20 @@ innGrid.renderChargeGroups = function (chargeGroups) {
 		var bookingId = chargeGroup[0].find("span[name='booking_id']").text().trim();
 		var room_name = chargeGroup[0].find("span[name='room_name']").text().trim();
 
+		var default_charge_name = $('.default_charge_name').val();
+
 		var period = "day";
-        if(description == 'Daily Room Charge')
+        if(description == 'Daily '+default_charge_name)
         {
             period = "day";
             dateEnd = innGrid.getDateDiff(dateEnd, 0, null);
         }
-        else if(description == 'Weekly Room Charge')
+        else if(description == 'Weekly '+default_charge_name)
         {
             period = "week";
             dateEnd = innGrid.getDateDiff(dateEnd, 6, null);
         }
-        else if(description == 'Monthly Room Charge')
+        else if(description == 'Monthly '+default_charge_name)
         {
             period = "month";
             dateEnd = innGrid.getDateDiff(dateEnd, -1, 1);
