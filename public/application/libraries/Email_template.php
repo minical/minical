@@ -1431,4 +1431,40 @@ class Email_template {
         }
     }
 
+    function send_email_to_partner($data)
+    {
+        $company = $this->ci->Company_model->get_company($data['company_id']);
+
+        $this->set_language($company['default_language']);
+
+        $config['mailtype'] = 'html';
+
+        $this->ci->email->initialize($config);
+
+        $customer_email = $data['partner_email'];
+
+        $from_email = $data['email'];
+
+        $this->ci->email->from($from_email, $company['name']);
+        $this->ci->email->to($customer_email);
+        $this->ci->email->cc('support@minical.io');
+
+        $this->ci->email->subject($data['company_name'] . ' wants to join ' . $data['partner_name'] . ' partner');
+        $this->ci->email->message($this->ci->load->view('email/partner-contact-html', $data, true));
+
+        $this->ci->email->send();
+
+        $this->reset_language($company['default_language']);
+
+        if(isset($_GET['dev_mode'])) {
+            echo $this->ci->email->print_debugger();
+        }
+
+        return array(
+            "success" => true,
+            "message" => "Email successfully sent to ".$customer_email,
+            "customer_email" => $customer_email
+        );
+    }
+
 }
