@@ -295,6 +295,8 @@ class Rates extends MY_Controller
                 $rate_array = Array('rate_plan_id' => $new_rate_plan_id);
                 if ($this->allow_free_bookings) {
                     $rate_array['can_be_sold_online'] = 0;
+                } else {
+                    $rate_array['can_be_sold_online'] = 1;
                 }
                 $new_rate_id = $this->Rate_model->create_rate($rate_array);
 
