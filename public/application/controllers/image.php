@@ -239,7 +239,12 @@ class Image extends MY_Controller
 	}
 
 	function _delete_in_s3($filename) {
-		$this->s3->putBucket(getenv("AWS_S3_BUCKET"), S3::ACL_PUBLIC_READ);
+		if (strlen(getenv("AWS_S3_REGION")) > 0) {
+			$this->s3->setRegion(getenv("AWS_S3_REGION"));
+			$this->s3->putBucket(getenv("AWS_S3_BUCKET"), S3::ACL_PUBLIC_READ, getenv("AWS_S3_REGION"));
+		} else {
+			$this->s3->putBucket(getenv("AWS_S3_BUCKET"), S3::ACL_PUBLIC_READ);
+		}
 		$this->s3->deleteObject(getenv("AWS_S3_BUCKET"), $this->company_id."/".$filename);					
 	}
 
