@@ -91,7 +91,7 @@ if($is_favourite) { ?>
 
                                             <?php if((isset($extension['supported_in_minimal']) && $extension['supported_in_minimal'] == 1) || $this->company_subscription_level == 1) { ?>
                                             <?php } else { ?>
-                                                <span style="font-size: 10px;color: red;font-weight: 600;padding: 0px 0 5px;">PREMIUM ONLY</span>
+                                                <span style="font-size: 10px;color: red;font-weight: 600;padding: 0px 0 5px;">PREMIUM EXTENSION</span>
                                             <?php } ?>
 
 
@@ -142,7 +142,7 @@ if($is_favourite) { ?>
                                                 <?php if((isset($extension['supported_in_minimal']) && $extension['supported_in_minimal'] == 1) || $this->company_subscription_level == 1) { ?>
                                                     <span></span>
                                                 <?php } else { ?>
-                                                    <span style="background-color: darkgrey;"></span>
+                                                    <span class="premium_extension" style="background-color: darkgrey;"></span>
                                                 <?php } ?>
                                             <?php } ?>
                                         </label>
@@ -202,7 +202,7 @@ if($is_favourite) { ?>
 <?php if($this->company_subscription_level == 0) { ?>
     <div class="alert alert-danger" role="alert">
         <div style="font-size: 15px;">
-            You are currently on a <b>Minimal</b> plan, please select a <b>Partner</b> to get access to all extensions.
+            You are currently on a <b>Minimal</b> plan, please select a <b>Partner</b> to get access to all Premium extensions.
             <a target="_blank" href="<?php echo base_url().'partners' ?>">
                 Select a Partner
             </a>
@@ -268,7 +268,7 @@ if($is_favourite) { ?>
 
                                             <?php if((isset($extension['supported_in_minimal']) && $extension['supported_in_minimal'] == 1) || $this->company_subscription_level == 1) { ?>
                                             <?php } else { ?>
-                                                <span style="font-size: 10px;color: red;font-weight: 600;padding: 0px 0 5px;">PREMIUM ONLY</span>
+                                                <span style="font-size: 10px;color: red;font-weight: 600;padding: 0px 0 5px;">PREMIUM EXTENSION</span>
                                             <?php } ?>
 
                                             <p class="extension-discription" style= "margin-bottom: 0px"><?php echo 
@@ -323,7 +323,7 @@ if($is_favourite) { ?>
                                                 <?php if((isset($extension['supported_in_minimal']) && $extension['supported_in_minimal'] == 1) || $this->company_subscription_level == 1) { ?>
                                                     <span></span>
                                                 <?php } else { ?>
-                                                    <span style="background-color: darkgrey;"></span>
+                                                    <span class="premium_extension" style="background-color: darkgrey;"></span>
                                                 <?php } ?>
                                             <?php } ?>
                                         </label>
@@ -346,6 +346,28 @@ if($is_favourite) { ?>
                         <h4><?php echo l('No extensions found!'); ?></h4>
                     <?php } ?>
                 <?php endif; ?>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="premium_extension">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="font-size: 15px;">
+                Please select a <b>Partner</b> to get access to this extension.
+                <a target="_blank" href="<?php echo base_url().'partners' ?>">
+                    Select a Partner
+                </a>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
