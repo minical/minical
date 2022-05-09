@@ -351,6 +351,9 @@ class Invoice extends MY_Controller {
                 }
             }
         }
+        $data['custom_booking_fields'] = $this->Booking_field_model->get_booking_fields_data($booking_id,'show_on_registration_card');
+
+        $data['booking_fields'] = $this->Booking_field_model->get_booking_fields($this->company_id,'show_on_registration_card');
 
         $data['pos_extras'] = $this->Extra_model->get_extras($this->company_id, true);
 
