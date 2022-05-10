@@ -89,10 +89,10 @@ if($is_favourite) { ?>
                                             <?php } ?>
 
 
-                                            <?php if((isset($extension['supported_in_minimal']) && $extension['supported_in_minimal'] == 1) || $this->company_subscription_level == 1) { ?>
+                                            <!-- <?php if((isset($extension['supported_in_minimal']) && $extension['supported_in_minimal'] == 1) || $this->company_subscription_level == 1) { ?>
                                             <?php } else { ?>
                                                 <span style="font-size: 10px;color: red;font-weight: 600;padding: 0px 0 5px;">PREMIUM EXTENSION</span>
-                                            <?php } ?>
+                                            <?php } ?> -->
 
 
                                             <p class="extension-discription" ><?php echo  strlen($extension['description']) > 200 ? substr($extension['description'],0,200)."..." : $extension['description']; ?>
@@ -137,13 +137,13 @@ if($is_favourite) { ?>
                                         </a>
                                         <label class="extension-box" style="padding-right: 1.5rem !important;">
                                             <input type="checkbox" class="extension-status-button" data-status="<?php echo $extension['is_active']; ?>" name="<?php echo $extension['extension_folder_name']; ?>"
-                                                <?= $extension['is_active'] ? 'checked=checked' : ''; ?> <?php if((isset($extension['supported_in_minimal']) && $extension['supported_in_minimal'] == 1) || $this->company_subscription_level == 1) {} else { echo "disabled"; } ?>/>
+                                                <?= $extension['is_active'] ? 'checked=checked' : ''; ?> <?php //if((isset($extension['supported_in_minimal']) && $extension['supported_in_minimal'] == 1) || $this->company_subscription_level == 1) {} else { echo "disabled"; } ?>/>
                                             <?php if($this->user_permission != 'is_employee'){ ?>
-                                                <?php if((isset($extension['supported_in_minimal']) && $extension['supported_in_minimal'] == 1) || $this->company_subscription_level == 1) { ?>
+                                                <?php //if((isset($extension['supported_in_minimal']) && $extension['supported_in_minimal'] == 1) || $this->company_subscription_level == 1) { ?>
                                                     <span></span>
-                                                <?php } else { ?>
-                                                    <span class="premium_extension" style="background-color: darkgrey;"></span>
-                                                <?php } ?>
+                                                <?php //} else { ?>
+                                                    <!-- <span class="premium_extension" style="background-color: darkgrey;"></span> -->
+                                                <?php //} ?>
                                             <?php } ?>
                                         </label>
                                     </div>
@@ -199,7 +199,7 @@ if($is_favourite) { ?>
     </div>
 </div>
 
-<?php if($this->company_subscription_level == 0) { ?>
+<!-- <?php if($this->company_subscription_level == 0) { ?>
     <div class="alert alert-danger" role="alert">
         <div style="font-size: 15px;">
             You are currently on a <b>Minimal</b> plan, please select a <b>Partner</b> to get access to all Premium extensions.
@@ -208,7 +208,7 @@ if($is_favourite) { ?>
             </a>
         </div>
     </div>
-<?php } ?>
+<?php } ?> -->
 
 <div class="main-card mb-3">
     <div class="extension-card">
@@ -266,10 +266,10 @@ if($is_favourite) { ?>
                                                 <span style="font-size: 11px;color: gray;font-weight: 500;padding: 0px 0 5px;">VENDOR ONLY</span>
                                             <?php } ?>
 
-                                            <?php if((isset($extension['supported_in_minimal']) && $extension['supported_in_minimal'] == 1) || $this->company_subscription_level == 1) { ?>
+                                            <!-- <?php if((isset($extension['supported_in_minimal']) && $extension['supported_in_minimal'] == 1) || $this->company_subscription_level == 1) { ?>
                                             <?php } else { ?>
                                                 <span style="font-size: 10px;color: red;font-weight: 600;padding: 0px 0 5px;">PREMIUM EXTENSION</span>
-                                            <?php } ?>
+                                            <?php } ?> -->
 
                                             <p class="extension-discription" style= "margin-bottom: 0px"><?php echo 
 
@@ -318,13 +318,13 @@ if($is_favourite) { ?>
                                         </a>
                                         <label class="extension-box" style="padding-right: 1.5rem !important;">
                                             <input type="checkbox" class="extension-status-button" data-status="<?php echo $extension['is_active']; ?>" name="<?php echo $extension['extension_folder_name']; ?>"
-                                                <?= $extension['is_active'] ? 'checked=checked' : ''; ?> <?php if((isset($extension['supported_in_minimal']) && $extension['supported_in_minimal'] == 1) || $this->company_subscription_level == 1) {} else { echo "disabled"; } ?>/>
+                                                <?= $extension['is_active'] ? 'checked=checked' : ''; ?> <?php //f((isset($extension['supported_in_minimal']) && $extension['supported_in_minimal'] == 1) || $this->company_subscription_level == 1) {} else { echo "disabled"; } ?>/>
                                             <?php if($this->user_permission != 'is_employee'){ ?>
-                                                <?php if((isset($extension['supported_in_minimal']) && $extension['supported_in_minimal'] == 1) || $this->company_subscription_level == 1) { ?>
+                                                <?php //if((isset($extension['supported_in_minimal']) && $extension['supported_in_minimal'] == 1) || $this->company_subscription_level == 1) { ?>
                                                     <span></span>
-                                                <?php } else { ?>
-                                                    <span class="premium_extension" style="background-color: darkgrey;"></span>
-                                                <?php } ?>
+                                                <?php //} else { ?>
+                                                    <!-- <span class="premium_extension" style="background-color: darkgrey;"></span> -->
+                                                <?php // ?>
                                             <?php } ?>
                                         </label>
                                     </div>
