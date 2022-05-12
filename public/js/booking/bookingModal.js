@@ -6663,7 +6663,11 @@ var bookingModalInvoker = function ($) {
             var check_out_date = new Date(checkOutDate);
             var oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
             var diffDays = Math.round(Math.abs((check_in_date.getTime() - check_out_date.getTime()) / (oneDay)))
-            this.$modalBody.find("[name='number_of_days']").val(diffDays);
+            
+            if($.isNumeric(diffDays))
+                this.$modalBody.find("[name='number_of_days']").val(diffDays);
+            else
+                this.$modalBody.find("[name='number_of_days']").val(0);
 
             that._updatePayPeriodDropdown();
         },
