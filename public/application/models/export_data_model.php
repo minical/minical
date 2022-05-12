@@ -364,7 +364,6 @@ class Export_data_model extends CI_Model {
         $db2->join('tax_price_brackets as tpb','tpb.tax_type_id = tt.tax_type_id', "left");
         $db2->where('tt.company_id',$company_id);
         $db2->where('tt.is_deleted', 0);
-        // $db2->where('tpb.is_deleted', 0);
         $query = $db2->get();
         return $query->result_array();
     }
@@ -373,17 +372,28 @@ class Export_data_model extends CI_Model {
     {
     	$db2 = $this->load->database('roomsy_db', TRUE);
 
-        $db2->select('c.*,cd.*,cxcf.*,GROUP_CONCAT(cf.name) as custom_fields_name,GROUP_CONCAT(cxcf.value) as custom_fields_value,ct.name as customer_type_name,c.customer_id as customers_id,c.customer_name as name_customer');
-        $db2->from('customer as c');
-        $db2->join('customer_fields as cf', 'cf.company_id = c.company_id AND cf.is_deleted = 0', 'left');
-        $db2->join('customer_x_customer_field as cxcf', 'cxcf.customer_field_id = cf.id AND cxcf.customer_id = c.customer_id', 'left');
-        $db2->join('customer_card_details as cd', 'c.customer_id = cd.customer_id', 'left');
-        $db2->join('customer_types as ct', 'c.customer_type_id = ct.id', 'left');
-        $db2->where('c.company_id', $company_id);
-        $db2->where('c.is_deleted', 0);
-        $db2->group_by('c.customer_id');
+    	$sql = 
+    	"SELECT 
+    		c.*,
+        	cd.*,
+        	GROUP_CONCAT(cf.name) as custom_fields_name,
+        	ct.name as customer_type_name,
+        	c.customer_id as customers_id,
+        	c.customer_name as name_customer,
+        	cxcf.value,
+            GROUP_CONCAT(IF(cxcf2.value != '', cxcf2.value, ''), ' ') as custom_fields_value,
+            GROUP_CONCAT(DISTINCT cxcf2.customer_field_id, ' ') as customer_field_id
+        FROM customer as c
+        LEFT JOIN customer_fields as cf ON cf.company_id = c.company_id AND cf.is_deleted = 0
+        LEFT JOIN customer_x_customer_field as cxcf ON cxcf.customer_field_id = cf.id AND cxcf.customer_id = c.customer_id
+        LEFT JOIN customer_x_customer_field as cxcf2 ON cxcf2.customer_field_id = cf.id AND cxcf2.customer_id = c.customer_id
+        LEFT JOIN customer_card_details as cd ON c.customer_id = cd.customer_id
+        LEFT JOIN customer_types as ct ON c.customer_type_id = ct.id
 
-        $query = $db2->get();
+        WHERE c.company_id = $company_id AND c.is_deleted = 0
+        GROUP BY c.customer_id";
+
+        $query = $db2->query($sql);
 
         if ($db2->_error_message()) // error checking
             show_error($db2->_error_message());
@@ -403,18 +413,14 @@ class Export_data_model extends CI_Model {
     	$db2->select('ct.*,c.*,c.charge_id as chargeid');
         $db2->from('charge_type as ct');
         $db2->join('charge as c', 'c.charge_type_id = ct.id', 'left');
-        // $db2->join('charge_type_tax_list as cttl', 'cttl.charge_type_id = ct.id', 'left');
-        // $db2->join('tax_type as tt', 'tt.tax_type_id = cttl.tax_type_id','left');
         $db2->where('ct.company_id', $company_id);
         $db2->where('ct.is_deleted', 0);
         $db2->where('c.is_deleted', 0);
-        // $db2->group_by('ct.id');
 
         $query = $db2->get();
 
         if ($db2->_error_message()) // error checking
             show_error($db2->_error_message());
-          // echo $db2->last_query();die;
         if ($query->num_rows >= 1)
         {
             $result =  $query->result_array();
@@ -629,5 +635,43 @@ class Export_data_model extends CI_Model {
             return $result;
         }
         return null;
+    }
+
+    function get_booking_staying_customers($company_id)
+    {
+    	$db2 = $this->load->database('roomsy_db', TRUE);
+
+    	$db2->select('booking_id');
+        $db2->from('booking_staying_customer_list');
+        $db2->where('company_id', $company_id);
+
+        $query = $db2->get();
+        $result = $query->result_array();
+
+        $booking_ids = array();
+
+        foreach ($result as $key => $value) {
+        	$booking_ids[] = $value['booking_id'];
+        }
+
+    	
+        $db2->select('booking_staying_customer_list.customer_id');
+        $db2->select('booking_staying_customer_list.booking_id');
+        $db2->select('customer_name');
+        $db2->from('booking_staying_customer_list');
+        $db2->join('customer', 'customer.customer_id = booking_staying_customer_list.customer_id', 'left');
+        $db2->where_in('booking_staying_customer_list.booking_id', $booking_ids);
+        $db2->where('booking_staying_customer_list.company_id', $company_id);
+
+        $results = $db2->get();
+        
+        if (empty($results))
+        {
+            return array();
+        }
+        else
+        {
+            return $results->result_array();
+        }
     }
 }
