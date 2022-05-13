@@ -5907,6 +5907,13 @@ class Migration_create_base extends CI_Migration {
 				'null' => FALSE,
 
 			),
+			'show_on_partners_page' => array(
+				'type' => 'TINYINT',
+				'constraint' => 1,
+				'null' => FALSE,
+				'default' => '1',
+
+			),
 		));
 		$this->dbforge->add_key("id",true);
 		$this->dbforge->create_table("whitelabel_partner", TRUE);
