@@ -634,12 +634,21 @@ function occupacyMoved(info) {
                     alert(data);
                     info.revert();
                 } else {
+                    
                     // reload booking_list_wrap and calendar
                     innGrid.reloadBookings();
-                    innGrid.updateAvailabilities(
-                        dateFrom2,
-                        dateTo2
-                    );
+                    if(dateFrom1 < dateFrom2){
+                        innGrid.updateAvailabilities(
+                            dateFrom1,
+                            dateTo2
+                        );
+                    }else{
+                        innGrid.updateAvailabilities(
+                            dateFrom2,
+                            dateTo1
+                        );
+                    }  
+
                 }
             }
         });
@@ -708,17 +717,26 @@ innGrid.bookingResized = function (info) {
                 start2: encodeURIComponent(dateFrom2),
                 end2: encodeURIComponent(dateTo2)
             },
+
             success: function(data){
                 if (data.trim() != "success") {
                     alert(data);
                     info.revert();
                 } else {
+                   
                     // reload booking_list_wrap and calendar
                     innGrid.reloadBookings();
-                    innGrid.updateAvailabilities(
-                        dateFrom2,
-                        dateTo2
-                    );
+                    if(dateTo1 > dateTo2) {
+                        innGrid.updateAvailabilities(
+                            dateFrom2,
+                            dateTo1
+                        );
+                    }else{
+                         innGrid.updateAvailabilities(
+                            dateFrom2,
+                            dateTo2
+                        );
+                    }
                 }
             }
         });
