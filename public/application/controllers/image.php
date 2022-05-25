@@ -223,8 +223,19 @@ class Image extends MY_Controller
 	// $output_filename should be:
 	// "slide#" for slideshow
 	// "gallery#" for gallery
-	function _upload_to_s3($source_image, $output_filename) {
+	function _upload_to_s3($source_image, $output_filename, $extension=null) {
 		
+		if(getenv("STORAGE_DRIVER")=='local'){
+			$dir = "upload/".$this->company_id;
+			if(!file_exists($dir)){
+				mkdir($dir);
+			}
+			if(move_uploaded_file($source_image, $dir."/{$output_filename}.{$extension}" )){
+				return true;
+			}
+			return false;
+		}
+
 		// remove the s3 file first
 		// Remember, _delete_in_s3 function also initializes s3->putBucket function.
 		$this->_delete_in_s3($output_filename);
@@ -243,25 +254,43 @@ class Image extends MY_Controller
 		$this->s3->deleteObject(getenv("AWS_S3_BUCKET"), $this->company_id."/".$filename);					
 	}
 
+	function test_shahid()
+	{
+		if(getenv("STORAGE_DRIVER")=='local'){
+			die("Driver local");
+			
+		}
+
+		die("Driver not local");
+	}
     function upload_to_s3 ($myId) {
 
-        $output_filename = generate_guid();
+        $output_filename = getenv("STORAGE_DRIVER")=='local' ? time().'-'. rand(10,10000) : generate_guid();
 
         $filename = $_FILES["file"]["tmp_name"];
         list($width, $height) = getimagesize($filename);
+		$extension = explode('/', $_FILES["file"]['type']);
+		$extension = end($extension);
 
-        if ($this->_upload_to_s3($_FILES["file"]["tmp_name"], $output_filename))
+        if ($this->_upload_to_s3($_FILES["file"]["tmp_name"], $output_filename, $extension))
         {
             $image_data = Array(
                 "image_group_id" => $myId,
-                "filename" => $output_filename
+                "filename" => getenv("STORAGE_DRIVER")=='local' ? "{$output_filename}.{$extension}" :  $output_filename 
             );
 
             $this->Image_model->insert_image($image_data);
+			
+			$img_url = $this->image_url.$this->company_id."/".$output_filename;
+
+			if(getenv("STORAGE_DRIVER")=='local')
+			{
+				$img_url = "upload/".$this->company_id."/".$output_filename.".".$extension;
+			}
 
             $response = array(
                 "status" => 'success',
-                "url" => $this->image_url.$this->company_id."/".$output_filename,
+                "url" => $img_url,
                 "width" => $width,
                 "height" => $height
             );

@@ -47,8 +47,11 @@ class MY_Controller extends CI_Controller {
 
         $this->language = $this->lang->language;
         $this->load->vars(array("l" => (object)$this->lang->language));
-
-        $this->image_url = "https://".getenv("AWS_S3_BUCKET").".s3.amazonaws.com/";
+        if(getenv("STORAGE_DRIVER")=='local'){
+            $this->image_url = getenv('PROJECT_URL'). '/upload/';
+        }else{
+            $this->image_url = "https://".getenv("AWS_S3_BUCKET").".s3.amazonaws.com/";
+        }
 
         $this->check_login();
 
