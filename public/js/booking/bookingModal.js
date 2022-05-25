@@ -989,26 +989,7 @@ var bookingModalInvoker = function ($) {
                                     })
                                 )
                             )
-                            // .append(
-                            //     $("<li/>").append(
-                            //         $("<a/>", {
-                            //             'href': '#extras',
-                            //             'data-toggle': "tab",
-                            //             'text': l('extras')
-                            //         })
-                            //             .append(
-                            //                 $("<span/>", {
-                            //                     'class': 'extras_count',
-                            //                     'text': " ( " + that.booking.extras_count + " )"
-                            //                 })
-                            //             )
-                            //             .on('click', function (e) {
-                            //                 setTimeout(function () {
-                            //                     that._setHeight('extras');
-                            //                 }, 1000);
-                            //             })
-                            //     )
-                            // )
+                            
                     )
                 );
 
@@ -1134,26 +1115,7 @@ var bookingModalInvoker = function ($) {
                                     })
                                 )
                             )
-                            // .append(
-                            //     $("<li/>").append(
-                            //         $("<a/>", {
-                            //             'href': '#extras',
-                            //             'data-toggle': "tab",
-                            //             'text': l('extras')
-                            //         })
-                            //             .append(
-                            //                 $("<span/>", {
-                            //                     'class': 'extras_count',
-                            //                     'text': " ( " + that.booking.extras_count + " )"
-                            //                 })
-                            //             )
-                            //             .on('click', function (e) {
-                            //                 setTimeout(function () {
-                            //                     that._setHeight('extras');
-                            //                 }, 1000);
-                            //             })
-                            //     )
-                            // )
+                            
                     )
                 );
             }
@@ -2558,9 +2520,13 @@ var bookingModalInvoker = function ($) {
                                                             $('.booking_balance').html(number_format(response.balance, 2, ".", ""));
                                                         }
 
-                                                        var current_count = $('.left-sidebar').find('.extras_count').text().split(' ');
-                                                        var new_count = (parseInt(current_count[2])) + 1;
-                                                        $('.left-sidebar').find('.extras_count').html(" ( " + new_count + " )");
+                                                        var current_count = $('.extra_len').val();
+                                                        var new_count = (parseInt(current_count) + 1);
+                                                        console.log('current_count',current_count);
+                                                        console.log('new_count',new_count);
+
+                                                        $('.left-sidebar').find('.extras_count').html(" (" + new_count + ")");
+                                                        $('.extra_len').val(new_count);
                                                         // if this is the first extra to this booking,
                                                         // create extra container (panel). otherwise, append extra to existing
                                                         extraData.booking_extra_id = response.booking_extra_id;
@@ -5302,9 +5268,13 @@ var bookingModalInvoker = function ($) {
                     success: function (data) {
                         $(".extra#" + bookingExtraID).remove();
 
-                        var current_count = $('.left-sidebar').find('.extras_count').text().split(' ');
-                        var new_count = (parseInt(current_count[2])) - 1;
-                        $('.left-sidebar').find('.extras_count').html(" ( " + new_count + " )");
+                        var current_count = $('.extra_len').val();
+                        var new_count = (parseInt(current_count) - 1);
+                        console.log('current_count',current_count);
+                        console.log('new_count',new_count);
+
+                        $('.left-sidebar').find('.extras_count').html(" (" + new_count + ")");
+                        $('.extra_len').val(new_count);
 
                         $.each(that.booking.extras, function (i, value) { // unset booking extra id that is deleted
                             if (value.booking_extra_id == bookingExtraID) {
