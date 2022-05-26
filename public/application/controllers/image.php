@@ -102,17 +102,20 @@ class Image extends MY_Controller
 		        $img_r = imagecreatefrompng($imgUrl);
 				$source_image = imagecreatefrompng($imgUrl);
 				$type = '.png';
+				$extension = 'png';
 		        break;
 		    case 'image/jpeg':
 		        $img_r = imagecreatefromjpeg($imgUrl);
 				$source_image = imagecreatefromjpeg($imgUrl);
 				error_log("jpg");
 				$type = '.jpeg';
+				$extension = 'jpeg';
 		        break;
 		    case 'image/gif':
 		        $img_r = imagecreatefromgif($imgUrl);
 				$source_image = imagecreatefromgif($imgUrl);
 				$type = '.gif';
+				$extension = 'gif';
 		        break;
 		    default: die('image type not supported');
 		}
@@ -144,7 +147,7 @@ class Image extends MY_Controller
 		$filename = tempnam(sys_get_temp_dir(), "foo");
 		imagejpeg($final_image, $filename, $jpeg_quality);
 		
-		if ($this->_upload_to_s3($filename, $output_filename))
+		if ($this->_upload_to_s3($filename, $output_filename, $extension))
 		{
 			$response = array(
 				"status" => 'success',
