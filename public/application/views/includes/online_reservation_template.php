@@ -202,19 +202,25 @@ $files = get_asstes_files($this->module_assets_files, $this->router->fetch_modul
 
 	<div class="footer hidden-print col-md-12">
 	    <?php
-         $whitelabelinfo = $this->session->userdata('white_label_information');
-         // Set the partner name
-         $partner_name =  isset($whitelabelinfo['name']) ? ucfirst($whitelabelinfo['name']) : $this->config->item('branding_name');
-	     $time = time() ;
-	     $year= date("Y",$time);
-	     echo l('powered by', true);
-         if(empty($whitelabelinfo) || (isset($whitelabelinfo['name']) && $whitelabelinfo['name'] == 'Minical')) {
-             echo " <a target='_blank' href='https://www.minical.io'>Minical</a>";
-         }else {
-             echo (!empty($whitelabelinfo['domain']) ? " <a target='_blank' href='https://".$whitelabelinfo['domain']."'>" : " <a href='#'>").$partner_name."</a>";
-         }
-		 echo ''; //Don't bother with showing copyright until a dashbar is built.
-	     ?>
+        $whitelabelinfo = $this->session->userdata('white_label_information');
+        // Set the partner name
+        $partner_name =  isset($whitelabelinfo['name']) ? ucfirst($whitelabelinfo['name']) : $this->config->item('branding_name');
+	    $time = time() ;
+	    $year= date("Y",$time);
+	    echo l('powered by', true);
+        
+        if(empty($whitelabelinfo) || (isset($whitelabelinfo['name']) && $whitelabelinfo['name'] == 'Minical')) {
+            echo " <a target='_blank' href='https://www.minical.io'>Minical</a>";
+        } else {
+        	if(!empty($whitelabelinfo['website'])) {
+        		echo '<a target="_blank" href="'.$whitelabelinfo['website'].'" > '.$partner_name.'</a>';
+        	} else {
+        		echo (!empty($whitelabelinfo['domain']) ? " <a target='_blank' href='https://".$whitelabelinfo['domain']."'>" : " <a href='#'>").$partner_name."</a>";
+        	}
+            
+        }
+		echo ''; //Don't bother with showing copyright until a dashbar is built.
+	    ?>
 	</div>
 
 
