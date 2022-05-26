@@ -254,15 +254,6 @@ class Image extends MY_Controller
 		$this->s3->deleteObject(getenv("AWS_S3_BUCKET"), $this->company_id."/".$filename);					
 	}
 
-	function test_shahid()
-	{
-		if(getenv("STORAGE_DRIVER")=='local'){
-			die("Driver local");
-			
-		}
-
-		die("Driver not local");
-	}
     function upload_to_s3 ($myId) {
 
         $output_filename = getenv("STORAGE_DRIVER")=='local' ? time().'-'. rand(10,10000) : generate_guid();
