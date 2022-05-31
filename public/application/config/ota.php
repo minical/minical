@@ -19,8 +19,8 @@ $config['booking_dot_com_password'] = '';//$_SERVER["BOOKING_DOT_COM_PASSWORD"];
 |--------------------------------------------------------------------------
 */
 
-$config['expedia_username'] = 'EQC_RoomsyTEST';//$_SERVER["EXPEDIA_USERNAME"];
-$config['expedia_password'] = '0p6gW3*$@0QX4zytu';//$_SERVER["EXPEDIA_PASSWORD"];
+$config['expedia_username'] = '';//$_SERVER["EXPEDIA_USERNAME"];
+$config['expedia_password'] = '';//$_SERVER["EXPEDIA_PASSWORD"];
 
 /*
 |--------------------------------------------------------------------------
