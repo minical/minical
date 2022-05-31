@@ -4834,21 +4834,21 @@ var bookingModalInvoker = function ($) {
                 existGroupId = that.groupInfo.group_id
 
 
-            var adult_count = $("select[name=adult_count]").children("option:selected").val();
-            var children_count = $("select[name=children_count]").children("option:selected").val();
-            var total_customer_length = parseInt(adult_count)+parseInt(children_count);
+            // var adult_count = $("select[name=adult_count]").children("option:selected").val();
+            // var children_count = $("select[name=children_count]").children("option:selected").val();
+            // var total_customer_length = parseInt(adult_count)+parseInt(children_count);
 
-            var token_label_length = $('.tokenfield').find('.token-label').length;
+            // var token_label_length = $('.tokenfield').find('.token-label').length;
             
-            console.log($('.tokenfield').find('.token-label').length);
-            console.log(parseInt(adult_count)+parseInt(children_count));
+            // console.log($('.tokenfield').find('.token-label').length);
+            // console.log(parseInt(adult_count)+parseInt(children_count));
 
-            if(token_label_length > total_customer_length){
-                alert('you are exceeding total customer count limit');
-                $('.booking-create').prop('disabled', false);
+            // if(token_label_length > total_customer_length){
+            //     alert('you are exceeding total customer count limit');
+            //     $('.booking-create').prop('disabled', false);
 
-                return false;
-            }
+            //     return false;
+            // }
 
 
             if (typeof _createBookingLock !== "undefined" && _createBookingLock) {
@@ -5071,19 +5071,19 @@ var bookingModalInvoker = function ($) {
             // update availabilities of the dates prior to update
             // why do we need it?
 
-            var adult_count = $("select[name=adult_count]").children("option:selected").val();
-            var children_count = $("select[name=children_count]").children("option:selected").val();
-            var total_customer_length = parseInt(adult_count)+parseInt(children_count);
+            // var adult_count = $("select[name=adult_count]").children("option:selected").val();
+            // var children_count = $("select[name=children_count]").children("option:selected").val();
+            // var total_customer_length = parseInt(adult_count)+parseInt(children_count);
 
-            var token_label_length = $('.tokenfield').find('.token-label').length;
+            // var token_label_length = $('.tokenfield').find('.token-label').length;
             
-            console.log($('.tokenfield').find('.token-label').length);
-            console.log(parseInt(adult_count)+parseInt(children_count));
+            // console.log($('.tokenfield').find('.token-label').length);
+            // console.log(parseInt(adult_count)+parseInt(children_count));
 
-            if(token_label_length > total_customer_length){
-                alert('you are exceeding total customer count limit');
-                return false;
-            }
+            // if(token_label_length > total_customer_length){
+            //     alert('you are exceeding total customer count limit');
+            //     return false;
+            // }
 
             $.ajax({
                 type: "POST",
