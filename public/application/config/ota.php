@@ -8,8 +8,8 @@
 |--------------------------------------------------------------------------
 */
 
-$config['booking_dot_com_username'] = '';//$_SERVER["BOOKING_DOT_COM_USERNAME"];
-$config['booking_dot_com_password'] = '';//$_SERVER["BOOKING_DOT_COM_PASSWORD"];
+$config['booking_dot_com_username'] = ''; //getenv("BOOKING_DOT_COM_USERNAME");
+$config['booking_dot_com_password'] = ''; //getenv("BOOKING_DOT_COM_PASSWORD");
 
 /*
 |--------------------------------------------------------------------------
@@ -19,9 +19,8 @@ $config['booking_dot_com_password'] = '';//$_SERVER["BOOKING_DOT_COM_PASSWORD"];
 |--------------------------------------------------------------------------
 */
 
-$config['expedia_username'] = '';//$_SERVER["EXPEDIA_USERNAME"];
-$config['expedia_password'] = '';//$_SERVER["EXPEDIA_PASSWORD"];
-
+$config['expedia_username'] = ''; //getenv("EXPEDIA_USERNAME");
+$config['expedia_password'] = ''; //getenv("EXPEDIA_PASSWORD");
 /*
 |--------------------------------------------------------------------------
 | Myallocator credentials
@@ -30,8 +29,8 @@ $config['expedia_password'] = '';//$_SERVER["EXPEDIA_PASSWORD"];
 |--------------------------------------------------------------------------
 */
 
-$config['myallocator_vendor_id'] = '';//$_SERVER["MYALLOCATOR_VENDOR_ID"];
-$config['myallocator_vendor_password'] = '';//$_SERVER["MYALLOCATOR_VENDOR_PASSWORD"];
+$config['myallocator_vendor_id'] = ''; //getenv("MYALLOCATOR_VENDOR_ID");
+$config['myallocator_vendor_password'] = '';// getenv("MYALLOCATOR_VENDOR_PASSWORD");
 
 /*
 |--------------------------------------------------------------------------
@@ -41,8 +40,8 @@ $config['myallocator_vendor_password'] = '';//$_SERVER["MYALLOCATOR_VENDOR_PASSW
 |--------------------------------------------------------------------------
 */
 
-$config['agoda_api_key'] = '';//$_SERVER["AGODA_API_KEY"];
-$config['agoda_env'] = '';//$_SERVER["AGODA_ENV"];
+$config['agoda_api_key'] = ''; //getenv("AGODA_API_KEY");
+$config['agoda_env'] = ''; //getenv("AGODA_ENV");
 
 /*
 |--------------------------------------------------------------------------
@@ -52,9 +51,9 @@ $config['agoda_env'] = '';//$_SERVER["AGODA_ENV"];
 |--------------------------------------------------------------------------
 */
 
-$config['siteminder_username'] =  'harshbinjwa';//$_SERVER["SITEMINDER_USERNAME"];
-$config['siteminder_password'] =  'Harsh@123';//$_SERVER["SITEMINDER_PASSWORD"];
-$config['siteminder_requestor_id'] =  '';//$_SERVER["SITEMINDER_REQUESTOR_ID"];
+$config['siteminder_username'] =  getenv("SITEMINDER_USERNAME");
+$config['siteminder_password'] =  getenv("SITEMINDER_PASSWORD");
+$config['siteminder_requestor_id'] =  ''; //getenv("SITEMINDER_REQUESTOR_ID");
 
 /* End of file ota.php */
 /* Location: ./application/config/ota.php */
