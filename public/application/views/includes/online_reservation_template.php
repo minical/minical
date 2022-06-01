@@ -110,7 +110,14 @@ $files = get_asstes_files($this->module_assets_files, $this->router->fetch_modul
 					        	else 
 					        		echo "disabled";
 					        ?>">
-								<div class="text-center bs-wizard-stepnum" style="font-size: 15px;"><?php echo l('Select Room', 1); ?></div>
+								<div class="text-center bs-wizard-stepnum" style="font-size: 15px;"><?php 
+								if(isset($company_data['default_room_singular']) && $company_data['default_room_singular'] !='' )
+                                {
+                                   echo l('Select')." ".$company_data['default_room_singular'];
+                                }else{
+                                	echo l('Select Room', 1);
+                                }
+								 ?></div>
 								<div class="progress"><div class="progress-bar"></div></div>
 								<div class="bs-wizard-dot"></div>
 								<div class="bs-wizard-info text-center">
