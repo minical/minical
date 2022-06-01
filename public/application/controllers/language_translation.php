@@ -159,10 +159,24 @@ class Language_translation extends MY_Controller
     function insert_non_translated_keys() {
         $insert_data = array();
         $non_translated_keys = $this->input->post('non_translated_keys');
+        $is_module = true;
+        $module_name = '';
+
         foreach($non_translated_keys as $key) {
-            if(is_null($this->translation_model->check_phrase_keyword_with_language($key, null, true))) {
-                $insert_data = array('phrase_keyword' => $key, 'created_at' => date('Y-m-d H:i:s'));
-                $insert_id = $this->translation_model->insert_records('language_phrase', $insert_data);
+            foreach ($this->all_active_modules as $module => $value) {
+                
+                $key1 = explode('/',$key);
+                if($module == $key1[0]) {
+                    $is_module = false;
+                    $module_name = $module;
+                }
+            }
+            
+            if($is_module && $module_name == '') {
+                if(is_null($this->translation_model->check_phrase_keyword_with_language($key, null, true))) {
+                    $insert_data = array('phrase_keyword' => $key, 'created_at' => date('Y-m-d H:i:s'));
+                    $insert_id = $this->translation_model->insert_records('language_phrase', $insert_data);
+                }
             }
         }
     }

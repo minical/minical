@@ -805,7 +805,8 @@ class Charge_model extends CI_Model {
 		$this->db->join('booking_block as bb', 'bb.booking_id = b.booking_id', 'left');
 		$this->db->join('room as r', 'r.room_id = bb.room_id', 'left');
 		$this->db->select('charge.*, cu.*, ct.*, user_profiles.*, b.*, b.pay_period, ct.name as charge_type_name, ct.id as charge_type_id,`cf`.`folio_id` as folio_id, CONCAT_WS(" ",first_name,  last_name ) as user_name, r.room_name');
-		$this->db->order_by('selling_date', 'ASC');
+		$this->db->group_by('charge.charge_id');
+        $this->db->order_by('selling_date', 'ASC');
         $query = $this->db->get("charge");
 		if ($this->db->_error_message()) // error checking
 			show_error($this->db->_error_message());

@@ -449,7 +449,17 @@ class Room extends MY_Controller
 			else
 			{
 				$response[$i]['status'] = "error";
-				$response[$i]['message'] = validation_errors();
+
+				if($date_start == ''){
+					$response[$i]['message'][] = 'The Start Date field is required';
+				}
+				if($date_end == ''){
+					$response[$i]['message'][] = 'The End Date field is required';
+				}
+				if($availability == ''){
+					$response[$i]['message'][] = 'The Availability for OTAs field is required';
+				}
+				// $response[$i]['message'] = validation_errors();
 			}
 		}
 

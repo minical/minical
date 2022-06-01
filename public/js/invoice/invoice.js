@@ -222,18 +222,20 @@ innGrid.renderChargeGroups = function (chargeGroups) {
 		var bookingId = chargeGroup[0].find("span[name='booking_id']").text().trim();
 		var room_name = chargeGroup[0].find("span[name='room_name']").text().trim();
 
+		var default_charge_name = $('.default_charge_name').val();
+
 		var period = "day";
-        if(description == 'Daily Room Charge')
+        if(description == 'Daily '+default_charge_name)
         {
             period = "day";
             dateEnd = innGrid.getDateDiff(dateEnd, 0, null);
         }
-        else if(description == 'Weekly Room Charge')
+        else if(description == 'Weekly '+default_charge_name)
         {
             period = "week";
             dateEnd = innGrid.getDateDiff(dateEnd, 6, null);
         }
-        else if(description == 'Monthly Room Charge')
+        else if(description == 'Monthly '+default_charge_name)
         {
             period = "month";
             dateEnd = innGrid.getDateDiff(dateEnd, -1, 1);
@@ -267,6 +269,14 @@ innGrid.renderChargeGroups = function (chargeGroups) {
 			var booking_id_data = {html: bookingId};
         }
 
+        var room_id_td = '';
+        var room_id_data = {html: ''};
+        if(function_name == 'show_master_invoice')
+        {
+            room_id_td = '<td/>';
+			var room_id_data = {html: room_name};
+        }
+
         expandableTR = $('<tr />', {
 				'class': 'expandable',
 				'name': chargeGroupID,
@@ -280,9 +290,9 @@ innGrid.renderChargeGroups = function (chargeGroups) {
 							html: innGrid._getLocalFormattedDate(dateStart)+" "+l('to')+" "+innGrid._getLocalFormattedDate(dateEnd)
 						}).add(booking_id_td,
 							booking_id_data
+						).add(booking_id_td,
+							room_id_data
 						).add('<td />', {
-							html: room_name
-						}).add('<td />', {
 							html: description
 						}).add('<td />', {
 							html: customer

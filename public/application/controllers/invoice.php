@@ -351,6 +351,9 @@ class Invoice extends MY_Controller {
                 }
             }
         }
+        $data['custom_booking_fields'] = $this->Booking_field_model->get_booking_fields_data($booking_id,'show_on_registration_card');
+
+        $data['booking_fields'] = $this->Booking_field_model->get_booking_fields($this->company_id,'show_on_registration_card');
 
         $data['pos_extras'] = $this->Extra_model->get_extras($this->company_id, true);
 
@@ -879,6 +882,10 @@ class Invoice extends MY_Controller {
                 $invoice_log_data['new_amount'] = isset($charge['amount']) ? $charge['amount'] : '';
                 $invoice_log_data['log'] = 'Charge Updated';
                 $this->Invoice_log_model->insert_log($invoice_log_data); 
+
+                $charge_changes[$key]['selling_date'] = get_base_formatted_date($charge['selling_date']);
+
+                $charge_id = $charge['charge_id'];
             }
         }
         $this->Invoice_model->update_charges($charge_changes);

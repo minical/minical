@@ -88,11 +88,11 @@
 			</table>
 			<br />
 			<br />
-			<br />
+            <?php echo l('Visit', true); ?> <a href="https://docs.minical.io/other-resources/overbooking-for-otas" target="_blank">https://docs.minical.io/other-resources/overbooking-for-otas</a> <?php echo l('for more details', true); ?>.
+            <br />
 			<?php echo l('Please contact support if you have any issues', true); ?>.
 			<br />
 			<br />
-
 			<?php echo l('Thanks & Regards', true); ?> <br />
 			Minical
 		</div>

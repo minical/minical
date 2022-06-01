@@ -63,7 +63,12 @@
             </div>
             <div>
             <?php echo l('Product Items'); ?>
-            <a>(<?php echo l('About Products'); ?>)</a>
+            <a href=#
+                class="text-primary h4" 
+                aria-hidden="true" 
+                data-toggle="modal" 
+                data-target="#help-modal"
+            >(<?php echo l('About Products'); ?>)</a>
             </div>
         </div>
     </div>

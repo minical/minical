@@ -1,3 +1,9 @@
+$(document).ready(function(){
+	$('body').on('click', '.premium_extension', function(){
+		$('#premium_extension').modal('show');
+	});
+});
+
 
 $(document).on('click', '.extension-status-button', function () {
 	var extensionName = $(this).attr('name');

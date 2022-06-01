@@ -1441,8 +1441,7 @@ class Booking extends MY_Controller
 
         $post_booking_data = $booking_data;
         $post_booking_data['booking_id'] = $booking_id;
-
-      
+        $post_booking_data['company_id'] = $this->company_id;
 
         $response = array();
 
@@ -1461,8 +1460,8 @@ class Booking extends MY_Controller
             $rate_array = array();
             foreach ($raw_rate_array as $rate)
             {
-//				$base_rate = $rate['base_rate'];
-//				$base_rate = $base_rate ? $base_rate : isset($rate['adult_'.$booking_data['adult_count'].'_rate']) ? $rate['adult_'.$booking_data['adult_count'].'_rate'] : 0;
+//              $base_rate = $rate['base_rate'];
+//              $base_rate = $base_rate ? $base_rate : isset($rate['adult_'.$booking_data['adult_count'].'_rate']) ? $rate['adult_'.$booking_data['adult_count'].'_rate'] : 0;
 
                 $rate_array[] = array(
                     'date' => $rate['date'],
@@ -1505,6 +1504,7 @@ class Booking extends MY_Controller
 
             $post_booking_data = array('rate_plan_id' => $rate_plan_id);
             $post_booking_data['booking_id'] = $booking_id;
+            $post_booking_data['company_id'] = $this->company_id;
 
             do_action('post.update.booking', $post_booking_data);
 
@@ -1562,6 +1562,7 @@ class Booking extends MY_Controller
         $post_booking_data['check_out_date'] = $room['check_out_date'];
         $post_booking_data['room_id'] = $room['room_id'];
         $post_booking_data['room_type_id'] =  $room['room_type_id'];
+        $post_booking_data['company_id'] = $this->company_id;
         do_action('post.create.booking', $post_booking_data);
 
         if (isset($customer_data['staying_customers'])) {
@@ -1626,6 +1627,7 @@ class Booking extends MY_Controller
 
         $post_booking_batch_data = $booking_batch;
         $post_booking_batch_data['booking_ids'] = $booking_ids;
+        $post_booking_batch_data['company_id'] = $this->company_id;
 
         $booking_history_batch = array();
 
@@ -2223,9 +2225,9 @@ class Booking extends MY_Controller
                         strtotime($latest_block['check_out_date']) < strtotime($block['check_out_date'])
                     ) {
                         // If the booking's check-in date is before selling_date,
-                        // 	divide the booking-room history into two blocks: 
-                        // 	Head block with range [check-in date, selling_date]
-                        // 	Tail block with range [selling_date, check out date]
+                        //  divide the booking-room history into two blocks: 
+                        //  Head block with range [check-in date, selling_date]
+                        //  Tail block with range [selling_date, check out date]
                         // SPLIT: Check if latest brh block (The tail block if splitted) is before current selling date
                         if (strtotime($latest_block['check_in_date']) < strtotime($this->selling_date)) {
                             if (strtotime($block['check_out_date']) > strtotime($this->selling_date))
@@ -2266,7 +2268,7 @@ class Booking extends MY_Controller
                                 if ($this->Booking_room_history_model->get_booking_block_count($booking_id) < 2) {
                                     $new_check_in_date = $block['check_in_date'];
                                     $this->Booking_room_history_model->update_check_in_date($latest_block, $new_check_in_date); // used for changing reservation's check in date. Irrelevant for inhouse guests
-                                    $latest_block['check_in_date'] = $new_check_in_date; // because check_in_date's been modified							
+                                    $latest_block['check_in_date'] = $new_check_in_date; // because check_in_date's been modified                           
                                 }
                             }
                             $this->Booking_room_history_model->update_check_out_date($latest_block, $block['check_out_date']);
@@ -2287,7 +2289,7 @@ class Booking extends MY_Controller
                         if ($this->Booking_room_history_model->get_booking_block_count($booking_id) < 2) {
                             $new_check_in_date = $block['check_in_date'];
                             $this->Booking_room_history_model->update_check_in_date($latest_block, $new_check_in_date); // used for changing reservation's check in date. Irrelevant for inhouse guests
-                            $latest_block['check_in_date'] = $new_check_in_date; // because check_in_date's been modified							
+                            $latest_block['check_in_date'] = $new_check_in_date; // because check_in_date's been modified                           
                         }
                     }
                     $this->Booking_room_history_model->update_check_out_date($latest_block, $block['check_out_date']);
@@ -2479,9 +2481,9 @@ class Booking extends MY_Controller
 //                    foreach ($rooms as $room) {
 //                        if ($room['room_id'] == $log['log'])
 //                            $log['log'] = $room['room_name'];
-//						if ($log['log'] == 0)
+//                      if ($log['log'] == 0)
 //                            $log['log'] = 'Not Assigned';
-//					}
+//                  }
                 }
                 elseif ($log_type == 20) { // payperiod
                     switch ($log['log']) {
@@ -2558,6 +2560,10 @@ class Booking extends MY_Controller
             if (!$this->_is_valid_date($new_data['rooms'][0]['check_out_date'])) {
                 $errors[] = l('check-out date must be in a valid format', true)." (YYYY-MM-DD)";
             }
+        }
+
+        if (isset($new_data['rooms'][0]['room_id']) && $new_data['rooms'][0]['room_id'] == '') {
+            $errors[] = l('Room selection is mandatory', true);
         }
 
         // validation for existing booking (not new booking)

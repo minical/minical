@@ -1,10 +1,18 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
-
+<?php
+ $phptoggle = '';
+ $classtoggle ='';
+ $phptoggle = isset($_COOKIE['sidebartogglevalue']) ? $_COOKIE['sidebartogglevalue'] : true;
+ 
+ if(isset($phptoggle) &&  $phptoggle === "false"){
+ 	$classtoggle = 'closed-sidebar-mobile closed-sidebar';
+ }
+?>
 
 <body class="theme-<?=isset($this->company_ui_theme) ? $this->company_ui_theme : 0;?>">
-	<div class="app-container  app-theme-white body-tabs-shadow fixed-header fixed-sidebar">
+	<div class="app-container  app-theme-white body-tabs-shadow fixed-header fixed-sidebar <?= $classtoggle;?>">
 
 
 		<?php 
@@ -141,7 +149,7 @@
 			//Load Menu
 			
 			$company_id = $this->session->userdata('current_company_id');
-
+           
 			$data['my_companies'] = $this->Company_model->get_companies($this->user_id);
 
 			$language = $this->session->userdata('language');
@@ -167,17 +175,18 @@
 
 		
 				<div class="app-main">
-					
 					<div class="app-header__mobile-menu">
 					<div>
                     	<button type="button" id="hamburger-01" class="hamburger hamburger--elastic mobile-toggle-nav">
                         <i class="fa fa-bars" style="font-size: 26px;color: #3f6ad8;"></i>
                     	</button>
                 		</div>
+
             		</div>
+            	   
 					<?php if(isset($menu_on) && $menu_on && current_url() != $protocol . $_SERVER['HTTP_HOST'].'/auth/register' && current_url() != $protocol . $_SERVER['HTTP_HOST'].'/auth/login' && current_url() != $protocol . $_SERVER['HTTP_HOST'].'/auth/forgot_password'){?>
 						<div  >
-
+                            
 							<?php 
 
 							$this->load->view('includes/bootstrapped_sidebar');
@@ -202,6 +211,7 @@
                         <div class="app_outer main" > <div class="app_inner"><?php }?>
                             <?php } else { ?>
                             <div class="main" >
+                            	
                                 <div class="">
                                     <?php }
                                     $this->load->view($main_content);

@@ -49,6 +49,13 @@ class Permission_model extends CI_Model {
                 (
                     $function_name === 'forward_encrypt_card'
                 )
+            ) ||
+
+            (
+                $controller_name === "customer" && 
+                (
+                    $function_name === 'post_add_customer_callback'
+                )
             )
 
         ) {
@@ -57,6 +64,16 @@ class Permission_model extends CI_Model {
         return false;
     }
 
+
+    function is_route_public($route_name) {
+        if (
+            ($route_name === 'cron') ||
+            ($route_name === 'public')
+        ) {
+            return true; // let em access the page!
+        }
+        return false;
+    }
 
     // this is the new, better way to control user access (2015-01-30)
     function has_access_to_function($user_id, $company_id, $controller_name, $function_name)
@@ -80,7 +97,6 @@ class Permission_model extends CI_Model {
                 ($controller_name === "wizard") ||
                 ($controller_name === "menu") ||
                 ($controller_name === "account_settings") ||
-                ($controller_name === "calendar") ||
                 ($controller_name === "rate_plan") ||
                 ($controller_name === "booking" &&
                     (
@@ -123,6 +139,21 @@ class Permission_model extends CI_Model {
             ) {
                 return true;
             }
+
+            if(
+                $controller_name === "calendar" &&
+                !in_array('bookings_view_only', $user_permissions)                        
+            ) {
+                return true;
+            } else
+                if(
+                    $controller_name === "calendar" && 
+                    $function_name !== "move_booking_room_history" && 
+                    $function_name !== "resize_booking_room_history"
+                )
+                {
+                    return true;
+                }
 		}
         
         // Permission-specific access grants
@@ -169,6 +200,13 @@ class Permission_model extends CI_Model {
                         ) ||
                         (
                             $controller_name == 'booking' && $function_name != 'update_booking_AJAX'
+                        ) ||
+                        (
+                            $controller_name == "calendar" && 
+                            (
+                                $function_name != "move_booking_room_history" && 
+                                $function_name != "resize_booking_room_history"
+                            )
                         ) ||
                         (
                             $controller_name == 'extra'

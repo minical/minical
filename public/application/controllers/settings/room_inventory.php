@@ -116,8 +116,8 @@ class Room_inventory extends MY_Controller {
             $data = Array(
                 'room_name' => $room->room_name,
                 'room_type_id' => $room->room_type_id,
-                'location_id' => isset($room->location_id) ? $room->location_id : '',
-                'floor_id' => isset($room->floor_id) ? $room->floor_id : '',
+                'location_id' => isset($room->location_id) ? $room->location_id : 0,
+                'floor_id' => isset($room->floor_id) ? $room->floor_id : 0,
                 'can_be_sold_online' => $room->can_be_sold_online,
                 'group_id' => $room->group_id,
                 'sort_order' => isset($room->sort_order) ? (int) $room->sort_order : 0

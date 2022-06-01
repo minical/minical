@@ -74,6 +74,7 @@ var customerId;
                 innGrid.ajaxCache.customerTypes = data;
 
                 if (options.customer_id) {
+                    customerId = options.customer_id;
                     $.ajax({
                         type: "POST",
                         url: getBaseURL() + "customer/get_customer_AJAX",
@@ -91,6 +92,7 @@ var customerId;
                         customer_id: options.customer_id,
                         customer_name: options.customer_name
                     }
+                    customerId = options.customer_id;
                     that.customerData = data;
                     that.deferredCustomerTypes.resolve();
                     options.onload();
@@ -279,6 +281,7 @@ var customerId;
                 .append(this._getHorizontalInput(l("Postal Code"), 'postal_code', customer.postal_code,
                     (commonCustomerFields && commonCustomerFields[11] && commonCustomerFields[11]['show_on_customer_form'] == 0 ? "hidden customer_field_12" : "customer_field_12"),
                     (commonCustomerFields && commonCustomerFields[11] && commonCustomerFields[11]['is_required'])));
+         
 
             if (that.customerFields != undefined) {
                 $.each(that.customerFields, function(key, value) {
@@ -683,8 +686,16 @@ var customerId;
                             // }
 
                             if (typeof nexioGateway !== "undefined" && nexioGateway) {
-                                var event = new CustomEvent('post.create_user', { detail: { "customer": customerData } });
-                                document.dispatchEvent(event);
+                                var myIframe = window.document.getElementById('myIframe');
+                                if(myIframe) {
+                                    console.log('customer.customer_id',customerId);
+                                    customerData['customer_id'] = customerId;
+                                    var event = new CustomEvent('post.create_user', { detail: { "customer": customerData } });
+                                    document.dispatchEvent(event);
+                                } else {
+                                    update_create_client();
+                                }
+                                
                             } else {
                                 update_create_client();
                             }
@@ -907,33 +918,76 @@ var customerId;
 
         },
         _getHorizontalInput: function(label, name, value, element_class = '', is_required = false) {
-            return $("<div/>", {
-                class: "form-group form-group-sm " + element_class,
-            }).append(
-                $("<label/>", {
-                    for: name,
-                    class: "col-sm-3 control-label " + element_class,
-                    text: label
-                }).append(
-                    $("<span/>", {
-                        style: "color: red",
-                        text: is_required == "1" ? "*" : ""
-                    })
-                )
-            ).append(
-                $("<div/>", {
-                    class: "col-sm-9"
-                }).append(
-                    $("<input/>", {
-                        class: "form-control restrict-cc-data " + element_class,
-                        name: name,
-                        type: 'text',
-                        value: value,
-                        length: 300,
-                        'data-label': label
-                    })
-                )
-            )
+
+            var countries_keys = Object.keys(COUNTRIES_OBJ)
+            var countries_values = Object.values(COUNTRIES_OBJ)
+
+            
+              if(name=="country"){
+                    return  $("<div/>", {
+                        class: "form-group form-group-sm " + element_class,
+                    }).append(
+                        $("<label/>", {
+                            for: name,
+                            class: "col-sm-3 control-label " + element_class,
+                            text: label
+                        }).append(
+                            $("<span/>", {
+                                style: "color: red",
+                                text: is_required == "1" ? "*" : ""
+                            })
+                        )
+                    ).append(
+                        $("<div/>", {
+                            class: "col-sm-9"
+                        }).append(
+                            $("<input/>", {
+                                class: "form-control restrict-cc-data " + element_class,
+                                name: name,
+                                type: 'text',
+                                value: value,
+                                length: 300,
+                                'data-label': label
+                            }).autocomplete({
+                                    source:  countries_keys.concat(countries_values)
+                            }) 
+                        )
+                       
+                    )
+                }else{
+                    
+                    return  $("<div/>", {
+                        class: "form-group form-group-sm " + element_class,
+                    }).append(
+                        $("<label/>", {
+                            for: name,
+                            class: "col-sm-3 control-label " + element_class,
+                            text: label
+                        }).append(
+                            $("<span/>", {
+                                style: "color: red",
+                                text: is_required == "1" ? "*" : ""
+                            })
+                        )
+                    ).append(
+                        $("<div/>", {
+                            class: "col-sm-9"
+                        }).append(
+                            $("<input/>", {
+                                class: "form-control restrict-cc-data " + element_class,
+                                name: name,
+                                type: 'text',
+                                value: value,
+                                length: 300,
+                                'data-label': label
+                            }) 
+                        
+                        )
+                        
+                    )
+                }
+            
+    
         }
 
 

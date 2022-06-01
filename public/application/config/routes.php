@@ -42,6 +42,7 @@ $route['default_controller'] = "auth";
 $route['404_override'] = '';
 
 $route['invoice/(:num)'] = 'invoice/index/$1';
+$route['settings/translation/(:num)'] = 'settings/translation/index/$1';
 
 
 $module_permission = array();
@@ -61,15 +62,13 @@ foreach($modules as $module)
             require($routes_path);
             foreach($extension_route as $key => $extension_route_item) {
                 $route[$key] = $module . '/' . $extension_route_item;
+                $module_permission[$key] = $module . '/' . $extension_route_item;
             }
-            $module_permission = $route;
-        }
-        else
-        {
-            continue;
         }
     }
 }
+
+$route['extensions/change_extension_status'] = 'extensions/change_extension_status';
 
 
 /* End of file routes.php */

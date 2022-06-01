@@ -20,6 +20,13 @@
     
     ?>
 <div class="app-sidebar sidebar-shadow m-038">
+    <?php if($menus) {?>
+    <div class="openbtn">
+     <button type="button" id="hamburger-02" class="hamburger hamburger--elastic desktop-toggle-nav">
+       <i class="fa fa-bars" style="font-size: 26px;color: #3f6ad8;"></i>
+     </button>
+    </div>
+    <?php }?>
     <div class="scrollbar-sidebar ps ps--active-y">
         <div class="sidebar__logo ">
 
@@ -351,18 +358,28 @@
                                                 <?php } $sidebar_menus = array(); ?>
                                             </ul>
                                         </li>
-                                    <?php } else { ?>
+                                    <?php } else { 
 
-                                        <li class="<?php if ($first_segment.'/'.$second_segment == $m_menu_one['link']) echo 'mm-active'; ?>">
+                                        if(isset($m_menu_one['name']) && $m_menu_one['name'] == "Translation"){
+                                                    if($this->is_super_admin == 1){ ?>
+
+                                            <li class="<?php if ($first_segment.'/'.$second_segment == $m_menu_one['link']) echo 'mm-active'; ?>">
                                             <a class="<?php if ($first_segment.'/'.$second_segment ==  $m_menu_one['link']) echo 'mm-active'; ?>" href="<?php echo base_url().$m_menu_one['link']; ?>">
-                                                <i class="<?php echo $m_menu_one['icon']; ?>"></i>
-                                                <?php
-                                                echo ucwords(l($m_menu_one['name']));
-                                                ?>
-                                            </a>
-                                        </li>
+                                                <i class="<?php echo $m_menu_one['icon']; ?>"></i>    
+                                                    <?php echo ucwords(l($m_menu_one['name'])); ?>
+                                                   </a>
+                                                   </li>
 
-                                    <?php } } ?>
+                                                 <?php }
+                                                }else{ ?>
+                                                <li class="<?php if ($first_segment.'/'.$second_segment == $m_menu_one['link']) echo 'mm-active'; ?>">
+                                                <a class="<?php if ($first_segment.'/'.$second_segment ==  $m_menu_one['link']) echo 'mm-active'; ?>" href="<?php echo base_url().$m_menu_one['link']; ?>">
+                                                <i class="<?php echo $m_menu_one['icon']; ?>"></i> 
+                                                  <?php echo ucwords(l($m_menu_one['name'])); ?>
+                                                </a>
+                                                   </li>   
+                                             <?php   }
+                                        } } ?>
                             </ul>
                         </li>
                     <?php } elseif($m_menu['link'] == 'extensions') { ?>
@@ -420,7 +437,7 @@
 
 
         <li class="dropdown d-inline-block">
-            <a type="button" id="myAccountMenu" aria-haspopup="true" aria-expanded="true" data-toggle="dropdown" class="m-2"><span id="user_email" class="profile-setting"><?php echo strtoupper(substr($this->session->userdata('first_name'),0,1).substr($this->session->userdata('last_name'),0,1)); ?></span>
+            <a type="button" id="myAccountMenu" aria-haspopup="true" aria-expanded="true" data-toggle="dropdown" class="m-2 my-account-dropdown-menu"><span id="user_email" class="profile-setting"><?php echo strtoupper(substr($this->session->userdata('first_name'),0,1).substr($this->session->userdata('last_name'),0,1)); ?></span>
                 <input id='user_id' class="" value='<?php echo $this->user_id; ?>' style='display:none;' />
                 <span class="menu-title ml-2"><?php echo($this->session->userdata('email'));?></span>
             </a>

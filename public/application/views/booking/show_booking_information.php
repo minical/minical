@@ -53,7 +53,7 @@
             <?php
             // show company logo image
             if (isset($company_logos[0]['filename'])) {
-                echo "<img src=\"https://".$_SERVER["AWS_S3_BUCKET"].".s3.amazonaws.com/".$company['company_id']."/".$company_logos[0]['filename']."\" id='company-logo-image'/><br/>";
+                echo "<img src=\"https://".getenv("AWS_S3_BUCKET").".s3.amazonaws.com/".$company['company_id']."/".$company_logos[0]['filename']."\" id='company-logo-image'/><br/>";
             }
             ?>
             <address>

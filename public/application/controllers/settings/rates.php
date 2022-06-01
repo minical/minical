@@ -295,6 +295,8 @@ class Rates extends MY_Controller
                 $rate_array = Array('rate_plan_id' => $new_rate_plan_id);
                 if ($this->allow_free_bookings) {
                     $rate_array['can_be_sold_online'] = 0;
+                } else {
+                    $rate_array['can_be_sold_online'] = 1;
                 }
                 $new_rate_id = $this->Rate_model->create_rate($rate_array);
 
@@ -314,7 +316,7 @@ class Rates extends MY_Controller
                 if ($extras) {
                     $old_extra_ids_array = $this->Extra_model->get_rate_plan_extras($new_rate_plan_id, $rate_plan_data['room_type_id']);
 
-                    if (count($old_extra_ids_array) > 0) {
+                    if (isset($old_extra_ids_array) && count($old_extra_ids_array) > 0) {
                         foreach ($old_extra_ids_array as $key => $value) {
                             $this->Extra_model->delete_rate_plan_etras($new_rate_plan_id, $rate_plan_data['room_type_id'], $value['extra_id']);
                         }
@@ -1307,7 +1309,7 @@ class Rates extends MY_Controller
 
             $extra_rate = $this->security->xss_clean($updated_extra['default_rate']);
 			$rate_data = array(
-				'rate' => ($extra_rate != '' && $extra_rate >= 0) ? trim(number_format($extra_rate, 2, ".", ",")) : 0,
+				'rate' => ($extra_rate != '' && $extra_rate >= 0) ? trim(number_format($extra_rate, 2, ".", "")) : 0,
 				'currency_id' => $default_currency['currency_id']
 			);
 

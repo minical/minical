@@ -52,14 +52,14 @@
      if(isset($whitelabelinfo['terms_of_service']) && $whitelabelinfo['terms_of_service']) { ?>
         <a href="<?php echo $whitelabelinfo['terms_of_service']; ?>" target="_blank"><?php echo l('Terms Of Service', true); ?></a>
     <?php } else { ?>
-        <a href="<?php echo base_url();?>auth/terms_of_service" target="_blank"><?php echo l('Terms Of Service', true); ?></a>
+        <a href="<?php echo base_url();?>auth/show_terms_of_service" target="_blank"><?php echo l('Terms Of Service', true); ?></a>
     <?php } ?>
     <?php echo " and " ?>
 
     <?php if(isset($whitelabelinfo['privacy_policy']) && $whitelabelinfo['privacy_policy']) { ?>
         <a href="<?php echo $whitelabelinfo['privacy_policy']; ?>" target="_blank"><?php echo l('Privacy Policy', true); ?></a>
     <?php } else { ?>
-        <a href="<?php echo base_url();?>auth/privacy_policy" target="_blank"><?php echo l('Privacy Policy', true); ?></a>
+        <a href="<?php echo base_url();?>auth/show_privacy_policy" target="_blank"><?php echo l('Privacy Policy', true); ?></a>
     <?php } //}?>
 </div>
 
@@ -92,6 +92,8 @@
     innGrid.isChannePCIEnabled = parseInt('<?=(($this->is_channex_pci_enabled) ? 1 : 0)?>');
     innGrid.featureSettings.cuurentLanguage = "<?=$this->session->userdata('language') ? $this->session->userdata('language') : ''?>";
     innGrid.imageUrl = "<?= $this->image_url; ?>";
+    innGrid.companyAPIKey = "<?=(isset($this->company_api_key) ? $this->company_api_key : '')?>";
+    innGrid.companyID = "<?=(isset($this->company_id) ? $this->company_id : '')?>";
 
     // subscription plans
     var STARTER = "<?php echo STARTER; ?>";
@@ -226,3 +228,9 @@ $(document).ready(function(){
     });
 });
 </script>
+
+<?php 
+	echo "<script>
+    COUNTRIES_OBJ = JSON.parse('".(COUNTRIES)."');
+        </script>";
+?>

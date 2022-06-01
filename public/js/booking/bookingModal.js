@@ -989,26 +989,7 @@ var bookingModalInvoker = function ($) {
                                     })
                                 )
                             )
-                            // .append(
-                            //     $("<li/>").append(
-                            //         $("<a/>", {
-                            //             'href': '#extras',
-                            //             'data-toggle': "tab",
-                            //             'text': l('extras')
-                            //         })
-                            //             .append(
-                            //                 $("<span/>", {
-                            //                     'class': 'extras_count',
-                            //                     'text': " ( " + that.booking.extras_count + " )"
-                            //                 })
-                            //             )
-                            //             .on('click', function (e) {
-                            //                 setTimeout(function () {
-                            //                     that._setHeight('extras');
-                            //                 }, 1000);
-                            //             })
-                            //     )
-                            // )
+                            
                     )
                 );
 
@@ -1134,26 +1115,7 @@ var bookingModalInvoker = function ($) {
                                     })
                                 )
                             )
-                            // .append(
-                            //     $("<li/>").append(
-                            //         $("<a/>", {
-                            //             'href': '#extras',
-                            //             'data-toggle': "tab",
-                            //             'text': l('extras')
-                            //         })
-                            //             .append(
-                            //                 $("<span/>", {
-                            //                     'class': 'extras_count',
-                            //                     'text': " ( " + that.booking.extras_count + " )"
-                            //                 })
-                            //             )
-                            //             .on('click', function (e) {
-                            //                 setTimeout(function () {
-                            //                     that._setHeight('extras');
-                            //                 }, 1000);
-                            //             })
-                            //     )
-                            // )
+                            
                     )
                 );
             }
@@ -2446,6 +2408,12 @@ var bookingModalInvoker = function ($) {
                         )
                         .append(
                             $("<div/>", {
+                                'id': 'payment_reminder',
+                                'class': "tab-pane",
+                            })
+                        )
+                        .append(
+                            $("<div/>", {
                                 'id': 'housekeeping',
                                 'class': "tab-pane"
                             }).append(
@@ -2552,9 +2520,13 @@ var bookingModalInvoker = function ($) {
                                                             $('.booking_balance').html(number_format(response.balance, 2, ".", ""));
                                                         }
 
-                                                        var current_count = $('.left-sidebar').find('.extras_count').text().split(' ');
-                                                        var new_count = (parseInt(current_count[2])) + 1;
-                                                        $('.left-sidebar').find('.extras_count').html(" ( " + new_count + " )");
+                                                        var current_count = $('.extra_len').val();
+                                                        var new_count = (parseInt(current_count) + 1);
+                                                        console.log('current_count',current_count);
+                                                        console.log('new_count',new_count);
+
+                                                        $('.left-sidebar').find('.extras_count').html(" (" + new_count + ")");
+                                                        $('.extra_len').val(new_count);
                                                         // if this is the first extra to this booking,
                                                         // create extra container (panel). otherwise, append extra to existing
                                                         extraData.booking_extra_id = response.booking_extra_id;
@@ -3505,7 +3477,7 @@ var bookingModalInvoker = function ($) {
                     }).append(
                         $("<div/>", {
                             class: "panel-body",
-                            html: log.date_time + " "+l('by')+" " + (log.user_id == '-1' ? l('Guest') : (log.first_name + " " + log.last_name)) + " - " + log.log
+                            html: log.date_time + " "+l('by')+" " + (log.user_id == '0' && !log.first_name && !log.last_name && !log.email ? l('System') : (log.user_id == '-1' ? l('Guest') : (log.first_name + " " + log.last_name))) + " - " + log.log
                         })
                     )
                 )
@@ -4861,6 +4833,24 @@ var bookingModalInvoker = function ($) {
             if (that.groupInfo != null)
                 existGroupId = that.groupInfo.group_id
 
+
+            // var adult_count = $("select[name=adult_count]").children("option:selected").val();
+            // var children_count = $("select[name=children_count]").children("option:selected").val();
+            // var total_customer_length = parseInt(adult_count)+parseInt(children_count);
+
+            // var token_label_length = $('.tokenfield').find('.token-label').length;
+            
+            // console.log($('.tokenfield').find('.token-label').length);
+            // console.log(parseInt(adult_count)+parseInt(children_count));
+
+            // if(token_label_length > total_customer_length){
+            //     alert('you are exceeding total customer count limit');
+            //     $('.booking-create').prop('disabled', false);
+
+            //     return false;
+            // }
+
+
             if (typeof _createBookingLock !== "undefined" && _createBookingLock) {
                 // booking creation already in progress
                 return;
@@ -5081,6 +5071,20 @@ var bookingModalInvoker = function ($) {
             // update availabilities of the dates prior to update
             // why do we need it?
 
+            // var adult_count = $("select[name=adult_count]").children("option:selected").val();
+            // var children_count = $("select[name=children_count]").children("option:selected").val();
+            // var total_customer_length = parseInt(adult_count)+parseInt(children_count);
+
+            // var token_label_length = $('.tokenfield').find('.token-label').length;
+            
+            // console.log($('.tokenfield').find('.token-label').length);
+            // console.log(parseInt(adult_count)+parseInt(children_count));
+
+            // if(token_label_length > total_customer_length){
+            //     alert('you are exceeding total customer count limit');
+            //     return false;
+            // }
+
             $.ajax({
                 type: "POST",
                 url: getBaseURL() + "booking/update_booking_AJAX",
@@ -5296,9 +5300,13 @@ var bookingModalInvoker = function ($) {
                     success: function (data) {
                         $(".extra#" + bookingExtraID).remove();
 
-                        var current_count = $('.left-sidebar').find('.extras_count').text().split(' ');
-                        var new_count = (parseInt(current_count[2])) - 1;
-                        $('.left-sidebar').find('.extras_count').html(" ( " + new_count + " )");
+                        var current_count = $('.extra_len').val();
+                        var new_count = (parseInt(current_count) - 1);
+                        console.log('current_count',current_count);
+                        console.log('new_count',new_count);
+
+                        $('.left-sidebar').find('.extras_count').html(" (" + new_count + ")");
+                        $('.extra_len').val(new_count);
 
                         $.each(that.booking.extras, function (i, value) { // unset booking extra id that is deleted
                             if (value.booking_extra_id == bookingExtraID) {
@@ -6062,7 +6070,7 @@ var bookingModalInvoker = function ($) {
                     // this prevents room type going resetting to the first one in the list whenever checkin/checkout dates change
                     if (!innGrid.isShowUnassignedRooms && !isShowUnassignedRooms) {
                         var option = $("<option/>", {
-                            value: '',
+                            value: '0',
                             text: l('Not Assigned')
                         });
 
@@ -6213,7 +6221,7 @@ var bookingModalInvoker = function ($) {
                     var staying_customers = data['booking']['staying_customers'];
                     var comapany_logo = '';
                     if (show_logo == 1 && data['company_logo'] != "undefined" && data['company_logo'] != null) {
-                        comapany_logo = '<img class="img" src="https://'+$_SERVER["AWS_S3_BUCKET"]+'.s3.amazonaws.com/' + data['company']['company_id'] + '/' + data['company_logo'] + '" id="company-logo-image"/><br/>';
+                        comapany_logo = '<img class="img" src="https://'+getenv("AWS_S3_BUCKET")+'.s3.amazonaws.com/' + data['company']['company_id'] + '/' + data['company_logo'] + '" id="company-logo-image"/><br/>';
                     }
 
                     $('#registration_card').html('');
@@ -6657,7 +6665,11 @@ var bookingModalInvoker = function ($) {
             var check_out_date = new Date(checkOutDate);
             var oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
             var diffDays = Math.round(Math.abs((check_in_date.getTime() - check_out_date.getTime()) / (oneDay)))
-            this.$modalBody.find("[name='number_of_days']").val(diffDays);
+            
+            if($.isNumeric(diffDays))
+                this.$modalBody.find("[name='number_of_days']").val(diffDays);
+            else
+                this.$modalBody.find("[name='number_of_days']").val(0);
 
             that._updatePayPeriodDropdown();
         },

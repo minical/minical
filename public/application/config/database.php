@@ -61,5 +61,26 @@ $db['default']['autoinit'] = TRUE;
 $db['default']['stricton'] = FALSE;
 
 
+
+
+$db['roomsy_db']['hostname'] = getenv("DATABASE_HOST_ROOMSY");
+$db['roomsy_db']['username'] = getenv("DATABASE_USER_ROOMSY");
+$db['roomsy_db']['password'] = getenv("DATABASE_PASS_ROOMSY");
+$db['roomsy_db']['database'] = getenv("DATABASE_NAME_ROOMSY");
+
+	
+$db['roomsy_db']['dbdriver'] = 'mysqli';
+$db['roomsy_db']['dbprefix'] = '';
+$db['roomsy_db']['pconnect'] = TRUE;
+$db['roomsy_db']['db_debug'] = (ENVIRONMENT == 'production') ? FALSE : TRUE; // Changed by Jaeyun on Mar 8, 11 in order to handle calender occupancy errors.
+$db['roomsy_db']['cache_on'] = FALSE;
+$db['roomsy_db']['cachedir'] = '';
+$db['roomsy_db']['char_set'] = 'utf8';
+$db['roomsy_db']['dbcollat'] = 'utf8_general_ci';
+$db['roomsy_db']['swap_pre'] = '';
+$db['roomsy_db']['autoinit'] = TRUE;
+$db['roomsy_db']['stricton'] = FALSE;
+
+
 /* End of file database.php */
 /* Location: ./application/config/database.php */

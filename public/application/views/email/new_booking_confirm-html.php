@@ -133,7 +133,14 @@
                                                         <td style="border-collapse:collapse; mso-line-height-rule:exactly; font-family:Arial, sans-serif; font-size:15px; color:#23496d; word-break:break-word; padding:10px 20px">
                                                             <div id="hs_cos_wrapper_module_155990198455226" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_module" style="color: inherit; font-size: inherit; line-height: inherit;" data-hs-cos-general-type="widget" data-hs-cos-type="module">
                                                                 <div id="hs_cos_wrapper_module_155990198455226_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_rich_text" style="color: inherit; font-size: inherit; line-height: inherit;" data-hs-cos-general-type="widget" data-hs-cos-type="rich_text">
-                                                                    <h2 style="margin:0; mso-line-height-rule:exactly; font-size:22px; line-height:175%"><span style="color: #000000;"><strong><?php echo l('Room Details', true); ?></strong></span></h2>
+                                                                    <h2 style="margin:0; mso-line-height-rule:exactly; font-size:22px; line-height:175%"><span style="color: #000000;"><strong><?php 
+                                                                    if(isset($default_room_singular) && $default_room_singular !='' )
+                                                                        {
+                                                                           echo $default_room_singular." ".l('Details');
+                                                                        }else{
+                                                                            echo l('Room Details', true);
+                                                                        }  
+                                                                ?></strong></span></h2>
                                                                 </div>
                                                             </div>
                                                         </td>
@@ -153,9 +160,32 @@
                                                             <div id="hs_cos_wrapper_module_15615385157202" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_module" style="color: inherit; font-size: inherit; line-height: inherit;" data-hs-cos-general-type="widget" data-hs-cos-type="module">
                                                                 <div id="hs_cos_wrapper_module_15615385157202_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_rich_text" style="color: inherit; font-size: inherit; line-height: inherit;" data-hs-cos-general-type="widget" data-hs-cos-type="rich_text">
                                                                     <p style="mso-line-height-rule: exactly;line-height: 175%;margin: 0;"><span style="color: #000000;"><strong><?php echo l('Full Name', true); ?>:&nbsp;</strong><?php echo $customer_name ? $customer_name : ''; ?></span></p>
-                                                                    <p style="mso-line-height-rule: exactly;line-height: 175%;margin: 0;"><span style="color: #000000;"><strong><?php echo l('Room Type', true); ?>:&nbsp;</strong><?php echo $room_type; ?></span></p>
-                                                                    <p style="mso-line-height-rule: exactly;line-height: 175%;margin: 0;"><span style="color: #000000;"><strong><?php echo l('Number Of Rooms', true); ?>:&nbsp;</strong>1</span></p>
-                                                                    <p style="mso-line-height-rule: exactly;line-height: 175%;margin: 0;"><span style="color: #000000;"><strong><?php echo l('Guests Per Room', true); ?>:&nbsp;</strong><?php echo $adult_count > 1 ? $adult_count.' Adults' : $adult_count.' Adult'; ?>
+                                                                    <p style="mso-line-height-rule: exactly;line-height: 175%;margin: 0;"><span style="color: #000000;"><strong><?php 
+                                                                        if(isset($default_room_type) && $default_room_type !='' )
+                                                                        {
+                                                                           echo $default_room_type;
+                                                                        }else{
+                                                                            echo l('Room Type', true);
+                                                                        }
+                                                                     ?>:&nbsp;</strong><?php echo $room_type; ?></span></p>
+                                                                    <p style="mso-line-height-rule: exactly;line-height: 175%;margin: 0;"><span style="color: #000000;"><strong><?php
+                                                                        if(isset($default_room_plural) && $default_room_plural !='' )
+                                                                        {
+                                                                           echo l('Number Of')." ".$default_room_plural;
+                                                                        }else{
+                                                                            echo l('Number Of Rooms', true);
+                                                                        }
+
+                                                                        ?>:&nbsp;</strong>1</span></p>
+                                                                    <p style="mso-line-height-rule: exactly;line-height: 175%;margin: 0;"><span style="color: #000000;"><strong><?php
+                                                                        if(isset($default_room_singular) && $default_room_singular !='' )
+                                                                        {
+                                                                           echo l('Guests Per')." ".$default_room_singular;
+                                                                        }else{
+                                                                            echo l('Guests Per Room', true);
+                                                                        }
+
+                                                                      ?>:&nbsp;</strong><?php echo $adult_count > 1 ? $adult_count.' Adults' : $adult_count.' Adult'; ?>
                                                                         <?php echo $children_count ? ($children_count > 1 ? ','.$children_count.' Children' : ','.$children_count.' Child') : ''; ?></span></p>
                                                                     <p style="mso-line-height-rule: exactly;font-size: 14px;line-height: 175%;margin: 0;"><span style="color: #000000;"><strong><?php echo l('Check-In Date', true); ?>:&nbsp;</strong><?php echo $check_in_date; ?></span></p>
                                                                     <p style="mso-line-height-rule: exactly;font-size: 14px;line-height: 175%;margin: 0;"><span style="color: #000000;"><strong><?php echo l('Check-Out Date', true); ?>:&nbsp;</strong><?php echo $check_out_date; ?></span></p>

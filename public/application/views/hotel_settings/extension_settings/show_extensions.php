@@ -50,7 +50,23 @@ if($is_favourite) { ?>
                             <div class="extension_block">
                                 <div class="main-extension">
                                     <div class="icon">
-                                        <img src="<?php echo (isset($extension['image_name']) && $extension['image_name']) ?  base_url().'/images/'.$extension['image_name'] : ''?>" style="width: 30px;height: 30px">
+                                        <img src="<?php  if(isset($extension['logo']) && $extension['logo']){
+                                            if(strpos($extension['logo'], 'http')  !== false){
+                                                echo $extension['logo'];
+                                            } else{
+                                                echo base_url().'application/extensions/'.$extension['extension_folder_name'].'/'.$extension['logo'];
+                                            }
+                                        
+                                } elseif(isset($extension['image_name']) && $extension['image_name']){
+                                    if(strpos($extension['image_name'], 'http')  !== false){
+                                        echo $extension['image_name'];
+                                    } else {
+                                        echo base_url().'/images/'. $extension['image_name'];
+                                    }
+                                    
+                                } else {
+                                    echo '';
+                                } ?>" style="width: 30px;height: 30px">
                                     </div>
                                     <div class="extension-content">
                                         <b style="font-size: 12px;"><?php
@@ -71,6 +87,14 @@ if($is_favourite) { ?>
                                             <?php if(isset($extension['is_admin_module']) && $extension['is_admin_module']){ ?>
                                                 <span style="font-size: 11px;color: gray;font-weight: 500;padding: 0px 0 5px;">VENDOR ONLY</span>
                                             <?php } ?>
+
+
+                                            <?php if((isset($extension['supported_in_minimal']) && $extension['supported_in_minimal'] == 1) || $this->company_subscription_level == 1) { ?>
+                                            <?php } else { ?>
+                                                <span style="font-size: 10px;color: red;font-weight: 600;padding: 0px 0 5px;">PREMIUM EXTENSION</span>
+                                            <?php } ?>
+
+
                                             <p class="extension-discription" ><?php echo  strlen($extension['description']) > 200 ? substr($extension['description'],0,200)."..." : $extension['description']; ?>
                                                 <?php if(isset($extension['marketplace_product_link']) && $extension['marketplace_product_link']){ ?>
                                                     <a href="<?php echo (isset($extension['marketplace_product_link']) && $extension['marketplace_product_link'] ? $extension['marketplace_product_link']: "")?>" style="font-size: 14px"><?php echo l('more');?></a>
@@ -100,7 +124,7 @@ if($is_favourite) { ?>
 
                                         <a href="<?php if(isset( $extension['view_link']) && $extension['view_link'] ){
                                             echo $extension['view_link'];
-                                        }else{
+                                        } else {
                                             echo '';}?>"
                                            class=""
                                            style="font-size: 25px;"
@@ -113,9 +137,13 @@ if($is_favourite) { ?>
                                         </a>
                                         <label class="extension-box" style="padding-right: 1.5rem !important;">
                                             <input type="checkbox" class="extension-status-button" data-status="<?php echo $extension['is_active']; ?>" name="<?php echo $extension['extension_folder_name']; ?>"
-                                                <?= $extension['is_active'] ? 'checked=checked' : ''; ?>/>
+                                                <?= $extension['is_active'] ? 'checked=checked' : ''; ?> <?php if((isset($extension['supported_in_minimal']) && $extension['supported_in_minimal'] == 1) || $this->company_subscription_level == 1) {} else { echo "disabled"; } ?>/>
                                             <?php if($this->user_permission != 'is_employee'){ ?>
-                                                <span></span>
+                                                <?php if((isset($extension['supported_in_minimal']) && $extension['supported_in_minimal'] == 1) || $this->company_subscription_level == 1) { ?>
+                                                    <span></span>
+                                                <?php } else { ?>
+                                                    <span class="premium_extension" style="background-color: darkgrey;"></span>
+                                                <?php } ?>
                                             <?php } ?>
                                         </label>
                                     </div>
@@ -171,6 +199,16 @@ if($is_favourite) { ?>
     </div>
 </div>
 
+<?php if($this->company_subscription_level == 0) { ?>
+    <div class="alert alert-danger" role="alert">
+        <div style="font-size: 15px;">
+            You are currently on a <b>Minimal</b> plan, please select a <b>Partner</b> to get access to all Premium extensions.
+            <a target="_blank" href="<?php echo base_url().'partners' ?>">
+                Select a Partner
+            </a>
+        </div>
+    </div>
+<?php } ?>
 
 <div class="main-card mb-3">
     <div class="extension-card">
@@ -190,8 +228,23 @@ if($is_favourite) { ?>
                             <div class="extension_block">
                                 <div class="main-extension">
                                     <div class="icon">
-
-                                        <img src="<?php echo (isset($extension['image_name']) && $extension['image_name']) ?  base_url().'/images/'.$extension['image_name'] : ''?>" style="width: 30px;height: 30px">
+                                        <img src="<?php  if(isset($extension['logo']) && $extension['logo']){
+                                            if(strpos($extension['logo'], 'http')  !== false){
+                                                echo $extension['logo'];
+                                            } else{
+                                                echo base_url().'application/extensions/'.$extension['extension_folder_name'].'/'.$extension['logo'];
+                                            }
+                                        
+                                } elseif(isset($extension['image_name']) && $extension['image_name']){
+                                    if(strpos($extension['image_name'], 'http')  !== false){
+                                        echo $extension['image_name'];
+                                    } else {
+                                        echo base_url().'/images/'. $extension['image_name'];
+                                    }
+                                    
+                                } else {
+                                    echo '';
+                                } ?>" style="width: 30px;height: 30px">
                                     </div>
                                     <div class="extension-content">
                                         <b style="font-size: 12px;"><?php
@@ -211,10 +264,12 @@ if($is_favourite) { ?>
                                         <div>
                                             <?php if(isset($extension['is_admin_module']) && $extension['is_admin_module']){ ?>
                                                 <span style="font-size: 11px;color: gray;font-weight: 500;padding: 0px 0 5px;">VENDOR ONLY</span>
-                                            <?php }
-                                            //elseif(isset($extension['is_vendor_module']) && $extension['is_vendor_module']){ ?>
-                                            <!-- <span style="font-size: 11px;color: gray;font-weight: 500;padding: 0px 0 5px;">VENDOR ONLY</span> -->
-                                            <?php //}?>
+                                            <?php } ?>
+
+                                            <?php if((isset($extension['supported_in_minimal']) && $extension['supported_in_minimal'] == 1) || $this->company_subscription_level == 1) { ?>
+                                            <?php } else { ?>
+                                                <span style="font-size: 10px;color: red;font-weight: 600;padding: 0px 0 5px;">PREMIUM EXTENSION</span>
+                                            <?php } ?>
 
                                             <p class="extension-discription" style= "margin-bottom: 0px"><?php echo 
 
@@ -234,7 +289,7 @@ if($is_favourite) { ?>
                                     <div class="checkbox checbox-switch switch-primary" style="margin-bottom: 5px;margin-top: 5px">
                                         <a href="<?php if(isset( $extension['setting_link']) && $extension['setting_link'] ){
                                             echo $extension['setting_link'];
-                                        }else{
+                                        } else {
                                             echo '';}?>"
                                            class="ml-4"
                                            style="font-size: 25px;"
@@ -243,14 +298,14 @@ if($is_favourite) { ?>
 
                                             <?php if($extension['is_active'] == 1 && $extension['setting_link'] !=null && $this->user_permission != 'is_employee'){
                                                 echo '<i class="pe-7s-config text-primary"></i>';
-                                            }else{
+                                            } else {
                                                 echo '';
                                             } ?>
                                         </a>
 
                                         <a href="<?php if(isset( $extension['view_link']) && $extension['view_link'] ){
                                             echo $extension['view_link'];
-                                        }else{
+                                        } else {
                                             echo '';}?>"
                                            class=""
                                            style="font-size: 25px;"
@@ -263,9 +318,13 @@ if($is_favourite) { ?>
                                         </a>
                                         <label class="extension-box" style="padding-right: 1.5rem !important;">
                                             <input type="checkbox" class="extension-status-button" data-status="<?php echo $extension['is_active']; ?>" name="<?php echo $extension['extension_folder_name']; ?>"
-                                                <?= $extension['is_active'] ? 'checked=checked' : ''; ?>/>
+                                                <?= $extension['is_active'] ? 'checked=checked' : ''; ?> <?php if((isset($extension['supported_in_minimal']) && $extension['supported_in_minimal'] == 1) || $this->company_subscription_level == 1) {} else { echo "disabled"; } ?>/>
                                             <?php if($this->user_permission != 'is_employee'){ ?>
-                                                <span></span>
+                                                <?php if((isset($extension['supported_in_minimal']) && $extension['supported_in_minimal'] == 1) || $this->company_subscription_level == 1) { ?>
+                                                    <span></span>
+                                                <?php } else { ?>
+                                                    <span class="premium_extension" style="background-color: darkgrey;"></span>
+                                                <?php } ?>
                                             <?php } ?>
                                         </label>
                                     </div>
@@ -287,6 +346,28 @@ if($is_favourite) { ?>
                         <h4><?php echo l('No extensions found!'); ?></h4>
                     <?php } ?>
                 <?php endif; ?>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="premium_extension">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="font-size: 15px;">
+                Please select a <b>Partner</b> to get access to this extension.
+                <a target="_blank" href="<?php echo base_url().'partners' ?>">
+                    Select a Partner
+                </a>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>

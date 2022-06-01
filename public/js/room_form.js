@@ -1,5 +1,5 @@
 innGrid.closeDialog = function() {
-	window.parent.jQuery('#booking_dialog').dialog('close');
+	window.jQuery('#booking_dialog').dialog('close');
 }
 
 $(function(){

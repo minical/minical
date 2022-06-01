@@ -97,6 +97,8 @@ function get_options()
 {
     $CI = & get_instance();
     $CI->load->model('Option_model');
+
+    $option = null;
     
     $data = apply_filters( 'before_get_options', $option, $CI->input->post());
     // $should_get_option = apply_filters( 'should_get_options', $option, $CI->input->post());

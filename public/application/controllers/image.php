@@ -35,8 +35,8 @@ class Image extends MY_Controller
 			}
 			else
 			{
-                                $filename = $_FILES["img"]["tmp_name"];
-                                list($width, $height) = getimagesize( $filename );
+                $filename = $_FILES["img"]["tmp_name"];
+                list($width, $height) = getimagesize( $filename );
 				
 				$this->_upload_to_s3($_FILES["img"]["tmp_name"], "temp_image.".$extension);
 				$response = array(
@@ -173,8 +173,8 @@ class Image extends MY_Controller
 
 	function delete_file_AJAX()
 	{
-		$src = $_POST['src'];
-		$image_group_id = $_POST['image_group_id'];
+		$src = isset($_POST['src']) ? $_POST['src'] : null;
+		$image_group_id = isset($_POST['image_group_id']) ? $_POST['image_group_id'] : null;
 		$filename = basename($src);
 		$this->_delete_in_s3($filename);
 		$this->Image_model->delete_image($filename, $image_group_id);
@@ -187,7 +187,7 @@ class Image extends MY_Controller
 
 	function get_dimensions_AJAX()
 	{
-		$image_group_id = $_POST['image_group_id'];
+		$image_group_id = isset ($_POST['image_group_id']) ? $_POST['image_group_id'] : null;
 		$dimensions = $this->Image_model->get_dimensions($image_group_id);
 		if($dimensions && isset($dimensions['width']) && isset($dimensions['height']))
 		{
@@ -230,7 +230,7 @@ class Image extends MY_Controller
 		$this->_delete_in_s3($output_filename);
 		
 		// upload/update the s3 file with new GUID
-		if ($this->s3->putObjectFile($source_image, $_SERVER["AWS_S3_BUCKET"], $this->company_id."/".$output_filename, S3::ACL_PUBLIC_READ)) 
+		if ($this->s3->putObjectFile($source_image, getenv("AWS_S3_BUCKET"), $this->company_id."/".$output_filename, S3::ACL_PUBLIC_READ)) 
 		{
 			return true;
 		}
@@ -239,8 +239,8 @@ class Image extends MY_Controller
 	}
 
 	function _delete_in_s3($filename) {
-		$this->s3->putBucket($_SERVER["AWS_S3_BUCKET"], S3::ACL_PUBLIC_READ);
-		$this->s3->deleteObject($_SERVER["AWS_S3_BUCKET"], $this->company_id."/".$filename);					
+		$this->s3->putBucket(getenv("AWS_S3_BUCKET"), S3::ACL_PUBLIC_READ);
+		$this->s3->deleteObject(getenv("AWS_S3_BUCKET"), $this->company_id."/".$filename);					
 	}
 
     function upload_to_s3 ($myId) {

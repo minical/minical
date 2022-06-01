@@ -447,7 +447,7 @@ class Forecast_charges
                             $extra_charges += ($extra['rate'] + $tax_total) * $extra['quantity'];
                         }
                     }
-                    else
+                    else if($extra['charging_scheme'] == 'once_a_day' && $extra['extra_type'] == 'rental' && strtotime($date_start) < strtotime($date_end))
                     {
                         for ($date = $date_start; $date < $date_end; $date = Date("Y-m-d", strtotime("+1 day", strtotime($date))))
                         {
@@ -469,6 +469,32 @@ class Forecast_charges
 										if (!$tax['is_tax_inclusive']) {
 	                                        $tax_total += ($extra['rate'] * $tax['tax_rate'] / 100);
 										}
+                                    }
+                                }
+                                $extra_charges += ($extra['rate'] + $tax_total) * $extra['quantity'];
+                            }
+                        }
+                    } else {
+                        for ($date = $date_start; $date <= $date_end; $date = Date("Y-m-d", strtotime("+1 day", strtotime($date))))
+                        {
+                            $extra_array[] = array(
+                                "amount"       => $extra['rate'] * $extra['quantity'],
+                                "selling_date" => $date,
+                                "pay_period" => DAILY,
+                                "description" => $extra['extra_name']." (quantity: ".$extra['quantity'].")",
+                                "charge_type_id" => $extra['charge_type_id'],
+                                "charge_type_name" => $extra['name']
+                            );
+                            
+                            if($get_amount_only)
+                            {
+                                $tax_total = 0;
+                                if($tax_rates && count($tax_rates) > 0)
+                                {
+                                    foreach ($tax_rates as $tax) {
+                                        if (!$tax['is_tax_inclusive']) {
+                                            $tax_total += ($extra['rate'] * $tax['tax_rate'] / 100);
+                                        }
                                     }
                                 }
                                 $extra_charges += ($extra['rate'] + $tax_total) * $extra['quantity'];

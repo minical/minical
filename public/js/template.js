@@ -1,5 +1,6 @@
+var checkIfRoomInventroyIsON = false;
 $(function () {
-    
+
     $("#from_date, #to_date").datepicker({ dateFormat: 'yy-mm-dd' });
     // if error message (alert-dissmissable) is present, and user clicks outside
     $(document).on("click", function (e) {
@@ -133,3 +134,7 @@ if(sessionStorage.getItem("currentCompanyId") != $('#currentCompanyId').val())
     sessionStorage.removeItem("afterDays");
     sessionStorage.setItem("currentCompanyId", $('#currentCompanyId').val());
 }
+
+window.parent.postMessage({
+    'minical-current-url': window.location.href
+},"*");

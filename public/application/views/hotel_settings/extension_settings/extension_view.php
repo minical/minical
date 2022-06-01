@@ -15,8 +15,23 @@
                     <div class="extension_block">
                         <div class="main-extension">
                             <div class="icon">
-
-                                <img src="<?php echo (isset($extension['image_name']) && $extension['image_name']) ?  base_url().'/images/'.$extension['image_name'] : ''?>" style="width: 30px;height: 30px">
+                                <img src="<?php  if(isset($extension['logo']) && $extension['logo']){
+                                            if(strpos($extension['logo'], 'http')  !== false){
+                                                echo $extension['logo'];
+                                            } else{
+                                                echo base_url().'application/extensions/'.$extension['extension_folder_name'].'/'.$extension['logo'];
+                                            }
+                                        
+                                } elseif(isset($extension['image_name']) && $extension['image_name']){
+                                    if(strpos($extension['image_name'], 'http')  !== false){
+                                        echo $extension['image_name'];
+                                    } else {
+                                        echo base_url().'/images/'. $extension['image_name'];
+                                    }
+                                    
+                                } else {
+                                    echo '';
+                                } ?>" style="width: 30px;height: 30px">
                             </div>
                             <div class="extension-content">
                                 <b style="font-size: 12px;"><?php

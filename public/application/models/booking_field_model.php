@@ -36,6 +36,26 @@ class Booking_field_model extends CI_Model {
         return NULL;
     }
 
+    function get_booking_fields_data($booking_id, $where_field){
+
+        $this->db->where('company_id', $this->company_id);
+        if ($where_field) {
+            $this->db->where($where_field, 1);
+        }
+        $this->db->where('is_deleted', 0);
+        $this->db->from('booking_field as bf');
+        $this->db->join('booking_x_booking_field as bxbf', "bxbf.booking_field_id = bf.id and bxbf.booking_id = '$booking_id'", 'left');
+        $query = $this->db->get();
+        $booking_fields_result = $query->result_array();
+
+        $booking_fields = array();
+        foreach($booking_fields_result as $field)
+        {
+            $booking_fields[$field['id']] = $field['value'];
+        }
+        return $booking_fields;
+    }
+    
     function create_booking_fields($data){
 
         $data = (object)$data;

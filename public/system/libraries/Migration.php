@@ -32,7 +32,7 @@ class CI_Migration {
 	protected $_migration_enabled = FALSE;
 	protected $_migration_path = NULL;
 	protected $_migration_version = 0;
-
+    protected $_migration_auto_latest = FALSE;
 	protected $_error_string = '';
 
 	public function __construct($config = array())
@@ -79,6 +79,12 @@ class CI_Migration {
 
 			$this->db->insert('migrations', array('version' => 0));
 		}
+
+        // Do we auto migrate to the latest migration?
+        if ($this->_migration_auto_latest === TRUE && ! $this->latest())
+        {
+            show_error($this->error_string());
+        }
 	}
 
 	// --------------------------------------------------------------------

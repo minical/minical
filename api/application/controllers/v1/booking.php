@@ -1021,7 +1021,7 @@ class Booking extends REST_Controller
                     'user_id' => 2, //User_id 2 is Online Reservation
                     'booking_id' => $booking_id,                  
                     'date_time' => gmdate('Y-m-d H:i:s'),
-                    'log' => "Overbooking alert email sent to " . $result_array['owner_email'],
+                    'log' => "Room allocation conflict alert email sent to " . $result_array['owner_email'],
                     'log_type' => SYSTEM_LOG
                 );
 

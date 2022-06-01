@@ -856,8 +856,23 @@ class Auth extends MY_Controller
             $this->User_model->add_user_permission($company_id, $data['user_id'], 'is_admin');
         }
 
-        if($this->User_model->get_users_count() == 1 && $data['email'] != SUPER_ADMIN){
+        if($this->User_model->get_users_count() == 1 && isset($data['email']) && $data['email'] != SUPER_ADMIN){
             $this->User_model->add_user_permission($company_id, $data['user_id'], 'is_admin');
+
+            $is_hosted_prod_service = getenv('IS_HOSTED_PROD_SERVICE');
+
+            if(
+                !$is_hosted_prod_service && 
+                $_SERVER['HTTP_HOST'] != "app.minical.io" && 
+                $_SERVER['HTTP_HOST'] != "demo.minical.io"
+            ){
+                $partner_x_admin_data = array(
+                                            'partner_id' => $company_data['partner_id'], 
+                                            'admin_id' => $data['user_id']
+                                        );
+                $this->Whitelabel_partner_model->add_whitelabel_partner_x_admin($partner_x_admin_data);
+            }
+
         }
 
          // support@minical.io will have admin permission
@@ -902,11 +917,19 @@ class Auth extends MY_Controller
                 $this->Room_model->create_room(null, null, null, $rooms);
             }
         }
-        $subscription_level = BASIC;
+
+        $is_hosted_prod_service = getenv('IS_HOSTED_PROD_SERVICE');
+
+        if(!$is_hosted_prod_service) {
+            $subscription_level = PREMIUM;
+        } else {
+            $subscription_level = BASIC;
+        }
+        
         $signup_minical_plan = isset($_COOKIE['signup-minical-plan']) ? $_COOKIE['signup-minical-plan'] : strtolower($subscription_type);
-        $subscription_level = $signup_minical_plan == "basic" ? BASIC : $subscription_level;
+        $subscription_level = $signup_minical_plan == "minimal" ? BASIC : $subscription_level;
         $subscription_level = $signup_minical_plan == "premium" ? PREMIUM : $subscription_level;
-        $subscription_level = $signup_minical_plan == "elite" ? ELITE : $subscription_level;
+        // $subscription_level = $signup_minical_plan == "elite" ? ELITE : $subscription_level;
 
         $subscription_type = $this->_process_subscription_type($subscription_type, $company_id, $region, $subscription_level);
         
@@ -1002,12 +1025,23 @@ class Auth extends MY_Controller
         if($active_extensions && count($active_extensions) > 0){
             $new_extensions = array();
             foreach ($active_extensions as $extension) {
-                if(isset($extension['extension_name']) && $extension['extension_name'] != 'reseller_package'){
-                    $new_extensions[] = array(
-                                                'extension_name' => $extension['extension_name'],
-                                                'company_id' => $company_id,
-                                                'is_active' => 1
-                                            );
+
+                if($this->is_super_admin == 1){
+                    if(isset($extension['extension_name'])){
+                        $new_extensions[] = array(
+                            'extension_name' => $extension['extension_name'],
+                            'company_id' => $company_id,
+                            'is_active' => 1
+                        );
+                    }
+                } else {
+                    if(isset($extension['extension_name']) && $extension['extension_name'] != 'reseller_package'){
+                        $new_extensions[] = array(
+                            'extension_name' => $extension['extension_name'],
+                            'company_id' => $company_id,
+                            'is_active' => 1
+                        );
+                    }
                 }
             }
 
@@ -1039,7 +1073,7 @@ class Auth extends MY_Controller
         $company_subscription_array = array(
             'company_id'         => $company_id,
             'subscription_type'  => $subscription_type,
-            'subscription_state' => "trialing",
+            'subscription_state' => "active",
             'renewal_period'     => $renewal_period,
             'region' => $region,
             'subscription_level'  => $subscription_level
