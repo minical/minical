@@ -472,7 +472,9 @@ class Email_template {
             'company_region' => $company['region'],
             'company_country' => $company['country'],
             'company_postal_code' => $company['postal_code'],
-
+            'default_room_singular' => $company['default_room_singular'],
+            'default_room_plural' => $company['default_room_plural'],
+            'default_room_type' => $company['default_room_type'],
             'company_phone' => $company['phone'],
             'company_email' => $company['email'],
             'company_website' => $company['website'],
@@ -1217,6 +1219,10 @@ class Email_template {
             'company_name' => $company['name'],
 
             'company_address' => $company['address'],
+
+            'default_room_singular' => $company['default_room_singular'],
+            'default_room_plural' => $company['default_room_plural'],
+            'default_room_type' => $company['default_room_type'],
 
             'company_city' => $company['city'],
             'company_region' => $company['region'],
