@@ -326,7 +326,7 @@
                 echo ($company['website'] != "")?"Website: ".$company['website']."<br/>":'';
                 echo $company['GST_number'];
                 ?>
-                <?php echo '<p class="invoice-header">'.$company['invoice_header'].'</p>'; ?>
+                <?php echo '<p class="invoice-header">'.$company['invoice_email_header'].'</p>'; ?>
         </div>
         <div class="col-xs-4 invoice_heading_div padding-left-zero-wep">
             <address class="form-inline text-gapp billed-gap">
