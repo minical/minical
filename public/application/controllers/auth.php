@@ -1461,7 +1461,7 @@ class Auth extends MY_Controller
                 $data['errors']['password_not_match'] = 'The Confirm new Password field does not match the New Password field.';
             }
             if ($this->input->post('new_password') != '' && preg_match('/[^a-zA-Z\d]/', $this->input->post('new_password'))) {
-                $data['errors']['password_contains_special_characters'] = 'The New Password field may only contain alpha-numeric characters, underscores, and dashes.';
+                $data['errors']['password_contains_special_characters'] = 'The New Password field must contain alphanumeric characters, underscores, and dashes.';
             }
         }
 
@@ -1550,7 +1550,7 @@ class Auth extends MY_Controller
                 $data['errors']['password_not_match'] = 'The Confirm new Password field does not match the New Password field.';
             }
             if ($this->input->post('new_password') != '' && preg_match('/[^a-zA-Z\d]/', $this->input->post('new_password'))) {
-                $data['errors']['password_contains_special_characters'] = 'The New Password field may only contain alpha-numeric characters, underscores, and dashes.';
+                $data['errors']['password_contains_special_characters'] = 'The New Password field must contain alphanumeric characters, underscores, and dashes.';
             }
         }
 
