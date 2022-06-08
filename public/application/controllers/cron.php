@@ -10,13 +10,27 @@ class Cron extends CI_Controller
         $this->load->model('Channex_model');
 	}
 	
-	function ota_booking_retrieval()
+	function ota_booking_retrieval($authorization_code = null)
 	{	
-        $this->get_channex_bookings();
+		if (getenv('CRON_AUTH_SECRET')) {
+			if (!$authorization_code || $authorization_code !== getenv('CRON_AUTH_SECRET')) {
+				echo 'Not authorized';
+				return;
+			}
+		}
+    	
+    	$this->get_channex_bookings($authorization_code);
 	}
 
-	function get_channex_bookings()
+	function get_channex_bookings($authorization_code)
 	{
+		if (getenv('CRON_AUTH_SECRET')) {
+			if (!$authorization_code || $authorization_code !== getenv('CRON_AUTH_SECRET')) {
+				echo 'Not authorized';
+				return;
+			}
+		}
+
 		$this->load->model('Company_model');
 		
 		$companies = $this->Company_model->get_all_companies(true);
