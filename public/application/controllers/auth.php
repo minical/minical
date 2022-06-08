@@ -1027,7 +1027,7 @@ class Auth extends MY_Controller
             foreach ($active_extensions as $extension) {
 
                 if($this->is_super_admin == 1){
-                    if(isset($extension['extension_name'])){
+                    if(isset($extension['extension_name']) && $extension['extension_name'] != 'reseller_package'){
                         $new_extensions[] = array(
                             'extension_name' => $extension['extension_name'],
                             'company_id' => $company_id,
@@ -1045,6 +1045,12 @@ class Auth extends MY_Controller
                 }
             }
 
+            $new_extensions[] = array(
+                'extension_name' => 'reseller_package',
+                'company_id' => $company_id,
+                'is_active' => 1
+            );
+
             for ($i = 0, $total = count($new_extensions); $i < $total; $i = $i + 50)
             {
                 $ext_batch = array_slice($new_extensions, $i, 50);
@@ -1056,6 +1062,14 @@ class Auth extends MY_Controller
                     show_error($this->db->_error_message());
                 }
             }
+        } else {
+            $new_extension = array(
+                'extension_name' => 'reseller_package',
+                'company_id' => $company_id,
+                'is_active' => 1
+            );
+
+            $this->db->insert("extensions_x_company", $new_extension);
         }
     }
 
