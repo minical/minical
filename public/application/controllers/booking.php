@@ -277,94 +277,6 @@ class Booking extends MY_Controller
         $this->load->view('includes/bootstrapped_template', $data);
     }
 
-    /**
-     * Displays booking list on main page (reservations, inhouses, and checkouts)
-     */
-//     function show_booking_list()
-//     {
-//         $user_id = $this->session->userdata('user_id');
-//         $data['is_reminder_hidden'] = $this->User_model->is_reminder_hidden($user_id);
-
-//         $data['selling_date'] = $this->selling_date;
-
-//         $filters = array(
-//             'filter_booking_list' => array(
-//                 'start_date' => $this->selling_date,
-//                 'end_date' => $this->selling_date,
-//                 'date_overlap' => $this->selling_date
-//             ),
-//             'not_include_charge_payment_total' => true,
-//             'fetch_checkindate_with_room_name' => true
-//         );
-
-//         $bookings = $this->Booking_model->get_bookings($filters, null, null, true);
-//         foreach($bookings as $key => $booking)
-//         {
-//             $booking['current_room_name'] = $booking['room_name'];
-//             if (isset($booking['room_name']) && $booking['room_name']) {
-//                 $room_name = $booking['room_name'];
-//                 $room_names = explode(",", $room_name);
-//                 $rooms_ar = array();
-//                 foreach($room_names as $room_name) {
-//                     $room_name_ar = explode("|$|", $room_name);
-//                     $name = $room_name_ar[0];
-//                     $date = $room_name_ar[1];
-//                     $rooms_ar[$date] = $name;
-//                 }
-
-//                 uksort($rooms_ar, function ($dt1, $dt2) {
-//                     $tm1 = strtotime($dt1);
-//                     $tm2 = strtotime($dt2);
-// //                    return ($tm1 < $tm2) ? 1 : (($tm1 > $tm2) ? -1 : 0);
-//                     return ($tm1 < $tm2) ? -1 : (($tm1 > $tm2) ? 1 : 0);
-//                 });
-
-//                 $booking['room_name'] = implode(",", $rooms_ar);
-//                 $booking['current_room_name'] = end($rooms_ar);
-//             }
-
-//             if($booking['state'] == UNCONFIRMED_RESERVATION)
-//             {
-//                 $data['unconfirmed_reservations'][] = $booking;
-//             }
-//             if($booking['state'] == INHOUSE)
-//             {
-//                 $data['staying_and_paying'][] = $booking;
-//             }
-//             if($booking['state'] == RESERVATION)
-//             {
-//                 $data['checking_in_today'][] = $booking;
-//             }
-//             if($booking['state'] == CHECKOUT)
-//             {
-//                 $data['checked_out_today'][] = $booking;
-//             }
-//             if($booking['state'] == OUT_OF_ORDER)
-//             {
-//                 $data['out_of_order_bookings'][] = $booking;
-//             }
-//         }
-
-//         if (isset($data['out_of_order_bookings']) && count($data['out_of_order_bookings']) > 0) {
-//             usort($data['out_of_order_bookings'], function($a, $b){ return strcmp($a["current_room_name"], $b["current_room_name"]); });
-//         }
-//         if (isset($data['checking_in_today']) && count($data['checking_in_today']) > 0) {
-//             usort($data['checking_in_today'], function($a, $b){ return strcmp($a["current_room_name"], $b["current_room_name"]); });
-//         }
-//         if (isset($data['checked_out_today']) && count($data['checked_out_today']) > 0) {
-//             usort($data['checked_out_today'], function($a, $b){ return strcmp($a["current_room_name"], $b["current_room_name"]); });
-//         }
-//         if (isset($data['staying_and_paying']) && count($data['staying_and_paying']) > 0) {
-//             usort($data['staying_and_paying'], function($a, $b){ return strcmp($a["current_room_name"], $b["current_room_name"]); });
-//         }
-//         if (isset($data['unconfirmed_reservations']) && count($data['unconfirmed_reservations']) > 0) {
-//             usort($data['unconfirmed_reservations'], function($a, $b){ return strcmp($a["current_room_name"], $b["current_room_name"]); });
-//         }
-
-//         //Note: This is not using template loader. Javascript and css files are loaded in view
-//         $this->load->view('booking/booking_list', $data);
-//     }
-
     function show_bookings()
     {
         $this->load->model('Booking_model');
@@ -892,8 +804,6 @@ class Booking extends MY_Controller
         print_r($rows);
     }
 
-
-
     // accessed by jquery calendar.js
     // not the best practice. This function should be in model
     function get_bookings_in_JSON()
@@ -1046,8 +956,6 @@ class Booking extends MY_Controller
         $this->load->view('includes/bootstrapped_template', $data);
     }
 
-    
-
     // If there are continuous bloking blocks that are split, then combine them.
     function _combine_booking_blocks($booking_id) {
         $this->Booking_room_history_model->check_and_combine_booking_blocks($booking_id);
@@ -1190,18 +1098,7 @@ class Booking extends MY_Controller
         $this->Booking_log_model->insert_logs($batch);
     }
 
-    // function download_csv_export($booking_type) {
-    //     $booking_types = Array($booking_type);
-
-    //     //get user's shift information
-    //     $query = $this->Booking_model->get_csv($this->company_id, $booking_types, $this->selling_date);
-
-    //     $this->load->dbutil();
-    //     $csv = $this->dbutil->csv_from_result($query);
-    //     $this->load->helper('download');
-    //     force_download("bookings-" . $this->selling_date . ".csv", $csv);
-    // }
-
+    
     /* New shit! 2015-03-09 Jaeyun */
 
     function get_booking_AJAX() {
@@ -1732,6 +1629,7 @@ class Booking extends MY_Controller
 
         $payment_details = $this->Payment_model->get_payments($booking_id);
         $booking_existing_data = $this->Booking_model->get_booking($booking_id);
+
         $final_amount = 0;
 
         if($new_state == 4 && $payment_details)
@@ -2352,6 +2250,28 @@ class Booking extends MY_Controller
         if ($custom_booking_fields) {
             $this->Booking_model->update_booking_fields($booking_id, $custom_booking_fields);
         }
+
+        if(strtotime($new_data['rooms'][0]['check_in_date']) > strtotime($booking_existing_data['check_in_date'])) {
+            $start_date = $booking_existing_data['check_in_date'];
+        } else {
+            $start_date = $new_data['rooms'][0]['check_in_date'];
+        }
+
+        if(strtotime($new_data['rooms'][0]['check_out_date']) > strtotime($booking_existing_data['check_out_date'])) {
+            $end_date = $new_data['rooms'][0]['check_out_date'];
+        } else {
+            $end_date = $booking_existing_data['check_out_date'];
+        }
+
+        $update_availability_data = array(
+                        'start_date' => $start_date,
+                        'end_date' => $end_date,
+                        'room_type_id' => $new_data['rooms'][0]['room_type_id'],
+                        'company_id' => $this->company_id,
+                        'update_from' => 'booking_controller'
+                    );
+
+        do_action('update_availability', $update_availability_data);
 
         echo json_encode($response);
     }

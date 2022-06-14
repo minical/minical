@@ -4402,6 +4402,17 @@ var bookingModalInvoker = function ($) {
 
                                         action = 'early-check-out';
                                     }
+
+                                    // update availabilities of the dates after the update
+
+                                    var bookingUpdatedData = [];
+                                    bookingUpdatedData.check_in_date = checkInDate;
+                                    bookingUpdatedData.check_out_date = checkOutDate;
+                                    bookingUpdatedData.room_type_id = that.booking.current_room_type_id;
+
+                                    var bookingUpdatedEvent = new CustomEvent('booking_updated', { "detail" : {"reservation_id" : that.booking.booking_id, "booking_data" : bookingUpdatedData} });
+                                    document.dispatchEvent(bookingUpdatedEvent);
+
                                     that._updateBooking(bookingData, l("Successfully checked-out"), action);
                                 }
 
