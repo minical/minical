@@ -353,7 +353,7 @@ class Customer_model extends CI_Model {
             
             if (!empty($search_query))
             {
-            	$search_sql   = " AND (customer_name like '%".$search_query."%' OR customer_id = '".$search_query."' OR phone like '%".$search_query."%' )";
+            	$search_sql   = " AND (customer_name like '%".$search_query."%' OR customer_id = '".$search_query."' OR phone like '%".$search_query."%' OR email like '%".$search_query."%' )";
             }
             	
 		}

@@ -604,7 +604,7 @@ class Roomsy_migration extends MY_Controller
                     if(empty($existing_customer_fields)) {
                         $customer_fields = $this->Customer_field_model->create_customer_field($this->company_id, $key);
                     } else {
-                        $customer_fields =$existing_customer_fields[0]['id'];
+                        $customer_fields = $existing_customer_fields[0]['id'];
                     }
 
                     if($customer_data) {
@@ -1901,7 +1901,7 @@ class Roomsy_migration extends MY_Controller
 
     function import_customers_data($company_id){
 
-        $customer= $this->Export_data_model->get_customer_card_details($company_id);
+        $customer = $this->Export_data_model->get_customer_card_details($company_id);
 
         $first_customer = $customer[0];
 
@@ -1909,18 +1909,13 @@ class Roomsy_migration extends MY_Controller
             $custom_fields_name = explode(',',$first_customer['custom_fields_name']);
         }
 
-        if(isset($custom_fields_name) && $custom_fields_name){
-            foreach($custom_fields_name as $custom_fields) {
-                $csv_customer_keys[] = $custom_fields;
-            }
-        }
-
+        
         foreach($customer as $data)
         {
+            $custom_fields_values = array();
+
             if($data['custom_fields_value']){
-                $custom_fields_values = explode(',',$data['custom_fields_value']);
-            }else{
-                $custom_fields_values = null;
+                $custom_fields_values[] = explode(',',$data['custom_fields_value']);
             }
 
             $customer_row = array();
@@ -1939,19 +1934,14 @@ class Roomsy_migration extends MY_Controller
             $customer_row['Address2'] = $data['address2'];
             $customer_row['Phone2'] = $data['phone2'];
 
-            if($custom_fields_values){
-                foreach($custom_fields_values as $custom_fields_value) {
-                    if(!empty($custom_fields_value)){
-                        $customer_row[] = $custom_fields_value;
-                    }else{
-                        $customer_row[] = "";
-                    }
-
-                }
-            }else{
-                if(isset($custom_fields_name) && $custom_fields_name){
-                    foreach ($custom_fields_name as $key => $value) {
-                        $customer_row[] = "";
+            if(isset($custom_fields_name) && $custom_fields_name){
+                foreach ($custom_fields_name as $key => $value) {
+                    if($custom_fields_values){
+                        foreach($custom_fields_values as $custom_fields_value) {
+                            if(!empty($custom_fields_value)){
+                                $customer_row[$value] = $custom_fields_value[$key];
+                            }
+                        }
                     }
                 }
             }
@@ -2098,14 +2088,16 @@ class Roomsy_migration extends MY_Controller
             }
         }
 
+        $staying_booking = $this->Export_data_model->get_booking_staying_customers($company_id);
         foreach($booking as $key => $data)
         {
             $staying_customer = array();
             $staying_booking_customer = "";
-            $staying_booking = $this->Booking_model->get_booking_staying_customers($data['bookingid'],$this->company_id);
             if(!empty($staying_booking)){
                 foreach ($staying_booking as $customer) {
-                    $staying_customer[] = $customer['customer_id'];
+                    if($customer['booking_id'] == $data['bookingid']){
+                        $staying_customer[] = $customer['customer_id'];
+                    }
                 }
                 $staying_booking_customer = implode(",", $staying_customer);
             }
@@ -2203,7 +2195,7 @@ class Roomsy_migration extends MY_Controller
         }
 
         $csv_data['bookings'] = $booking_keys;
-
+        
         if (isset($csv_data['bookings'])) {
             $this->import_bookings_csv($csv_data['bookings']);
         }

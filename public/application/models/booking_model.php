@@ -159,12 +159,17 @@ class Booking_model extends CI_Model {
     }
     
     
-    function get_booking($booking_id, $is_company = true)
+    function get_booking($booking_id, $is_company = true, $is_booking_history = true)
     {   
         $this->db->where('b.booking_id', $booking_id);
         $this->db->from('booking as b');
+
+        if($is_booking_history)
+            $this->db->join('booking_block as bb', 'bb.booking_id = b.booking_id');
+
         if($is_company)
             $this->db->join('company as c', 'c.company_id = b.company_id');
+
         $query = $this->db->get();
         $result = $query->result_array();
         

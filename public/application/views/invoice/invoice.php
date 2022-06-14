@@ -326,7 +326,7 @@
                 echo ($company['website'] != "")?"Website: ".$company['website']."<br/>":'';
                 echo $company['GST_number'];
                 ?>
-                <?php echo '<p class="invoice-header">'.$company['invoice_header'].'</p>'; ?>
+                <?php echo '<p class="invoice-header">'.$company['invoice_email_header'].'</p>'; ?>
         </div>
         <div class="col-xs-4 invoice_heading_div padding-left-zero-wep">
             <address class="form-inline text-gapp billed-gap">
@@ -424,13 +424,19 @@
                 ?>
 
                 </span><br/>
+               <span id="booking-field">
                 <?php
+
                 if (isset($booking_fields) && count($booking_fields) > 0) {
                     foreach ($booking_fields as $booking_field) {
-                        echo ($booking_field['name'] && $booking_field['value']) ? $booking_field['name'].": " . $booking_field['value'] . "<br/>" : '';
+                        $value = $custom_booking_fields[$booking_field['id']];
+                        if ($value) {
+                        echo ($booking_field['name'] && $value) ? $booking_field['name'].": " . $value . "<br/>" : '';
+                        }
                     }
                 }
                 ?>
+                </span>
             </address>
 
 

@@ -37,12 +37,18 @@ function get_base_formatted_date($date) {
     return $date;
 }
 
-function get_local_formatted_date($date) {
+function get_local_formatted_date($date, $company_date_format = null) {
     $dateAr = explode(' ',$date);
     $dateParts = explode('-',$dateAr[0]);
 
 	$CI =& get_instance();
-    $companyDateFormat = isset($CI->company_date_format) && $CI->company_date_format ? $CI->company_date_format : 'YY-MM-DD';
+
+    if($company_date_format){
+        $companyDateFormat = $company_date_format;
+    } else {
+        $companyDateFormat = isset($CI->company_date_format) && $CI->company_date_format ? $CI->company_date_format : 'YY-MM-DD';
+    }
+    
     $currentDateFormat = strtolower($companyDateFormat);
     
     if ($currentDateFormat == 'yy-mm-dd') {
