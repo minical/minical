@@ -323,7 +323,68 @@ class Cron extends CI_Controller
 
 	function daily(){
 
+		$this->load->model(array('Extension_model','Company_model'));
+		$this->load->helper('my_assets_helper');
+        $companies = $this->Company_model->get_all_companies(false);
 		$data = array();
+		foreach ($companies as $company)
+	 	{ 
+
+	        $active_extensions = $this->Extension_model->get_active_extensions($company['company_id']);
+	        $modules_path = APPPATH.'extensions/';
+
+	        $active_modules = array();
+	        if($active_extensions){
+	            foreach ($active_extensions as $key => $extension) {
+	                $active_modules[] = $extension['extension_name'];
+	            }
+	        }
+
+	        $autoload_helpers = array();
+	        $autoload_packages = array();
+
+	        if($active_modules && count($active_modules) > 0){
+	            foreach($active_modules as $module)
+	            {
+	                $extension_helper = array();
+	                if($module === '.' || $module === '..') continue;
+	                if(is_dir($modules_path) . '/' . $module)
+	                {
+
+	                    if(file_exists('application/extensions/'.$module . '/hooks/actions.php')) {
+	                        $autoload_packages[$module.'-actions'] = '../extensions/'.$module . '/hooks/actions';
+	                    }
+	                    if(file_exists('application/extensions/'.$module . '/hooks/filters.php')) {
+	                        $autoload_packages[$module.'-filters'] = '../extensions/'.$module . '/hooks/filters';
+	                    }
+
+	                    $helpers_path = $modules_path . $module . '/config/autoload.php';
+	                    if(file_exists($helpers_path))
+	                    {
+	                        require($helpers_path);
+
+	                        if($extension_helper && is_array($extension_helper)){
+	                            foreach($extension_helper as $key => $extension_helper_item) {
+	                                if ($extension_helper_item) {
+	                                    $autoload_helpers[$extension_helper_item] = '../extensions/'.$module . '/helpers/' . $extension_helper_item;
+	                                }
+	                            }
+	                        }
+	                    }
+	                    else
+	                    {
+	                        continue;
+	                    }
+	                }
+	            }
+	        }
+	     
+        if($autoload_helpers && count($autoload_helpers) > 0)
+            $this->load->helper($autoload_helpers);
+        if($autoload_packages && count($autoload_packages) > 0)
+            $this->load->helper($autoload_packages, true);
+        }
+        
 		do_action('daily-cron', $data);
 	}
 
