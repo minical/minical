@@ -74,7 +74,7 @@ function Header(calendar, options) {
 									$("<button/>", {
 										href: '#',
 										class: 'btn btn-success  create-new-booking',
-										text: l('create_new_booking')
+										text: l('Create New Booking', true)
 									}).on('click', function() {
 										if (typeof $(this).openBookingModal !== 'undefined' && $.isFunction($(this).openBookingModal)) {
 					                        $(this).openBookingModal();
