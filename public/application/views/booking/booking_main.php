@@ -407,7 +407,9 @@
                                     <label for="" class="col-sm-3 control-label"></label>
                                     <div class="col-sm-9">
                                         <button type="button" class="btn btn-lg btn-success btn-block" id="update_property_button" onclick="ajax_submit('<?php echo base_url()?>auth/update_company','#update_company_form','update_company')">
-                                            <?php echo l('Start Using Minical'); ?>
+                                           <?php echo l('Start Using '); if($whitelabel_detail){  echo ucfirst($whitelabel_detail['name']); }else{
+                                                    echo $this->config->item('branding_name');
+                                            }?>
                                         </button>
                                     </div>
                                 </div>

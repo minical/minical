@@ -3198,9 +3198,9 @@
       .text-gapp{
           text-align: left !important;
       }
-      .padding-left-zero-wep{
+      /*.padding-left-zero-wep{
           width:100%;
-      }
+      }*/
       .card-img img{
         width: 40%!important;margin-bottom: 20px;
       }
