@@ -1073,6 +1073,14 @@ function get_total_companies($extension_name = null, $is_extension_active = fals
         }
     }
 
+    function deconfigure_company_api_key($api_key){
+    	$this->db->where('company_id', $this->company_id);
+        $this->db->delete('key_x_company');
+
+        $this->db->where('key', $api_key);
+        $this->db->delete('key');
+    }
+
 	function update_common_booking_engine_fields($company_id, $booking_engine_field_id, $data)
     {
         $this->db->where('id', $booking_engine_field_id);

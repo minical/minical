@@ -65,6 +65,13 @@
       </span>
       <!-- <span class="btn btn-primary update-availabilities-button pull-right"><?php echo l('manually_update_availabilities_for_all_channels'); ?></span> -->
       <div class="calendar" channel_id="0" style="margin-top: 10px;"></div>
+      <div class="ml-5 enable_api_msg" id="enable_api_msg" style="display:none;">
+        
+        <input type="hidden" name="api_key_access" class="api_key_access" id="<?php echo isset($api_key) && count($api_key) > 0 ? $api_key[0]['key'] : ''; ?>">
+
+        <p class="text-danger">*Please Enable minical API key</p>
+        <p class="text-danger">*Settings => API Access => Activate "Enable minical API access"</p>
+      </div>
    </div>
    <style>
       .inv_hide {

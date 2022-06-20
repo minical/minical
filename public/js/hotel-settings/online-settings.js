@@ -205,6 +205,7 @@ $(function (){
     innGrid.toggleEnableApiAccess();
     $("input[name=enable_api_access]").on("click", function() {
         innGrid.toggleEnableApiAccess();
+        $('.api_access_settings_update').click();
     });
 
     $('#save-all-booking-fields-button').on("click", function () { 
@@ -228,11 +229,26 @@ innGrid.generateNewAPIKey = function() {
     });
 }
 
+innGrid.deconfigure = function() {
+    var api_key = $('#api_key').val();
+    // alert(api_key);
+    $.ajax({
+        type   : "POST",
+        url    : getBaseURL() + 'settings/company/deconfigure_company_api_key',
+        data   : {api_key: api_key},
+        dataType: "json",
+        success: function (data) {
+            console.log('data ',data);
+        }
+    });
+}
+
 innGrid.toggleEnableApiAccess = function() {
     if($("input[name='enable_api_access']:checked").length > 0) {
         innGrid.generateNewAPIKey();
         $(".api-key").show();
     } else {
+        innGrid.deconfigure();
         $(".api-key").hide();
     }
 }

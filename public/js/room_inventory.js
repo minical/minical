@@ -137,11 +137,17 @@ innGrid.createTable = function(dateStart, dateEnd) {
             url: getBaseURL()+'room/get_room_type_availability_AJAX',
             data: query,
             beforeSend: function() {
-                $("#loading_img").show();
+                if($('.api_key_access').attr('id') != '')
+                    $("#loading_img").show();
+                else
+                    $('#enable_api_msg').show();
+                
             },
             success: function(res) {
                 res = JSON.parse(res);
                $("#loading_img").hide();
+
+               $('#enable_api_msg').hide();
 
                 var otaThresholdVal = 0;
                 var rows = [];

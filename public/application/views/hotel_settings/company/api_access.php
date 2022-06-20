@@ -39,7 +39,7 @@
         </div>
 
     <div class="col-sm-12 ml-2 ">
-        <input type="submit" class="btn btn-primary" style="width: 200px;" value="<?php echo l('Update', true); ?>"/>
+        <input type="submit" class="btn btn-primary api_access_settings_update"  style="width: 200px; display: none;" value="<?php echo l('Update', true); ?>"/>
     </div>
 </form>
 </div></div>

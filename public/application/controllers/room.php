@@ -218,9 +218,11 @@ class Room extends MY_Controller
 
         if(!empty($res)){
             foreach($res as $key => $r){
-                $result = $this->Room_model->get_room_count_by_room_type_id($r['id']); //  get rooms in particular room type
-                $res[$key]['room_count'] = $result['room_count'];
-                $res[$key]['is_threshold_enabled'] = $isThresholdEnabled;
+            	if(isset($r['id']) && $r['id']){
+            		$result = $this->Room_model->get_room_count_by_room_type_id($r['id']); //  get rooms in particular room type
+	                $res[$key]['room_count'] = $result['room_count'];
+	                $res[$key]['is_threshold_enabled'] = $isThresholdEnabled;
+            	}
             }
         }
 		echo json_encode($res, true);
@@ -353,6 +355,9 @@ class Room extends MY_Controller
         $channels = count($channels_keys) ? $this->Channel_model->get_all_channels($channels_keys) : array();
 
         $data['channels'] = array_merge(array(array("id" => -1, "name" => "Overview")), $channels);
+
+        $get_api_key = $this->Company_model->get_company_api_permission($this->company_id);
+        $data['api_key'] = $get_api_key;
         
 		$this->load->view('includes/bootstrapped_template', $data);			
 	}
