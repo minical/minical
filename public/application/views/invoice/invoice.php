@@ -396,7 +396,7 @@
                     <strong><?php echo l('invoice'); ?> #:</strong>
                     <?php echo str_pad((isset($invoice_number))?$invoice_number:0, 8, "0", STR_PAD_LEFT); ?>
                 </div>
-        <div class="col-xs-4 text-right booking_id_div padding-right-zero padding-left-zero-wep">
+        <div class="col-xs-4 text-right padding-right-zero padding-left-zero-wep">
              
             <address class="text-gapp book-wep">
                 <strong class="invoice_booking_id"><?php echo l('booking').' '.l('id'); ?>:</strong>

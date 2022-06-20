@@ -512,9 +512,10 @@ class Auth extends MY_Controller
                     );
                     //$_SESSION['is_registration_page'] = '1';
                     $this->session->set_userdata('is_registration_page', '1');
+                    $whitelabelinfo = $this->session->userdata('white_label_information');
 
                         $data['new_email_key'] = '';
-                        $data['site_name']         = $this->config->item('website_name', 'tank_auth');
+                        $data['site_name']         = $whitelabelinfo && isset($whitelabelinfo['name']) && $whitelabelinfo['name'] ? $whitelabelinfo['name'] : $this->config->item('website_name', 'tank_auth');
                         $data['activation_period'] = $this->config->item('email_activation_expire', 'tank_auth') / 3600;
 
                         $this->_send_email('activate', $email, $data);
@@ -1247,16 +1248,16 @@ class Auth extends MY_Controller
 
         $from_email = $whitelabelinfo && isset($whitelabelinfo['do_not_reply_email']) && $whitelabelinfo['do_not_reply_email'] ? $whitelabelinfo['do_not_reply_email'] : 'donotreply@minical.io';
         
-        $from_name = $whitelabelinfo && isset($whitelabelinfo['name']) && $whitelabelinfo['name'] ? $whitelabelinfo['name'] : 'minical';
+        $from_name = $whitelabelinfo && isset($whitelabelinfo['name']) && $whitelabelinfo['name'] ? $whitelabelinfo['name'] : 'Minical';
 
         $reply_to_email = $whitelabelinfo && isset($whitelabelinfo['support_email']) && $whitelabelinfo['support_email'] ? $whitelabelinfo['support_email'] : 'support@minical.io';
         
-        $reply_to_name = $whitelabelinfo && isset($whitelabelinfo['name']) && $whitelabelinfo['name'] ? $whitelabelinfo['name'] : 'minical';
+        $reply_to_name = $whitelabelinfo && isset($whitelabelinfo['name']) && $whitelabelinfo['name'] ? $whitelabelinfo['name'] : 'Minical';
 
         $this->email->from($from_email, $from_name);
         $this->email->reply_to($reply_to_email, $reply_to_name." Support");
         $this->email->to($email);
-        $this->email->subject(sprintf($this->lang->line('auth_subject_'.$type), $this->config->item('website_name', 'tank_auth')));
+        $this->email->subject(sprintf($this->lang->line('auth_subject_'.$type), $from_name));
         $this->email->message($this->load->view('email/'.$type.'-html', $data, true));
         $this->email->set_alt_message($this->load->view('email/'.$type.'-txt', $data, true));
         $this->email->send();
@@ -1317,7 +1318,8 @@ class Auth extends MY_Controller
                 )
                 ) {            // success
 
-                    $data['site_name']         = $this->config->item('website_name', 'tank_auth');
+                    $whitelabelinfo = $this->session->userdata('white_label_information');
+                    $data['site_name']         = $whitelabelinfo && isset($whitelabelinfo['name']) && $whitelabelinfo['name'] ? $whitelabelinfo['name'] : $this->config->item('website_name', 'tank_auth');
                     $data['activation_period'] = $this->config->item('email_activation_expire', 'tank_auth') / 3600;
 
                     $this->_send_email('activate', $data['email'], $data);
@@ -1385,7 +1387,8 @@ class Auth extends MY_Controller
                 )
                 ) {
 
-                    $data['site_name'] = $this->config->item('website_name', 'tank_auth');
+                    $whitelabelinfo = $this->session->userdata('white_label_information');
+                    $data['site_name'] = $whitelabelinfo && isset($whitelabelinfo['name']) && $whitelabelinfo['name'] ? $whitelabelinfo['name'] : $this->config->item('website_name', 'tank_auth');
 
                     // Send email with password activation link
                     $this->_send_email('forgot_password', $data['email'], $data);
@@ -1436,7 +1439,8 @@ class Auth extends MY_Controller
             )
             ) {    // success
 
-                $data['site_name'] = $this->config->item('website_name', 'tank_auth');
+                $whitelabelinfo = $this->session->userdata('white_label_information');
+                $data['site_name'] = $whitelabelinfo && isset($whitelabelinfo['name']) && $whitelabelinfo['name'] ? $whitelabelinfo['name'] : $this->config->item('website_name', 'tank_auth');
 
                 // Send email with new password
                 $this->_send_email('reset_password', $data['email'], $data);
@@ -1603,7 +1607,8 @@ class Auth extends MY_Controller
                 )
                 ) {            // success
 
-                    $data['site_name'] = $this->config->item('website_name', 'tank_auth');
+                    $whitelabelinfo = $this->session->userdata('white_label_information');
+                    $data['site_name'] = $whitelabelinfo && isset($whitelabelinfo['name']) && $whitelabelinfo['name'] ? $whitelabelinfo['name'] : $this->config->item('website_name', 'tank_auth');
 
                     // Send email with new email address and its activation link
                     $this->_send_email('change_email', $data['new_email'], $data);
@@ -2048,13 +2053,14 @@ class Auth extends MY_Controller
     {
         
         $user_id =  $this->session->userdata('user_id');
+        $whitelabelinfo = $this->session->userdata('white_label_information');
         $user_profile = $this->User_model->get_user_profile($user_id);
         $data = array(
             'user_id' => $user_id,
             'username'    => $user_profile['username'],
             'email'        => $user_profile['email'],
             'new_email_key' => md5(rand().microtime()),
-            'site_name' => $this->config->item('website_name', 'tank_auth'),
+            'site_name' => $whitelabelinfo && isset($whitelabelinfo['name']) && $whitelabelinfo['name'] ? $whitelabelinfo['name'] : $this->config->item('website_name', 'tank_auth'),
             'activation_period' => $this->config->item('email_activation_expire', 'tank_auth') / 3600
         );
         
