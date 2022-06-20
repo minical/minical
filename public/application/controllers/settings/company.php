@@ -540,7 +540,7 @@ class Company extends MY_Controller
     function deconfigure_company_api_key(){
         $api_key = $this->input->post('api_key');
 
-        $this->Company_model->insert_company_api_key($api_key);
+        $this->Company_model->deconfigure_company_api_key($api_key);
     }
 
     function update_features_AJAX()
