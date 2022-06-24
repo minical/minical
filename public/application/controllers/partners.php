@@ -20,7 +20,7 @@ class Partners extends MY_Controller {
 		
 	function show_partners()
 	{		
-		$data['partners'] = $this->Whitelabel_partner_model->get_partners_detail();
+		$data['partners'] = $this->Whitelabel_partner_model->get_partners_detail($this->vendor_id);
 		
 		$data['main_content'] = 'partners/show_partners';
 		$data['js_files']     = array(

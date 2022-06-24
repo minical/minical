@@ -345,6 +345,8 @@ class MY_Controller extends CI_Controller {
                 }
             }
 
+            $this->is_self_hosted_domain = ($host_name == $whitelabelinfo['domain']);
+
             if(
                 $this->company_feature_limit == 1 && 
                 $this->company_subscription_state != 'trialing' &&

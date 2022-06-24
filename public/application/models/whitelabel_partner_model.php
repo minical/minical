@@ -214,12 +214,17 @@ class Whitelabel_partner_model extends CI_Model {
         return NULL;
     }
 
-    function get_partners_detail(){
+    function get_partners_detail($partner_id){
 
         $this->db->from('whitelabel_partner AS wp');
         $this->db->join('users AS u', "u.id = wp.admin_user_id", "left");
         $this->db->where('wp.show_on_partners_page', 1);
         $this->db->where('wp.is_deleted', 0);
+
+        if($this->is_self_hosted_domain == 1) {
+            $this->db->where('wp.id', $partner_id);
+        }
+        
         $this->db->group_by('wp.id');
         $query = $this->db->get();
         if($query->num_rows() > 0)
