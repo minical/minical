@@ -317,6 +317,8 @@ class MY_Controller extends CI_Controller {
             $this->vendor_id = isset($admin_user_ids['partner_id']) && $admin_user_ids['partner_id'] ? $admin_user_ids['partner_id'] : $this->company_data['partner_id'];
             $this->user_permission = ($user && isset($user['permission']) && $user['permission']) ? $user['permission'] : '';
 
+            $this->is_partner_owner = ($admin_user_ids && isset($admin_user_ids['admin_user_id']) && $this->user_id == $admin_user_ids['admin_user_id']);
+
             $common_booking_sources = json_decode(COMMON_BOOKING_SOURCES, true);
             $i = 0;
             $booking_sources = $this->Booking_source_model->get_common_booking_sources_settings($this->company_id);
