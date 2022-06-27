@@ -96,7 +96,7 @@ if($is_favourite) { ?>
 
 
                                             <p class="extension-discription" ><?php echo  strlen($extension['description']) > 200 ? substr($extension['description'],0,200)."..." : $extension['description']; ?>
-                                                <?php if(isset($extension['marketplace_product_link']) && $extension['marketplace_product_link'] && $this->vendor_id != 0 && $this->is_partner_owner == 1){ ?>
+                                                <?php if(isset($extension['marketplace_product_link']) && $extension['marketplace_product_link'] && $this->is_partner_owner == 1){ ?>
                                                     <a href="<?php echo (isset($extension['marketplace_product_link']) && $extension['marketplace_product_link'] ? $extension['marketplace_product_link']: "")?>" style="font-size: 14px"><?php echo l('more');?></a>
                                                 <?php } ?>
                                             </p>
@@ -276,7 +276,7 @@ if($is_favourite) { ?>
                                             <p class="extension-discription" style= "margin-bottom: 0px"><?php echo 
 
                                                 strlen($extension['description']) > 200 ? substr($extension['description'],0,200)."..." : $extension['description']; ?>
-                                                <?php if(isset($extension['marketplace_product_link']) && $extension['marketplace_product_link'] && $this->vendor_id != 0 && $this->is_partner_owner == 1){ ?>
+                                                <?php if(isset($extension['marketplace_product_link']) && $extension['marketplace_product_link'] && $this->is_partner_owner == 1){ ?>
                                                     <a href="<?php echo (isset($extension['marketplace_product_link']) && $extension['marketplace_product_link'] ? $extension['marketplace_product_link']: "")?>" style="font-size: 14px"><?php echo l('more');?></a>
                                                 <?php }?>
                                             </p>

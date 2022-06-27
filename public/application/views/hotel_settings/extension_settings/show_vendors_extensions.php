@@ -70,7 +70,7 @@
                                             <?php } ?>
                                            
                                             <p class="extension-discription" ><?php echo strlen($extension['description']) > 200 ? substr($extension['description'],0,200)."..." : $extension['description']; ?>
-                                                <?php if(isset($extension['marketplace_product_link']) && $extension['marketplace_product_link']){ ?>
+                                                <?php if(isset($extension['marketplace_product_link']) && $extension['marketplace_product_link'] && $this->is_partner_owner == 1){ ?>
                                                     <a href="<?php echo (isset($extension['marketplace_product_link']) && $extension['marketplace_product_link'] ? $extension['marketplace_product_link']: "")?>" style="font-size: 14px"><?php echo l('more');?></a>
                                                 <?php } ?>
                                             </p>
@@ -154,7 +154,7 @@
                                                 <?php } ?>
                                                
                                                 <p class="extension-discription" ><?php echo  strlen($extension['description']) > 200 ? substr($extension['description'],0,200)."..." : $extension['description']; ?>
-                                                    <?php if(isset($extension['marketplace_product_link']) && $extension['marketplace_product_link']){ ?>
+                                                    <?php if(isset($extension['marketplace_product_link']) && $extension['marketplace_product_link'] && $this->is_partner_owner == 1){ ?>
                                                         <a href="<?php echo (isset($extension['marketplace_product_link']) && $extension['marketplace_product_link'] ? $extension['marketplace_product_link']: "")?>" style="font-size: 14px"><?php echo l('more');?></a>
                                                     <?php } ?>
                                                 </p>
