@@ -302,66 +302,7 @@ class Booking extends REST_Controller
         
         $this->response(null, 200); // 200 being the HTTP response code
     } 
-
     /*
-        Takes a booking array with the following parameters and creates booking
-        [0] => Array
-        (
-            [ota_booking_id] => 200841623
-            [booking_type] => new
-            [company_id] => 35
-            [customer] => Array
-                (
-                    [company_id] => 35
-                    [customer_name] => jaeyun Noh
-                    [phone] => 4037080563
-                    [email] => jaeyun@gmail.com
-                    [address] => 2114 14ave
-                    [city] => Wainwright
-                    [postal_code] => T9W1L2
-                    [country] => ca
-                )
-
-            [pms_room_type_id] => 222
-            [check_in_date] => 2014-08-08
-            [check_out_date] => 2014-08-11
-            [adult_count] => 2
-            [rate_plan] => Array
-                (
-                    [rate_plan_name] => Booking_dot_com #200841623
-                    [number_of_adults_included_for_base_rate] => 2
-                    [description] => No meal is included in this room rate. Children and Extra Bed Policy: All children are welcome. One child under 4 years stays free of charge when using existing beds. The maximum number of extra beds/children's cots permitted in a room is 1.  Deposit Policy: No deposit will be charged.  Cancellation Policy: If cancelled  up to 1 day before the date of arrival,  100 percent of the first night will be charged. 
-                    [room_type_id] => 222
-                    [rates] => Array
-                        (
-                            [0] => Array
-                                (
-                                    [date_start] => 2014-08-08
-                                    [date_end] => 2014-08-11
-                                    [base_rate] => 79.00
-                                )
-
-                            [1] => Array
-                                (
-                                    [date_start] => 2014-08-11
-                                    [date_end] => 2014-08-12
-                                    [base_rate] => 89.00
-                                )
-
-                        )
-
-                    [currency] => Array
-                        (
-                            [currency_code] => USD
-                        )
-
-                )
-
-        )
-
-
-
-    /**
     *
     *   @return booking_id of the newly created booking
     */
