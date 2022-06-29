@@ -4253,6 +4253,13 @@ class Migration_create_base extends CI_Migration {
 				'null' => FALSE,
 
 			),
+			'is_extra_charge' => array(
+				'type' => 'TINYINT',
+				'constraint' => 1,
+				'null' => TRUE,
+				'default' => '1',
+
+			),
 		));
 		$this->dbforge->add_key("ota_x_company_id",true);
 		$this->dbforge->create_table("ota_x_company", TRUE);
