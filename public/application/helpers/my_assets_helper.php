@@ -12,6 +12,9 @@ function get_asstes_files($module_assets_files, $module_name, $controller, $func
 
                     if(strpos($js_files[$i]['file'], 'http')  !== false){
                         $load_files['js_files']['file'][] = $js_files[$i]['file'];
+                    } elseif(strpos($js_files[$i]['file'], '../')  !== false) {
+                        $direct_file = str_replace("../", "", $js_files[$i]['file']);
+                        $load_files['js_files']['file'][] = base_url() . $direct_file;
                     } else {
                         $load_files['js_files']['file'][] = module_base_path() . $key . '/' .$js_files[$i]['file'];
                     }
@@ -35,6 +38,9 @@ function get_asstes_files($module_assets_files, $module_name, $controller, $func
 
                     if(strpos($css_files[$k]['file'], 'http')  !== false){
                         $load_files['css_files']['file'][] = $css_files[$k]['file'];
+                    } elseif(strpos($css_files[$k]['file'], '../')  !== false) {
+                        $direct_file = str_replace("../", "", $css_files[$k]['file']);
+                        $load_files['css_files']['file'][] = base_url() . $direct_file;
                     } else {
                         $load_files['css_files']['file'][] = module_base_path() . $key . '/' .$css_files[$k]['file'];
                     }
