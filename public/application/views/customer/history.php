@@ -263,7 +263,7 @@ if ($permissions && in_array('bookings_view_only', $permissions) && !(in_array('
                 <span class='legend-color state0 bttn-gapp'><?php echo l('Reservation', true); ?></span>
                 <span class='legend-color state1 bttn-gapp'><?php echo l('Checked in', true); ?></span>
                 <span class='legend-color state2 bttn-gapp'><?php echo l('Checked out', true); ?></span>
-                <span class='legend-color state3 bttn-gapp'><?php echo l('Cancelled', true); ?></span>
+                <span class='legend-color state4 bttn-gapp'><?php echo l('Cancelled', true); ?></span>
             </div>
         </div>
     </div>

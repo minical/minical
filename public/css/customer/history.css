@@ -54,6 +54,12 @@
 	background-color:#eeeeee; 
 }
 
+/* Cancelled */
+.state4 {
+	background-color:#D3D3D3;
+}
+
+
 .fc-event a:hover,
 .fc-event1 a:hover,
 .fc-event2 a:hover,
