@@ -202,7 +202,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <?php if($average_daily_rate && $average_daily_rate > 0): ?>
+                                <?php $rate_plan_total = 0; if($average_daily_rate && $average_daily_rate > 0): ?>
                                 <div id="module_1559902991513" class="hse-section hse-section-1-col " style="padding-left:10px; padding-right:10px">
                                     <div class="hse-column-container " style="min-width:280px; max-width:600px; width:100%; Margin-left:auto; Margin-right:auto; border-collapse:collapse; border-spacing:0; background-color:#ffffff" bgcolor="#ffffff">
                                         <div id="module_1559902991513_0" class="hse-column ">
@@ -232,11 +232,235 @@
                                                             <div id="hs_cos_wrapper_module_15615388260943" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_module" style="color: inherit; font-size: inherit; line-height: inherit;" data-hs-cos-general-type="widget" data-hs-cos-type="module">
                                                                 <div id="hs_cos_wrapper_module_15615388260943_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_rich_text" style="color: inherit; font-size: inherit; line-height: inherit;" data-hs-cos-general-type="widget" data-hs-cos-type="rich_text">
                                                                     <?php if($rate_plan_detail): ?><p style="mso-line-height-rule: exactly;line-height: 175%;margin: 0;"><span style="color: #000000;"><strong><?php echo l('Rate Plan', true); ?>:&nbsp;</strong><?php echo $rate_plan_detail['rate_plan_name']; ?></span></p><?php endif; ?>
-                                                                    <p style="mso-line-height-rule: exactly;line-height: 175%;margin: 0;"><span style="color: #000000;"><strong><?php echo l('Total room charges', true); ?>:&nbsp;</strong><?php echo number_format($rate, 2, ".", ","); ?></span></p>
+                                                                    <p style="mso-line-height-rule: exactly;line-height: 175%;margin: 0;"><span style="color: #000000;"><strong><?php echo l('Total room charges', true); ?>:&nbsp;</strong><?php echo number_format($rate, 2, ".", ""); ?></span></p>
                                                                     <p style="mso-line-height-rule: exactly;line-height: 175%;margin: 0;"><span style="color: #000000;"><strong><?php echo l('Tax', true); ?>:&nbsp;</strong><?php $tax = floatval($rate_with_taxes) - floatval($rate); echo number_format($tax, 2, ".", ","); ?></span></p>
-                                                                    <p style="mso-line-height-rule: exactly;line-height: 175%;margin: 0;"><span style="color: #000000;"><strong><?php echo l('Grand Total', true); ?>:&nbsp;</strong><?php echo number_format($rate_with_taxes, 2, ".", ","); ?></span></p>
+                                                                    <p style="mso-line-height-rule: exactly;line-height: 175%;margin: 0;"><span style="color: #000000;"><strong><?php echo l('Total', true); ?>:&nbsp;</strong><?php echo number_format($rate_with_taxes, 2, ".", ""); $rate_plan_total = number_format($rate_with_taxes, 2, ".", ""); ?></span></p>
                                                                     <p style="mso-line-height-rule: exactly;line-height: 175%;margin: 0;"><span style="color: #000000;"><strong><?php echo l('Average daily rate', true); ?>:&nbsp;</strong><?php echo number_format($average_daily_rate, 2, ".", ","); ?></span></p>
-                                                                    <p style="mso-line-height-rule: exactly;line-height: 175%;margin: 0;"><span style="color: #000000;"><strong><?php echo l('Amount due', true); ?>:&nbsp;</strong><?php echo number_format($amount_due, 2, ".", ","); ?></span></p>
+                                                                    <p style="mso-line-height-rule: exactly;line-height: 175%;margin: 0;"><span style="color: #000000;"><strong><?php echo l('Amount due', true); ?>:&nbsp;</strong><?php echo number_format($amount_due, 2, ".", ""); ?></span></p>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <?php endif; ?>
+                                
+                                <?php $start_date_total = $include_date_total = $exclude_date_total = 0;
+                                $start_date_tax_total = $include_date_tax_total = $exclude_date_tax_total = 0;
+                                $date_diff = 0;
+                                 if($extras && count($extras) > 0): ?>
+                                <div id="module_1559902991513" class="hse-section hse-section-1-col " style="padding-left:10px; padding-right:10px">
+                                    <div class="hse-column-container " style="min-width:280px; max-width:600px; width:100%; Margin-left:auto; Margin-right:auto; border-collapse:collapse; border-spacing:0; background-color:#ffffff" bgcolor="#ffffff">
+                                        <div id="module_1559902991513_0" class="hse-column ">
+                                            <table cellpadding="0" cellspacing="0" width="100%" style="border-spacing:0 !important; border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt">
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="border-collapse:collapse; mso-line-height-rule:exactly; font-family:Arial, sans-serif; font-size:15px; color:#23496d; word-break:break-word; padding:10px 20px">
+                                                            <div id="hs_cos_wrapper_module_155990299151328" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_module" style="color: inherit; font-size: inherit; line-height: inherit;" data-hs-cos-general-type="widget" data-hs-cos-type="module">
+                                                                <div id="hs_cos_wrapper_module_155990299151328_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_rich_text" style="color: inherit; font-size: inherit; line-height: inherit;" data-hs-cos-general-type="widget" data-hs-cos-type="rich_text">
+                                                                    <h2 style="margin:0; mso-line-height-rule:exactly; font-size:22px; line-height:175%"><span style="color: #000000;"><strong><?php echo l('Summary of Additional Products', true); ?></strong></span></h2>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="module_1561538826095" class="hse-section hse-section-2-col " style="padding-left:10px; padding-right:10px">
+                                    <div class="hse-column-container " style="min-width:280px; max-width:600px; width:100%; Margin-left:auto; Margin-right:auto; border-collapse:collapse; border-spacing:0; background-color:#ffffff; background-image:url(''); background-position:center; background-repeat:repeat" bgcolor="#ffffff">
+                                        <div id="module_1561538826095_0" class="hse-column hse-narrow">
+                                            <table cellpadding="0" cellspacing="0" width="100%" style="border-spacing:0 !important; border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt">
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="border-collapse:collapse; mso-line-height-rule:exactly; font-family:Arial, sans-serif; font-size:15px; color:#23496d; word-break:break-word; padding:10px 20px">
+                                                            <div id="hs_cos_wrapper_module_15615388260943" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_module" style="color: inherit; font-size: inherit; line-height: inherit;" data-hs-cos-general-type="widget" data-hs-cos-type="module">
+                                                                <div id="hs_cos_wrapper_module_15615388260943_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_rich_text" style="color: inherit; font-size: inherit; line-height: inherit;" data-hs-cos-general-type="widget" data-hs-cos-type="rich_text">
+                                                                    <p style="mso-line-height-rule: exactly;line-height: 175%;margin: 0;">
+                                                                        <span style="color: #000000;"><strong>
+                                                                            <table border="1" cellpadding="4" cellspacing="0" style="display: block;">
+                                                                                <thead class="">
+                                                                                    <tr class="table-header">
+                                                                                        <th>Product Name</th>
+                                                                                        <th style="width: 21% !important;">Charge Scheme</th>
+                                                                                        <th>Price</th>
+                                                                                        <th>Quantity</th>
+                                                                                        <th>Calculation</th>
+                                                                                        <th>Total</th>
+                                                                                        <th>Tax</th>
+                                                                                        <!-- <th>Final Total</th> -->
+                                                                                    </tr>
+                                                                                </thead>
+                                                                                    <?php 
+                                                                                    foreach($extras as $extra) : 
+                                                                                        if($date_diff == 0)
+                                                                                            $date_diff = (strtotime($extra['end_date']) - strtotime($extra['start_date'])) / (3600*24);?>
+                                                                                        <tr>
+                                                                                            <td>
+                                                                                                <div class="name-rate-div-<?php echo $extra['extra_id']; ?>">
+                                                                                                    <span class="name-span-<?php echo $extra['extra_id']; ?>"><?php echo $extra['extra_name']; ?></span>
+                                                                                                </div>
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <?php if($extra['charging_scheme'] == 'on_start_date'){
+                                                                                                    echo 'On start date';
+                                                                                                } else if($extra['charging_scheme'] == 'once_a_day' && $extra['extra_type'] == 'item'){
+                                                                                                    echo 'Once a day (end date inclusive)';
+                                                                                                } else if($extra['charging_scheme'] == 'once_a_day' && $extra['extra_type'] == 'rental'){
+                                                                                                    echo 'Once a day (end date exclusive)';
+                                                                                                } ?>
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <?php echo number_format($extra['rate'], 2, ".", ""); ?>
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <?php echo number_format($extra['quantity'], 2, ".", ""); ?>
+                                                                                            </td>
+                                                                                            <td style="padding: 4px;">
+                                                                                                <?php
+                                                                                                    if ($extra['charging_scheme'] == 'on_start_date') {
+                                                                                                        echo $extra['rate'].' * '.$extra['quantity'];
+                                                                                                        $start_date_total = number_format(($extra['rate'] * $extra['quantity']), 2, ".", "");
+
+                                                                                                    } elseif ($extra['charging_scheme'] == 'once_a_day' && $extra['extra_type'] == 'item' && strtotime($extra['start_date']) <= strtotime($extra['end_date'])) {
+                                                                                                        echo $extra['rate'].' * '.$extra['quantity'].' * '.(1 + $date_diff);
+                                                                                                        $include_date_total = number_format(($extra['rate'] * $extra['quantity'] * (1 + $date_diff) ), 2, ".", "");
+
+                                                                                                    } elseif ($extra['charging_scheme'] == 'once_a_day' && $extra['extra_type'] == 'rental' && strtotime($extra['start_date']) < strtotime($extra['end_date'])) {
+                                                                                                        echo $extra['rate'].' * '.$extra['quantity'].' * '.$date_diff;
+                                                                                                        $exclude_date_total = number_format(($extra['rate'] * $extra['quantity'] * $date_diff ), 2, ".", "");
+                                                                                                    }
+                                                                                                ?>
+                                                                                            </td>
+    
+                                                                                            <td>
+                                                                                                <?php 
+                                                                                                    if ($extra['charging_scheme'] == 'on_start_date') {
+                                                                                                        echo number_format(($extra['rate'] * $extra['quantity']), 2, ".", "");
+                                                                                                    
+                                                                                                    } elseif ($extra['charging_scheme'] == 'once_a_day' && $extra['extra_type'] == 'item' && strtotime($extra['start_date']) <= strtotime($extra['end_date'])) {
+                                                                                                        echo number_format(($extra['rate'] * $extra['quantity'] * (1 + $date_diff) ), 2, ".", "");
+                                                                                                    
+                                                                                                    } elseif ($extra['charging_scheme'] == 'once_a_day' && $extra['extra_type'] == 'rental' && strtotime($extra['start_date']) < strtotime($extra['end_date'])) {
+                                                                                                        echo number_format(($extra['rate'] * $extra['quantity'] * $date_diff ), 2, ".", "");
+                                                                                                    }
+                                                                                                ?>
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <?php 
+                                                                                                    if($extra_tax_rates && count($extra_tax_rates) > 0) {
+                                                                                                        foreach ($extra_tax_rates as $key => $tax_rate) {
+
+                                                                                                            $current_selling_date = $selling_date;
+                                                                                                            $date_start = Date('Y-m-d', max(strtotime($current_selling_date), strtotime($extra['start_date'])));
+                                                                                                            $date_end = $extra['end_date'];
+
+                                                                                                            if($extra['extra_id'] == $key){
+                                                                                                                if ($extra['charging_scheme'] == 'on_start_date') {
+                                                                                                                    
+                                                                                                                    $tax_total = 0;
+                                                                                                                    if($tax_rate && count($tax_rate) > 0)
+                                                                                                                    {
+                                                                                                                        foreach($tax_rate as $tax){
+                                                                                                                            if(!$tax['is_tax_inclusive']){
+                                                                                                                                $tax_total += ($extra['rate'] * $extra['quantity'] * $tax['tax_rate'] / 100);
+                                                                                                                            }
+                                                                                                                        }
+                                                                                                                    }
+                                                                                                                    
+                                                                                                                    echo $tax_total;
+                                                                                                                    $start_date_tax_total += $tax_total;
+
+                                                                                                                } else if($extra['charging_scheme'] == 'once_a_day' && $extra['extra_type'] == 'rental' && strtotime($date_start) < strtotime($date_end)) {
+                                                                                                                    $tax_total = 0;
+                                                                                                                    for ($date = $date_start; $date < $date_end; $date = Date("Y-m-d", strtotime("+1 day", strtotime($date))))
+                                                                                                                    {
+                                                                                                                        if($tax_rate && count($tax_rate) > 0)
+                                                                                                                        {
+                                                                                                                            foreach ($tax_rate as $tax) {
+                                                                                                                                if (!$tax['is_tax_inclusive']) {
+                                                                                                                                    $tax_total += ($extra['rate'] * $extra['quantity'] * $tax['tax_rate'] / 100);
+                                                                                                                                }
+                                                                                                                            }
+                                                                                                                        }
+                                                                                                                    }
+
+                                                                                                                    echo $tax_total;
+                                                                                                                    $exclude_date_tax_total += $tax_total;
+
+                                                                                                                } else {
+                                                                                                                    $tax_total = 0;
+                                                                                                                    for ($date = $date_start; $date <= $date_end; $date = Date("Y-m-d", strtotime("+1 day", strtotime($date))))
+                                                                                                                    {
+                                                                                                                        
+                                                                                                                        if($tax_rate && count($tax_rate) > 0)
+                                                                                                                        {
+                                                                                                                            foreach ($tax_rate as $tax) {
+                                                                                                                                if (!$tax['is_tax_inclusive']) {
+                                                                                                                                    $tax_total += ($extra['rate'] * $extra['quantity'] * $tax['tax_rate'] / 100);
+                                                                                                                                }
+                                                                                                                            }
+                                                                                                                        }
+                                                                                                                    }
+
+                                                                                                                    echo $tax_total;
+                                                                                                                    $include_date_tax_total += $tax_total;
+                                                                                                                }
+                                                                                                            }
+                                                                                                        }
+                                                                                                    }
+                                                                                                ?>
+                                                                                            </td>
+                                                                                            <!-- <td>
+                                                                                                <?php 
+                                                                                                    if ($extra['charging_scheme'] == 'on_start_date') {
+                                                                                                        echo $start_date_tax_total + $start_date_total;
+                                                                                                    
+                                                                                                    } elseif ($extra['charging_scheme'] == 'once_a_day' && $extra['extra_type'] == 'item' && strtotime($extra['start_date']) <= strtotime($extra['end_date'])) {
+                                                                                                        echo $include_date_tax_total + $include_date_total;
+                                                                                                    
+                                                                                                    } elseif ($extra['charging_scheme'] == 'once_a_day' && $extra['extra_type'] == 'rental' && strtotime($extra['start_date']) < strtotime($extra['end_date'])) {
+                                                                                                        echo $exclude_date_tax_total + $exclude_date_total;
+                                                                                                    }
+                                                                                                ?>
+                                                                                            </td> -->
+                                                                                        </tr>
+                                                                                    <?php endforeach; ?>
+                                                                            </table>
+                                                                        </span>
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="border-collapse:collapse; mso-line-height-rule:exactly; font-family:Arial, sans-serif; font-size:15px; color:#23496d; word-break:break-word; padding:10px 20px">
+                                                            <div id="hs_cos_wrapper_module_15615388260943" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_module" style="color: inherit; font-size: inherit; line-height: inherit;" data-hs-cos-general-type="widget" data-hs-cos-type="module">
+                                                                <div id="hs_cos_wrapper_module_15615388260943_" class="hs_cos_wrapper hs_cos_wrapper_widget hs_cos_wrapper_type_rich_text" style="color: inherit; font-size: inherit; line-height: inherit;" data-hs-cos-general-type="widget" data-hs-cos-type="rich_text">
+                                                                    <p style="mso-line-height-rule: exactly;line-height: 175%;margin: 0;">
+                                                                        <span style="color: #000000;"><strong>
+                                                                            <?php echo l('Grand Total', true); ?>:&nbsp;</strong>
+
+                                                                            <?php //echo 'Rate plan total + Start date total + Exclude (check-out) date total + Include (check-out) date total'; ?><br/>
+                                                                            <?php $grand_total = $rate_plan_total + $start_date_total + $start_date_tax_total + $exclude_date_total + $exclude_date_tax_total + $include_date_total + $include_date_tax_total; ?>
+                                                                            <?php $grand_total_calculation = $rate_plan_total;
+                                                                                if($start_date_total){
+                                                                                    $grand_total_calculation .= ' + ('.$start_date_total.' + '.$start_date_tax_total.')';
+                                                                                }
+                                                                                if($exclude_date_total){
+                                                                                    $grand_total_calculation .= ' + ('.$exclude_date_total.' + '.$exclude_date_tax_total.')';
+                                                                                }
+                                                                                if($include_date_total){
+                                                                                    $grand_total_calculation .= ' + ('.$include_date_total.' + '.$include_date_tax_total.')';
+                                                                                }
+                                                                            ?>
+                                                                            <?php echo $grand_total_calculation .' = '. number_format($grand_total, '2', '.', ''); ?>
+                                                                        </span>
+                                                                    </p>
                                                                 </div>
                                                             </div>
                                                         </td>

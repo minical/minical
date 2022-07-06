@@ -7,6 +7,7 @@ class Email_template {
         $this->ci =& get_instance();
 
         $this->ci->load->model('Booking_model');
+        $this->ci->load->model('Booking_extra_model');
         $this->ci->load->model('Booking_room_history_model');
         $this->ci->load->model('Room_model');
         $this->ci->load->model('Room_type_model');
@@ -16,6 +17,7 @@ class Email_template {
         $this->ci->load->model('Charge_type_model');
         $this->ci->load->model('Image_model');
         $this->ci->load->model('Booking_source_model');
+        $this->ci->load->model('Tax_model');
 
         $this->ci->load->library('Email');
         $this->ci->load->helper('language_translation_helper');
@@ -438,9 +440,21 @@ class Email_template {
                 }
             }
         }         
+        $extras = $this->ci->Booking_extra_model->get_booking_extras($booking_id);
+        $extra_tax_rates = array();
+
+        if($extras && count($extras) > 0){
+            foreach ($extras as $key => $extra) {
+                $extra_tax_rates[$extra['extra_id']] = $this->ci->Tax_model->get_tax_rates_by_charge_type_id($extra['charge_type_id'], $company_id, $extra['rate']);
+            }
+        }
+        
 
         //Send confirmation email
         $email_data = array (
+            'extras' => $extras,
+            'extra_tax_rates' => $extra_tax_rates,
+            'selling_date' => $company['selling_date'],
             'booking_id' => $booking_id,
 
             'customer_name' => $customer_info['customer_name'],
@@ -915,7 +929,7 @@ class Email_template {
         {
             $rate = $booking_data['rate'] * $number_of_nights;
         }
-
+        
         $customer_info = $this->ci->Customer_model->get_customer_info($booking_data['booking_customer_id']);
 
         if (!$customer_info)
@@ -1191,8 +1205,11 @@ class Email_template {
                 break;
         }
 
+        $extras = $this->ci->Booking_extra_model->get_booking_extras($booking_id);
+
         //Send confirmation email
         $email_data = array (
+            'extras' => $extras,
             'booking_id' => $booking_id,
 
             'customer_name' => $customer_info['customer_name'],
@@ -1248,7 +1265,7 @@ class Email_template {
             'booking_type' => $booking_type,
             'amount_due' => $booking_data['balance'],
             'rate_plan_detail' => $rate_plan,
-            'confirmation_email_header' => $company['booking_confirmation_email_header']
+            'confirmation_email_header' => $company['booking_confirmation_email_header'],
         );
 
         if ($email_data['customer_email'] == null || strlen($email_data['customer_email']) <= 1) {
@@ -1261,7 +1278,7 @@ class Email_template {
         {
             $email_list .= ",".$company['additional_company_emails'];
         }
-
+        
         $whitelabelinfo = $this->ci->session->userdata('white_label_information');
 
         $from_email = isset($whitelabelinfo['do_not_reply_email']) && $whitelabelinfo['do_not_reply_email'] ? $whitelabelinfo['do_not_reply_email'] : 'donotreply@minical.io';
