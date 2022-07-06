@@ -43,7 +43,7 @@
 
 <div class="container-fluid">
 	<h3><?php echo l('Add new User', true); ?></h3>
-	<form  class="form-inline" method="post" action="<?php echo base_url();?>settings/company/employees" autocomplete="off" id="employee-settings-form" onsubmit="return validateUserRestriction() && warnSuperAdmin()">
+	<form  class="form-inline" method="post" action="<?php echo base_url();?>settings/company/employees" autocomplete="off" id="employee-settings-form" onsubmit="return warnSuperAdmin()">
 		<div class="form-group">
 			<label class="sr-only" for="employee_first_name"><?php echo l('first_name'); ?></label>
 			<input type="text" class="form-control" name="employee_first_name" value="<?php echo set_value('employee_first_name');?>" placeholder="<?php echo l('First Name', true); ?>">
