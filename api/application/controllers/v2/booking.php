@@ -2166,4 +2166,12 @@ class Booking extends MY_Controller
 
         return $changes_indexed_by_date;    
     }
+
+    function get_company_data_post()
+    {
+        $company_id = $this->post('company_id');
+        $company_data = $this->Company_model->get_company_data($company_id);
+        
+        $this->response($company_data, 200); // 200 being the HTTP response code
+    }
 }

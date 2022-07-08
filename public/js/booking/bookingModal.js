@@ -28,6 +28,7 @@ var bookingModalInvoker = function ($) {
     var show_decimal = true;
     var add_remaining_daily_charges = true;
     var invoiceGroupId = '';
+    var invoice_group_id = '';
 //    var parent_rate_plan_id = false;
 
     var startTime = moment().startOf('day');
@@ -287,6 +288,12 @@ var bookingModalInvoker = function ($) {
                 {id: '3', name: l('One Time')}
             ];
 
+            setTimeout(function(){
+                invoice_group_id = $('#group_id').val();
+                console.log('invoice_group_id',invoice_group_id);
+                $('.group_invoice').attr('href', getBaseURL() + "invoice/show_master_invoice/" + invoice_group_id);
+            },2000);
+
             // array of different option buttons
             this.$allActions = {
                 editHousekeepingNotes: $("<li/>").append(
@@ -340,6 +347,15 @@ var bookingModalInvoker = function ($) {
 //                    });
                     })
                 ),
+                openGroupInvoice: $("<li/>").append(
+                    $("<a/>", {
+                        href: getBaseURL() + "invoice/show_master_invoice/" + invoice_group_id,
+                        class: 'group_invoice',
+                        text: l('Group Invoice')
+                    }).on('click', function (e) {
+                        
+                    })
+                ),
                 showHistory: $("<li/>").append(
                     $("<a/>", {
                         href: "#",
@@ -365,7 +381,7 @@ var bookingModalInvoker = function ($) {
                 addExtra: $("<li/>").append(
                     $("<a/>", {
                         href: "#",
-                        text: l("Add Extra")
+                        text: l("Add Product")
                     }).on('click', function (e) {
                         e.preventDefault(); // prevent # scrolling to the top
 
@@ -791,11 +807,12 @@ var bookingModalInvoker = function ($) {
                                             "data-toggle": "dropdown",
                                             "aria-expanded": false,
                                             text: l("Action")+" ",
-                                        }).append(
-                                            $("<span/>", {
-                                                class: "caret"
-                                            })
-                                        )
+                                        })
+                                        // .append(
+                                        //     $("<span/>", {
+                                        //         class: "caret"
+                                        //     })
+                                        // )
                                     ).append(
                                         $("<ul/>", {
                                             class: "dropdown-menu other-actions",
@@ -989,6 +1006,26 @@ var bookingModalInvoker = function ($) {
                                     })
                                 )
                             )
+                            .append(
+                                $("<li/>").append(
+                                    $("<a/>", {
+                                        'href': '#extras',
+                                        'data-toggle': "tab",
+                                        'text': l('Products')
+                                    })
+                                        .append(
+                                            $("<span/>", {
+                                                'class': 'extras_count',
+                                                'text': " ( " + that.booking.extras_count + " )"
+                                            })
+                                        )
+                                        .on('click', function (e) {
+                                            setTimeout(function () {
+                                                that._setHeight('extras');
+                                            }, 1000);
+                                        })
+                                )
+                            )
                             
                     )
                 );
@@ -1113,6 +1150,26 @@ var bookingModalInvoker = function ($) {
                                             that._setHeight('history');
                                         }, 1000);
                                     })
+                                )
+                                
+                            ).append(
+                                $("<li/>").append(
+                                    $("<a/>", {
+                                        'href': '#extras',
+                                        'data-toggle': "tab",
+                                        'text': l('Products')
+                                    })
+                                        .append(
+                                            $("<span/>", {
+                                                'class': 'extras_count',
+                                                'text': " ( " + that.booking.extras_count + " )"
+                                            })
+                                        )
+                                        .on('click', function (e) {
+                                            setTimeout(function () {
+                                                that._setHeight('extras');
+                                            }, 1000);
+                                        })
                                 )
                             )
                             
@@ -2483,13 +2540,13 @@ var bookingModalInvoker = function ($) {
                                         .append(
                                             $('<button/>', {
                                                 class: 'btn btn-primary btn-sm',
-                                                text: l('add_extra'),
+                                                text: l('Add Product'),
                                                 style: 'margin: 0px 0px 10px 0px;'
                                             }).on('click', function (e) {
                                                 e.preventDefault(); // prevent # scrolling to the top
 
                                                 if (!that.extras || !that.extras[0]) {
-                                                    alert(l('Please add the extras first under Settings')+ " > "+l('Rates')+" > "+l('Products'));
+                                                    alert(l('Please add the products first under Settings')+ " > "+l('Rates')+" > "+l('Products'));
                                                     return;
                                                 }
 
@@ -2811,7 +2868,7 @@ var bookingModalInvoker = function ($) {
                     $("<div/>", {
                         class: "modal-header"
                     })
-                        .append(l("Extra Information"))
+                        .append(l("Product Information"))
                         .append(
                             $("<button/>", {
                                 class: "close",
@@ -2829,7 +2886,7 @@ var bookingModalInvoker = function ($) {
                     $("<div/>", {
                         class: "modal-body form-horizontal"
                     })
-                        .append(this._getExtraSelect(l("Extra"), 'extra_id', that.extras, extra.extra_id))
+                        .append(this._getExtraSelect(l("Prodcut"), 'extra_id', that.extras, extra.extra_id))
                         .append(this._getHorizontalInput(l("Start Date"), 'start_date', extra.start_date))
                         .append(this._getHorizontalInput(l("End Date"), 'end_date', extra.end_date))
                         .append(this._getHorizontalInput(l("Quantity"), 'quantity', extra.quantity))
@@ -4296,6 +4353,12 @@ var bookingModalInvoker = function ($) {
                             style: "padding-left: 20px",
                             html: l("Group")+" "+l("Name")+": " + this.groupInfo.group_name + " "
                         })
+                    ).append(
+                        $("<input/>", {
+                            type: "hidden",
+                            id: "group_id",
+                            value: this.groupInfo.group_id
+                        })
                     )
                 );
                 invoiceGroupId = this.groupInfo.group_id;
@@ -5298,7 +5361,7 @@ var bookingModalInvoker = function ($) {
         },
         _deleteExtra: function (bookingExtraID) {
             var that = this;
-            var answer = confirm(l("Are you sure you want to delete this extra?"));
+            var answer = confirm(l("Are you sure you want to delete this prodcut?"));
             if (answer == true) {
 
                 $.ajax({
@@ -5368,6 +5431,7 @@ var bookingModalInvoker = function ($) {
                     ];
 
                     if (that.groupInfo !== null) {
+                        $actions.push(this.$allActions.openGroupInvoice);
                         $actions.push(this.$allActions.sendGroupConfirmationEmail);
                     } else {
                         $actions.push(this.$allActions.sendConfirmationEmail);
@@ -5456,11 +5520,11 @@ var bookingModalInvoker = function ($) {
                                 "aria-expanded": false,
                                 text: l('more') + " "
                             })
-                                .append(
-                                    $("<span/>", {
-                                        class: "caret"
-                                    })
-                                )
+                                // .append(
+                                //     $("<span/>", {
+                                //         class: "caret"
+                                //     })
+                                // )
                         )
                         .append(actionsUL)
                 );
@@ -5474,33 +5538,34 @@ var bookingModalInvoker = function ($) {
                             $("<a/>", {
                                 class: "btn btn-light",
                                 href: getBaseURL() + "invoice/show_invoice/" + that.booking.booking_id,
-                                text: l('open_invoice')
+                                text: l('open_invoice'),    
+                                style: "margin-right: 10px;border-radius: 3px;"
                             })
                         )
-                        .append(
-                            $("<button/>", {
-                                type: "button",
-                                class: "btn btn-light dropdown-toggle",
-                                "data-toggle": "dropdown",
-                                "aria-expanded": false,
-                                "style": "margin-right: 10px;"
-                            })
-                                .append(
-                                    $("<span/>", {
-                                        class: "caret"
-                                    })
-                                )
-                        )
-                        .append(groupInvoiceUL
-                            .append(
-                                $("<li/>", {}).append(
-                                    $("<a/>", {
-                                        href: getBaseURL() + "invoice/show_master_invoice/" + invoiceGroupId,
-                                        text: l('Group Invoice')
-                                    })
-                                )
-                            )
-                        )
+                        // .append(
+                        //     $("<button/>", {
+                        //         type: "button",
+                        //         class: "btn btn-light dropdown-toggle",
+                        //         "data-toggle": "dropdown",
+                        //         "aria-expanded": false,
+                        //         "style": "margin-right: 10px;"
+                        //     })
+                        //         // .append(
+                        //         //     $("<span/>", {
+                        //         //         class: "caret"
+                        //         //     })
+                        //         // )
+                        // )
+                        // .append(groupInvoiceUL
+                        //     .append(
+                        //         $("<li/>", {}).append(
+                        //             $("<a/>", {
+                        //                 href: getBaseURL() + "invoice/show_master_invoice/" + invoiceGroupId,
+                        //                 text: l('Group Invoice')
+                        //             })
+                        //         )
+                        //     )
+                        // )
 
                 );
                 

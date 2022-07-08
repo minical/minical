@@ -199,6 +199,7 @@ class Extra_model extends CI_Model {
 			LEFT JOIN extra_rate as er ON e.extra_id = er.extra_id
 			WHERE
 				rpxe.rate_plan_id = '$rate_plan_id'
+				AND e.is_deleted = 0
 				$where_condition
 			GROUP BY e.extra_id
 		";

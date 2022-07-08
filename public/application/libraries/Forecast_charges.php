@@ -399,6 +399,7 @@ class Forecast_charges
 		$extra_array = Array();
         $extra_charges = 0;
 		$booking_details = $booking_details ? $booking_details : $this->ci->Booking_model->get_booking_detail($booking_id);
+        $room_name = $booking_details['room_name'];
         $company_id = $booking_details['company_id'];
        
         if ($booking_details['state'] == CANCELLED || $booking_details['state'] == CHECKOUT)
@@ -429,7 +430,9 @@ class Forecast_charges
                             "pay_period" => ONE_TIME,
 							"description" => $extra['extra_name']." (quantity: ".$extra['quantity'].")",
 							"charge_type_id" => $extra['charge_type_id'],
-							"charge_type_name" => $extra['name']
+							"charge_type_name" => $extra['name'],
+                            "booking_id" => $booking_id,
+                            "room_name" => $room_name
                         );
                         
                         if($get_amount_only)
@@ -457,7 +460,9 @@ class Forecast_charges
                                 "pay_period" => DAILY,
                                 "description" => $extra['extra_name']." (quantity: ".$extra['quantity'].")",
                                 "charge_type_id" => $extra['charge_type_id'],
-                                "charge_type_name" => $extra['name']
+                                "charge_type_name" => $extra['name'],
+                                "booking_id" => $booking_id,
+                                "room_name" => $room_name
                             );
                             
                             if($get_amount_only)
@@ -483,7 +488,9 @@ class Forecast_charges
                                 "pay_period" => DAILY,
                                 "description" => $extra['extra_name']." (quantity: ".$extra['quantity'].")",
                                 "charge_type_id" => $extra['charge_type_id'],
-                                "charge_type_name" => $extra['name']
+                                "charge_type_name" => $extra['name'],
+                                "booking_id" => $booking_id,
+                                "room_name" => $room_name
                             );
                             
                             if($get_amount_only)
