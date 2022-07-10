@@ -679,7 +679,6 @@ innGrid.getRooms = function(callback){
 			roomsArray[index].room_type_id = roomObject.room_type_id;
 			//******************************
 
-			// wtf --- this makes no sense JAEYUN MAGIC
 			// update June 25, 2011. The code below ensures that
 			// the bookings are aligned with the rooms accordingly on calendar display.
 			if(roomIds[roomObject.room_id] === undefined){ //because variables are global this somehow works...
