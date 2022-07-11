@@ -114,7 +114,12 @@
                         <li class="<?php if ($first_segment == $m_menu['link']) echo 'mm-active'; ?>">
                             <a href="#" >
                                 <i class="<?php echo $m_menu['icon']; ?>"></i>
-                                <?php echo ucwords(l($m_menu['name'])); ?>
+                                <?php 
+                                    if($m_menu['name'] == 'rooms'){
+                                        echo ucwords(l($this->default_room_plural));
+                                    }else{
+                                        echo ucwords(l($m_menu['name']));//here
+                                    }  ?>
                                 <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
                             </a>
                             <ul class="mm-collapse <?php if ($first_segment ==  $m_menu['link']) echo 'mm-show'; ?>">
@@ -185,7 +190,11 @@
                                             <a class="<?php if (($first_segment ==  $m_menu_one['link']) || ($first_segment.'/'.$second_segment ==  $m_menu_one['link']) || ($first_segment.'/'.$second_segment.'/'.$third_segment ==  $m_menu_one['link'])) echo 'mm-active'; ?>" href="<?php echo base_url().$m_menu_one['link']; ?>">
                                                 <i class="<?php echo $m_menu_one['icon']; ?>"></i>
                                                 <?php
-                                                echo ucwords(l($m_menu_one['name']));
+                                                if($m_menu_one['name'] == 'room status'){
+                                                    echo ucwords(l($this->default_room_singular).' '.ucwords(l('status')));
+                                                }else{
+                                                     echo ucwords(l($m_menu_one['name']));
+                                                } 
                                                 ?>
                                             </a>
                                         </li>
@@ -288,7 +297,8 @@
                         }
                     }
 
-                    if(count($sub_menus) > 0 && $m_menu['link'] == 'settings'){ ?>
+                    if(count($sub_menus) > 0 && $m_menu['link'] == 'settings'){
+                        ?>
                         <li class="<?php if ($first_segment == $m_menu['link']) echo 'mm-active'; ?>">
                             <a href="#" >
                                 <i class="<?php echo $m_menu['icon']; ?>"></i>
@@ -343,7 +353,14 @@
                                         <li class="<?php if ($first_segment.'/'.$second_segment ==  $m_menu_one['link']) echo 'mm-active'; ?>">
                                             <a href="#">
                                                 <i class="metismenu-icon"></i>
-                                                <?php echo ucwords(l($m_menu_one['name'])); ?>
+                                                <?php 
+                                               
+                                                if($m_menu_one['name'] == 'room inventory'){
+                                                 echo ucwords(l($this->default_room_singular)).' '.ucwords(l('Inventory'));
+                                                }else{
+                                                  echo ucwords(l($m_menu_one['name']));//here
+                                                } 
+                                                ?>
                                                 <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
                                             </a>
                                             <ul class="mm-collapse <?php if ($first_segment.'/'.$second_segment ==  $m_menu_one['link']) echo 'mm-show'; ?>">
@@ -352,7 +369,17 @@
                                                     <li class="<?php if ($first_segment.'/'.$second_segment.'/'.$third_segment == $m_menu_two['link']) echo 'mm-active'; ?>">
                                                         <a class="<?php if ($first_segment.'/'.$second_segment.'/'.$third_segment ==  $m_menu_two['link']) echo 'mm-active'; ?>" href="<?php echo base_url().$m_menu_two['link']; ?>">
                                                             <i class="metismenu-icon"></i>
-                                                            <?php echo ucwords(l($m_menu_two['name'])); ?>
+                                                            <?php 
+                                                            if($m_menu_two['name'] == 'rooms'){
+                                                                echo ucwords(l($this->default_room_plural));
+                                                            }elseif($m_menu_two['name'] == 'room types'){
+                                                               echo ucwords(l($this->default_room_singular).' '.ucwords(l('types')));
+                                                            }else{
+                                                               echo ucwords(l($m_menu_two['name']));  
+                                                            }
+
+
+                                                             ?>
                                                         </a>
                                                     </li>
                                                 <?php } $sidebar_menus = array(); ?>
