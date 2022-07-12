@@ -123,12 +123,16 @@ class MY_Controller extends CI_Controller {
         }
 
         $this->is_channex_pci_enabled = false;
+        $this->is_pci_booking_enabled = false;
 
         if($get_active_modules){
             foreach ($get_active_modules as $key => $value) {
 
                 if($value['extension_name'] == 'channexpci_integration'){
                     $this->is_channex_pci_enabled = true;
+                }
+                if($value['extension_name'] == 'pcibooking-integration'){
+                    $this->is_pci_booking_enabled = true;
                 }
 
                 $config = array();
