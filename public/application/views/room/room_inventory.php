@@ -4,7 +4,7 @@
          <div class="page-title-icon">
             <i class="pe-7s-notebook text-success"></i>
          </div>
-         <div><?php echo l('Room Inventory', true); ?>
+         <div><?php echo l($this->default_room_singular).' '.l('Inventory',true); ?>
          </div>
       </div>
    </div>
@@ -44,7 +44,7 @@
    </div>
    <!-- /.modal -->
    <div class="container-fluid">
-      <h1><?php echo l('room_inventory'); ?></h1>
+      <h1><?php echo l($this->default_room_singular).' '.l('Inventory',true); ?></h1>
       <ul class="nav nav-tabs channels">
          <?php foreach($channels as $channel): ?>
          <li class="channel <?php if($channel['id'] == -1) { echo 'active'; } ?> " data-id="<?php echo $channel['id'];?>" data-key="<?php echo isset($channel['key']) && $channel['key'] ? $channel['key'] : '' ;?>">
@@ -57,7 +57,8 @@
          </li>
       </ul>
       <br>
-      <button disabled class="btn btn-primary modify-availabilities m-011"><?php echo l('modify_maximum_availabilities'); ?></button>
+      <button disabled class="btn btn-primary modify-availabilities m-011">
+        <?php echo l('Modify Maximum Availabilities (Select', true).' '.l($this->default_room_singular).' '.l('Types below)', true); ?></button>
       <span class="btn btn-light change-dates" data-date-diff="-7"><?php echo l('previous_week'); ?></span>
       <span class="btn btn-light change-dates" data-date-diff="7"><?php echo l('next_week'); ?></span>
       <span id="loading_img" style="display:none;">
@@ -78,7 +79,7 @@
           <thead>
               <tr>
                   <th></th>
-                  <th><?php echo l('Room Type', true); ?></th>
+                  <th><?php echo l($this->default_room_singular).' '.l('Type', true); ?></th>
                   {{#is_ota}}
                       <th><?php echo l('OTA close out threshold', true); ?></th>
                   {{/is_ota}}

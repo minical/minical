@@ -17,7 +17,7 @@
 			<!-- variables that are used in booking controller -->
 			<input id="room_id" name="room_id" type="hidden" value="<?php echo $room_id; ?>" />		
 			
-			<label><?php echo l('Room Notes', true); ?></label>
+			<label><?php echo l($this->default_room_singular).' '.l('Notes',true); ?></label>
 			<br/>
 			<textarea id="notes" name="notes" autocomplete="off"><?php echo set_value('notes', $notes);?></textarea>
 			

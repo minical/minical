@@ -4,7 +4,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="myModalLabel"><?php echo l('edit_room_notes'); ?></h4>
+				<h4 class="modal-title" id="myModalLabel"><?php echo l('Edit',true).' '.l($this->default_room_singular).' '.l('Notes',true) ; ?></h4>
 			</div>
 			<div class="modal-body">
 				<textarea id="room-notes" class="form-control" rows=5>
@@ -24,7 +24,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="myModalLabel"><?php echo l('Edit Room Instructions'); ?></h4>
+				<h4 class="modal-title" id="myModalLabel"><?php echo l('Edit',true).' '.l($this->default_room_singular).' '.l('Instructions',true) ; ?></h4>
 			</div>
 			<div class="modal-body">
 				<textarea id="room-instructions" class="form-control" rows=5>
@@ -64,7 +64,7 @@
 			<div class="page-title-icon">
 				<i class="pe-7s-home text-success"></i>
 			</div>
-			<div><?php echo l('room_status'); ?>
+			<div><?php echo l($this->default_room_singular).' '.l('Status',true) ; ?>
 			<span class="<?=$this->session->userdata('user_role') == "is_housekeeping" ? "hidden" : "";?>">
 		<!-- <a href="<?php echo base_url() . 'reports/room/show_housekeeping_report';?>">
 			<?php echo l('housekeeping_report'); ?>
@@ -75,7 +75,7 @@
 </div>
 <div class="page-title-actions m-008">
 	<a href="<?php echo base_url() . 'settings/room_inventory/rooms';?>" class="btn-shadow  btn btn-dark">
-		<?php echo l('edit_rooms'); ?>
+		<?php echo l('Edit', true) .' '. l($this->default_room_plural); ?>
 	</a>
 
 </div>    </div>
@@ -87,15 +87,15 @@
 	<div class="table-responsive">
 		<table class="table table-hover table-rating">
 			<tr>
-				<th class="td-room-name text-center"><?php echo l('rooms'); ?></th>
-				<th class="td-room-type text-center"><?php echo l('room_types'); ?></th>
+				<th class="td-room-name text-center"><?php echo l($this->default_room_plural); ?></th>
+				<th class="td-room-type text-center"><?php echo l($this->default_room_singular).' '.l('Types',true) ; ?></th>
 				<th class="td-customer-name text-left"><?php echo l('customer'); ?></th>
 				<th class="td-room-status text-center" style="width: 100px">
 					<button class="btn btn-primary" id="set_rooms_clean">
-						<?php echo l('clean_all_rooms'); ?>
+						<?php echo l('Clean All',true).' '.l($this->default_room_plural) ; ?>
 					</button>
 				</th>
-				<th class="text-left"><?php echo l('room_notes'); ?></th>
+				<th class="text-left"><?php echo l($this->default_room_singular).' '.l('Notes',true) ; ?></th>
 				<th class="text-left"><?php echo l('Check-In Instructions'); ?></th>
 
 				<?php if ($this->company_subscription_level == ELITE) { ?>
@@ -147,7 +147,7 @@
 					<?php } ?>
 					<td class="td-room-notes text-right">
 						<button class='room-notes-button btn btn-light' style="margin-bottom: 5px">
-							<?php echo l('Edit Room Note', true); ?>
+							<?php echo l('Edit',true).' '.l($this->default_room_singular).' '.l('Note',true) ; ?>
 						</button>
 						<button class='room-instructions-button btn btn-light'>
 							<?php echo l('Edit Instructions', true); ?>
@@ -159,7 +159,7 @@
 			endforeach;
 		else : 
 			?>
-			<h1><?php echo l('No room types have been recorded.', true); ?></h1>
+			<h1><?php echo l('No',true).' '.l($this->default_room_singular).' '.l('types have been recorded.',true) ; ?></h1>
 		<?php endif; ?>
 	</table>
 		</div>

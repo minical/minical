@@ -228,7 +228,7 @@
 	</div>
 </div>
 
-<div id='invoice-container' class="container">
+<div id='invoice-container' class="">
 	<div id='invoice-container' class="">
     <div class="app-page-title">
         <div class="page-title-wrapper">
@@ -294,7 +294,7 @@
             </div>
         </div>
     </div>
-</div>
+	</div>
    
 
 <div class="main-card mb-3 card">

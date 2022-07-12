@@ -2194,7 +2194,7 @@ var bookingModalInvoker = function ($) {
                                                                 .append(
                                                                     $("<small/>", {
                                                                         for: "state",
-                                                                        text: l('room_type')
+                                                                        text: l(innGrid.featureSettings.defaultRoomType)
                                                                     })
                                                                 )
                                                         ).append(
@@ -2214,7 +2214,7 @@ var bookingModalInvoker = function ($) {
                                                                 .append(
                                                                     $("<small/>", {
                                                                         for: "state",
-                                                                        text: l('room')
+                                                                        text: l(innGrid.featureSettings.defaultRoomSingular)
                                                                     })
                                                                 )
                                                         )
@@ -4320,7 +4320,7 @@ var bookingModalInvoker = function ($) {
                     modalHeader.prepend(
                         $("<span/>", {
                             class: "h4",
-                            html: l('edit_room') + " (" + l('id') + ": " + this.booking.booking_id + ") " + l('balance') + ": <a class='booking_balance' href='" + getBaseURL() + "invoice/show_invoice/" + this.booking.booking_id + "'>" + number_format(this.booking.balance, 2, ".", "") + "</a> "
+                            html: l('Edit') + ' ' + l(innGrid.featureSettings.defaultRoomSingular) + " (" + l('id') + ": " + this.booking.booking_id + ") " + l('balance') + ": <a class='booking_balance' href='" + getBaseURL() + "invoice/show_invoice/" + this.booking.booking_id + "'>" + number_format(this.booking.balance, 2, ".", "") + "</a> "
                         })
                     )
                 } else {

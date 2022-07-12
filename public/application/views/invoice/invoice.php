@@ -489,7 +489,7 @@
                 </div>
             </div>
         <?php } ?>
-        <div class="panel panel-default">
+        <div class="panel panel-default" style="border: yellowgreen;">
             <div class="h2 charge_div">
                 <div class="col-sm-8">
                     <?php echo l('charges'); ?>

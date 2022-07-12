@@ -37,7 +37,7 @@
 					<?php echo l('Set max availabilities to', true); ?>*:
 					<input name='availability'>
 					<br><br>
-					*<?php echo l('If the actual number of available rooms is lower, that will be used instead', true); ?>.
+					*<?php echo l('If the actual number of available',true).' '.l($this->default_room_plural).' '.l('is lower, that will be used instead',true) ; ?>.
 				</td>
 			</tr>
 		</tbody>
