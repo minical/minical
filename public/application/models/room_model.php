@@ -413,6 +413,10 @@ class Room_model extends CI_Model {
 		}
 
 		if($this->enable_hourly_booking){
+
+			$check_in_date = $check_in_date.' '.date("H:i:s", strtotime($this->default_checkin_time));
+			$check_out_date = $check_out_date.' '.date("H:i:s", strtotime($this->default_checkout_time));
+
 			$date_condition = " brh.check_out_date > '$check_in_date' AND '$check_out_date' > brh.check_in_date ";
 		} else {
 			$date_condition = " DATE(brh.check_out_date) > '$check_in_date' AND '$check_out_date' > DATE(brh.check_in_date) ";
