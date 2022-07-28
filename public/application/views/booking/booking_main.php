@@ -531,7 +531,7 @@
                 var diff_date =  nd - current_date;
                 var days = Math.floor(((diff_date % 31536000000) % 2628000000)/86400000);
                 
-                var url = '<?php echo base_url(); ?>account_settings/subscription';
+                var url = '<?php echo base_url(); ?>settings/company/view_subscription';
                 if(days <= 5 && days >= 0)
                 {
                     if(days == '0')

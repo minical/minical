@@ -43,7 +43,14 @@ class Permission_model extends CI_Model {
                     $function_name === 'channex_get_bookings'
                 )
             ) ||
-
+            (
+                $controller_name === "subscription" && 
+                (
+                    $function_name === 'get_subscription_status'||
+                    $function_name === 'get_subscription_update_cancelled'
+                )
+            )
+            ||
             (
                 $controller_name === "nexio_integration" && 
                 (

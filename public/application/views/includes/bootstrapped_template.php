@@ -13,7 +13,7 @@
 
 <body class="theme-<?=isset($this->company_ui_theme) ? $this->company_ui_theme : 0;?>">
 	<div class="app-container  app-theme-white body-tabs-shadow fixed-header fixed-sidebar <?= $classtoggle;?>">
-
+<div class="alert alert-danger trial_period" style="margin: 10px;display: none;"></div>
 
 		<?php 
 
@@ -271,4 +271,26 @@ data-keyboard="false" style="z-index: 9999;"
 	</div><!-- /.modal-content -->
 </div><!-- /.modal-dialog -->
 </div>
+<div class="modal fade" id="dialog-update-billing" data-backdrop="static" 
+   data-keyboard="false" 
+   >
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">
+            <?php echo l('Subscription Notice', true); ?>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </h4>        
+      </div>
+      <div class="modal-body">
+          <?php echo l('Dear customer', true); ?>, 
+        <p class="message"></p>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-success" href="<?php echo base_url(); ?>settings/company/view_subscription"><?php echo l('Update payment details', true); ?></a>
+      </div>
+      
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 </html>
