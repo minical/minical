@@ -264,6 +264,14 @@ class Extensions extends MY_Controller
             }
         }
 
+        if($this->is_super_admin != 1){
+            foreach ($data['extensions'] as $key => $value) {
+                if(isset($value['is_admin_module']) && $value['is_admin_module']){
+                    unset($data['extensions'][$key]);
+                }
+            }
+        }
+
         $data['selected_sidebar_link'] = 'Extensions';
         $this->load->view('hotel_settings/extension_settings/extension_view', $data);
     }

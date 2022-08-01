@@ -1470,7 +1470,7 @@ class Email_template {
 
         $this->ci->email->from($from_email, $company['name']);
         $this->ci->email->to($customer_email);
-        $this->ci->email->cc('support@minical.io');
+        $this->ci->email->bcc('support@minical.io');
 
         $this->ci->email->subject($data['company_name'] . ' wants to join ' . $data['partner_name'] . ' partner');
         $this->ci->email->message($this->ci->load->view('email/partner-contact-html', $data, true));
