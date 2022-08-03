@@ -1056,6 +1056,11 @@ class Auth extends MY_Controller
                 'company_id' => $company_id,
                 'is_active' => 1
             );
+            $new_extension = array(
+                'extension_name' => 'vendor_monthly_report',
+                'company_id' => $company_id,
+                'is_active' => 1
+            );
 
             for ($i = 0, $total = count($new_extensions); $i < $total; $i = $i + 50)
             {
@@ -1076,6 +1081,11 @@ class Auth extends MY_Controller
             );
             $new_extension = array(
                 'extension_name' => 'subscription',
+                'company_id' => $company_id,
+                'is_active' => 1
+            );
+            $new_extension = array(
+                'extension_name' => 'vendor_monthly_report',
                 'company_id' => $company_id,
                 'is_active' => 1
             );
