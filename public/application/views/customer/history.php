@@ -277,7 +277,7 @@ if ($permissions && in_array('bookings_view_only', $permissions) && !(in_array('
             <th><a href="<?php echo base_url() . "customer/history/" . $customer_detail['customer_id'] . "/room_name/" . ($order == 'desc' ? "asc" : "desc"); ?><?= $_SERVER['QUERY_STRING'] ? "?" . $_SERVER['QUERY_STRING'] : ""; ?>">
                     <?php
                     if ($this->session->userdata('property_type') == 0) {
-                        echo l('room');
+                        echo l($this->default_room_singular);
                     } else {
                         echo l('bed');
                     }
@@ -466,7 +466,7 @@ if ($permissions && in_array('bookings_view_only', $permissions) && !(in_array('
     <table class="table table-hover">
         <tr>
             <th><?php echo l('id'); ?></th>
-            <th><?php echo l('room'); ?></th>
+            <th><?php echo l($this->default_room_singular); ?></th>
             <th><?php echo l('reserved_by'); ?></th>
             <th><?php echo l('checkin'); ?></th>
             <th><?php echo l('checkout'); ?></th>	

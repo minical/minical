@@ -156,7 +156,7 @@
 		</div>
 		<div class="col-md-6">
 			<div class="position-relative form-group">
-				<label for="number_of_rooms" class=""><?php echo l('no_of_rooms'); ?><span style="color: red;">*</span></label>
+				<label for="number_of_rooms" class=""><?php echo l('No Of',true).' '.l($this->default_room_plural); ?><span style="color: red;">*</span></label>
 				<input class="form-control" READONLY type="text" name="number_of_rooms" value="<?php 
 				if(isset($company)) 
 				echo $company['number_of_rooms']; 

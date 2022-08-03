@@ -24,7 +24,7 @@
 			</div>
 			<div class="form-group">
 				<label for="number_of_rooms" class="col-sm-4 control-label">
-					<?php echo l('Number of Rooms', true); ?>
+					<?php echo l('Number of ', true).' '.l($this->default_room_plural); ?>
 				</label>
 				<div class="col-sm-8">
 					<input type="text" class="form-control" name="number_of_rooms">

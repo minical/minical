@@ -30,7 +30,7 @@
 	<tr>
 		<th class="text-left"><?php echo l('charge_type'); ?></th>
 		<th class="text-left"><?php echo l('applicable_taxes'); ?></th>
-		<th class="text-center"><?php echo l('room_charge'); ?></th>
+		<th class="text-center"><?php echo l($this->default_room_singular).' '.l('Charge',true); ?></th>
                 <th class="text-center"><?php echo l('report_ad_tax_exempt'); ?></th>
 		<th class="text-center"><?php echo l('delete_booking'); ?></th>                
 	</tr>

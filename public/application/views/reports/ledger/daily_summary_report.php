@@ -43,7 +43,7 @@
 		<thead>
 			<tr>
 				<th><?php echo l('Category'); ?></th>
-				<th class="text-center"><?php echo l('Room Charge'); ?></th>
+				<th class="text-center"><?php echo l($this->default_room_singular).' '.l('Charge',true) ; ?></th>
 				<th class="text-right"><?php echo l('Sub-total'); ?></th>
 				<th class="text-right"><?php echo l('Tax'); ?></th>
 				<th class="text-right"><?php echo l('Total Charge'); ?></th>
@@ -249,7 +249,7 @@
 		<thead>
 			<tr>
 			<th><?php echo l('Category'); ?></th>
-				<th class="text-center"><?php echo l('Room Charge'); ?></th>
+				<th class="text-center"><?php echo l($this->default_room_singular).' '.l('Charge',true) ; ?></th>
 				<th class="text-right"><?php echo l('Sub-total'); ?></th>
 				<th class="text-right"><?php echo l('Tax'); ?></th>
 				<th class="text-right"><?php echo l('Total Charge'); ?></th>

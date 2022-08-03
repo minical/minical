@@ -176,7 +176,7 @@
                 <div class="form-group" id="option-to-add-multiple-payments">
                     <div class="col-sm-12">
                         <input type="checkbox" class="add-daily-charge" name="add-daily-charge" value="1">
-                        <?php echo l('Allow Daily Room Charges to be added for remaining days of a Monthly/Weekly period bookings.'); ?>
+                        <?php echo l('Allow Daily',true).' '.l($this->default_room_singular).' '.l('Charges to be added for remaining days of a Monthly/Weekly period bookings.',true) ; ?>
                     </div>
                 </div>
                 <div class="form-group" id="residual_rate_div">
@@ -706,8 +706,8 @@
                         <td class="hidden" id="pay-period-td">
                             <select class="input-field form-control">
                                 <option value="0"><?php echo l('Nightly', true); ?></option>
-                                <option value="1"><?php echo l('Weekly Room Charge', true); ?></option>
-                                <option value="2"><?php echo l('Monthly Room Charge', true); ?></option>
+                                <option value="1"><?php echo l('Weekly',true).' '.l($this->default_room_singular).' '.l('Charge',true) ; ?></option>
+                                <option value="2"><?php echo l('Monthly',true).' '.l($this->default_room_singular).' '.l('Charge',true) ; ?></option>
                                 <option value="3"><?php echo l('One Time Charge', true); ?></option>
                             </select>
                         </td>

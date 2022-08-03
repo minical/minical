@@ -197,7 +197,7 @@
 
     <?php if($room_instructions){ ?>
     
-        <h3><?php echo l('Room Instructions', true); ?></h3>
+        <h3><?php echo l($this->default_room_singular).' '.l('Instructions', true); ?></h3>
         <div class="group">
             <?php echo $room_instructions; ?>
             <br />

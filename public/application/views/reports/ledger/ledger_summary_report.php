@@ -86,7 +86,7 @@
 				<th class="text-center"><?php echo l('bookings'); ?><span class="hidden-print"> (<?php echo l('occupancy_rate'); ?>)</span></th>
 				<th class="text-right"><a href="https://en.wikipedia.org/wiki/RevPAR"><?php echo l('revpar'); ?></a></th>
 				<th class="text-right"><a href="https://en.wikipedia.org/wiki/Average_daily_rate"><?php echo l('adr'); ?></a></th>
-				<th class="text-right"><?php echo l('room_charges_before_taxes'); ?></th>
+				<th class="text-right"><?php echo l($this->default_room_singular).' '.l('Charges Before Taxes',true) ; ?></th>
 				<th class="text-right"><?php echo l('all_charges'); ?><span class="hidden-print"> <?php echo l('including_taxes'); ?> </span></th>
 				<th class="text-right"><?php echo l('all_payments'); ?></th>
 				<th class="text-right"><?php echo l('balance'); ?></th>

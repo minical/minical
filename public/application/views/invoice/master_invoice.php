@@ -407,7 +407,7 @@
 						 	        	<div>
 						 	        		<span>
 						 	        			<div style="color: #457ec3;">
-								                    <?php echo l('Room').' '.$value['room_name'];?>
+								                    <?php echo l($this->default_room_singular).' '.$value['room_name'];?>
 								                </div> 
 							                </span>
 							                <a href="<?php echo base_url()."invoice/show_master_invoice/".$group_id."/".$value['booking_id'];?>">
@@ -446,7 +446,7 @@
 					<tr>
                         <th class="text-left"><?php echo l('date'); ?></th>
                         <th class="text-left"><?php echo l('booking_id'); ?></th>
-						<th class="text-left"><?php echo l('Room'); ?></th>
+						<th class="text-left"><?php echo l($this->default_room_singular); ?></th>
 						<th class="text-left"><?php echo l('description'); ?></th>
 						<th class="text-left"><?php echo l('paying').' '.l('customer'); ?></th>
                         <th class="text-left"><?php echo l('charge_type'); ?></th>
@@ -642,8 +642,8 @@
                                 <td class="hidden" id="pay-period-td">
 									<select class="input-field form-control">
 		                                <option value="0"><?php echo l('Nightly', true); ?></option>
-		                                <option value="1"><?php echo l('Weekly Room Charge', true); ?></option>
-		                                <option value="2"><?php echo l('Monthly Room Charge', true); ?></option>
+		                                <option value="1"><?php echo l('Weekly',true).' '.l($this->default_room_singular).' '.l('Charge',true) ; ?></option>
+		                                <option value="2"><?php echo l('Monthly',true).' '.l($this->default_room_singular).' '.l('Charge',true) ; ?></option>
 		                                <option value="3"><?php echo l('One Time Charge', true); ?></option>
 		                            </select>
                                 </td>

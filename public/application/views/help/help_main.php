@@ -24,7 +24,7 @@
 				<a class='fancybox-media' a href='http://www.youtube.com/watch?v=MOhMs1SDGDU?enablejsapi=1&wmode=opaque'>► Learn how to use Accounting</a>
 			</li>
 			<li>
-				<a class='fancybox-media' a href='http://www.youtube.com/watch?v=fPJLN1a0eEQ?enablejsapi=1&wmode=opaque'>► Learn how to use Rooms</a>
+				<a class='fancybox-media' a href='http://www.youtube.com/watch?v=fPJLN1a0eEQ?enablejsapi=1&wmode=opaque'>► Learn how to use <?php echo l($this->default_room_plural ) ; ?></a>
 			</li>
 			<li>
 				<a class='fancybox-media' a href='http://www.youtube.com/watch?v=9xumgVq0Qy0?enablejsapi=1&wmode=opaque'>► Learn how to use Rate Plan Settings</a>
