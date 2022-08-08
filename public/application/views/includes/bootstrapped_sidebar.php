@@ -30,7 +30,7 @@
     <div class="scrollbar-sidebar ps ps--active-y">
         <div class="sidebar__logo ">
 
-            <ul style="padding-left: 10px;" class="multi-properties hide_properties <?=$this->session->userdata('user_role') == "is_housekeeping" ? "hidden" : "";?>">
+            <ul style="padding-left: 10px; width: 190px;" class="multi-properties hide_properties <?=$this->session->userdata('user_role') == "is_housekeeping" ? "hidden" : "";?>">
 
                 <?php if(count($my_companies) > 1){ ?>
                 <a href='#' id="myPropertyMenu"  data-toggle="dropdown" aria-expanded="true" tabindex="-1">
