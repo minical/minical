@@ -21,6 +21,20 @@ class Whitelabel_partner_model extends CI_Model {
         $query = $this->db->get('whitelabel_partner');
         return $query->result_array();
     }
+
+    function get_partner_by_username($username) {
+        $sql = "SELECT *
+                FROM whitelabel_partner 
+                WHERE 
+                    BINARY username = '$username'";
+        
+        $query = $this->db->query($sql);
+        if($query->num_rows() > 0)
+        {
+            return $query->result_array();
+        }
+        return NULL;
+    }
     
     function update_partner_detail($user_id, $data){
         $this->db->where('id', $user_id);
