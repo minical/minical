@@ -928,6 +928,7 @@ class Channex_model extends CI_Model {
 
     function get_ota_xml_logs($limit){
         $this->db->from('ota_xml_logs');
+        $this->db->order_by('xml_log_id', 'desc');
         $this->db->limit($limit);
 
         $query = $this->db->get();
