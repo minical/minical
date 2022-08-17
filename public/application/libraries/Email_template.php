@@ -18,6 +18,7 @@ class Email_template {
         $this->ci->load->model('Image_model');
         $this->ci->load->model('Booking_source_model');
         $this->ci->load->model('Tax_model');
+        $this->ci->load->model('Whitelabel_partner_model');
 
         $this->ci->load->library('Email');
         $this->ci->load->helper('language_translation_helper');
@@ -44,7 +45,15 @@ class Email_template {
     {
         $booking = $this->ci->Booking_model->get_booking_detail($booking_id);
         $company = $this->ci->Company_model->get_company($booking['company_id']);
-
+        $whitelabelinfo = null;
+        $white_label_detail = $this->ci->Whitelabel_partner_model->get_partners(array('id' => $company['partner_id']));
+        
+        if($white_label_detail && isset($white_label_detail[0])) {
+            $whitelabelinfo = $white_label_detail[0];
+        }
+        
+        $company_url = $whitelabelinfo && isset($whitelabelinfo['support_email']) && $whitelabelinfo['support_email'] ? $whitelabelinfo['domain'].'/' : base_url();
+        
         $this->set_language($company['default_language']);
 
         $email = $booking['booking_customer_email'];
@@ -52,7 +61,7 @@ class Email_template {
         {
             $customer_name = $booking['booking_customer_name'];
             $invoice_hash = $booking['invoice_hash'];
-            $invoice_link = base_url() . "invoice/show_invoice_read_only/".$invoice_hash;
+            $invoice_link = $company_url . "invoice/show_invoice_read_only/".$invoice_hash;
             $invoice_link = $folio_id ? $invoice_link.'/'.$folio_id : $invoice_link;
             $review_link = base_url() . "review/?hash=".$invoice_hash;
             $invoice_email_header = $company['invoice_email_header'];
