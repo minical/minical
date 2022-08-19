@@ -1190,6 +1190,40 @@ class Booking extends MY_Controller
         return null;
     }
 
+    public function get_booking_detail_post()
+    {       
+        $company_id = $this->post('company_id');
+
+        if(!$company_id) {
+            $this->response(array('status' => false, 'error' => 'Company ID is missing.'), 200);
+        }
+
+        $bookings = $this->Booking_model->get_recent_bookings($company_id);
+        $common_booking_sources = json_decode(COMMON_BOOKING_SOURCES, true);
+
+        foreach($bookings as $key => $booking) {
+            foreach($common_booking_sources as $id => $name) {
+                if(intval($booking['booking_source']) && $booking['booking_source'] == $id) {
+                    $bookings[$key]['booking_source'] = $name;
+                    break;
+                } 
+            }
+        }
+
+        $common_customer_types = json_decode(COMMON_CUSTOMER_TYPES, true);
+
+        foreach($bookings as $key => $booking) {
+            foreach($common_customer_types as $id => $name) {
+                if(intval($booking['customer_type']) && $booking['customer_type'] == $id) {
+                    $bookings[$key]['customer_type'] = $name;
+                    break;
+                } 
+            }
+        }
+
+        $this->response($bookings, 200);
+    }
+
     public function get_booking_charges_post()
     {       
         $booking_id = $this->post('booking_id');

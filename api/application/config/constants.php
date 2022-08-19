@@ -214,3 +214,15 @@ define('COMMON_BOOKING_ENGINE_FIELDS',
         BOOKING_FIELD_SPECIAL_REQUEST => 'Special Requests'
     ))
 );
+
+// Customer Types
+define('BLACKLIST', '-1');
+define('VIP', '-2');
+
+// these customer types are hardcoded and common for each user
+define('COMMON_CUSTOMER_TYPES', 
+        json_encode(array(
+            BLACKLIST => 'Blacklist',
+            VIP => 'VIP'
+        ))
+    );

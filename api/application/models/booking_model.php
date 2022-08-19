@@ -1264,4 +1264,62 @@ class Booking_model extends CI_Model {
         }
         return $where_conditions;
     }
+
+    function get_recent_bookings($company_id) {
+        
+        $sql = "SELECT 
+                    bb.booking_id,
+                    bb.check_in_date as arrival_date,
+                    bb.check_out_date as departure_date,
+                    bc.customer_name,
+                    bc.email,
+                    IF(bs.name IS NOT NULL, bs.name, IF(cbss.booking_source_id = 0, 'Walk-in / Telephone', cbss.booking_source_id)) as booking_source,
+                    b.rate,
+                    bl.date_time as booking_date,
+                    rt.name as room_type,
+                    rp.rate_plan_name as rate_plan,
+                    IF(ct.name IS NOT NULL, ct.name, ccts.customer_type_id)as customer_type
+                FROM 
+                    booking as b 
+                LEFT JOIN 
+                    booking_block as bb ON bb.booking_id = b.booking_id
+                LEFT JOIN 
+                    booking_log as bl ON bl.booking_id = b.booking_id
+                LEFT JOIN 
+                    customer as bc ON b.booking_customer_id = bc.customer_id
+                LEFT JOIN 
+                    booking_source as bs ON bs.id = b.source
+                LEFT JOIN 
+                    common_booking_source_setting as cbss ON cbss.booking_source_id = b.source
+                LEFT JOIN 
+                    room_type as rt ON rt.id = bb.room_type_id
+                LEFT JOIN 
+                    rate_plan as rp ON rp.rate_plan_id = b.rate_plan_id
+                LEFT JOIN 
+                    customer_type as ct ON ct.id = bc.customer_type_id
+                LEFT JOIN 
+                    common_customer_type_setting as ccts ON ccts.customer_type_id = bc.customer_type_id
+                LEFT JOIN 
+                    company as c ON c.company_id = b.company_id
+                WHERE 
+                    (bl.date_time) >= (NOW() - INTERVAL 15 MINUTE) AND
+                    c.company_id = $company_id
+                GROUP BY 
+                    b.booking_id
+                ORDER BY 
+                    b.booking_id desc
+                ";
+
+        $q = $this->db->query($sql);
+
+        if ($this->db->_error_message()) 
+        {
+            show_error($this->db->_error_message());
+        }
+        
+
+        $result = $q->result_array();       
+        
+        return $result;
+    }
 }
