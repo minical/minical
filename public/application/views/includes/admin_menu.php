@@ -32,7 +32,7 @@
       	</ul>
 	    
 	    <div class="col-sm-1 col-md-1">
-            <form class="navbar-form" role="search" method="GET" action="<?php echo base_url()."admin/company_list"; ?>" autocomplete="off" style="width: 235px;">
+            <form class="navbar-form" role="search" method="GET" action="<?php echo base_url()."admin/company_list"; ?>" autocomplete="off" style="width: 195px;">
 				<div class="input-group">
 		            <input class="form-control" type="text" name="search_query" placeholder="Search company" value="<?php echo $this->input->get('search_query'); ?>"/>
 					<div class="input-group-btn">
