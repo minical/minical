@@ -6,15 +6,15 @@
             <div class="page-title-icon">
                 <i class="pe-7s-home text-success"></i>
             </div>
-            <?php echo l('room')." ".l('settings'); ?>
+            <?php echo l($this->default_room_singular).' '.l('Settings',true); ?>
         </div>
         <div class="page-title-actions m-010">
-          <button id="add-room-button" class="btn btn-primary btn-height"><?php echo l('add_room'); ?></button>
+          <button id="add-room-button" class="btn btn-primary btn-height"><?php echo l('Add').' '.l($this->default_room_singular); ?></button>
           <button id="save-all-rooms-button" class="btn btn-success btn-height"><?php echo l('save_all'); ?></button>
 
           <div class="custom-checkbox custom-control custom-control-inline">
               <input style="margin-left: 12px;" id="show-hidden-rooms" type="checkbox">
-              <label for="show-hidden-rooms" class="control-label"><?php echo l('Show Hidden Rooms', true); ?></label>
+              <label for="show-hidden-rooms" class="control-label"><?php echo l('Show Hidden').' '.l($this->default_room_plural); ?></label>
           </div>
 
           
@@ -40,10 +40,10 @@
             <thead>
                 <tr>
                     <th>
-                        <?php echo l('room_name'); ?>
+                        <?php echo l($this->default_room_singular).' '.l('Name',true); ?>
                     </th>
                     <th>
-                        <?php echo l('room_type'); ?>
+                        <?php echo l($this->default_room_singular).' '.l('Type',true); ?>
                     </th>
             <th>
                 <?php echo l('housekeeping_group'); ?>
@@ -88,7 +88,7 @@
                             }
                             ?>
                             <option>--------------------</option>
-                            <option value="create_new">[<?php echo l('Add New Room Type', true); ?>]</a></option>
+                            <option value="create_new">[<?php echo l('Add New',true).' '.l($this->default_room_singular).' '.l('Type',true); ?>]</a></option>
                         </select>
                         <?php
                     endif;
@@ -178,7 +178,7 @@
     </tr>
 <?php endforeach; ?>
 <?php else : ?>
-    <h3><?=l("No Room(s) have been recorded");?></h3>
+    <h3><?= l('No',true).' '.l($this->default_room_singular)."(s)".' '.l('have been recorded',true);?> </h3>
 <?php endif; ?>
 </tbody>
 </table>
@@ -197,7 +197,7 @@ aria-labelledby="myModalLabel" aria-hidden="true">
             <span class="sr-only"><?=l("Close");?></span>
         </button>
         <h4 class="modal-title" id="myModalLabel">
-            <?=l("Add Rooms");?>
+            <?=l('Add',true).' '.l($this->default_room_plural);?>
         </h4>
     </div>
 
@@ -205,7 +205,7 @@ aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-body">                
         <form role="form">
             <div class="form-group">
-                <label for="room_types"><?=l("Room Type");?>:</label>
+                <label for="room_types"><?=l($this->default_room_singular).' '.l('Type',true);?>:</label>
                 <?php
                 if (isset($room_types)):
                    ?>
@@ -214,9 +214,9 @@ aria-labelledby="myModalLabel" aria-hidden="true">
                       <?php
                       foreach($room_types as $room_type)
                       {
-								echo "<option value='".$room_type['id']."' ";//								
-								echo ">".$room_type['name']."</option>\n";
-							}
+                                echo "<option value='".$room_type['id']."' ";//                             
+                                echo ">".$room_type['name']."</option>\n";
+                            }
                           ?>
                       </select>
                       <?php
@@ -224,9 +224,9 @@ aria-labelledby="myModalLabel" aria-hidden="true">
                   ?>
               </div>
               <div class="form-group">
-                  <label for="room_count"><?=l("Number of Rooms");?></label>
+                  <label for="room_count"><?=l('Number of',true).' '.l($this->default_room_plural);?></label>
                   <input type="number" class="form-control" name="room_count"
-                  id="room_count" placeholder="Room Count" value="1"/>
+                  id="room_count" placeholder="<?=l($this->default_room_singular).' '.l('Count',true);?>" value="1"/>
               </div> 
           </form>
       </div>
@@ -234,7 +234,7 @@ aria-labelledby="myModalLabel" aria-hidden="true">
       <!-- Modal Footer -->
       <div class="modal-footer">                
         <button type="button" class="btn btn-primary" id="add_multiple_rooms">
-            <?=l("Add Rooms");?>
+            <?=l('Add',true).' '.l($this->default_room_plural);?>
         </button>
     </div>
 </div>

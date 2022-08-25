@@ -6,7 +6,7 @@
             <div class="page-title-icon">
                 <i class="pe-7s-home text-success"></i>
             </div>
-           <?php echo l('Room type settings'); ?>
+           <?php echo l($this->default_room_singular).' '.l('Type Settings',true); ?>
         </div>
     </div>
   </div>
@@ -37,7 +37,7 @@
 
 	<div id="side-menu">
 		<h5>
-			<button id="add-room-type-button" class="btn btn-primary"><?php echo l('add_room_type'); ?></button>
+			<button id="add-room-type-button" class="btn btn-primary"><?php echo l('Add',true).' '.l($this->default_room_singular).' '.l('Type',true); ?></button>
 		</h5>
 		<!-- <div id="room-type-list"></div> -->
 	</div>
@@ -58,7 +58,7 @@
 							<?php echo l('Show on Website'); ?>
 						</th>
 						<th>
-							<?php echo l('Room Charge'); ?>
+							<?php echo l($this->default_room_singular).' '.l('Charge',true); ?>
 						</th>
 						<th>
 							<?php echo l('Min / Max Occupancy'); ?>
@@ -131,7 +131,7 @@
 						<?php $count++;
 						endforeach; ?>
 					<?php else : ?>
-						<h3>No Room Type(s) have been recorded</h3>
+						<h3><?= l('No',true).' '.l($this->default_room_singular).' '.l('Type(s) have been recorded',true);?></h3>
 					<?php endif; ?>
 
 				</tbody>
@@ -143,7 +143,7 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<h4 class="modal-title" style="text-align: center;">
-							<?php echo l('Edit Room Type', true); ?>
+							<?php echo l('Edit',true).' '.l($this->default_room_singular).' '.l('Type',true); ?>
 							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 						</h4>
 					</div>
@@ -157,7 +157,7 @@
 									<button 
 												class="btn btn-success update-room-type-button" count="<?php echo $count; ?>"
 											>
-												<?php echo l('update_room_type'); ?>
+												<?php echo l('Update',true).' '.l($this->default_room_singular).' '.l('Type',true); ?>
 											</button>
 								</div>
 							</div>
@@ -175,7 +175,7 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<h4 class="modal-title" style="text-align: center;">
-							<?php echo l('Add Room Type', true); ?>
+							<?php echo l('Add',true).' '.l($this->default_room_singular).' '.l('Type',true); ?>
 							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 						</h4>
 					</div>
@@ -190,7 +190,7 @@
 										<?php echo l('Cancel', true); ?>
 									</button>
 									<button class="btn btn-success add_room_type" count="">
-										<?php echo l('add_room_type'); ?>
+							            <?php echo l('Add',true).' '.l($this->default_room_singular).' '.l('Type',true); ?>
 									</button>
 								</div>
 							</div>

@@ -5,10 +5,10 @@
             <div class="page-title-icon">
                 <i class="pe-7s-home text-success"></i>
             </div>
-            <?php echo l('room_location_settings'); ?>
+            <?php echo l($this->default_room_singular).' '.l('Location Settings',true); ?>
         </div>
         <div class="page-title-actions m-010">
-          <button id="add-room-location-button" class="btn btn-primary"><?php echo l('add_room_location'); ?></button>
+          <button id="add-room-location-button" class="btn btn-primary"><?php echo l('Add',true).' '.l($this->default_room_singular).' '.l('Location',true); ?></button>
           <button id="save-all-rooms-locations-button" class="btn btn-default"><?php echo l('save_all'); ?></button>
         </div>
     </div>
@@ -23,7 +23,7 @@
     <thead>
         <tr>
             <th colspan="2">
-                <?php echo l('room_location_name'); ?>
+                <?php echo l($this->default_room_singular).' '.l('Location Name',true); ?>
             </th>
             
         </tr>
@@ -38,10 +38,9 @@
         </tr>
         <?php endforeach; ?>
     </tbody>
-	<?php else : ?>
-		<h3><?php echo l('No Room Location(s) have been recorded', true); ?>.</h3>
-	<?php endif; ?>
+    <?php else : ?>
+        <h3><?php echo l('No',true).' '.l($this->default_room_singular).' '.l('Location(s) have been recorded',true); ?>.</h3>
+    <?php endif; ?>
 </table>
 
 </div></div>
-
