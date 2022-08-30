@@ -526,7 +526,7 @@ class User_model extends CI_Model {
     
     function get_partner_id_by_user_id($user_id){
         $sql = "SELECT 
-                    IF(wp.id, wp.id, u.partner_id) as partner_id, wp.timezone, wp.currency_id
+                    IF(wp.id, wp.id, u.partner_id) as partner_id, wp.timezone, wp.currency_id, wp.default_property_status
                 FROM users as u
                 LEFT JOIN 
                     whitelabel_partner_x_admin as wpxa on u.id = wpxa.admin_id
