@@ -935,8 +935,9 @@ class Auth extends MY_Controller
         $subscription_level = $signup_minical_plan == "minimal" ? BASIC : $subscription_level;
         $subscription_level = $signup_minical_plan == "premium" ? PREMIUM : $subscription_level;
         // $subscription_level = $signup_minical_plan == "elite" ? ELITE : $subscription_level;
+        $subscription_state = isset($partner_detail[0]['default_property_status']) ? $partner_detail[0]['default_property_status'] :'active';
 
-        $subscription_type = $this->_process_subscription_type($subscription_type, $company_id, $region, $subscription_level);
+        $subscription_type = $this->_process_subscription_type($subscription_type, $company_id, $region, $subscription_level,$subscription_state);
         
         // Get Company was created by which lead source
         $lead_source_slug = isset($data['lead_source_slug']) ? $data['lead_source_slug'] : '';
@@ -1083,7 +1084,7 @@ class Auth extends MY_Controller
      * @param $subscription_type
      * @param $company_id
      */
-    private function _process_subscription_type($subscription_type, $company_id, $region, $subscription_level = 0)
+    private function _process_subscription_type($subscription_type, $company_id, $region, $subscription_level = 0,$subscription_state)
     {
         $renewal_period = isset($_COOKIE['signup-minical-renewal']) ? $_COOKIE['signup-minical-renewal'] : "";
         $renewal_period = $renewal_period ? ($renewal_period) : '1 month';
@@ -1092,7 +1093,7 @@ class Auth extends MY_Controller
         $company_subscription_array = array(
             'company_id'         => $company_id,
             'subscription_type'  => $subscription_type,
-            'subscription_state' => "active",
+            'subscription_state' => $subscription_state,
             'renewal_period'     => $renewal_period,
             'region' => $region,
             'subscription_level'  => $subscription_level
