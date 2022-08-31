@@ -51,8 +51,23 @@ class Email_template {
         if($white_label_detail && isset($white_label_detail[0])) {
             $whitelabelinfo = $white_label_detail[0];
         }
+
+        $base_url = base_url();
+
+        if(
+            $whitelabelinfo && 
+            isset($whitelabelinfo['support_email']) && 
+            $whitelabelinfo['support_email']
+        ) {
+            if(
+                isset($whitelabelinfo['domain']) && 
+                $whitelabelinfo['domain']
+            ) {
+                $base_url = $whitelabelinfo['domain'].'/';
+            }
+        }
         
-        $base_url = $whitelabelinfo && isset($whitelabelinfo['support_email']) && $whitelabelinfo['support_email'] ? $whitelabelinfo['domain'].'/' : base_url();
+        //$base_url = $whitelabelinfo && isset($whitelabelinfo['support_email']) && $whitelabelinfo['support_email'] ? isset($whitelabelinfo['domain']) && $whitelabelinfo['domain'] ? $whitelabelinfo['domain'].'/' : base_url();
 
         $this->set_language($company['default_language']);
 
