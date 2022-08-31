@@ -140,7 +140,7 @@ if($is_favourite) { ?>
                                                 <?= $extension['is_active'] ? 'checked=checked' : ''; ?> <?php if((isset($extension['supported_in_minimal']) && $extension['supported_in_minimal'] == 1) || $this->company_subscription_level == 1) {} else { echo "disabled"; } ?>/>
                                             <?php if($this->user_permission != 'is_employee'){ ?>
                                                 <?php if((isset($extension['supported_in_minimal']) && $extension['supported_in_minimal'] == 1) || $this->company_subscription_level == 1) { ?>
-                                                    <?php if($extension['extension_name'] != 'Vendor Core Features') { ?>
+                                                    <?php if($extension['extension_name'] != 'Vendor Core Features' && $extension['extension_name'] != 'Subscription' && $extension['extension_name'] != 'Vendor monthly report') { ?>
                                                         <span></span>
                                                     <?php } ?>
                                                 <?php } else { ?>
@@ -322,7 +322,7 @@ if($is_favourite) { ?>
                                                 <?= $extension['is_active'] ? 'checked=checked' : ''; ?> <?php if((isset($extension['supported_in_minimal']) && $extension['supported_in_minimal'] == 1) || $this->company_subscription_level == 1) {} else { echo "disabled"; } ?>/>
                                             <?php if($this->user_permission != 'is_employee'){ ?>
                                                 <?php if((isset($extension['supported_in_minimal']) && $extension['supported_in_minimal'] == 1) || $this->company_subscription_level == 1) { ?>
-                                                    <?php if($extension['extension_name'] != 'Vendor Core Features') { ?>
+                                                    <?php if($extension['extension_name'] != 'Vendor Core Features' && $extension['extension_name'] != 'Subscription' && $extension['extension_name'] != 'Vendor monthly report') { ?>
                                                         <span></span>
                                                     <?php } ?>
                                                 <?php } else { ?>

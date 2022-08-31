@@ -1056,6 +1056,16 @@ class Auth extends MY_Controller
                 'company_id' => $company_id,
                 'is_active' => 1
             );
+            $new_extension = array(
+                'extension_name' => 'subscription',
+                'company_id' => $company_id,
+                'is_active' => 1
+            );
+            $new_extension = array(
+                'extension_name' => 'vendor_monthly_report',
+                'company_id' => $company_id,
+                'is_active' => 1
+            );
 
             for ($i = 0, $total = count($new_extensions); $i < $total; $i = $i + 50)
             {
@@ -1074,7 +1084,16 @@ class Auth extends MY_Controller
                 'company_id' => $company_id,
                 'is_active' => 1
             );
-
+            $new_extension = array(
+                'extension_name' => 'subscription',
+                'company_id' => $company_id,
+                'is_active' => 1
+            );
+            $new_extension = array(
+                'extension_name' => 'vendor_monthly_report',
+                'company_id' => $company_id,
+                'is_active' => 1
+            );
             $this->db->insert("extensions_x_company", $new_extension);
         }
     }
@@ -1764,10 +1783,10 @@ class Auth extends MY_Controller
 
     public function get_subscription_state_extended()
     {
-
+        $this->load->model('Company_subscription_model');
         $whitelabelinfo = $this->session->userdata('white_label_information');
         $reply_to_email = $whitelabelinfo && isset($whitelabelinfo['support_email']) && $whitelabelinfo['support_email'] ? $whitelabelinfo['support_email'] : 'support@minical.io';
-        $this->load->library('Chargify_wrapper');
+        //$this->load->library('Chargify_wrapper');
         $subscription = null;
         $response     = array(
             'is_blocking' => 0,
@@ -1775,9 +1794,8 @@ class Auth extends MY_Controller
             'state'       => 'active',
             'show_link'   => 0
         );
-
         if ($this->company_id) {
-            $subscription = $this->chargify_wrapper->getInternalSubscriptionRecord($this->company_id);
+            $subscription = $this->Company_subscription_model->get_company_subscription($this->company_id);
         }
         
         if ($subscription) {
@@ -1786,11 +1804,7 @@ class Auth extends MY_Controller
             switch ($subscription['subscription_state']) {
 //                case 'soft_failure':
                 case 'past_due':
-                case 'unpaid':
-                    // update company 
-//                    $this->load->model('Company_subscription_model');
-//                    $this->Company_subscription_model->update_company_subscription($this->company_id, array('subscription_state' => 'trial_ended'));
-                                        
+                case 'unpaid':                  
                     $response = array(
                         'is_blocking' => 0,
                         'message'     => 'Your account payment is past due. '.($is_manual
@@ -1800,34 +1814,34 @@ class Auth extends MY_Controller
                         'state'       => $subscription['subscription_state']
                     );
                     break;
-                case 'trial_ended':
-                    $response = array(
-                        'is_blocking' => 0,
-                        'message'     => 'Thank you for trying minical! To set up your recurring subscription '.($is_manual
-                                ? 'please contact '.$reply_to_email
-                                : 'please update your payment details. '),
-                        'show_link'   => 1,
-                        'state'       => $subscription['subscription_state']
-                    );
-                    break;
-                case 'canceled':
-                    $response = array(
-                        'is_blocking' => 1,
-                        'message'     => 'Your account is about to be suspended. '.($is_manual
-                                ? 'Please contact '.$reply_to_email
-                                : 'Please update your payment details. '),
-                        'show_link'   => $is_manual ? 0 : 1,
-                        'state'       => $subscription['subscription_state']
-                    );
-                    break;
-                case 'suspended':
-                    $response = array(
-                        'is_blocking' => 1,
-                        'message'     => 'Your account was suspended <br/> For more information please contact '.$reply_to_email,
-                        'show_link'   => 0,
-                        'state'       => $subscription['subscription_state']
-                    );
-                    break;
+                // case 'trial_ended':
+                //     $response = array(
+                //         'is_blocking' => 0,
+                //         'message'     => 'Thank you for trying minical! To set up your recurring subscription '.($is_manual
+                //                 ? 'please contact '.$reply_to_email
+                //                 : 'please update your payment details. '),
+                //         'show_link'   => 1,
+                //         'state'       => $subscription['subscription_state']
+                //     );
+                //     break;
+                // case 'canceled':
+                //     $response = array(
+                //         'is_blocking' => 1,
+                //         'message'     => 'Your account is about to be suspended. '.($is_manual
+                //                 ? 'Please contact '.$reply_to_email
+                //                 : 'Please update your payment details. '),
+                //         'show_link'   => $is_manual ? 0 : 1,
+                //         'state'       => $subscription['subscription_state']
+                //     );
+                //     break;
+                // case 'suspended':
+                //     $response = array(
+                //         'is_blocking' => 1,
+                //         'message'     => 'Your account was suspended <br/> For more information please contact '.$reply_to_email,
+                //         'show_link'   => 0,
+                //         'state'       => $subscription['subscription_state']
+                //     );
+                //     break;
             }
         }
 //        $this->session->set_flashdata('flash', 'value');

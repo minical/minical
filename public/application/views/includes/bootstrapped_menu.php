@@ -154,28 +154,28 @@ if(
 </div>
 
 
-<div class="modal fade" id="dialog-update-billing" data-backdrop="static" 
+<!-- <div class="modal fade" id="dialog-update-billing" data-backdrop="static" 
    data-keyboard="false" 
    >
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title">
-            <?php echo l('Subscription Notice', true); ?>
+            <?php //echo l('Subscription Notice', true); ?>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         </h4>        
       </div>
       <div class="modal-body">
-          <?php echo l('Dear customer', true); ?>, 
+          <?php //echo l('Dear customer', true); ?>, 
         <p class="message"></p>
       </div>
       <div class="modal-footer">
-        <a class="btn btn-success" href="<?php echo base_url(); ?>account_settings/subscription"><?php echo l('Update payment details', true); ?></a>
+        <a class="btn btn-success" href="<?php //echo base_url(); ?>account_settings/subscription"><?php //echo l('Update payment details', true); ?></a>
       </div>
       
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+    </div>
+  </div>
+</div> -->
 
 <div class="modal fade" id="dialog-verify-email-notification" data-backdrop="static"
      data-keyboard="false"

@@ -22,30 +22,30 @@ $(function () {
         sec = 30 * 60; // reset timer to 30 minutes
     });
 
-    // if(window.location.href.substr(-12) != 'subscription'){ // subscription
-    //     setTimeout(function () {
-    //         $.post(
-    //             getBaseURL() + 'auth/get_subscription_state_extended',
-    //             {},
-    //             function (response) {
-    //                 //itodo fix this
-    //                 if(response.message){
-    //                     $("#dialog-update-billing").modal("show");
-    //                     $('#dialog-update-billing .message').html(response.message);
+    if(window.location.href.substr(-12) != 'subscription'){ // subscription
+        setTimeout(function () {
+            $.post(
+                getBaseURL() + 'auth/get_subscription_state_extended',
+                {},
+                function (response) {
+                    //itodo fix this
+                    if(response.message){
+                        $("#dialog-update-billing").modal("show");
+                        $('#dialog-update-billing .message').html(response.message);
 
-    //                     if(response.show_link){ // link to page
-    //                         $('#dialog-update-billing a').show();
-    //                     }
+                        if(response.show_link){ // link to page
+                            $('#dialog-update-billing a').show();
+                        }
 
-    //                     if(response.is_blocking){
-    //                         $("#dialog-update-billing").find(".close").hide();
-    //                     }
-    //                 }
-    //             },
-    //             'json'
-    //         );
-    //     },2000);
-    // }
+                        if(response.is_blocking){
+                            $("#dialog-update-billing").find(".close").hide();
+                        }
+                    }
+                },
+                'json'
+            );
+        },2000);
+    }
 
     // if (is_current_user_activated == "0") {
     //     $("#dialog-verify-email-notification").modal("show");
