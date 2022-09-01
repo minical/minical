@@ -3,21 +3,21 @@
 //		Only the first instance of the line is defined.
 
 //Main Booking
-$lang['search_bookings'] = 'Search Bookings';
-$lang['search_groups'] = 'Search Groups';
-$lang['show'] = 'Show';
-$lang['to'] = 'To';
-$lang['new_reservation'] = 'New Reservation';
-$lang['new_walk_in'] = 'New Walk-in';
-$lang['new_out_of_order'] = 'New Out Of Order';
+$lang['search_bookings'] = 'Recherche Réservations';
+$lang['search_groups'] = 'Recherche Groupes';
+$lang['show'] = 'Afficher';
+$lang['to'] = 'Pour';
+$lang['new_reservation'] = 'Nouvelle Réservation';
+$lang['new_walk_in'] = 'Nouvelle Arrivée';
+$lang['new_out_of_order'] = 'Mise Hors-Service Chambre';
 
 //Calendar
-$lang['create_new_booking'] = 'Create New Booking';
-$lang['today'] = 'Today';
-$lang['filters'] = 'Filters';
-$lang['export_booking_to_csv_file'] = 'Export Bookings to CSV File';
-$lang['no_more_rooms'] = 'there\'s no more rooms';
-$lang['room_name'] = 'Room Name';
+$lang['create_new_booking'] = 'Créer Nouvelle Réservation';
+$lang['today'] = 'Aujourd\'hui';
+$lang['filters'] = 'Filtres';
+$lang['export_booking_to_csv_file'] = 'Exporter Réservations au Format CSV';
+$lang['no_more_rooms'] = 'il n\'y a plus de chambres disponibles';
+$lang['room_name'] = 'Nom de la Chambre';
 $lang['type'] = 'Type';
 
 //Months
@@ -35,24 +35,24 @@ $lang['Nov'] = 'Nov';
 $lang['Dec'] = 'Dec';
 
 //Reminder
-$lang['reminder'] = 'Reminder';
-$lang['unconfirmed_reservations'] = 'Unconfirmed Reservations';
-$lang['reservations'] = 'Reservations';
-$lang['checking_in_today'] = 'Checking-in Today';
-$lang['staying_and_paying'] = 'Checked-in';
-$lang['checked_out_today'] = 'Checked-out Today';
-$lang['out_of_orders'] = 'Out of Orders';
+$lang['reminder'] = 'Rappel';
+$lang['unconfirmed_reservations'] = 'Réservation Non Confirmée';
+$lang['reservations'] = 'Réservations';
+$lang['checking_in_today'] = 'Arrivées d\'Aujourd\'hui';
+$lang['staying_and_paying'] = 'Arrivées';
+$lang['checked_out_today'] = 'Arrivées Aujourd\'hui';
+$lang['out_of_orders'] = 'Chambres Hors-Service';
 
-$lang['room'] = 'Room';
-$lang['bed'] = 'Bed';
-$lang['guest'] = 'Guest';
-$lang['hide'] = 'hide';
-$lang['show'] = 'show';
-$lang['download_csv_export'] = 'Download CSV Export';
+$lang['room'] = 'Chambre';
+$lang['bed'] = 'Lit';
+$lang['guest'] = 'Invité';
+$lang['hide'] = 'cacher';
+$lang['show'] = 'montrer';
+$lang['download_csv_export'] = 'Télécharger Rapport CSV';
 
 //Booking Controller
-$lang['booking_successfully_created'] = 'Booking created successfully';
-$lang['reference_number'] = 'Reference Number';
+$lang['booking_successfully_created'] = 'Réservation Créée Avec Succès';
+$lang['reference_number'] = 'Numéro de Référence';
 $lang['does_the_guest_need_another_room'] = "Does the guest need another room?";
 $lang['did_the_guest_pay'] = "Did the guest make the payment?";
 $lang['all_done'] = 'All done?';
