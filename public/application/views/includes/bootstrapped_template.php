@@ -13,7 +13,6 @@
 
 <body class="theme-<?=isset($this->company_ui_theme) ? $this->company_ui_theme : 0;?>">
 	<div class="app-container  app-theme-white body-tabs-shadow fixed-header fixed-sidebar <?= $classtoggle;?>">
-<div class="alert alert-danger trial_period" style="margin: 10px;display: none;"></div>
 
 		<?php 
 
@@ -205,10 +204,13 @@
                         ){
                             ?>
                             <div class="app-main__outer main" ><div class="app-main__inner">
+                            <div class="alert alert-danger trial_period" style="margin: 10px;display: none;"></div>
                         <?php
                             }else{
                         ?>
-                        <div class="app_outer main" > <div class="app_inner"><?php }?>
+                        <div class="app_outer main" > <div class="app_inner">
+                        <div class="alert alert-danger trial_period" style="margin: 10px;display: none;"></div>
+                        <?php }?>
                             <?php } else { ?>
                             <div class="main" >
                             	
