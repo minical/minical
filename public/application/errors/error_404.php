@@ -55,10 +55,13 @@ p {
 </head>
 <body>
 	<div id="container">
+		<?php $this->ci =& get_instance(); 
+
+		$support_email = isset($this->ci->session->userdata('white_label_information')['support_email']) && $this->ci->session->userdata('white_label_information')['support_email'] !='' ? $this->ci->session->userdata('white_label_information')['support_email'] : 'support@minical.io' ; ?>
 		<h1><?php echo $heading; ?></h1>
 		<div style="margin:20px;">
             <br/><br/>
-			For any questions/inquiries, contact support at <a href="mailto:support@minical.io">support@minical.io<a/>
+			For any questions/inquiries, contact support at <a href="mailto:<?php echo $support_email;?>"><?php echo $support_email;?><a/>
 		</div>
 		<?php //echo $message; ?>
 	</div>
