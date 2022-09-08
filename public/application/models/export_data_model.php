@@ -390,7 +390,7 @@ class Export_data_model extends CI_Model {
         LEFT JOIN customer_card_details as cd ON c.customer_id = cd.customer_id
         LEFT JOIN customer_types as ct ON c.customer_type_id = ct.id
 
-        WHERE c.company_id = $company_id AND c.is_deleted = 0
+        WHERE c.company_id = $company_id AND c.is_deleted = 0 AND ct.is_deleted = 0
         GROUP BY c.customer_id";
 
         $query = $db2->query($sql);

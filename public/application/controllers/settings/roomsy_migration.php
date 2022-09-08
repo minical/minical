@@ -1610,7 +1610,7 @@ class Roomsy_migration extends MY_Controller
             'Enable Hourly Booking' => $settings['enable_hourly_booking'],
             'Enable Api Access' => $settings['enable_api_access'],
             'Booking Cancelled With Balance' => $settings['booking_cancelled_with_balance'],
-            'Enable New Calendar' => $settings['enable_new_calendar'],
+            'Enable New Calendar' => 1,
             'Hide Room Name' => $settings['hide_room_name'],
             'Restrict Booking Dates Modification' => $settings['restrict_booking_dates_modification'],
             'Restrict Checkout With Balance' => $settings['restrict_checkout_with_balance'],
