@@ -532,19 +532,19 @@
                 var days = Math.floor(((diff_date % 31536000000) % 2628000000)/86400000);
                 
                 var url = '<?php echo base_url(); ?>settings/company/view_subscription';
-                if(days <= 5 && days >= 0)
-                {
-                    if(days == '0')
-                    {
-                        $('.trial_period').html(l('Your trial will expire today. To avoid service interruption') + ', <a href="'+url+'">'+l("please click here")+'</a>')
-                    }
-                    else
-                    {
-                        $('.trial_period').html(l('Your trial will expire in')+' '+days+' '+l("days")+'. '+l("To avoid service interruption")+', <a href="'+url+'">'+l("please click here")+'</a>')
-                    }
+                // if(days <= 5 && days >= 0)
+                // {
+                //     if(days == '0')
+                //     {
+                //         $('.trial_period').html(l('Your trial will expire today. To avoid service interruption') + ', <a href="'+url+'">'+l("please click here")+'</a>')
+                //     }
+                //     else
+                //     {
+                //         $('.trial_period').html(l('Your trial will expire in')+' '+days+' '+l("days")+'. '+l("To avoid service interruption")+', <a href="'+url+'">'+l("please click here")+'</a>')
+                //     }
                     
-                    $('.trial_period').css('display', 'block');
-                }
+                //     $('.trial_period').css('display', 'block');
+                // }
             }
         
         innGrid.isDisplayTooltip = parseInt('<?=(isset($this->is_display_tooltip) ? $this->is_display_tooltip : 0)?>');        

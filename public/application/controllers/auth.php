@@ -1803,17 +1803,17 @@ class Auth extends MY_Controller
             $is_manual = ($subscription['payment_method'] == 'manual');
             switch ($subscription['subscription_state']) {
 //                case 'soft_failure':
-                case 'past_due':
-                case 'unpaid':                  
-                    $response = array(
-                        'is_blocking' => 0,
-                        'message'     => 'Your account payment is past due. '.($is_manual
-                                ? 'Please contact '.$reply_to_email
-                                : 'Please update your payment details. '),
-                        'show_link'   => 1,
-                        'state'       => $subscription['subscription_state']
-                    );
-                    break;
+                // case 'past_due':
+                // case 'unpaid':                  
+                //     $response = array(
+                //         'is_blocking' => 0,
+                //         'message'     => 'Your account payment is past due. '.($is_manual
+                //                 ? 'Please contact '.$reply_to_email
+                //                 : 'Please update your payment details. '),
+                //         'show_link'   => 1,
+                //         'state'       => $subscription['subscription_state']
+                //     );
+                //     break;
                 // case 'trial_ended':
                 //     $response = array(
                 //         'is_blocking' => 0,
