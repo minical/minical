@@ -18,9 +18,9 @@
 				<a href="<?php echo base_url(); ?>admin/translate_keywords">Language Translation</a>
 			</li>
 			<?php if($this->is_super_admin){ ?>
-			<li>
-				<a href="<?php echo base_url(); ?>admin/show_monthly_report">Monthly Report</a>
-			</li>
+			<!-- <li>
+				<a href="<?php //echo base_url(); ?>admin/show_monthly_report">Monthly Report</a>
+			</li> -->
 		   <?php }  ?>
 			<?php if($this->user_email == SUPER_ADMIN): ?>
 				<li>
