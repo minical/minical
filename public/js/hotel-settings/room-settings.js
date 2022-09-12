@@ -30,15 +30,19 @@ innGrid.saveAllRooms = function () {
 		});
 
 	});   
-   
+   console.log('roomData',roomData);
 	$.ajax({
         url: getBaseURL() + 'settings/room_inventory/save_rooms_AJAX',
         type: "POST",
-        dataType: 'json',
-        data: JSON.stringify(roomData),
+        data: {room_data : roomData},
         success: function(response){
+        	console.log('response',response);
             innGrid.updateAvailabilities("","");
-        	alert(l('All rooms saved', true));
+            if(response != 1){
+            	alert(response);
+            } else {
+        		alert(l('All rooms saved', true));
+            }
         }
 
        });

@@ -110,9 +110,17 @@ class Room_inventory extends MY_Controller {
     }
 
     function save_rooms_AJAX() {
-        $strRequest = file_get_contents('php://input');
-        $rooms = json_decode($strRequest);
+        // $strRequest = file_get_contents('php://input');
+        $strRequest = $this->security->xss_clean($this->input->post('room_data'));
+        $rooms = json_decode(json_encode($strRequest));
+        $error_flag = false;
         foreach ($rooms as $room) {
+
+            if( strpos($room->room_name, ',') !== false ) {
+                $error_flag = true; 
+                break;
+            }
+
             $data = Array(
                 'room_name' => $room->room_name,
                 'room_type_id' => $room->room_type_id,
@@ -125,9 +133,12 @@ class Room_inventory extends MY_Controller {
             $this->Room_model->update_room($room->room_id, $data);
             $this->_create_room_log("Room updated ({$room->room_name} [ID {$room->room_id}])");
         }
-        
-        // todo report error
-        echo 1;
+
+        if($error_flag) {
+            echo "Please do not use comma (,) as a separator";
+        } else {
+            echo 1;
+        }
     }
 
     //changes selected room's roomtype
