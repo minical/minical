@@ -1213,6 +1213,7 @@ class Customer extends MY_Controller {
                 $customer['cc_tokenex_token'] = $card_details['cc_tokenex_token'];
                 $customer['cc_cvc_encrypted'] = $card_details['cc_cvc_encrypted'];
                 $customer['customer_pci_token'] = json_decode($card_details['customer_meta_data'], true)['token'] ?? null;
+                $customer['token_source'] = json_decode($card_details['customer_meta_data'], true)['source'] ?? null;
             }
 
         echo json_encode($customer);
@@ -1224,6 +1225,8 @@ class Customer extends MY_Controller {
         $error_msg = '';
 
         $customer_data               = $this->security->xss_clean($this->input->post('customer_data', TRUE));
+
+        // prx($customer_data);
 		
 		$customer_data['customer_name'] = sqli_clean($this->security->xss_clean($customer_data['customer_name']));
 		
@@ -1231,9 +1234,13 @@ class Customer extends MY_Controller {
 
         $cvc = $customer_data['cvc'];
         $cc_number = $customer_data['cc_number'];
+        $cc_token = '';
+        if(isset($customer_data['cc_token']) && $customer_data['cc_token'])
+            $cc_token = $customer_data['cc_token'];
 
         unset($customer_data['cvc']);
         unset($customer_data['cc_number']);
+        unset($customer_data['cc_token']);
 
         $customer_id                 = $this->Customer_model->create_customer($customer_data);
         
@@ -1299,6 +1306,11 @@ class Customer extends MY_Controller {
                 $meta['token'] = $card_token;
                 $card_details['customer_meta_data'] = json_encode($meta);
             }
+        } else if($cc_token){
+            $card_details['cc_number'] = $cc_number;
+            $meta['token'] = $cc_token;
+            $meta['source'] = 'pci_booking';
+            $card_details['customer_meta_data'] = json_encode($meta);
         }
 
         $customer_data['cc_number'] = "";

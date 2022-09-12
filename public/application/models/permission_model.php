@@ -59,6 +59,13 @@ class Permission_model extends CI_Model {
             ) ||
 
             (
+                $controller_name === "pci_booking" && 
+                (
+                    ($function_name === 'card_token_success' || $function_name === 'card_token_failure'|| $function_name ==='get_tokenization_response' || $function_name ===  'card_over_phone_success')
+                )
+            ) ||
+
+            (
                 $controller_name === "customer" && 
                 (
                     $function_name === 'post_add_customer_callback'

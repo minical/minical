@@ -309,7 +309,7 @@ var customerId;
                 console.log('customer-data',customer);
                 console.log('channexpci',innGrid.isChannePCIEnabled);
                 var sensitiveCardNumber =
-                    (innGrid.isChannePCIEnabled && customer.customer_pci_token && customer.customer_pci_token.length == 32 ? '<a style="position: absolute; right: 26px; top: 7px; z-index: 9999;" title = "Show Card Number" class="show_cc" data-cc_number_encrypted="' + customer.cc_number_encrypted + '" data-cc_number="' + customer.cc_number + '" data-customer_pci_token="' + customer.customer_pci_token + '" data-cc_detail="card_number" href="javascript:"><i class="fa fa-eye" ></i></a><input type="hidden" class="customer_id" data-cc_token="' + customer.cc_tokenex_token + '" data-cc_cvc="' + customer.cc_cvc_encrypted + '" value="' + customer.customer_id + '"/>' : '');
+                    ((innGrid.isChannePCIEnabled || innGrid.isPCIBookingEnabled) && customer.customer_pci_token ? '<a style="position: absolute; right: 26px; top: 7px; z-index: 9999;" title = "Show Card Number" class="show_cc" data-cc_number_encrypted="' + customer.cc_number_encrypted + '" data-cc_number="' + customer.cc_number + '" data-customer_pci_token="' + customer.customer_pci_token + '" data-token_source="' + customer.token_source + '" data-cc_detail="card_number" href="javascript:"><i class="fa fa-eye" ></i></a><input type="hidden" class="customer_id" data-cc_token="' + customer.cc_tokenex_token + '" data-cc_cvc="' + customer.cc_cvc_encrypted + '" value="' + customer.customer_id + '"/>' : '');
                 var sensitiveCardCVC = (customer.cc_cvc_encrypted ? '<a style="position: absolute; right: 26px; top: 7px; z-index: 9999;" title = "Show Card CVC" class="show_cc" data-cc_number_encrypted="' + customer.cc_number_encrypted + '" data-cc_number="' + customer.cc_number + '" data-cc_detail="card_cvc" href="javascript:"><i class="fa fa-eye" ></i></a>' : '');
 
                 $customer_form.append(
@@ -471,12 +471,12 @@ var customerId;
                     )
                 )
                 .append($customer_form)
-                .append(
+                $customer_form.append(
                     $("<div/>", {
                         class: "modal-footer"
                     }).append(
                         $("<button/>", {
-                            type: "button",
+                            type: "submit",
                             class: "btn btn-primary",
                             id: "button-update-customer",
                             text: (customer.customer_id) ? l("Update") : l("Create")
@@ -581,6 +581,21 @@ var customerId;
                                     cc_tokenex_token = data.token;
                                     cc_cvc_encrypted = data.cc_cvc_encrypted;
                                 }
+
+                                if (data && data.length > 0){
+                                    var cardData = data.split('_');
+                                    if(cardData){
+                                        console.log('customerData',customerData);
+                                        console.log('cardData',cardData);
+                                        customerData.cc_number = "XXXX XXXX XXXX " + cardData[1].substr(cardData[1].length - 4);
+                                        customerData.cvc = cardData[3];
+                                        customerData.cc_token = cardData[0];
+                                        customerData.cc_expiry_month = cardData[2].substring(0, 2);
+                                        customerData.cc_expiry_year = cardData[2].substring(4);
+                                    }
+                                }
+
+                                console.log('customerData',customerData);
 
                                 if (customer.customer_id) // new customer
                                 {
@@ -697,7 +712,21 @@ var customerId;
                                 }
                                 
                             } else {
-                                update_create_client();
+
+                                if($("#myIframe")[0] && $("#myIframe")[0].contentWindow){
+
+                                    var contentWindow = $("#myIframe")[0].contentWindow;
+                                    contentWindow.postMessage("submit", document.getElementById('myIframe').src);       
+
+                                    setTimeout(function(){
+                                        var cardData = $("#myIframe").contents().find("body").html();
+                                        console.log(cardData);
+                                        update_create_client(cardData);
+                                    },1500);
+                                } else {
+                                    var cardData = [];
+                                    update_create_client(cardData);
+                                }
                             }
 
                         })
@@ -1007,18 +1036,50 @@ var customerId;
     $('body').on('click', '.show_cc', function() {
 
         var customer_pci_token = $(this).data('customer_pci_token');
+        var token_source = $(this).data('token_source');
 
-        var iframe = document.createElement('iframe');
-        iframe.src = getBaseURL() + "customer/get_credit_card_number?customer_pci_token=" + customer_pci_token;
-        iframe.height = '300px';
-        iframe.width = '100%';
-        iframe.style = 'border-style: none';
+        if(token_source == 'pci_booking'){
 
-        console.log('iframe', iframe);
+            $.ajax({
+                type: "POST",
+                url: 'show_credit_card_data',
+                dataType: "html",
+                data: {card_token : customer_pci_token},
+                success: function (response) {
+                    console.log('response', response);
 
-        $('#display-cc-details').find('.modal-body').html(iframe);
-        $('#display-cc-details').modal('show');
+                    var iframe = document.createElement('iframe');
+                    iframe.srcdoc = response;
+                    iframe.height = '300px';
+                    iframe.width = '100%';
+                    iframe.style = 'border-style: none';
 
+                    $('#display-cc-details').find('.modal-body').html(iframe);
+                }
+            });
+                    $('#display-cc-details').modal('show');
+
+            // var iframe = document.createElement('iframe');
+            // iframe.src = getBaseURL() + "customer/get_credit_card_number?customer_pci_token=" + customer_pci_token;
+            // iframe.height = '300px';
+            // iframe.width = '100%';
+            // iframe.style = 'border-style: none';
+
+            // console.log('iframe', iframe);
+
+            
+        } else {
+            var iframe = document.createElement('iframe');
+            iframe.src = getBaseURL() + "customer/get_credit_card_number?customer_pci_token=" + customer_pci_token;
+            iframe.height = '300px';
+            iframe.width = '100%';
+            iframe.style = 'border-style: none';
+
+            console.log('iframe', iframe);
+
+            $('#display-cc-details').find('.modal-body').html(iframe);
+            $('#display-cc-details').modal('show');
+        }
     });
 
 })(jQuery, window, document);
