@@ -1123,6 +1123,32 @@ var bookingModalInvoker = function ($) {
                                 })
                             )
                             .append(
+                                $("<li/>").append(
+                                    $("<a/>", {
+                                        'href': '#housekeeping',
+                                        'data-toggle': "tab",
+                                        'text': l('housekeeping')
+                                    }).on('click', function (e) {
+                                        if (that.booking.state !== undefined) {
+                                            $.ajax({
+                                                type: "POST",
+                                                url: getBaseURL() + "booking/get_housekeeping_notes_AJAX",
+                                                data: {
+                                                    booking_id: that.booking.booking_id
+                                                },
+                                                dataType: "json",
+                                                success: function (data) {
+                                                    that._populateHousekeepingNotesModal(data);
+                                                }
+                                            })
+                                        }
+                                        setTimeout(function () {
+                                            that._setHeight('housekeeping');
+                                        }, 1000);
+                                    })
+                                )
+                            )
+                            .append(
                                 $("<li/>",{
                                     class: "history_tab"
                                 }

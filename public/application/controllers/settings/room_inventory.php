@@ -815,5 +815,96 @@ class Room_inventory extends MY_Controller {
         }
     }
 
+    /**
+
+      HOUSEKEEPING SETTINGS
+
+     */
+    function housekeeping() {
+        $data = array();
+
+        //Load the company's house keeping data
+        if (!is_null($housekeeping_settings = $this->Company_model->get_housekeeping_settings($this->company_id))) {
+            $data['settings'] = $housekeeping_settings;
+            //change the TIME format from MYSQL to simple human legible format (i.e. 03:00:00 to 03:00 AM)
+            $timestamp = strtotime($housekeeping_settings->housekeeping_auto_clean_time);
+            $data['settings']->hour = date("h", $timestamp);
+            $data['settings']->minute = date("i", $timestamp);
+            $data['settings']->am_pm = date("A", $timestamp);
+        }
+
+        if (!is_null($dirty_room_housekeeping_settings = $this->Company_model->get_housekeeping_settings($this->company_id, true))) {
+            $data['dirty_room_settings'] = $dirty_room_housekeeping_settings;
+            //change the TIME format from MYSQL to simple human legible format (i.e. 03:00:00 to 03:00 AM)
+            $dirty_room_timestamp = strtotime($dirty_room_housekeeping_settings->housekeeping_auto_dirty_time);
+            $data['dirty_room_settings']->d_hour = date("h", $dirty_room_timestamp);
+            $data['dirty_room_settings']->d_minute = date("i", $dirty_room_timestamp);
+            $data['dirty_room_settings']->d_am_pm = date("A", $dirty_room_timestamp);
+        }
+
+        $this->form_validation->set_rules('housekeeping_auto_clean_is_enabled', 'Automatically clean all rooms', 'trim');
+        $this->form_validation->set_rules('hour', 'Time(hour) of time to clearn all rooms', 'trim|greater_than[0]|less_than[13]');
+        $this->form_validation->set_rules('minute', 'Time(hour) of time to clean all rooms', 'trim|greater_than[-1]|less_than[60]');
+        $this->form_validation->set_rules('am_pm', 'Time(am/pm) of time to clean all rooms', 'trim|max_length[2]');
+        $this->form_validation->set_rules('housekeeping_day_interval_for_full_cleaning', 'Number of days until full cleaning', 'trim');
+
+        if ($this->form_validation->run() == TRUE) {
+            $time = $this->input->post('hour') . ":" . $this->input->post('minute') . " " . $this->input->post('am_pm');
+            $timestamp = strtotime($time);
+            $mysql_time = Date("H:i:00", $timestamp);
+
+            $data['settings']->housekeeping_auto_clean_is_enabled = ($this->input->post('housekeeping_auto_clean_is_enabled') == 'on') ? '1' : '0';
+            $data['settings']->housekeeping_day_interval_for_full_cleaning = $this->input->post('housekeeping_day_interval_for_full_cleaning');
+
+            $data['settings']->hour = date("h", $timestamp);
+            $data['settings']->minute = date("i", $timestamp);
+            $data['settings']->am_pm = date("A", $timestamp);
+
+            $update_data = array(
+                'housekeeping_auto_clean_is_enabled' => $data['settings']->housekeeping_auto_clean_is_enabled,
+                'housekeeping_auto_clean_time' => $mysql_time,
+                'housekeeping_day_interval_for_full_cleaning' => $data['settings']->housekeeping_day_interval_for_full_cleaning
+            );
+
+            // if($this->input->post('housekeeping_auto_dirty_is_enabled'))
+            // {
+                $data['dirty_room_settings']->housekeeping_auto_dirty_is_enabled = ($this->input->post('housekeeping_auto_dirty_is_enabled') == 'on') ? '1' : '0';
+
+                $dirty_room_time = $this->input->post('d_hour') . ":" . $this->input->post('d_minute') . " " . $this->input->post('d_am_pm');
+                $dirty_room_timestamp = strtotime($dirty_room_time);
+                $dirty_room_mysql_time = Date("H:i:00", $dirty_room_timestamp);
+
+                $data['dirty_room_settings']->d_hour = date("h", $dirty_room_timestamp);
+                $data['dirty_room_settings']->d_minute = date("i", $dirty_room_timestamp);
+                $data['dirty_room_settings']->d_am_pm = date("A", $dirty_room_timestamp);
+
+                $update_data['housekeeping_auto_dirty_is_enabled'] = $data['dirty_room_settings']->housekeeping_auto_dirty_is_enabled; 
+                $update_data['housekeeping_auto_dirty_time'] = $dirty_room_mysql_time; 
+                
+            // }
+            // prx($update_data);
+            //TO DO: This should be done in model.
+            $this->Company_model->update_company($this->company_id, $update_data);
+            $this->_create_room_log("Housekeeping setting updated");
+
+            //Post Redirect Get practice
+            redirect('/settings/room_inventory/housekeeping');
+        }
+
+        //load view
+        $data['company_ID'] = $this->company_id;
+
+        $data['submenu'] = 'hotel_settings/hotel_settings_submenu.php';
+        $data['selected_submenu'] = 'room_inventory';
+
+        $data['selected_sidebar_link'] = 'Housekeeping';
+
+        $data['main_content'] = 'hotel_settings/room_inventory_settings/housekeeping_settings';
+
+        //No Post Redirect Get here, because the validation error message must be shown
+        $this->load->view('includes/bootstrapped_template', $data);
+        return;
+    }
+
      
 }
