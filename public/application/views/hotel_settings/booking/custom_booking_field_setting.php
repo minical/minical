@@ -24,7 +24,7 @@
 <!--        <th class="text-center">--><?php //echo l('show_on_inhouse_report'); ?><!--</th>-->
         <th class="text-center"><?php echo l('Show on Invoice'); ?></th>
         <th class="text-center"><?php echo l('Is a required field'); ?></th>
-        <th class="text-center"><?php echo l('delete_booking'); ?></th>
+        <th class="text-center"><?php echo l('delete'); ?></th>
     </tr>
 
     <?php if(isset($booking_fields)): ?>
