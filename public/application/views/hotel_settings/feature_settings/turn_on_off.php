@@ -662,7 +662,16 @@
                     <label for="restrict_checkout_with_balance"><b><?= l("Restrict bookings to checkout with balance", true); ?></b></label>
                 </div>
             </div>
-
+            <div class="form-group features-div-padding ">
+                <div class="checkbox checbox-switch switch-primary">
+                    <label>
+                        <input type="checkbox" name="restrict_cvc_not_mandatory" id="restrict_cvc_not_mandatory"
+                               <?= $company_data['restrict_cvc_not_mandatory'] == 1 ? 'checked=checked' : ''; ?>/>
+                        <span></span>
+                    </label>
+                    <label for="restrict_cvc_not_mandatory"><b><?= l("Restrict CVC not mandatory with the credit card details", true); ?></b></label>
+                </div>
+            </div>
 
             <div class="form-group features-div-padding ">
                 <div class="checkbox checbox-switch switch-primary">

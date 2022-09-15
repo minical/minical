@@ -143,12 +143,12 @@ class Invoice extends MY_Controller {
         $data['room_detail']    = $this->Room_model->get_room($booking_room_history['room_id'], $booking_room_history['room_type_id']);
         $data['customer_id']    = $customer_id;
 
-        $data['currency_symbol'] = $this->session->userdata('currency_symbol');
-        if (!$data['currency_symbol']) {
+        //$data['currency_symbol'] = $this->session->userdata('currency_symbol');
+        //if (!$data['currency_symbol']) {
             $default_currency       = $this->Currency_model->get_default_currency($this->company_id);
             $data['currency_symbol'] = isset($default_currency['currency_code']) ? $default_currency['currency_code'] : null;
             $this->session->set_userdata(array('currency_symbol' => $data['currency_symbol']));
-        }
+        //}
 
         $staying_customers       = $this->Customer_model->get_staying_customers($booking_id);
         $staying_customer_names  = array();

@@ -36,8 +36,10 @@
                         value="<?php echo $customer_type['name']; ?>" maxlength="45" style="width:250px;"/>
                                                 
 					</td>
-					<td style="<?php echo isset($customer_type['is_common_type']) && $customer_type['is_common_type'] ? 'cursor: not-allowed;' : ''; ?>">
-						<div class="delete-customer-type btn btn-light" style="<?php echo isset($customer_type['is_common_source']) && $customer_type['is_common_source'] ? 'pointer-events: none;' : ''; ?>">X</div>
+					<td>
+						<?php  if(!(isset($customer_type['is_common_type']) && $customer_type['is_common_type'])) { ?>
+						<div class="delete-customer-type btn btn-light">X</div>
+					<?php } ?>
 					</td>
 				</tr>
 	<?php endforeach; ?>

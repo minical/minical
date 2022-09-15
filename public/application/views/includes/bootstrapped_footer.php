@@ -91,6 +91,7 @@
     innGrid.isAsaasPaymentEnabled = parseInt('<?=(($this->selected_payment_gateway == "asaas") ? 1 : 0)?>');
     innGrid.isChannePCIEnabled = parseInt('<?=(($this->is_channex_pci_enabled) ? 1 : 0)?>');
     innGrid.isPCIBookingEnabled = parseInt('<?=(($this->is_pci_booking_enabled) ? 1 : 0)?>');
+    innGrid.restrictCvcNotMandatory = parseInt('<?=(($this->restrict_cvc_not_mandatory) ? 1 : 0)?>');
     innGrid.featureSettings.cuurentLanguage = "<?=$this->session->userdata('language') ? $this->session->userdata('language') : ''?>";
     innGrid.imageUrl = "<?= $this->image_url; ?>";
     innGrid.companyAPIKey = "<?=(isset($this->company_api_key) ? $this->company_api_key : '')?>";

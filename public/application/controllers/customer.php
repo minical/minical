@@ -1256,7 +1256,7 @@ class Customer extends MY_Controller {
            'customer_name' => $customer_data['customer_name'],
            'card_name' => '',
            'company_id' => $this->company_id,
-           'cc_number' => (isset($customer_data['cc_number'])? $customer_data['cc_number'] : NULL),
+           'cc_number' => (isset($cc_number) ? 'XXXX XXXX XXXX '.substr($cc_number,-4) : NULL),
            'cc_expiry_month' => (isset($customer_data['cc_expiry_month']) ? $customer_data['cc_expiry_month'] : NULL),
            'cc_expiry_year' => (isset($customer_data['cc_expiry_year']) ? $customer_data['cc_expiry_year'] : NULL)
         );
