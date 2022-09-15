@@ -533,7 +533,8 @@ var customerId;
                             var cvc = $.trim($("input[name='cvc']").val());
                             if (
                                 cardno !== '' &&
-                                cvc == ''
+                                cvc == '' &&
+                                innGrid.restrictCvcNotMandatory == 0
                             ) {
                                 errorMsg += "\nPlease enter CVC code";
                             }

@@ -1035,7 +1035,7 @@
                     <?php echo l('amount', true).' '.l('due', true); ?>:
                     &nbsp;&nbsp;&nbsp;&nbsp;
                     <span class="text-right smaller_fonts" id="amount_due">
-                    </span>
+                    </span>  <?php echo $currency_symbol;?>
                 </div>
             </div>
             <div>

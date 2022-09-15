@@ -152,7 +152,8 @@ $(function (){
             'enable_new_calendar' : 1,
             'restrict_booking_dates_modification' : $('input[name="restrict_booking_dates_modification"]').prop('checked') ? 1 : 0,
             'restrict_checkout_with_balance' : $('input[name="restrict_checkout_with_balance"]').prop('checked') ? 1 : 0,
-            'show_guest_group_invoice' : $('input[name="show_guest_group_invoice"]').prop('checked') ? 1 : 0
+            'show_guest_group_invoice' : $('input[name="show_guest_group_invoice"]').prop('checked') ? 1 : 0,
+            'restrict_cvc_not_mandatory' : $('input[name="restrict_cvc_not_mandatory"]').prop('checked') ? 1 : 0
         };
         $.ajax({
             type   : "POST",

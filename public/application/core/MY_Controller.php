@@ -301,7 +301,8 @@ class MY_Controller extends CI_Controller {
             $this->default_checkout_time = $company['default_checkout_time'];
             $this->selected_payment_gateway = $company['selected_payment_gateway'];
             $this->booking_cancelled_with_balance = $company['booking_cancelled_with_balance'];
-
+            $this->restrict_cvc_not_mandatory = $company['restrict_cvc_not_mandatory'];
+            
             $user = $this->User_model->get_user_by_id($this->user_id);
             $this->user_email = $user['email'];
             $this->company_is_tos_agreed = ($user['tos_agreed_date'] >= TOS_PUBLISH_DATE);

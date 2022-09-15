@@ -120,7 +120,9 @@ class Company extends MY_Controller
 
             $this->company_id  = $this->session->userdata('current_company_id');
             $this->Company_model->update_company($this->company_id, $update_data);
-
+            $default_currency       = $this->Currency_model->get_default_currency($this->company_id);
+            $data['currency_symbol'] = isset($default_currency['currency_code']) ? $default_currency['currency_code'] : null;
+            $this->session->set_userdata(array('currency_symbol' => $data['currency_symbol']));
             redirect('/settings/company/general'); // redirect to settings unavailable screen
         }
 
@@ -583,7 +585,8 @@ class Company extends MY_Controller
                 'hide_room_name' => $this->input->post('hide_room_name'),
                 'restrict_booking_dates_modification' => $this->input->post('restrict_booking_dates_modification'),
                 'restrict_checkout_with_balance' => $this->input->post('restrict_checkout_with_balance'),
-                'show_guest_group_invoice' => $this->input->post('show_guest_group_invoice')
+                'show_guest_group_invoice' => $this->input->post('show_guest_group_invoice'),
+                'restrict_cvc_not_mandatory' => $this->input->post('restrict_cvc_not_mandatory')
             );
             $this->Company_model->update_company($this->company_id, $company_data);
             $this->_create_employee_log("Feature settings updated");
