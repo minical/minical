@@ -23,7 +23,7 @@
 <table id="customer-types" class="table">
 	<tr>
 		<th><?php echo l('customer_type_name'); ?></th>
-		<th><?php echo l('delete_booking'); ?></th>
+		<th><?php echo l('delete'); ?></th>
 	</tr>
     <tbody id="sortable" >
 	<?php if(isset($customer_types)): ?>
