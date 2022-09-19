@@ -226,7 +226,7 @@ aria-labelledby="myModalLabel" aria-hidden="true">
               <div class="form-group">
                   <label for="room_count"><?=l('Number of',true).' '.l($this->default_room_plural);?></label>
                   <input type="number" class="form-control" name="room_count"
-                  id="room_count" placeholder="<?=l($this->default_room_singular).' '.l('Count',true);?>" value="1"/>
+                  id="room_count" placeholder="<?=$this->default_room_singular.' '.l('Count',true);?>" value="1"/>
               </div> 
           </form>
       </div>
