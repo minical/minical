@@ -550,7 +550,7 @@ class Migration_create_base extends CI_Migration {
 			),
 			'rate' => array(
 				'type' => 'DECIMAL',
-				'constraint' => 10,2,
+				'constraint' => "10,2",
 				'null' => TRUE,
 
 			),
@@ -665,7 +665,7 @@ class Migration_create_base extends CI_Migration {
 			),
 			'amount' => array(
 				'type' => 'DECIMAL',
-				'constraint' => 10,2,
+				'constraint' => "10,2",
 				'null' => TRUE,
 
 			),
@@ -1426,7 +1426,7 @@ class Migration_create_base extends CI_Migration {
 			),
 			'common_additional_adult_rate' => array(
 				'type' => 'DECIMAL',
-				'constraint' => 10,2,
+				'constraint' => "10,2",
 				'null' => TRUE,
 
 			),
@@ -1752,6 +1752,12 @@ class Migration_create_base extends CI_Migration {
 				'default' => '0',
 
 			),
+			'restrict_cvc_not_mandatory' => array(
+				'type' => 'TINYINT',
+				'constraint' => 1,
+				'null' => FALSE,
+				'default' => '0',
+			),
 		));
 		$this->dbforge->add_key("company_id",true);
 		$this->dbforge->create_table("company", TRUE);
@@ -1853,7 +1859,7 @@ class Migration_create_base extends CI_Migration {
 			),
 			'amount' => array(
 				'type' => 'DECIMAL',
-				'constraint' => 10,2,
+				'constraint' => "10,2",
 				'null' => TRUE,
 				'default' => '0.00',
 
@@ -1998,13 +2004,13 @@ class Migration_create_base extends CI_Migration {
 			),
 			'renewal_cost' => array(
 				'type' => 'DECIMAL',
-				'constraint' => 10,2,
+				'constraint' => "10,2",
 				'null' => TRUE,
 
 			),
 			'balance' => array(
 				'type' => 'DECIMAL',
-				'constraint' => 10,2,
+				'constraint' => "10,2",
 				'null' => TRUE,
 				'default' => '0.00',
 
@@ -3448,7 +3454,7 @@ class Migration_create_base extends CI_Migration {
 			),
 			'amount' => array(
 				'type' => 'DECIMAL',
-				'constraint' => 10,2,
+				'constraint' => "10,2",
 				'null' => TRUE,
 
 			),
@@ -3658,7 +3664,7 @@ class Migration_create_base extends CI_Migration {
 			),
 			'new_amount' => array(
 				'type' => 'DECIMAL',
-				'constraint' => 10,2,
+				'constraint' => "10,2",
 				'null' => TRUE,
 
 			),
@@ -4367,7 +4373,7 @@ class Migration_create_base extends CI_Migration {
 			),
 			'amount' => array(
 				'type' => 'DECIMAL',
-				'constraint' => 10,2,
+				'constraint' => "10,2",
 				'null' => TRUE,
 
 			),
@@ -4704,43 +4710,43 @@ class Migration_create_base extends CI_Migration {
 			),
 			'base_rate' => array(
 				'type' => 'DECIMAL',
-				'constraint' => 10,2,
+				'constraint' => "10,2",
 				'null' => TRUE,
 
 			),
 			'adult_1_rate' => array(
 				'type' => 'DECIMAL',
-				'constraint' => 10,2,
+				'constraint' => "10,2",
 				'null' => TRUE,
 
 			),
 			'adult_2_rate' => array(
 				'type' => 'DECIMAL',
-				'constraint' => 10,2,
+				'constraint' => "10,2",
 				'null' => TRUE,
 
 			),
 			'adult_3_rate' => array(
 				'type' => 'DECIMAL',
-				'constraint' => 10,2,
+				'constraint' => "10,2",
 				'null' => TRUE,
 
 			),
 			'adult_4_rate' => array(
 				'type' => 'DECIMAL',
-				'constraint' => 10,2,
+				'constraint' => "10,2",
 				'null' => TRUE,
 
 			),
 			'additional_adult_rate' => array(
 				'type' => 'DECIMAL',
-				'constraint' => 10,2,
+				'constraint' => "10,2",
 				'null' => TRUE,
 
 			),
 			'additional_child_rate' => array(
 				'type' => 'DECIMAL',
-				'constraint' => 10,2,
+				'constraint' => "10,2",
 				'null' => TRUE,
 
 			),
@@ -4954,25 +4960,25 @@ class Migration_create_base extends CI_Migration {
 			),
 			'supplied_adult_1_rate' => array(
 				'type' => 'DECIMAL',
-				'constraint' => 10,2,
+				'constraint' => "10,2",
 				'null' => TRUE,
 
 			),
 			'supplied_adult_2_rate' => array(
 				'type' => 'DECIMAL',
-				'constraint' => 10,2,
+				'constraint' => "10,2",
 				'null' => TRUE,
 
 			),
 			'supplied_adult_3_rate' => array(
 				'type' => 'DECIMAL',
-				'constraint' => 10,2,
+				'constraint' => "10,2",
 				'null' => TRUE,
 
 			),
 			'supplied_adult_4_rate' => array(
 				'type' => 'DECIMAL',
-				'constraint' => 10,2,
+				'constraint' => "10,2",
 				'null' => TRUE,
 
 			),
@@ -5925,6 +5931,13 @@ class Migration_create_base extends CI_Migration {
 				'type' => 'VARCHAR',
 				'constraint' => 255,
 				'null' => TRUE
+
+			),
+			'default_property_status' => array(
+				'type' => 'VARCHAR',
+				'constraint' => 25,
+				'null' => FALSE,
+				'default' => 'active',
 
 			),
 		));

@@ -124,6 +124,7 @@ class MY_Controller extends CI_Controller {
 
         $this->is_channex_pci_enabled = false;
         $this->is_pci_booking_enabled = false;
+        $this->is_intercom_enabled = false;
 
         if($get_active_modules){
             foreach ($get_active_modules as $key => $value) {
@@ -133,6 +134,9 @@ class MY_Controller extends CI_Controller {
                 }
                 if($value['extension_name'] == 'pcibooking-integration'){
                     $this->is_pci_booking_enabled = true;
+                }
+                if($value['extension_name'] == 'intercom'){
+                    $this->is_intercom_enabled = true;
                 }
 
                 $config = array();
