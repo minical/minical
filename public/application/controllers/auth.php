@@ -1056,12 +1056,12 @@ class Auth extends MY_Controller
                 'company_id' => $company_id,
                 'is_active' => 1
             );
-            $new_extension = array(
+            $new_extensions[] = array(
                 'extension_name' => 'subscription',
                 'company_id' => $company_id,
                 'is_active' => 1
             );
-            $new_extension = array(
+            $new_extensions[] = array(
                 'extension_name' => 'vendor_monthly_report',
                 'company_id' => $company_id,
                 'is_active' => 1
@@ -1079,22 +1079,33 @@ class Auth extends MY_Controller
                 }
             }
         } else {
-            $new_extension = array(
+             $new_extensions[] = array(
                 'extension_name' => 'reseller_package',
                 'company_id' => $company_id,
                 'is_active' => 1
             );
-            $new_extension = array(
+            $new_extensions[] = array(
                 'extension_name' => 'subscription',
                 'company_id' => $company_id,
                 'is_active' => 1
             );
-            $new_extension = array(
+            $new_extensions[] = array(
                 'extension_name' => 'vendor_monthly_report',
                 'company_id' => $company_id,
                 'is_active' => 1
             );
-            $this->db->insert("extensions_x_company", $new_extension);
+
+            for ($i = 0, $total = count($new_extensions); $i < $total; $i = $i + 50)
+            {
+                $ext_batch = array_slice($new_extensions, $i, 50);
+
+                $this->db->insert_batch("extensions_x_company", $ext_batch);
+
+                if ($this->db->_error_message())
+                {
+                    show_error($this->db->_error_message());
+                }
+            }
         }
     }
 
