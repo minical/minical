@@ -669,7 +669,7 @@
                                <?= $company_data['restrict_cvc_not_mandatory'] == 1 ? 'checked=checked' : ''; ?>/>
                         <span></span>
                     </label>
-                    <label for="restrict_cvc_not_mandatory"><b><?= l("Restrict CVC not mandatory with the credit card details", true); ?></b></label>
+                    <label for="restrict_cvc_not_mandatory"><b><?= l("CVC not mandatory with the credit card details", true); ?></b></label>
                 </div>
             </div>
 
