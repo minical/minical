@@ -883,7 +883,9 @@ class Invoice extends MY_Controller {
                 $invoice_log_data['log'] = 'Charge Updated';
                 $this->Invoice_log_model->insert_log($invoice_log_data); 
 
-                $charge_changes[$key]['selling_date'] = get_base_formatted_date($charge['selling_date']);
+                if(isset($charge['selling_date']) && $charge['selling_date']){
+                    $charge_changes[$key]['selling_date'] = get_base_formatted_date($charge['selling_date']);
+                }
 
                 $charge_id = $charge['charge_id'];
             }
