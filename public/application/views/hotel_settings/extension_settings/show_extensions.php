@@ -69,10 +69,22 @@ if($is_favourite) { ?>
                                 } ?>" style="width: 30px;height: 30px">
                                     </div>
                                     <div class="extension-content">
-                                        <b style="font-size: 12px;"><?php
-                                            $name = $extension['extension_name'];
-                                            $extension_name = str_replace("_"," ",$name);
-                                            echo ucwords(l($extension_name, true)); ?>
+                                        <b style="font-size: 12px;">
+											<?php if(isset($extension['marketplace_product_link']) && $extension['marketplace_product_link'] && $this->is_partner_owner == 1){ ?>
+												<a href="<?php echo (isset($extension['marketplace_product_link']) && $extension['marketplace_product_link'] ? $extension['marketplace_product_link']: "")?>" style="font-size: 14px">
+												<?php
+												$name = $extension['extension_name'];
+												$extension_name = str_replace("_"," ",$name);
+												echo ucwords(l($extension_name, true)); ?>
+												</a>
+											<?php }else{ ?>
+												<a href="javascript:">
+												<?php
+												$name = $extension['extension_name'];
+												$extension_name = str_replace("_"," ",$name);
+												echo ucwords(l($extension_name, true)); ?>
+												</a>
+											<?php } ?>
 
                                             <span>
                                                 <?php if(isset($extension['is_favourite']) && $extension['is_favourite'] == 1){?>
@@ -96,9 +108,6 @@ if($is_favourite) { ?>
 
 
                                             <p class="extension-discription" ><?php echo  strlen($extension['description']) > 200 ? substr($extension['description'],0,200)."..." : $extension['description']; ?>
-                                                <?php if(isset($extension['marketplace_product_link']) && $extension['marketplace_product_link'] && $this->is_partner_owner == 1){ ?>
-                                                    <a href="<?php echo (isset($extension['marketplace_product_link']) && $extension['marketplace_product_link'] ? $extension['marketplace_product_link']: "")?>" style="font-size: 14px"><?php echo l('more');?></a>
-                                                <?php } ?>
                                             </p>
                                         </div>
                                     </div>
@@ -249,10 +258,22 @@ if($is_favourite) { ?>
                                 } ?>" style="width: 30px;height: 30px">
                                     </div>
                                     <div class="extension-content">
-                                        <b style="font-size: 12px;"><?php
-                                            $name = $extension['extension_name'];
-                                            $extension_name = str_replace("_"," ",$name);
-                                            echo ucwords(l($extension_name, true)); ?>
+                                        <b style="font-size: 12px;">
+											<?php if(isset($extension['marketplace_product_link']) && $extension['marketplace_product_link'] && $this->is_partner_owner == 1){ ?>
+												<a href="<?php echo (isset($extension['marketplace_product_link']) && $extension['marketplace_product_link'] ? $extension['marketplace_product_link']: "")?>" style="font-size: 14px">
+												<?php
+												$name = $extension['extension_name'];
+												$extension_name = str_replace("_"," ",$name);
+												echo ucwords(l($extension_name, true)); ?>
+												</a>
+											<?php }else{ ?>
+												<a href="javascript:">
+												<?php
+												$name = $extension['extension_name'];
+												$extension_name = str_replace("_"," ",$name);
+												echo ucwords(l($extension_name, true)); ?>
+												</a>
+											<?php } ?>
 
                                             <span>
                                                 <?php if(isset($extension['is_favourite']) && $extension['is_favourite'] == 1){?>
@@ -276,9 +297,6 @@ if($is_favourite) { ?>
                                             <p class="extension-discription" style= "margin-bottom: 0px"><?php echo 
 
                                                 strlen($extension['description']) > 200 ? substr($extension['description'],0,200)."..." : $extension['description']; ?>
-                                                <?php if(isset($extension['marketplace_product_link']) && $extension['marketplace_product_link'] && $this->is_partner_owner == 1){ ?>
-                                                    <a href="<?php echo (isset($extension['marketplace_product_link']) && $extension['marketplace_product_link'] ? $extension['marketplace_product_link']: "")?>" style="font-size: 14px"><?php echo l('more');?></a>
-                                                <?php }?>
                                             </p>
                                         </div>
 

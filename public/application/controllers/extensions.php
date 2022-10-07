@@ -135,6 +135,7 @@ class Extensions extends MY_Controller
                         $extension['is_vendor_module'] = isset($module['is_vendor_module']) && $module['is_vendor_module'] ? true : false;
                         $extension['is_admin_module'] = isset($module['is_admin_module']) && $module['is_admin_module'] ? true : false;
                         $extension['supported_in_minimal'] = isset($module['supported_in_minimal']) && $module['supported_in_minimal'] ? true : false;
+                        $extension['categories']= isset($module['categories']) ? $module['categories']:"";
 
                         $final_modules[] = $extension;
                         $flag = false;
@@ -203,6 +204,23 @@ class Extensions extends MY_Controller
         }
         echo json_encode(array('success' => true));
     }
+
+    function get_active_extensions()
+    {
+        $extensionFirstCategory = $this->input->post('extensionFirstCategory');
+
+        $get_active_extensions = $this->Extension_model->get_active_extensions($this->company_id);
+        $active_extensions_name = array();
+        $cnt = count($get_active_extensions);
+        for ($i=0; $i < $cnt; $i++) {
+            if ($get_active_extensions[$i]['extension_name'] != '0') {
+                array_push($active_extensions_name,$get_active_extensions[$i]['extension_name']);
+            }
+        }
+
+        echo json_encode(array('success' => true,'data' => $active_extensions_name));
+
+    }
     
     function get_category_extension(){
 
@@ -229,6 +247,16 @@ class Extensions extends MY_Controller
         }
         $active_extension_name;
 
+        $fv_status = 1;
+        $fv_extension = $this->Extension_model->get_favourite_extension($fv_status,$this->company_id);
+
+        $fv_extension_name = array();
+        if($fv_extension && count($fv_extension) > 0) {
+            foreach ($fv_extension as $key => $value) {
+                $fv_extension_name[] = $value['extension_name'];
+            }
+        }
+
         $final_modules = array();
         foreach ($all_active_modules as $key => $module) {
             if(isset($module['categories']) && $module['categories'] ){
@@ -238,12 +266,14 @@ class Extensions extends MY_Controller
                     $extension['extension_folder_name'] = $module['extension_folder_name'];
                     $extension['extension_name'] = $module['name'];
                     $extension['is_active'] = in_array($module['extension_folder_name'],$active_extension_name) ? 1: 0;
+                    $extension['is_favourite'] = in_array($module['extension_folder_name'],$fv_extension_name) ? 1: 0;
                     $extension['image_name'] = isset($module['image_name'])? $module['image_name']:"";
                     $extension['setting_link']= isset($module['setting_link'])?$module['setting_link']:"";
                     $extension['view_link']= isset($module['view_link'])?$module['view_link']:"";
                     $extension['marketplace_product_link']= isset($module['marketplace_product_link'])?$module['marketplace_product_link']:"";
                     $extension['is_vendor_module'] = isset($module['is_vendor_module']) && $module['is_vendor_module'] ?true : false;
                     $extension['is_admin_module'] = isset($module['is_admin_module']) && $module['is_admin_module'] ?true : false;
+                    $extension['categories']= isset($module['categories']) ? $module['categories']:"";
 
                     $final_modules[] = $extension;
                 }
@@ -339,6 +369,7 @@ class Extensions extends MY_Controller
                         $extension['marketplace_product_link']= isset($module['marketplace_product_link'])?$module['marketplace_product_link']:"";
                         $extension['is_vendor_module'] = isset($module['is_vendor_module']) && $module['is_vendor_module'] ?true : false;
                         $extension['is_admin_module'] = isset($module['is_admin_module']) && $module['is_admin_module'] ?true : false;
+                        $extension['categories']= isset($module['categories']) ? $module['categories']:"";
 
                         $final_modules[] = $extension;
                     }
@@ -432,6 +463,16 @@ class Extensions extends MY_Controller
             }
         }
 
+        $fv_status = 1;
+        $fv_extension = $this->Extension_model->get_favourite_extension($fv_status,$this->company_id);
+
+        $fv_extension_name = array();
+        if($fv_extension && count($fv_extension) > 0) {
+            foreach ($fv_extension as $key => $value) {
+                $fv_extension_name[] = $value['extension_name'];
+            }
+        }
+
         $new_array = $modules_name;
 
         foreach($all_active_modules as $key => $module){
@@ -447,6 +488,8 @@ class Extensions extends MY_Controller
                 $extension['is_vendor_module'] = isset($module['is_vendor_module']) && $module['is_vendor_module'] ?true : false;
                 $extension['is_admin_module'] = isset($module['is_admin_module']) && $module['is_admin_module'] ?true : false;
                 $extension['is_active'] = $extension_status == "active" ? 1 : 0;
+                $extension['is_favourite'] = in_array($module['extension_folder_name'],$fv_extension_name) ? 1: 0;
+                $extension['categories']= isset($module['categories']) ? $module['categories']:"";
 
                 $final_modules[] = $extension;
             }
@@ -603,6 +646,7 @@ class Extensions extends MY_Controller
                         $extension['marketplace_product_link']= isset($module['marketplace_product_link'])?$module['marketplace_product_link']:"";
                         $extension['is_vendor_module'] = isset($module['is_vendor_module']) && $module['is_vendor_module'] ?true : false;
                         $extension['is_admin_module'] = isset($module['is_admin_module']) && $module['is_admin_module'] ?true : false;
+                        $extension['categories']= isset($module['categories']) ? $module['categories']:"";
 
                         $final_modules[] = $extension;
                         $flag = false;

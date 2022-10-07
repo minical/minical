@@ -60,9 +60,19 @@
                                     </div>
                                     <div class="extension-content">
                                         <b style="font-size: 12px;">
-                                            <?php $name = $extension['extension_name'];
-                                            $extension_name = str_replace("_"," ",$name);
-                                            echo ucwords(l($extension_name, true)); ?>
+                                            <?php if(isset($extension['marketplace_product_link']) && $extension['marketplace_product_link'] && $this->is_partner_owner == 1){ ?>
+                                                <a href="<?php echo (isset($extension['marketplace_product_link']) && $extension['marketplace_product_link'] ? $extension['marketplace_product_link']: "")?>" style="font-size: 14px">
+                                                    <?php $name = $extension['extension_name'];
+                                                    $extension_name = str_replace("_"," ",$name);
+                                                    echo ucwords(l($extension_name, true)); ?>
+                                                </a>
+                                            <?php }else{ ?>
+                                                <a href="javascript:">
+                                                    <?php $name = $extension['extension_name'];
+                                                    $extension_name = str_replace("_"," ",$name);
+                                                    echo ucwords(l($extension_name, true)); ?>
+                                                </a>
+                                            <?php } ?>
                                         </b>
                                         <div>
                                             <?php if(isset($extension['is_admin_module']) && $extension['is_admin_module']){ ?>
@@ -70,9 +80,6 @@
                                             <?php } ?>
                                            
                                             <p class="extension-discription" ><?php echo strlen($extension['description']) > 200 ? substr($extension['description'],0,200)."..." : $extension['description']; ?>
-                                                <?php if(isset($extension['marketplace_product_link']) && $extension['marketplace_product_link'] && $this->is_partner_owner == 1){ ?>
-                                                    <a href="<?php echo (isset($extension['marketplace_product_link']) && $extension['marketplace_product_link'] ? $extension['marketplace_product_link']: "")?>" style="font-size: 14px"><?php echo l('more');?></a>
-                                                <?php } ?>
                                             </p>
                                         </div>
                                     </div>
@@ -144,9 +151,17 @@
                                         </div>
                                         <div class="extension-content">
                                             <b style="font-size: 12px;">
-                                                <?php $name = $extension['extension_name'];
-                                                $extension_name = str_replace("_"," ",$name);
-                                                echo ucwords(l($extension_name, true)); ?>
+                                                <?php if(isset($extension['marketplace_product_link']) && $extension['marketplace_product_link'] && $this->is_partner_owner == 1){ ?>
+                                                    <a href="<?php echo (isset($extension['marketplace_product_link']) && $extension['marketplace_product_link'] ? $extension['marketplace_product_link']: "")?>" style="font-size: 14px">
+                                                        <?php $name = $extension['extension_name'];
+                                                        $extension_name = str_replace("_"," ",$name);
+                                                        echo ucwords(l($extension_name, true)); ?>
+                                                    </a>
+                                                <?php }else{ ?>
+                                                    <a href="javascript:"><?php $name = $extension['extension_name'];
+                                                        $extension_name = str_replace("_"," ",$name);
+                                                        echo ucwords(l($extension_name, true)); ?></a>
+                                                <?php } ?>
                                             </b>
                                             <div>
                                                 <?php if(isset($extension['is_admin_module']) && $extension['is_admin_module']){ ?>
@@ -154,9 +169,6 @@
                                                 <?php } ?>
                                                
                                                 <p class="extension-discription" ><?php echo  strlen($extension['description']) > 200 ? substr($extension['description'],0,200)."..." : $extension['description']; ?>
-                                                    <?php if(isset($extension['marketplace_product_link']) && $extension['marketplace_product_link'] && $this->is_partner_owner == 1){ ?>
-                                                        <a href="<?php echo (isset($extension['marketplace_product_link']) && $extension['marketplace_product_link'] ? $extension['marketplace_product_link']: "")?>" style="font-size: 14px"><?php echo l('more');?></a>
-                                                    <?php } ?>
                                                 </p>
                                             </div>
                                         </div>
