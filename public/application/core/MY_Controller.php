@@ -356,7 +356,16 @@ class MY_Controller extends CI_Controller {
                 }
             }
 
-            $this->is_self_hosted_domain = ($host_name == $whitelabelinfo['domain']);
+            if(
+                isset($whitelabelinfo['domain']) && 
+                $whitelabelinfo['domain'] &&
+                $host_name == $whitelabelinfo['domain']
+            ) {
+                $this->is_self_hosted_domain = 1;
+            }
+            else {
+                $this->is_self_hosted_domain = 0;
+            }
 
             if(
                 $this->company_feature_limit == 1 && 
