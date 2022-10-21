@@ -1059,17 +1059,12 @@ var customerId;
                 }
             });
                     $('#display-cc-details').modal('show');
-
-            // var iframe = document.createElement('iframe');
-            // iframe.src = getBaseURL() + "customer/get_credit_card_number?customer_pci_token=" + customer_pci_token;
-            // iframe.height = '300px';
-            // iframe.width = '100%';
-            // iframe.style = 'border-style: none';
-
-            // console.log('iframe', iframe);
-
             
         } else {
+
+            var imageUrl = getBaseURL() + 'images/loading.gif'
+            $('<img class="loader-img" src="'+imageUrl+'" style="width: 7%;margin: -25px -25px;float: right;"/>').insertAfter(this);
+
             var iframe = document.createElement('iframe');
             iframe.src = getBaseURL() + "customer/get_credit_card_number?customer_pci_token=" + customer_pci_token;
             iframe.height = '300px';
@@ -1079,7 +1074,23 @@ var customerId;
             console.log('iframe', iframe);
 
             $('#display-cc-details').find('.modal-body').html(iframe);
-            $('#display-cc-details').modal('show');
+
+            setTimeout(function(){
+
+                console.log($('#display-cc-details').find('.modal-body').find('iframe').contents().find("body").html().trim());
+                var responseBody = $('#display-cc-details').find('.modal-body').find('iframe').contents().find("body").html().trim();
+                console.log('responseBody',responseBody);
+                if (responseBody == undefined || responseBody == 'card not found\n' || responseBody == 'card not found' || responseBody == null) {
+                    console.log('in');
+                    $("#display-cc-details").find('iframe').contents().find("body").html("Card details are no longer viewable");
+                    $('#display-cc-details').modal('show');
+                    $('.loader-img').hide();
+                } else {
+                    $('#display-cc-details').modal('show');
+                    $('.loader-img').hide();
+                }
+
+            },3000);
         }
     });
 
