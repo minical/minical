@@ -1035,7 +1035,6 @@ var customerId;
     }
 
     $('body').on('click', '.show_cc', function() {
-
         var customer_pci_token = $(this).data('customer_pci_token');
         var token_source = $(this).data('token_source');
 
