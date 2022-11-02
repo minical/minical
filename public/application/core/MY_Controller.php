@@ -125,6 +125,8 @@ class MY_Controller extends CI_Controller {
         $this->is_channex_pci_enabled = false;
         $this->is_pci_booking_enabled = false;
         $this->is_intercom_enabled = false;
+        $this->booking_confirmation_email = false;
+        $this->invoice_email = false;
 
         if($get_active_modules){
             foreach ($get_active_modules as $key => $value) {
@@ -137,6 +139,12 @@ class MY_Controller extends CI_Controller {
                 }
                 if($value['extension_name'] == 'intercom'){
                     $this->is_intercom_enabled = true;
+                }
+                if($value['extension_name'] == 'booking_confirmation_email'){
+                    $this->booking_confirmation_email = true;
+                }
+                if($value['extension_name'] == 'invoice_email'){
+                    $this->invoice_email = true;
                 }
 
                 $config = array();

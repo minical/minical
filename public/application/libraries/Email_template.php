@@ -79,7 +79,11 @@ class Email_template {
             $invoice_link = $base_url . "invoice/show_invoice_read_only/".$invoice_hash;
             $invoice_link = $folio_id ? $invoice_link.'/'.$folio_id : $invoice_link;
             $review_link = base_url() . "review/?hash=".$invoice_hash;
-            $invoice_email_header = $company['invoice_email_header'];
+
+            $invoice_email_header = '';
+            if($this->ci->invoice_email) {
+                $invoice_email_header = $company['invoice_email_header'];
+            }
 
             // generate html email
             // for a good guideline, read: http://kb.mailchimp.com/article/how-to-code-html-emails
@@ -155,7 +159,10 @@ class Email_template {
             $invoice_hash = $booking['invoice_hash'];
             $invoice_link = base_url() . "invoice/show_master_invoice_read_only/".$invoice_hash;
             //$review_link = base_url() . "review/?hash=".$invoice_hash;
-            $invoice_email_header = $company['invoice_email_header'];
+            $invoice_email_header = '';
+            if($this->ci->invoice_email) {
+                $invoice_email_header = $company['invoice_email_header'];
+            }
 
             // generate html email
             // for a good guideline, read: http://kb.mailchimp.com/article/how-to-code-html-emails
@@ -521,7 +528,6 @@ class Email_template {
             'reservation_policies' => $company['reservation_policies'],
             'date_format' => $company['date_format'],
             'company_room' => $company['default_room_plural'],
-            'booking_confirmation_email_header' => $company['booking_confirmation_email_header'],
             'customer_modify_booking' => $company['customer_modify_booking'],
             'booking_modify_link' => $booking_modify_link,
             'room_instructions' => $room_instructions,
@@ -532,10 +538,14 @@ class Email_template {
             'booking_type' => $booking_type,
             'amount_due' => $booking_data['balance'],
             'rate_plan_detail' => $rate_plan,
-            'confirmation_email_header' => $company['booking_confirmation_email_header'],
             'booking_source' => $booking_source,
             'booking_notes' => $booking_notes
         );
+
+        $email_data['confirmation_email_header'] = '';
+        if($this->ci->booking_confirmation_email){
+            $email_data['confirmation_email_header'] = $company['booking_confirmation_email_header'];
+        }
 
         if ($email_data['customer_email'] == null || strlen($email_data['customer_email']) <= 1) {
             return array(
@@ -830,7 +840,6 @@ class Email_template {
             'company_website' => $company['website'],
             'company_fax' => $company['fax'],
             'reservation_policies' => $company['reservation_policies'],
-            'booking_confirmation_email_header' => $company['booking_confirmation_email_header'],
             'reservation_info' => $booked_rooms,
             'group_id' => $group_id,
             'company_logo_url' => $logo_url,
@@ -839,6 +848,11 @@ class Email_template {
             'room_instructions' => $room_instructions,
             'booking_modify_link' => $booking_modify_link
         );
+
+        $email_data['booking_confirmation_email_header'] = '';
+        if($this->ci->booking_confirmation_email){
+            $email_data['booking_confirmation_email_header'] = $company['booking_confirmation_email_header'];
+        }
 
         if ($email_data['customer_email'] == null || strlen($email_data['customer_email']) <= 1) {
             return array(
@@ -1003,10 +1017,14 @@ class Email_template {
             'company_website' => $company['website'],
             'company_fax' => $company['fax'],
             'reservation_policies' => $company['reservation_policies'],
-            'booking_confirmation_email_header' => $company['booking_confirmation_email_header'],
             'reservation_info' => $booked_rooms,
             'group_id' => $group_id
         );
+
+        $email_data['booking_confirmation_email_header'] = '';
+        if($this->ci->booking_confirmation_email){
+            $email_data['booking_confirmation_email_header'] = $company['booking_confirmation_email_header'];
+        }
 
         if ($email_data['customer_email'] == null || strlen($email_data['customer_email']) <= 1) {
             return array(
@@ -1278,7 +1296,6 @@ class Email_template {
             'reservation_policies' => $company['reservation_policies'],
             'date_format' => $company['date_format'],
             'company_room' => $company['default_room_plural'],
-            'booking_confirmation_email_header' => $company['booking_confirmation_email_header'],
             'customer_modify_booking' => $company['customer_modify_booking'],
             'booking_modify_link' => $booking_modify_link,
             'room_instructions' => $room_instructions,
@@ -1289,8 +1306,12 @@ class Email_template {
             'booking_type' => $booking_type,
             'amount_due' => $booking_data['balance'],
             'rate_plan_detail' => $rate_plan,
-            'confirmation_email_header' => $company['booking_confirmation_email_header'],
         );
+
+        $email_data['confirmation_email_header'] = '';
+        if($this->ci->booking_confirmation_email){
+            $email_data['confirmation_email_header'] = $company['booking_confirmation_email_header'];
+        }
 
         if ($email_data['customer_email'] == null || strlen($email_data['customer_email']) <= 1) {
             echo "ERROR: Customer Making Reservation does not have email entered";
