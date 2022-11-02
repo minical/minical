@@ -128,7 +128,7 @@ innGrid.renderReport = function(dateStart, dateEnd, groupBy, customerTypeId) {
 					).append(
 						$("<td>", {
 							"class": "text-right ADR",
-							text: isNaN(roomChargeTotal/value.booking_count) ? '0.00' : (roomChargeTotal/value.booking_count).toFixed(2)
+							text: isNaN(roomChargeTotal/value.booking_count) || roomChargeTotal/value.booking_count == 'Infinity' ? '0.00' : (roomChargeTotal/value.booking_count).toFixed(2)
 							//value.ADR.toFixed(2)
 						})
 					).append(
