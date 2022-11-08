@@ -1206,13 +1206,14 @@ class Customer extends MY_Controller {
                     $card_details['cc_number_encrypted'] = $card_details['cc_number'];
                     $card_details['cc_number'] = 'XXXX XXXX XXXX '.substr(base64_decode($card_details['cc_number']), -4);
                 }
+                $token = isset(json_decode($card_details['customer_meta_data'], true)['token']) && json_decode($card_details['customer_meta_data'], true)['token'] ? json_decode($card_details['customer_meta_data'], true)['token'] : json_decode($card_details['customer_meta_data'], true)['pci_token'];
                 $customer['cc_number_encrypted'] = isset($card_details['cc_number_encrypted']) && $card_details['cc_number_encrypted'] ? $card_details['cc_number_encrypted'] : null;
                 $customer['cc_number'] = $card_details['cc_number'];
                 $customer['cc_expiry_month'] = $card_details['cc_expiry_month'];
                 $customer['cc_expiry_year'] = $card_details['cc_expiry_year'];
                 $customer['cc_tokenex_token'] = $card_details['cc_tokenex_token'];
                 $customer['cc_cvc_encrypted'] = $card_details['cc_cvc_encrypted'];
-                $customer['customer_pci_token'] = json_decode($card_details['customer_meta_data'], true)['token'] ?? null;
+                $customer['customer_pci_token'] = $token ?? null;
                 $customer['token_source'] = json_decode($card_details['customer_meta_data'], true)['source'] ?? null;
             }
 
@@ -1308,7 +1309,7 @@ class Customer extends MY_Controller {
             }
         } else if($cc_token){
             $card_details['cc_number'] = $cc_number;
-            $meta['token'] = $cc_token;
+            $meta['pci_token'] = $cc_token;
             $meta['source'] = 'pci_booking';
             $card_details['customer_meta_data'] = json_encode($meta);
         }
