@@ -722,7 +722,7 @@ var customerId;
                                         var cardData = $("#myIframe").contents().find("body").html();
                                         console.log(cardData);
                                         update_create_client(cardData);
-                                    },1500);
+                                    },2500);
                                 } else {
                                     var cardData = [];
                                     update_create_client(cardData);
