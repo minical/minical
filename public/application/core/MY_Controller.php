@@ -125,6 +125,7 @@ class MY_Controller extends CI_Controller {
         $this->is_channex_pci_enabled = false;
         $this->is_pci_booking_enabled = false;
         $this->is_intercom_enabled = false;
+        $this->is_kovena_enabled = false;
         $this->booking_confirmation_email = false;
         $this->invoice_email = false;
 
@@ -139,6 +140,9 @@ class MY_Controller extends CI_Controller {
                 }
                 if($value['extension_name'] == 'intercom'){
                     $this->is_intercom_enabled = true;
+                }
+                if($value['extension_name'] == 'kovena_integration'){
+                    $this->is_kovena_enabled = true;
                 }
                 if($value['extension_name'] == 'booking_confirmation_email'){
                     $this->booking_confirmation_email = true;

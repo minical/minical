@@ -100,6 +100,7 @@
     innGrid.featureSettings.defaultRoomSingular = '<?=(isset($this->default_room_singular) ? $this->default_room_singular : '')?>';
     innGrid.featureSettings.defaultRoomPlural = '<?=(isset($this->default_room_plural) ? $this->default_room_plural : '')?>';
     innGrid.featureSettings.defaultRoomType = '<?=(isset($this->default_room_type) ? $this->default_room_type : '')?>';
+    innGrid.isKovenaEnabled = parseInt('<?=(($this->is_kovena_enabled) ? 1 : 0)?>');
 
     // subscription plans
     var STARTER = "<?php echo STARTER; ?>";

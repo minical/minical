@@ -307,9 +307,9 @@ var customerId;
 
             if (isTokenizationEnabled == true) {
                 console.log('customer-data',customer);
-                console.log('channexpci',innGrid.isChannePCIEnabled);
+                console.log('Kovena',innGrid.isKovenaEnabled);
                 var sensitiveCardNumber =
-                    ((innGrid.isChannePCIEnabled || innGrid.isPCIBookingEnabled) && customer.customer_pci_token ? '<a style="position: absolute; right: 26px; top: 7px; z-index: 9999;" title = "Show Card Number" class="show_cc" data-cc_number_encrypted="' + customer.cc_number_encrypted + '" data-cc_number="' + customer.cc_number + '" data-customer_pci_token="' + customer.customer_pci_token + '" data-token_source="' + customer.token_source + '" data-cc_detail="card_number" href="javascript:"><i class="fa fa-eye" ></i></a><input type="hidden" class="customer_id" data-cc_token="' + customer.cc_tokenex_token + '" data-cc_cvc="' + customer.cc_cvc_encrypted + '" value="' + customer.customer_id + '"/>' : '');
+                    (((innGrid.isChannePCIEnabled || innGrid.isPCIBookingEnabled) && customer.token_source != 'kovena') && customer.customer_pci_token ? '<a style="position: absolute; right: 26px; top: 7px; z-index: 9999;" title = "Show Card Number" class="show_cc" data-cc_number_encrypted="' + customer.cc_number_encrypted + '" data-cc_number="' + customer.cc_number + '" data-customer_pci_token="' + customer.customer_pci_token + '" data-token_source="' + customer.token_source + '" data-cc_detail="card_number" href="javascript:"><i class="fa fa-eye" ></i></a><input type="hidden" class="customer_id" data-cc_token="' + customer.cc_tokenex_token + '" data-cc_cvc="' + customer.cc_cvc_encrypted + '" value="' + customer.customer_id + '"/>' : '');
                 var sensitiveCardCVC = (customer.cc_cvc_encrypted ? '<a style="position: absolute; right: 26px; top: 7px; z-index: 9999;" title = "Show Card CVC" class="show_cc" data-cc_number_encrypted="' + customer.cc_number_encrypted + '" data-cc_number="' + customer.cc_number + '" data-cc_detail="card_cvc" href="javascript:"><i class="fa fa-eye" ></i></a>' : '');
 
                 $customer_form.append(
@@ -571,6 +571,8 @@ var customerId;
 
                             var customerData = that._fetchCustomerData();
 
+                            console.log('customerData',customerData);
+
                             var update_create_client = function(data) {
                                 data = _.isUndefined(data) ? null : data;
                                 var token = null,
@@ -692,14 +694,7 @@ var customerId;
                                         return;
                                     }
                                 });
-                            // if(isTokenizationEnabled == 1 && $('#credit_card_iframe')[0].src)
-                            // {
-                            //     $('#credit_card_iframe')[0].contentWindow.postMessage('validate', '*');
-                            // }
-                            // else
-                            // {
-                            // update_create_client();
-                            // }
+                            
 
                             if (typeof nexioGateway !== "undefined" && nexioGateway) {
                                 var myIframe = window.document.getElementById('myIframe');
@@ -712,7 +707,24 @@ var customerId;
                                     update_create_client();
                                 }
                                 
+                            } 
+                            else if (typeof kovenaGateway !== "undefined" && kovenaGateway && innGrid.isKovenaEnabled == 1) {
+                                console.log('widget',widget);
+                                widget.trigger('submit_form');
+                                widget.load();
+
+                                setTimeout(function(){
+                                    customerData.kovena_vault_token = $("input[name='payment_source_token']").val();             
+                                    console.log('Kovena vault token',customerData.kovena_vault_token);
+                                    if(!customerData.kovena_vault_token && customerData.kovena_vault_token ==''){
+                                        alert("one time token not found" );
+                                        return false;
                             } else {
+                                        update_create_client();
+                                    }
+                                },4500);
+                            }
+                            else {
 
                                 if($("#myIframe")[0] && $("#myIframe")[0].contentWindow){
 
