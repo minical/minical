@@ -128,7 +128,16 @@ class Extensions extends MY_Controller
                         $extension['description'] = $module['description'];
                         $extension['extension_folder_name'] = $module['extension_folder_name'];
                         $extension['extension_name'] = $module['name'];
-                        $extension['image_name'] = isset($module['image_name'])? $module['image_name']:"";
+
+                        if(isset($module['image_name']) && $module['image_name']) {
+                            $extension['image_name'] = $module['image_name']; 
+                        } elseif(isset($module['logo']) && $module['logo']) {
+                            $extension['logo'] = $module['logo']; 
+                        } else {
+                            $extension['image_name'] = "";
+                            $extension['logo'] = "";
+                        }
+
                         $extension['setting_link']= isset($module['setting_link'])?$module['setting_link']:"";
                         $extension['view_link']= isset($module['view_link'])?$module['view_link']:"";
                         $extension['marketplace_product_link']= isset($module['marketplace_product_link'])?$module['marketplace_product_link']:"";
@@ -238,7 +247,16 @@ class Extensions extends MY_Controller
                     $extension['extension_folder_name'] = $module['extension_folder_name'];
                     $extension['extension_name'] = $module['name'];
                     $extension['is_active'] = in_array($module['extension_folder_name'],$active_extension_name) ? 1: 0;
-                    $extension['image_name'] = isset($module['image_name'])? $module['image_name']:"";
+                    
+                    if(isset($module['image_name']) && $module['image_name']) {
+                        $extension['image_name'] = $module['image_name']; 
+                    } elseif(isset($module['logo']) && $module['logo']) {
+                        $extension['logo'] = $module['logo']; 
+                    } else {
+                        $extension['image_name'] = "";
+                        $extension['logo'] = "";
+                    }
+
                     $extension['setting_link']= isset($module['setting_link'])?$module['setting_link']:"";
                     $extension['view_link']= isset($module['view_link'])?$module['view_link']:"";
                     $extension['marketplace_product_link']= isset($module['marketplace_product_link'])?$module['marketplace_product_link']:"";
@@ -333,7 +351,16 @@ class Extensions extends MY_Controller
                         $extension['extension_name'] = $module['name'];
                         $extension['is_active'] = in_array($module['extension_folder_name'],$active_extension_name) ? 1: 0;
                         $extension['is_favourite'] = in_array($module['extension_folder_name'],$fv_extension_name) ? 1: 0;
-                        $extension['image_name'] = isset($module['image_name'])? $module['image_name']:"";
+                        
+                        if(isset($module['image_name']) && $module['image_name']) {
+                            $extension['image_name'] = $module['image_name']; 
+                        } elseif(isset($module['logo']) && $module['logo']) {
+                            $extension['logo'] = $module['logo']; 
+                        } else {
+                            $extension['image_name'] = "";
+                            $extension['logo'] = "";
+                        }
+
                         $extension['setting_link']= isset($module['setting_link'])?$module['setting_link']:"";
                         $extension['view_link']= isset($module['view_link'])?$module['view_link']:"";
                         $extension['marketplace_product_link']= isset($module['marketplace_product_link'])?$module['marketplace_product_link']:"";
@@ -440,7 +467,16 @@ class Extensions extends MY_Controller
                 $extension['description'] = $module['description'];
                 $extension['extension_folder_name'] = $module['extension_folder_name'];
                 $extension['extension_name'] = $module['name'];
-                $extension['image_name'] = isset($module['image_name'])? $module['image_name']:"";
+                
+                if(isset($module['image_name']) && $module['image_name']) {
+                    $extension['image_name'] = $module['image_name']; 
+                } elseif(isset($module['logo']) && $module['logo']) {
+                    $extension['logo'] = $module['logo']; 
+                } else {
+                    $extension['image_name'] = "";
+                    $extension['logo'] = "";
+                }
+                        
                 $extension['setting_link']= isset($module['setting_link'])?$module['setting_link']:"";
                 $extension['view_link']= isset($module['view_link'])?$module['view_link']:"";
                 $extension['marketplace_product_link']= isset($module['marketplace_product_link'])?$module['marketplace_product_link']:"";
@@ -597,7 +633,16 @@ class Extensions extends MY_Controller
                         $extension['description'] = $module['description'];
                         $extension['extension_folder_name'] = $module['extension_folder_name'];
                         $extension['extension_name'] = $module['name'];
-                        $extension['image_name'] = isset($module['image_name'])? $module['image_name']:"";
+
+                        if(isset($module['image_name']) && $module['image_name']) {
+                            $extension['image_name'] = $module['image_name']; 
+                        } elseif(isset($module['logo']) && $module['logo']) {
+                            $extension['logo'] = $module['logo']; 
+                        } else {
+                            $extension['image_name'] = "";
+                            $extension['logo'] = "";
+                        }
+
                         $extension['setting_link']= isset($module['setting_link'])?$module['setting_link']:"";
                         $extension['view_link']= isset($module['view_link'])?$module['view_link']:"";
                         $extension['marketplace_product_link']= isset($module['marketplace_product_link'])?$module['marketplace_product_link']:"";
