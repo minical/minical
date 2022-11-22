@@ -184,7 +184,7 @@ class Invoice extends MY_Controller {
             unset($data['customers'][$key]['cc_cvc_encrypted']);
             
             $card_data = isset($customer['customer_id']) ? $this->Card_model->get_active_card($customer['customer_id'], $this->company_id) : null;
-            $token = isset(json_decode($card_data['customer_meta_data'], true)['token']) && json_decode($card_data['customer_meta_data'], true)['token'] ? json_decode($card_data['customer_meta_data'], true)['token'] : json_decode($card_data['customer_meta_data'], true)['pci_token'];
+            $token = isset($card_data['customer_meta_data']) && $card_data['customer_meta_data'] ? (isset(json_decode($card_data['customer_meta_data'], true)['token']) && json_decode($card_data['customer_meta_data'], true)['token'] ? json_decode($card_data['customer_meta_data'], true)['token'] : json_decode($card_data['customer_meta_data'], true)['pci_token']) : null;
             
             if(isset($card_data) && $card_data){
                 $data['customers'][$key]['cc_number'] = $card_data['cc_number'];
