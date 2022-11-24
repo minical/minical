@@ -66,19 +66,48 @@
 		echo '<thead><tr>';			
 		$pi = 0; // keep track of column index. To prevent making date/shift_type_name into currency format
 		$total = array();
+
+		$p_total = 0;
+		$show = false;
+
+		foreach ($result as $r) {
+			foreach ($r as $pi => $p) {
+				if($pi == 'PayPal' && $pi != 'Selling Date') {
+					$p_total += $p;
+				}
+			}
+		}
+
+		if($p_total > 0) {
+			$show = true;
+		}
 		
 		// construct the table's headers
 		foreach ($result[0] as $column_key => $value)
 		{
-			echo '<th';
-			if ($column_key == 'Selling Date') // first column is for the date
-				echo " id='date_td'";
-			else {
-				echo ' class="text-right"';
-			}
-			echo '>';
-			echo l($column_key, true).'</th>';	
-			$total[$column_key] = 0;				
+			if($show) {
+				echo '<th';
+				if ($column_key == 'Selling Date') // first column is for the date
+					echo " id='date_td'";
+				else {
+					echo ' class="text-right"';
+				}
+				echo '>';
+				echo l($column_key, true).'</th>';	
+				$total[$column_key] = 0;
+			} else {
+				if($column_key != 'PayPal') {
+					echo '<th';
+					if ($column_key == 'Selling Date') // first column is for the date
+						echo " id='date_td'";
+					else {
+						echo ' class="text-right"';
+					}
+					echo '>';
+					echo l($column_key, true).'</th>';	
+					$total[$column_key] = 0;
+				}
+			}	
 		}
 		echo '<th class="text-right">'.l("Total").'</th></tr></thead>';
 		
@@ -92,6 +121,7 @@
 			$pi = 0; // keep track of column index. To prevent making date/shift_type_name into currency format
 			$row_total[$ri] = 0;
 			foreach ($r as $pi => $p)  {
+				if($show) {
 					if ($pi == 'Selling Date') { // pi represents column index
 						// generate link to daily sale report
 						echo "<td class='date_td'><a href='".base_url()."reports/ledger/show_daily_report/".$p."'>".$p."</a></td>";							
@@ -99,7 +129,19 @@
 						echo '<td class="text-right">'.number_format($p, 2, ".", ",").'</td>';
 						$total[$pi] += $p;
 						$row_total[$ri] += $p;
-					}	
+					}
+				} else {
+					if($pi != 'PayPal') {
+						if ($pi == 'Selling Date') { // pi represents column index
+							// generate link to daily sale report
+							echo "<td class='date_td'><a href='".base_url()."reports/ledger/show_daily_report/".$p."'>".$p."</a></td>";							
+						} else { // not include date in total
+							echo '<td class="text-right">'.number_format($p, 2, ".", ",").'</td>';
+							$total[$pi] += $p;
+							$row_total[$ri] += $p;
+						}
+					}
+				}
 			}
 			// column total
 			echo '<td class="text-right">'.number_format($row_total[$ri], 2, ".", ",").'</td>';
@@ -116,12 +158,21 @@
 		$column_total = 0;
 		foreach ($result[0] as $key => $value)
 		{
-			if ($key != 'Selling Date')
-			{
-				$column_total += $total[$key];
-				echo '<td class="text-right">';
-				echo number_format($total[$key], 2, ".", ",");	
-				echo '</td class="text-right">';
+			if($show) {
+				if ($key != 'Selling Date')
+				{
+					$column_total += $total[$key];
+					echo '<td class="text-right">';
+					echo number_format($total[$key], 2, ".", ",");	
+					echo '</td class="text-right">';
+				}
+			} else {
+				if($key != 'PayPal') {
+					$column_total += $total[$key];
+					echo '<td class="text-right">';
+					echo number_format($total[$key], 2, ".", ",");	
+					echo '</td class="text-right">';
+				}
 			}
 		}
 		echo '<td class="text-right">'.number_format($column_total, 2, ".", ",").'</td>';
