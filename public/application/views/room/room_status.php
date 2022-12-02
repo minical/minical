@@ -98,11 +98,11 @@
 				<th class="text-left"><?php echo l($this->default_room_singular).' '.l('Notes',true) ; ?></th>
 				<th class="text-left"><?php echo l('Check-In Instructions'); ?></th>
 
-				<?php if ($this->company_subscription_level == ELITE) { ?>
-					<th class="text-left" data-content="Score must be betweeen 0 to 10, a float number. 10 as the highest" rel="popover" data-placement="top" data-container="body" data-trigger="hover"><?php echo l('Score'); ?>
+				<?php if ($this->review_management_settings) { ?>
+				<th class="text-left" data-content="Score must be betweeen 0 to 10, a float number. 10 as the highest" rel="popover" data-placement="top" data-container="body" data-trigger="hover"><?php echo l('Score'); ?>
 					&nbsp;<i class="fa fa-question-circle" aria-hidden="true"></i>
 				</th>
-				<!-- <th class="text-center"><?php echo l('Rating'); ?></th> -->
+				<th class="text-center"><?php echo l('Rating'); ?></th>
 			<?php } ?>
 			<th style="width: 100px"></th>
 		</tr>			
@@ -132,18 +132,18 @@
 				<td style="width: 16%;">
 					<?php echo str_replace("\n", "<br/>", $r->instructions); ?>
 				</td>
-				<?php if ($this->company_subscription_level == ELITE) { ?>
+				<?php if ($this->review_management_settings) { ?>
 					<td class="text-left">
 						<input class="form-control room_score" type="number" min="0" max="10" name="room_score" value="<?php echo $r->score; ?>" style="width: 80px;">
 					</td>
-						<!-- <td class="text-center">
-							<input class="star-rating" name="star-rating" type="hidden" value="<?php echo isset($r->rating) && $r->rating ? $r->rating : 0; ?>" />
-							<a href="javascript:" class="show_rating" data-room_id="<?php echo $r->room_id; ?>" data-room_rating="<?php echo isset($r->rating) && $r->rating ? $r->rating : 0; ?>" >
-								<div class="rateit stars" data-rateit-starwidth="16" data-rateit-starheight="16" style="pointer-events: none;"></div>
-							</a>
-							<br/>
-							<?php echo isset($r->total_ratings) && $r->total_ratings ? $r->total_ratings > 1 ? '('.$r->total_ratings.' '.l("ratings", true).')' : '('.$r->total_ratings.' '.l("rating", true).')' : ''; ?>
-						</td> -->
+					<td class="text-center">
+						<input class="star-rating" name="star-rating" type="hidden" value="<?php echo isset($r->rating) && $r->rating ? $r->rating : 0; ?>" />
+						<a href="javascript:" class="show_rating" data-room_id="<?php echo $r->room_id; ?>" data-room_rating="<?php echo isset($r->rating) && $r->rating ? $r->rating : 0; ?>" >
+							<div class="rateit stars" data-rateit-starwidth="16" data-rateit-starheight="16" style="pointer-events: none;"></div>
+						</a>
+						<br/>
+						<?php echo isset($r->total_ratings) && $r->total_ratings ? $r->total_ratings > 1 ? '('.$r->total_ratings.' '.l("ratings", true).')' : '('.$r->total_ratings.' '.l("rating", true).')' : ''; ?>
+					</td>
 					<?php } ?>
 					<td class="td-room-notes text-right">
 						<button class='room-notes-button btn btn-light' style="margin-bottom: 5px">

@@ -128,6 +128,7 @@ class MY_Controller extends CI_Controller {
         $this->is_kovena_enabled = false;
         $this->booking_confirmation_email = false;
         $this->invoice_email = false;
+        $this->review_management_settings = false;
 
         if($get_active_modules){
             foreach ($get_active_modules as $key => $value) {
@@ -149,6 +150,9 @@ class MY_Controller extends CI_Controller {
                 }
                 if($value['extension_name'] == 'invoice_email'){
                     $this->invoice_email = true;
+                }
+                if($value['extension_name'] == 'review_management_settings'){
+                    $this->review_management_settings = true;
                 }
 
                 $config = array();
