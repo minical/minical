@@ -964,7 +964,9 @@ class Charge_model extends CI_Model {
                                 else
                                 {
                                     $sql .= "di.date >= '$start_date' AND di.date <= '$end_date'";
-                                }    
+                                }
+
+                                $sql .= " ORDER by di.date" ;
 		
 		$q = $this->db->query($sql);
 		
