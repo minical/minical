@@ -51,7 +51,7 @@ innGrid.saveAllRooms = function () {
                     if(response != 1){
                     	alert(response);
                     } else {
-                		alert(l('All rooms saved', true));
+                		// alert(l('All rooms saved', true));
                     }
                 }
             });
