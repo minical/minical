@@ -30,22 +30,65 @@ innGrid.saveAllRooms = function () {
 		});
 
 	});   
-   console.log('roomData',roomData);
-	$.ajax({
-        url: getBaseURL() + 'settings/room_inventory/save_rooms_AJAX',
-        type: "POST",
-        data: {room_data : roomData},
-        success: function(response){
-        	console.log('response',response);
-            innGrid.updateAvailabilities("","");
-            if(response != 1){
-            	alert(response);
-            } else {
-        		alert(l('All rooms saved', true));
-            }
+    console.log('roomData',roomData);
+
+    var roomsData = roomData;
+    var data = {};
+    var count = 0;
+    var total = true;
+    for(var key in roomsData) {
+
+        if (count == 100) {
+            // send ajax request with data
+
+        	$.ajax({
+                url: getBaseURL() + 'settings/room_inventory/save_rooms_AJAX',
+                type: "POST",
+                data: {room_data : data},
+                success: function(response){
+                	console.log('response',response);
+                    innGrid.updateAvailabilities("","");
+                    if(response != 1){
+                    	alert(response);
+                    } else {
+                		alert(l('All rooms saved', true));
+                    }
+                }
+            });
+
+            console.log(data);
+                
+            data = {}; // reset data
+            count = 0; // reset counter
+            total = false;
         }
 
-       });
+        data[key] = roomsData[key];
+        count ++;
+    }
+
+    if (count > 0) {
+        // send ajax request with data
+        $.ajax({
+            url: getBaseURL() + 'settings/room_inventory/save_rooms_AJAX',
+            type: "POST",
+            data: {room_data : data},
+            success: function(response){
+                console.log('response',response);
+                innGrid.updateAvailabilities("","");
+                if(response != 1){
+                    alert(response);
+                } else {
+                    alert(l('All rooms saved', true));
+                }
+            }
+        });
+        
+        console.log(data);
+        
+        data = {}; // reset data
+        count = 0; // reset counter
+    }
 };
       var check_api_response = 0;
 innGrid.updateAvailabilities = function(start_date, end_date) {
