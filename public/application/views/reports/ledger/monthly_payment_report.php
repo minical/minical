@@ -158,22 +158,15 @@
 		$column_total = 0;
 		foreach ($result[0] as $key => $value)
 		{
-			if($show) {
-				if ($key != 'Selling Date')
+			//if($show) {
+				if ($key != 'Selling Date' && $key != 'PayPal')
 				{
 					$column_total += $total[$key];
 					echo '<td class="text-right">';
 					echo number_format($total[$key], 2, ".", ",");	
 					echo '</td class="text-right">';
 				}
-			} else {
-				if($key != 'PayPal') {
-					$column_total += $total[$key];
-					echo '<td class="text-right">';
-					echo number_format($total[$key], 2, ".", ",");	
-					echo '</td class="text-right">';
-				}
-			}
+			//} 
 		}
 		echo '<td class="text-right">'.number_format($column_total, 2, ".", ",").'</td>';
 		echo '</tr></tfoot>';
