@@ -383,6 +383,19 @@
                 <input type="hidden" id="group_id" value="<?php if(isset($booking_group_detail)) { echo $booking_group_detail['id'];}?>">
 			    <br/>
 			    <?php echo l('group').' '.l('name'); ?>: <?php if(isset($booking_group_detail)){echo $booking_group_detail['name'];} ?><br/>
+			    <span id="booking-field">
+                <?php
+
+                if (isset($booking_fields) && count($booking_fields) > 0) {
+                    foreach ($booking_fields as $booking_field) {
+                        $value = $custom_booking_fields[$booking_field['id']];
+                        if ($value) {
+                        echo ($booking_field['name'] && $value) ? $booking_field['name'].": " . $value . "<br/>" : '';
+                        }
+                    }
+                }
+                ?>
+                </span>
 			</address>
         </div>
 	</div> <!-- /.container -->
