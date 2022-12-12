@@ -11,4 +11,4 @@ RUN docker-php-ext-install mysqli && docker-php-ext-enable mysqli
 #     && docker-php-ext-configure gd --with-freetype --with-jpeg \
 #     && docker-php-ext-install -j$(nproc) gd
 
-RUN pecl install xdebug && docker-php-ext-enable xdebug
+RUN pecl install xdebug-2.7.0 && docker-php-ext-enable xdebug
