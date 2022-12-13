@@ -195,7 +195,7 @@ class Auth extends MY_Controller
                 $employee_permission['permissions'] = $this->Employee_log_model->get_user_permission($this->session->userdata('current_company_id'),$this->session->userdata('user_id'));
                  $this->session->set_userdata($employee_permission);	
                  
-                 redirect('/booking');
+                 // redirect('/booking');
 
                 if ($this->session->userdata('user_role') == "is_admin" || in_array("is_salesperson", $employee_permission['permissions']))
                 {

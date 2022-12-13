@@ -30,7 +30,7 @@
     <div class="scrollbar-sidebar ps ps--active-y">
         <div class="sidebar__logo ">
 
-            <ul style="padding-left: 10px; width: 190px;" class="multi-properties hide_properties <?=$this->session->userdata('user_role') == "is_housekeeping" ? "hidden" : "";?>">
+            <ul style="padding-left: 10px; width: 190px;" class="multi-properties hide_properties ">
 
                 <?php if(count($my_companies) > 1){ ?>
                 <a href='#' id="myPropertyMenu"  data-toggle="dropdown" aria-expanded="true" tabindex="-1">
@@ -42,7 +42,7 @@
 
                         <b style="font-size: large;"><?php echo substr($this->company_name, 0, 30).((strlen($this->company_name)>30)?'...':''); ?></b>
 
-                        <?php if(count($my_companies) > 1) { ?><span class="caret multi-prop"></span> <?php } ?>
+                        <?php if(count($my_companies) > 1) { ?><span class="caret multi-prop <?=$this->session->userdata('user_role') == "is_housekeeping" ? "hidden" : "";?>"></span> <?php } ?>
 
                     </a>
                     <?php
@@ -55,7 +55,7 @@
                     ?>
 
                     <?php if(count($my_companies) > 1){ ?>
-                        <ul class="dropdown-menu property-menu" role="menu" aria-labelledby="myAccountMenu">
+                        <ul class="dropdown-menu property-menu <?=$this->session->userdata('user_role') == "is_housekeeping" ? "hidden" : "";?>" role="menu" aria-labelledby="myAccountMenu">
                             <?php
                             foreach($my_companies as $key => $values){
                                 echo '<li>
