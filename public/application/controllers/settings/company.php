@@ -420,6 +420,11 @@ class Company extends MY_Controller
         if($new_user_role)
         {
             $this->User_model->remove_all_user_permissions($this->company_id, $user_id);
+            
+            if($new_user_role == 'is_owner'){
+                $this->User_model->add_user_permission($this->company_id, $user_id, 'is_admin');
+            }
+            
             $this->User_model->add_user_permission($this->company_id, $user_id, $new_user_role);
 
             $user_detail = $this->User_model->get_user_profile($user_id);
