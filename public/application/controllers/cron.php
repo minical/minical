@@ -501,4 +501,27 @@ class Cron extends CI_Controller
             $this->Channex_model->delete_old_xml_logs($xml_log_ids);
         }
     }
+
+    function install_extension_vendor(){
+    	$extension_name = isset($_GET['extension']) ? $_GET['extension']: "";
+    	if($extension_name ==''){
+    		echo 'please provide extension name';
+    		return;
+    	}
+    	$this->load->model('Whitelabel_partner_model');
+    	$this->load->model('Extension_model');
+    	$whitelabel_partners = $this->Whitelabel_partner_model->get_whitelabel_partners();
+        foreach ($whitelabel_partners as $key => $value) {
+             
+           $is_install = $this->Extension_model->get_vendor_extension_status($extension_name,1,$value['id']);
+           if(isset($is_install) && $is_install){
+           		echo $extension_name." already install for vendor id ".$value['id']."<br>";
+           }else{
+           		$data = array('extension_name'=>$extension_name,'vendor_id'=>$value['id'],'is_installed'=> 1);
+           		$this->Extension_model->add_vendors_extension($data);
+           		echo $extension_name." installed for vendor id ".$value['id']."<br>";
+           }
+        	
+        }
+    }
 }
