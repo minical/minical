@@ -249,6 +249,40 @@ class Extension_model extends CI_Model {
             }
         }
 	}
+
+	function get_vendor_extension_status($extension,$status,$vendor_id){
+		$this->db->select('*');
+		$this->db->from('extensions_x_vendor');
+		$this->db->where('extension_name', $extension);
+		$this->db->where('vendor_id', $vendor_id);
+		$this->db->where('is_installed', $status);
+		
+		$query = $this->db->get();
+		
+		if ($query->num_rows >= 1)
+		{
+			return $result = $query->result_array();
+		}
+		
+		return NULL;
+	}
+
+	function add_vendors_extension($data){
+		$data = (object) $data;        
+        $this->db->insert("extensions_x_vendor", $data);
+		
+		//return $this->db->insert_id();
+        $query = $this->db->query('select LAST_INSERT_ID( ) AS last_id');
+		$result = $query->result_array();
+        if(isset($result[0]))
+        {  
+             return $result[0]['last_id'];
+        }
+		else
+        {  
+             return null;
+        }
+	}
 }
 
 /* End of file - extra_model.php */
