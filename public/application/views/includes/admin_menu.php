@@ -19,7 +19,7 @@
 			</li>
 			<?php if($this->is_super_admin){ ?>
 			 <li>
-				<a href="<?php //echo base_url(); ?>admin/show_monthly_report">Monthly Report</a>
+				<a href="<?php echo base_url(); ?>admin/show_monthly_report">Monthly Report</a>
 			</li>
 			<li>
 				<a href="<?php echo base_url(); ?>admin/property_list">Property List</a>
