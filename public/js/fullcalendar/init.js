@@ -150,7 +150,7 @@ innGrid.buildCalendar = function (rooms) {
         plugins: ['resourceTimeline', 'interaction'],
         resourceColumns: [
             {
-                labelText: l("Room", true),
+                labelText: l(innGrid.featureSettings.defaultRoomSingular, true),
                 field: 'name'
             },
             {
