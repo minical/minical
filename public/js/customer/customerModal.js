@@ -9,6 +9,16 @@ var customerId;
 
     var commonCustomerFields = [];
 
+    if(!innGrid.ajaxCache.commonCustomerFields) {
+        $.getJSON(getBaseURL() + 'booking/get_customer_data_on_pageload',
+            function (data) {
+                innGrid.ajaxCache.commonCustomerFields = data.common_customer_fields;
+                console.log(innGrid.ajaxCache.commonCustomerFields);
+                commonCustomerFields = data.common_customer_fields;
+            }
+        );
+    }
+
     // dynamically load required js
     var scripts = [
         'js/jquery.payment.js'
