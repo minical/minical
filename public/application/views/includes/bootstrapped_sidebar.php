@@ -30,21 +30,25 @@
     <div class="scrollbar-sidebar ps ps--active-y">
         <div class="sidebar__logo ">
 
-            <ul style="padding-left: 10px; width: 190px;" class="multi-properties hide_properties ">
+            <!-- <script type="text/javascript">
+                if($('#alert').html() == undefined){
+                    
+                }
+            </script> -->
+
+            <ul style="padding-left: 2px;" class="multi-properties hide_properties ">
 
                 <?php if(count($my_companies) > 1){ ?>
-                <a href='#' id="myPropertyMenu"  data-toggle="dropdown" aria-expanded="true" tabindex="-1">
+                <button type="button" class="btn btn-light" id="myPropertyMenu"  data-toggle="dropdown" aria-expanded="true" tabindex="-1" title="<?php echo $this->company_name; ?>">
                     <?php } else { ?>
-                    <a href='#'  id="myPropertyMenu">
+                    <button type="button" class="btn btn-light" id="myPropertyMenu" title="<?php echo $this->company_name; ?>">
                         <?php } ?>
 
-
-
-                        <b style="font-size: large;"><?php echo substr($this->company_name, 0, 30).((strlen($this->company_name)>30)?'...':''); ?></b>
+                        <b style="font-size: medium;"><?php echo substr($this->company_name, 0, 10).((strlen($this->company_name)>10)?'...':''); ?></b>
 
                         <?php if(count($my_companies) > 1) { ?><span class="caret multi-prop <?=$this->session->userdata('user_role') == "is_housekeeping" ? "hidden" : "";?>"></span> <?php } ?>
 
-                    </a>
+                    </button>
                     <?php
 
                     $user_permissions = $this->session->userdata('user_permissions');
