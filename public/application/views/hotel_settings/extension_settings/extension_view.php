@@ -55,15 +55,13 @@
                                 <div>
                                     <?php if(isset($extension['is_admin_module']) && $extension['is_admin_module']){ ?>
                                         <span style="font-size: 11px;color: gray;font-weight: 500;padding: 0px 0 5px;">VENDOR ONLY</span>
-                                    <?php }
-                                    //elseif(isset($extension['is_vendor_module']) && $extension['is_vendor_module']){ ?>
-                                    <!-- <span style="font-size: 11px;color: gray;font-weight: 500;padding: 0px 0 5px;">VENDOR ONLY</span> -->
-                                    <?php //}?>
-
-                                    <p class="extension-discription" ><?php echo  strlen($extension['description']) > 200 ? substr($extension['description'],0,200)."..." : $extension['description']; ?>
-                                        <?php if(isset($extension['marketplace_product_link']) && $extension['marketplace_product_link']){ ?>
-                                            <a href="<?php echo (isset($extension['marketplace_product_link']) && $extension['marketplace_product_link'] ? $extension['marketplace_product_link']: "")?>" style="font-size: 14px"><?php echo l('more');?></a>
                                         <?php } ?>
+
+                                    <?php if((isset($extension['supported_in_minimal']) && $extension['supported_in_minimal'] == 1) || $this->company_partner_id != 0) { ?>
+                                    <?php } else { ?>
+                                        <span style="font-size: 10px;color: red;font-weight: 600;padding: 0px 0 5px;">PREMIUM EXTENSION</span>
+                                    <?php } ?>
+
                                     <p class="extension-discription" ><?php echo  strlen($extension['description']) > 150 ? substr($extension['description'],0,150)."..." : $extension['description']; ?>
                                         
                                     </p>
