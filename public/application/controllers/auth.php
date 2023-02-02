@@ -2126,4 +2126,15 @@ class Auth extends MY_Controller
             return false;
         }
     }
+
+    function checkSession()
+    {
+        $user_id =  $this->session->userdata('user_id');
+        $user_email =  $this->session->userdata('email');
+
+        if (!$user_id || !$user_email) {
+            $this->logout();
+            redirect('/auth/login/');
+        }
+    }
 }

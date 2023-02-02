@@ -263,6 +263,16 @@ $(document).ready(function(){
     $('.multi-properties').on('click', function(){
         $('.main-sidebar').css({'z-index':'1'});
     });
+
+    $.ajax({
+        type: "GET",
+        url: getBaseURL() + 'auth/checkSession',
+        data: {},
+        success: function( data ) {
+            console.log('data', data);
+        }
+    });
+
 });
 </script>
 
