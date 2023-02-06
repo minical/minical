@@ -102,7 +102,16 @@
 				);
             if(isset($employees)) : 
 		?>
-			<?php foreach ($employees as $employee) : ?>
+			<?php 
+
+			foreach ($employees as $key => $employee) {
+
+				if(isset($employee['permission']) && $employee['permission'] == 'is_admin') {
+					unset($employees[$key]);
+				}
+			}
+
+			foreach ($employees as $employee) : ?>
 				
 				<?php 
 					if(	(

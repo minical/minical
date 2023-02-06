@@ -27,13 +27,18 @@ class Room extends MY_Controller
 		
 	}
 	
-	function index() {
+	function index() {		
+
+		$data['css_files']= array( 
+			base_url() . auto_version('css/review_form/rateit.css')
+		);
 
 		$data['js_files'] = array(
 			base_url() . auto_version('js/rooms.js'),
 			base_url() . auto_version('js/booking/booking_main.js'),
-			base_url() . auto_version('js/room_status.js')
-		);		
+			base_url() . auto_version('js/room_status.js'),
+			base_url() . auto_version('js/review_form/jquery.rateit.min.js')
+		);
 
 		$room_ratings = $this->Room_model->get_room_rating($this->company_id);
 		$data['date'] = $this->selling_date;

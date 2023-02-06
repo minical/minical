@@ -914,7 +914,7 @@ class Migration_create_base extends CI_Migration {
 			),
 			'room_type_id' => array(
 				'type' => 'MEDIUMTEXT',
-				'null' => FALSE,
+				'null' => true,
 
 			),
 		));

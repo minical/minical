@@ -4688,3 +4688,8 @@
 .my-account-dropdown-menu {
   white-space: nowrap;
 }
+.tokenfield {
+    height: auto !important;
+    min-height: 34px !important;
+    padding-bottom: 0 !important;
+}

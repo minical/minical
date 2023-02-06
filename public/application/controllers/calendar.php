@@ -34,9 +34,12 @@ class Calendar extends MY_Controller
 		$latest_booking_room_history_data = $this->Booking_room_history_model->get_latest_booking_room_history($booking_id);
 
 		// Ensure that the block that's being resized is the latest booking_room_history row		
-		if ($latest_booking_room_history_data['booking_id'] == $booking_id AND
+		if (
+			($latest_booking_room_history_data['booking_id'] == $booking_id AND
 			$latest_booking_room_history_data['room_id'] == $room_id AND
-			$latest_booking_room_history_data['check_in_date'] == $start1) {
+			$latest_booking_room_history_data['check_in_date'] == $start1)
+			AND !$this->Booking_model->check_overbooking(date('Y-m-d H:i:s', strtotime($this->input->post('start1'))), date('Y-m-d H:i:s', strtotime($this->input->post('end2'))), $room_id, $booking_id)
+		) {
 
 			$booking_room_history_data['booking_id'] = $booking_id;
 			$booking_room_history_data['room_id'] = trim($room_id);

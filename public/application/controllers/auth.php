@@ -195,7 +195,7 @@ class Auth extends MY_Controller
                 $employee_permission['permissions'] = $this->Employee_log_model->get_user_permission($this->session->userdata('current_company_id'),$this->session->userdata('user_id'));
                  $this->session->set_userdata($employee_permission);	
                  
-                 redirect('/booking');
+                 // redirect('/booking');
 
                 if ($this->session->userdata('user_role') == "is_admin" || in_array("is_salesperson", $employee_permission['permissions']))
                 {
@@ -2124,6 +2124,17 @@ class Auth extends MY_Controller
         else
         {
             return false;
+        }
+    }
+
+    function checkSession()
+    {
+        $user_id =  $this->session->userdata('user_id');
+        $user_email =  $this->session->userdata('email');
+
+        if (!$user_id || !$user_email) {
+            $this->logout();
+            redirect('/auth/login/');
         }
     }
 }

@@ -34,11 +34,13 @@
                                 } ?>" style="width: 30px;height: 30px">
                             </div>
                             <div class="extension-content">
-                                <b style="font-size: 12px;"><?php
+                                <b style="font-size: 12px;">
+                                    <a href="<?php echo (isset($extension['marketplace_product_link']) && $extension['marketplace_product_link'] && $this->is_partner_owner == 1 ? $extension['marketplace_product_link']: "javascript:")?>" style="font-size: 14px">
+                                        <?php
                                     $name = $extension['extension_name'];
                                     $extension_name = str_replace("_"," ",$name);
                                     echo ucwords(l($extension_name, true)); ?>
-
+                                    </a>
                                     <span>
 
                     <?php if(isset($extension['is_favourite']) && $extension['is_favourite'] == 1){?>
@@ -53,15 +55,15 @@
                                 <div>
                                     <?php if(isset($extension['is_admin_module']) && $extension['is_admin_module']){ ?>
                                         <span style="font-size: 11px;color: gray;font-weight: 500;padding: 0px 0 5px;">VENDOR ONLY</span>
-                                    <?php }
-                                    //elseif(isset($extension['is_vendor_module']) && $extension['is_vendor_module']){ ?>
-                                    <!-- <span style="font-size: 11px;color: gray;font-weight: 500;padding: 0px 0 5px;">VENDOR ONLY</span> -->
-                                    <?php //}?>
-
-                                    <p class="extension-discription" ><?php echo  strlen($extension['description']) > 200 ? substr($extension['description'],0,200)."..." : $extension['description']; ?>
-                                        <?php if(isset($extension['marketplace_product_link']) && $extension['marketplace_product_link']){ ?>
-                                            <a href="<?php echo (isset($extension['marketplace_product_link']) && $extension['marketplace_product_link'] ? $extension['marketplace_product_link']: "")?>" style="font-size: 14px"><?php echo l('more');?></a>
                                         <?php } ?>
+
+                                    <?php if((isset($extension['supported_in_minimal']) && $extension['supported_in_minimal'] == 1) || $this->company_partner_id != 0) { ?>
+                                    <?php } else { ?>
+                                        <span style="font-size: 10px;color: red;font-weight: 600;padding: 0px 0 5px;">PREMIUM EXTENSION</span>
+                                    <?php } ?>
+
+                                    <p class="extension-discription" ><?php echo  strlen($extension['description']) > 150 ? substr($extension['description'],0,150)."..." : $extension['description']; ?>
+                                        
                                     </p>
                                 </div>
 
@@ -125,4 +127,25 @@
     </div>
 
 
+</div>
+
+<div class="modal fade" id="premium_extension">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="font-size: 15px;">
+                To unlock all <b>PREMIUM</b> extensions.
+                <a target="_blank" href="<?php echo base_url().'partners' ?>">
+                    Select a Partner PMS Vendor
+                </a>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
 </div>

@@ -168,15 +168,15 @@
                                                                             echo l('Room Type', true);
                                                                         }
                                                                      ?>:&nbsp;</strong><?php echo $room_type; ?></span></p>
-                                                                    <p style="mso-line-height-rule: exactly;line-height: 175%;margin: 0;"><span style="color: #000000;"><strong><?php
+                                                                   <!--  <p style="mso-line-height-rule: exactly;line-height: 175%;margin: 0;"><span style="color: #000000;"><strong><?php
                                                                         if(isset($default_room_plural) && $default_room_plural !='' )
                                                                         {
-                                                                           echo l('Number Of')." ".$default_room_plural;
+                                                                           //echo l('Number Of')." ".$default_room_plural;
                                                                         }else{
-                                                                            echo l('Number Of Rooms', true);
+                                                                            //echo l('Number Of Rooms', true);
                                                                         }
 
-                                                                        ?>:&nbsp;</strong>1</span></p>
+                                                                        ?>:&nbsp;</strong>1</span></p> -->
                                                                     <p style="mso-line-height-rule: exactly;line-height: 175%;margin: 0;"><span style="color: #000000;"><strong><?php
                                                                         if(isset($default_room_singular) && $default_room_singular !='' )
                                                                         {

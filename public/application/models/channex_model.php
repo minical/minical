@@ -522,9 +522,11 @@ class Channex_model extends CI_Model {
 
     function get_related_pms_booking_ids($ota_booking_id, $booking_type = null)
     {
-        $this->db->select('pms_booking_id');
-        $this->db->from('ota_bookings');
-        $this->db->where('ota_booking_id', $ota_booking_id);
+        $this->db->select('ob.pms_booking_id');
+        $this->db->from('ota_bookings as ob');
+        $this->db->join('booking as b', 'ob.pms_booking_id = b.booking_id');
+        $this->db->where('ob.ota_booking_id', $ota_booking_id);
+        $this->db->where('b.is_deleted', 0);
 
         if($booking_type){
             $this->db->where('booking_type', $booking_type);
@@ -928,7 +930,7 @@ class Channex_model extends CI_Model {
 
     function get_ota_xml_logs($limit){
         $this->db->from('ota_xml_logs');
-        $this->db->order_by('xml_log_id', 'desc');
+        $this->db->order_by('xml_log_id', 'asc');
         $this->db->limit($limit);
 
         $query = $this->db->get();

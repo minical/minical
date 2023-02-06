@@ -28,9 +28,9 @@
 		<?php $date = ($this->uri->segment(4) != '') ? $this->uri->segment(4) : ""; ?>
 		<?php $param = $date; ?>
 		<a id="downloaddailyreport" href="<?php if ($param != '/') {
-			echo base_url() . "reports/download_daily_summary_report_csv_export/" . $param;
+			echo base_url() . "reports/ledger/download_daily_summary_report_csv_export/" . $param;
 		} else {
-			echo base_url() . "reports/download_daily_summary_report_csv_export/";
+			echo base_url() . "reports/ledger/download_daily_summary_report_csv_export/";
 		} ?>" class="btn btn-primary" style="margin-right: 10px;" target="blank">
 			<span title="Export to CSV" class="glyphicon glyphicon-download-alt"></span>
 		</a>

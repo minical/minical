@@ -125,6 +125,10 @@ class MY_Controller extends CI_Controller {
         $this->is_channex_pci_enabled = false;
         $this->is_pci_booking_enabled = false;
         $this->is_intercom_enabled = false;
+        $this->is_kovena_enabled = false;
+        $this->booking_confirmation_email = false;
+        $this->invoice_email = false;
+        $this->review_management_settings = false;
 
         if($get_active_modules){
             foreach ($get_active_modules as $key => $value) {
@@ -137,6 +141,18 @@ class MY_Controller extends CI_Controller {
                 }
                 if($value['extension_name'] == 'intercom'){
                     $this->is_intercom_enabled = true;
+                }
+                if($value['extension_name'] == 'kovena_integration'){
+                    $this->is_kovena_enabled = true;
+                }
+                if($value['extension_name'] == 'booking_confirmation_email'){
+                    $this->booking_confirmation_email = true;
+                }
+                if($value['extension_name'] == 'invoice_email'){
+                    $this->invoice_email = true;
+                }
+                if($value['extension_name'] == 'review_management_settings'){
+                    $this->review_management_settings = true;
                 }
 
                 $config = array();
@@ -356,7 +372,16 @@ class MY_Controller extends CI_Controller {
                 }
             }
 
-            $this->is_self_hosted_domain = ($host_name == $whitelabelinfo['domain']);
+            if(
+                isset($whitelabelinfo['domain']) && 
+                $whitelabelinfo['domain'] &&
+                $host_name == $whitelabelinfo['domain']
+            ) {
+                $this->is_self_hosted_domain = 1;
+            }
+            else {
+                $this->is_self_hosted_domain = 0;
+            }
 
             if(
                 $this->company_feature_limit == 1 && 

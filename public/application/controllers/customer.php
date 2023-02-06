@@ -5,24 +5,24 @@
  */
 class Customer extends MY_Controller {
 
-	function __construct()
-	{
-		parent::__construct();
-		
+    function __construct()
+    {
+        parent::__construct();
+        
         $this->load->library('encrypt');
- 		$this->load->library('form_validation');
-		$this->load->library('PaymentGateway');
+        $this->load->library('form_validation');
+        $this->load->library('PaymentGateway');
         $this->load->library('tokenex');
         
         $this->load->model('Company_model');
-		$this->load->model('Customer_model');
-		$this->load->model('Customer_type_model');
-		$this->load->model('Customer_field_model');
-		$this->load->model('Customer_log_model');
-		$this->load->model('User_model');		
-		$this->load->model('Booking_model');		
-		$this->load->model('Payment_model');		
-		$this->load->model('Tax_model');
+        $this->load->model('Customer_model');
+        $this->load->model('Customer_type_model');
+        $this->load->model('Customer_field_model');
+        $this->load->model('Customer_log_model');
+        $this->load->model('User_model');       
+        $this->load->model('Booking_model');        
+        $this->load->model('Payment_model');        
+        $this->load->model('Tax_model');
         $this->load->model('Group_model');
         $this->load->model('Charge_model');
         $this->load->model('Statement_model');
@@ -32,22 +32,22 @@ class Customer extends MY_Controller {
         $this->load->model('Folio_model');
         $this->load->model('Booking_log_model');
         
-		$this->load->helper('timezone');
-		$this->load->helper('url');
+        $this->load->helper('timezone');
+        $this->load->helper('url');
         
     }
-	
-	function index()
-	{
-		//Preset customer list to show customers by balance
-		$this->session->set_userdata('customer_search_query', '');
-		$this->session->set_userdata('customer_order_by', 'balance');
-		$this->session->set_userdata('customer_order', 'DESC');
-		$this->session->set_userdata('booking_order', 'ASC');
-		$this->show_customers();
-	}
-	
-	function get_credit_card_frame()
+    
+    function index()
+    {
+        //Preset customer list to show customers by balance
+        $this->session->set_userdata('customer_search_query', '');
+        $this->session->set_userdata('customer_order_by', 'balance');
+        $this->session->set_userdata('customer_order', 'DESC');
+        $this->session->set_userdata('booking_order', 'ASC');
+        $this->show_customers();
+    }
+    
+    function get_credit_card_frame()
     {
         if(!$this->input->is_ajax_request()){
             return;
@@ -66,44 +66,44 @@ class Customer extends MY_Controller {
         }
    }
 
-	/**
-	 * Show customer page includes: customer/guest lists, customer information and booking list
-	 */
-	function show_customers()
-	{
-		$config['per_page'] = (sqli_clean($this->security->xss_clean($this->input->get('per_page'))) ? sqli_clean($this->security->xss_clean($this->input->get('per_page'))) : '30');
-		$config['uri_segment'] = 3; // uri_segment is used to tell pagination which page we're on. it seems that default is 3.
-		$config['base_url'] = base_url() . "customer/show_customers";
-		$config['suffix'] = '?'.http_build_query($_GET, '', "&");
-		
-		// pagination stuff
-		$filters['company_id'] = $this->company_id;
+    /**
+     * Show customer page includes: customer/guest lists, customer information and booking list
+     */
+    function show_customers()
+    {
+        $config['per_page'] = (sqli_clean($this->security->xss_clean($this->input->get('per_page'))) ? sqli_clean($this->security->xss_clean($this->input->get('per_page'))) : '30');
+        $config['uri_segment'] = 3; // uri_segment is used to tell pagination which page we're on. it seems that default is 3.
+        $config['base_url'] = base_url() . "customer/show_customers";
+        $config['suffix'] = '?'.http_build_query($_GET, '', "&");
+        
+        // pagination stuff
+        $filters['company_id'] = $this->company_id;
         $filters['order_by'] = $this->session->userdata('customer_order_by');
-		$filters['order'] = $this->session->userdata('customer_order');
-		$filters['per_page'] = $config['per_page'];
-		$filters['offset'] = $this->uri->segment(3);
-		$filters['submit'] = $this->security->xss_clean($this->input->get('submit'));
-		$filters['customer_type_id'] = sqli_clean($this->security->xss_clean($this->input->get('customer_type_id')));
-		$filters['show_deleted'] = sqli_clean($this->security->xss_clean($this->input->get('show_deleted')));
-		$filters['search_query'] = sqli_clean($this->security->xss_clean($this->input->get('search_query')));
+        $filters['order'] = $this->session->userdata('customer_order');
+        $filters['per_page'] = $config['per_page'];
+        $filters['offset'] = $this->uri->segment(3);
+        $filters['submit'] = $this->security->xss_clean($this->input->get('submit'));
+        $filters['customer_type_id'] = sqli_clean($this->security->xss_clean($this->input->get('customer_type_id')));
+        $filters['show_deleted'] = sqli_clean($this->security->xss_clean($this->input->get('show_deleted')));
+        $filters['search_query'] = sqli_clean($this->security->xss_clean($this->input->get('search_query')));
         $filters['selling_date'] = ($this->security->xss_clean($this->input->get('date')) ? sqli_clean($this->security->xss_clean($this->input->get('date'))) : "");
-		$view_data['rows'] = $this->Customer_model->get_customers($filters);
-		$config['total_rows'] = $this->Customer_model->get_found_rows();
-		// $config['total_rowsfilters'] = $this->Customer_model->get_found_rows();
+        $view_data['rows'] = $this->Customer_model->get_customers($filters);
+        $config['total_rows'] = $this->Customer_model->get_found_rows();
+        // $config['total_rowsfilters'] = $this->Customer_model->get_found_rows();
        
-		$this->load->library('pagination');
-		$this->pagination->initialize($config);
-		
-		//Load view data
-		$view_data['js_files'] = array(
-			base_url() . auto_version('js/customer/customer_main.js'),
-			base_url() . auto_version('js/customer/customerModal.js'),
+        $this->load->library('pagination');
+        $this->pagination->initialize($config);
+        
+        //Load view data
+        $view_data['js_files'] = array(
+            base_url() . auto_version('js/customer/customer_main.js'),
+            base_url() . auto_version('js/customer/customerModal.js'),
             base_url() . auto_version('js/card_detail/cardModal.js')
-		);
-		
-		$view_data['menu_on'] = true;
+        );
+        
+        $view_data['menu_on'] = true;
 
-		$view_data['customer_types'] = $this->Customer_type_model->get_customer_types($this->company_id);
+        $view_data['customer_types'] = $this->Customer_type_model->get_customer_types($this->company_id);
 
         $common_customer_types = json_decode(COMMON_CUSTOMER_TYPES, true);
 
@@ -120,15 +120,15 @@ class Customer extends MY_Controller {
 
         
 
-		$view_data['selected_menu'] = 'customers';
-		$view_data['main_content'] = 'customer/customer_main';
-		$this->load->view('includes/bootstrapped_template',$view_data + $filters);
-	}	
-	
+        $view_data['selected_menu'] = 'customers';
+        $view_data['main_content'] = 'customer/customer_main';
+        $this->load->view('includes/bootstrapped_template',$view_data + $filters);
+    }   
+    
 
-	// This is the main customer page that the user is taken to after clicking on a customer from a customer list page.
-	function history()
-	{
+    // This is the main customer page that the user is taken to after clicking on a customer from a customer list page.
+    function history()
+    {
         //############################## customer information form ##############################
         $segment_array = $this->uri->segment_array();
         $last_segment_index = sizeof($segment_array);
@@ -158,33 +158,33 @@ class Customer extends MY_Controller {
 
         $data['order'] = $order;
         $data['groups'] = $this->Group_model->get_groups();
-        $global_data['menu_on'] = true;			
-		$global_data['submenu'] = 'includes/submenu.php';
-		$global_data['submenu_parent_url'] = base_url()."customer/";
-		$global_data['menu_items'] = $this->Menu_model->get_menus(array('parent_id' => 2, 'wp_id' => 1));
+        $global_data['menu_on'] = true;         
+        $global_data['submenu'] = 'includes/submenu.php';
+        $global_data['submenu_parent_url'] = base_url()."customer/";
+        $global_data['menu_items'] = $this->Menu_model->get_menus(array('parent_id' => 2, 'wp_id' => 1));
         $data['selected_submenu'] = 'Booking History';
         $this->load->vars($global_data);
         
         $this->permission->check_access_to_customer_id($this->user_id, $customer_id);
 
         if (isset($order)) 
-		{			
-			if ($order == 'asc')
-				$this->session->set_userdata('booking_order', 'ASC');			
-			else
-				$this->session->set_userdata('booking_order', 'DESC');			
-		} else 
-			$this->session->set_userdata('booking_order', 'DESC');
+        {           
+            if ($order == 'asc')
+                $this->session->set_userdata('booking_order', 'ASC');           
+            else
+                $this->session->set_userdata('booking_order', 'DESC');          
+        } else 
+            $this->session->set_userdata('booking_order', 'DESC');
         
         $order = $this->session->userdata('booking_order');
         if ($order_by == '')
-			$order_by = "balance $order, booking_id";
+            $order_by = "balance $order, booking_id";
         else{
             $order_by = "$order_by $order, booking_id";
         }
         
-		$data['company'] = $this->Company_model->get_company($this->company_id);
-		$data['customer_detail'] = $this->Customer_model->get_customer_info($customer_id);
+        $data['company'] = $this->Company_model->get_company($this->company_id);
+        $data['customer_detail'] = $this->Customer_model->get_customer_info($customer_id);
         
             unset($data['customer_detail']['cc_number']);
             unset($data['customer_detail']['cc_expiry_month']);
@@ -202,34 +202,34 @@ class Customer extends MY_Controller {
                 $data['customer_detail']['cc_cvc_encrypted'] = $card_data['cc_cvc_encrypted'];
             }
        
-		$search_filter_data['submit'] = $this->security->xss_clean($this->input->get('submit'));
-		$search_filter_data['start_date'] = sqli_clean($this->security->xss_clean($this->input->get('start-date')));
-		$search_filter_data['end_date'] = sqli_clean($this->security->xss_clean($this->input->get('end-date')));
-		$search_filter_data['show_paid'] = sqli_clean($this->security->xss_clean($this->input->get('show_paid')));
-		$search_filter_data['status'] = sqli_clean($this->security->xss_clean($this->input->get('status')));
+        $search_filter_data['submit'] = $this->security->xss_clean($this->input->get('submit'));
+        $search_filter_data['start_date'] = sqli_clean($this->security->xss_clean($this->input->get('start-date')));
+        $search_filter_data['end_date'] = sqli_clean($this->security->xss_clean($this->input->get('end-date')));
+        $search_filter_data['show_paid'] = sqli_clean($this->security->xss_clean($this->input->get('show_paid')));
+        $search_filter_data['status'] = sqli_clean($this->security->xss_clean($this->input->get('status')));
         $search_filter_data['group'] = $this->input->get('group');
         $search_filter_data['statement_date'] = sqli_clean($this->security->xss_clean(trim($this->input->get('statement_date'))));
         $search_filter_data['in_statement'] = sqli_clean($this->security->xss_clean(trim($this->input->get('in_statement'))));
         $search_filter_data['linked_group_id'] = sqli_clean($this->security->xss_clean(trim($this->input->get('linked_group_id'))));
         $search_filter_data['staying_guest_name'] = sqli_clean($this->security->xss_clean(trim($this->input->get('staying_guest_name'))));
         
-		switch ($search_filter_data['status']) {		
-			case "reservation" : $state = '0'; break;
-			case "checkin" : $state = '1'; break;
-			case "checkout" : $state = '2'; break;
-			case "cancelled" : $state = '4'; break;
-			default: $state = 'all'; break;
-		}
-		
-		$filters = array(
-			'start_date' => $search_filter_data['start_date'],
-			'end_date' => $search_filter_data['end_date'],
-			'show_paid' => $search_filter_data['show_paid'],
-			'order_by' => $order_by,
-			'order'	=> "DESC", // this is for booking id, for balance we appended it in order_by
-			'per_page' => $config['per_page'], // pagination stuff - deprecated
-			'offset' => $offset,
-			'state' => $state,
+        switch ($search_filter_data['status']) {        
+            case "reservation" : $state = '0'; break;
+            case "checkin" : $state = '1'; break;
+            case "checkout" : $state = '2'; break;
+            case "cancelled" : $state = '4'; break;
+            default: $state = 'all'; break;
+        }
+        
+        $filters = array(
+            'start_date' => $search_filter_data['start_date'],
+            'end_date' => $search_filter_data['end_date'],
+            'show_paid' => $search_filter_data['show_paid'],
+            'order_by' => $order_by,
+            'order' => "DESC", // this is for booking id, for balance we appended it in order_by
+            'per_page' => $config['per_page'], // pagination stuff - deprecated
+            'offset' => $offset,
+            'state' => $state,
             'group' => $search_filter_data['group'],
             'statement_date' => $search_filter_data['statement_date'],
             'group_ids' => $search_filter_data['linked_group_id'],
@@ -244,20 +244,20 @@ class Customer extends MY_Controller {
             $filters['in_statement'] = false;
         }
         
-		// if the dates entered are in valid format (yyyy-mm-dd), otherwise clear the dates
-		if (!$this->_is_valid_date($search_filter_data['start_date']) || !$this->_is_valid_date($search_filter_data['start_date']) ) {			
-			// for clearing input field
-			$search_filter_data['start_date'] = ''; 
-			$search_filter_data['end_date'] = ''; 
-			// for clearing MYSQL query
-			$filters['start_date'] = '';
-            $filters['end_date'] = '';	            	
-		}
+        // if the dates entered are in valid format (yyyy-mm-dd), otherwise clear the dates
+        if (!$this->_is_valid_date($search_filter_data['start_date']) || !$this->_is_valid_date($search_filter_data['start_date']) ) {          
+            // for clearing input field
+            $search_filter_data['start_date'] = ''; 
+            $search_filter_data['end_date'] = ''; 
+            // for clearing MYSQL query
+            $filters['start_date'] = '';
+            $filters['end_date'] = '';                  
+        }
         if(!$this->_is_valid_date($search_filter_data['statement_date'])){
             $search_filter_data['statement_date'] = $filters['statement_date'] = '';
         }
        
-		$data['payment_types'] = $this->Payment_model->get_payment_types($this->company_id);	
+        $data['payment_types'] = $this->Payment_model->get_payment_types($this->company_id);    
         
         $payment_gateway_credentials = $this->paymentgateway->getGatewayCredentials();
         
@@ -272,11 +272,11 @@ class Customer extends MY_Controller {
             $filters['show_only_checked_in_and_checked_out'] = true;
         }
         
-		$bookings = $this->Booking_model->get_bookings($filters+array('booking_customer_id' => $customer_id), null, null, true);
+        $bookings = $this->Booking_model->get_bookings($filters+array('booking_customer_id' => $customer_id), null, null, true);
         // Must be called RIGHT AFTER the query that we want to get the number of rows for.
-		$config['total_rows'] = $this->Booking_model->get_found_rows(); 
-		foreach ($bookings as $index => $booking)
-		{
+        $config['total_rows'] = $this->Booking_model->get_found_rows(); 
+        foreach ($bookings as $index => $booking)
+        {
             $next_room_charge_selling_date = max($booking['check_in_date'], $this->selling_date);
             $last_room_charge = $this->Charge_model->get_last_applied_charge($booking['booking_id'], $booking['charge_type_id'], null, true);
             if(isset($last_room_charge['selling_date']) && $last_room_charge['selling_date']){
@@ -357,42 +357,42 @@ class Customer extends MY_Controller {
         }
         
         $data['bookings_made_by_this_customer'] = $bookings;
-      	
+        
         // Not going to get number of rows for the below code. Eventually, I'll create a link "show all.." as we can only have one pagination per page with codeigniter
-		$group_by = " check_in_date,check_out_date";
-        $data['bookings_that_this_customer_stayed_in'] = $this->Booking_model->get_bookings($filters+array('staying_customer_id' => $customer_id),'',$group_by, true);	
-		
-		
-		$this->load->library('pagination');
+        $group_by = " check_in_date,check_out_date";
+        $data['bookings_that_this_customer_stayed_in'] = $this->Booking_model->get_bookings($filters+array('staying_customer_id' => $customer_id),'',$group_by, true);  
+        
+        
+        $this->load->library('pagination');
         $this->pagination->initialize($config);
         $data['menu_on'] = true;
-		$data['selected_menu'] = 'customers';
-		$data['main_content'] = 'customer/history';
-					
-		
-		//############################## customer information ends here ##############################
-		
-		
-		//#################################### customer log ends here #################################
-		$data['css_files'] = array(
-			base_url() . auto_version('css/customer/history.css'),
+        $data['selected_menu'] = 'customers';
+        $data['main_content'] = 'customer/history';
+                    
+        
+        //############################## customer information ends here ##############################
+        
+        
+        //#################################### customer log ends here #################################
+        $data['css_files'] = array(
+            base_url() . auto_version('css/customer/history.css'),
             base_url() . auto_version('css/booking/booking_main.css')
-		);
-		$data['js_files'] = array(
-			base_url() . auto_version('js/customer/history.js'),
-			base_url() . auto_version('js/channel_manager/channel_manager.js'),
+        );
+        $data['js_files'] = array(
+            base_url() . auto_version('js/customer/history.js'),
+            base_url() . auto_version('js/channel_manager/channel_manager.js'),
             base_url().'js/moment.min.js',
-			base_url() . auto_version('js/booking/bookingModal.js'),
+            base_url() . auto_version('js/booking/bookingModal.js'),
             base_url() . auto_version('js/card_detail/cardModal.js'),
-		);
-		
-		$this->load->view('includes/bootstrapped_template', $search_filter_data + $data);
-	}
+        );
+        
+        $this->load->view('includes/bootstrapped_template', $search_filter_data + $data);
+    }
     
-	//Called by javascript
+    //Called by javascript
 
     function _is_valid_date($date)
-	{
+    {
         //match the format of the date
         if (preg_match("/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/", $date, $parts)) {
             //check weather the date is valid of not
@@ -404,9 +404,9 @@ class Customer extends MY_Controller {
         } else {
             return false;
         }
-	}
-	
-	// called when "create new customer" is clicked in Customer Main
+    }
+    
+    // called when "create new customer" is clicked in Customer Main
 
     function create_customer()
     {
@@ -414,10 +414,10 @@ class Customer extends MY_Controller {
         unset($customer_data["customer_id"]); // new customer doesn't have customer_id
         $customer_data['company_id'] = $this->company_id;
 
-		$this->load->library('form_validation');
-		$this->_set_statement_validation_rules();
+        $this->load->library('form_validation');
+        $this->_set_statement_validation_rules();
 
-		if ($this->form_validation->run() == FALSE) {
+        if ($this->form_validation->run() == FALSE) {
             $errors = validation_errors('<div class="error">', '</div>');
 
             $data = array(
@@ -426,7 +426,7 @@ class Customer extends MY_Controller {
             );
 
             echo json_encode($data);
-		} else {
+        } else {
             $customer_id = $this->Customer_model->create_customer($customer_data);
 
             $post_customer_data = $customer_data;
@@ -443,11 +443,11 @@ class Customer extends MY_Controller {
             );
 
             echo json_encode($data);
-		}
-	}
+        }
+    }
 
-	
-	// called when "edit customer" is clicked in View Customer
+    
+    // called when "edit customer" is clicked in View Customer
 
     function get_customer_field_POSTs()
     {
@@ -470,9 +470,9 @@ class Customer extends MY_Controller {
         $data['cc_expiry_year']  = sqli_clean($this->security->xss_clean($this->input->post('cc-expiry-year')));
 
         return $data;
-	}
-	
-	//called from booking_form.js
+    }
+    
+    //called from booking_form.js
 
     function _set_statement_validation_rules()
     {
@@ -486,11 +486,11 @@ class Customer extends MY_Controller {
         $this->form_validation->set_rules('country', 'Country', 'trim');
         $this->form_validation->set_rules('postal-code', 'Postal Code', 'trim');
         $this->form_validation->set_rules('customer_notes', 'Notes', 'trim');
-	}
-	
+    }
+    
 
 
-	// show & edit booking log
+    // show & edit booking log
 
     function create_new_customer()
     {
@@ -629,60 +629,60 @@ class Customer extends MY_Controller {
     }
 
     function show_customer_log($customer_id)
-	{
-		$this->load->helper('timezone');
-		$view_data  = array();
+    {
+        $this->load->helper('timezone');
+        $view_data  = array();
         $view_data['time_zone'] = $this->Company_model->get_time_zone($this->company_id);
-		$view_data['customer_id'] = $customer_id;
-		$view_data['log'] = sqli_clean($this->security->xss_clean($this->input->post('log')));
-		$this->load->library('form_validation');
+        $view_data['customer_id'] = $customer_id;
+        $view_data['log'] = sqli_clean($this->security->xss_clean($this->input->post('log')));
+        $this->load->library('form_validation');
         $this->form_validation->set_rules('log', 'log', 'required|trim');
 
-		$this->load->model('Customer_log_model');
-		$view_data['customer_data'] = $this->Customer_model->get_customer_info($customer_id);
+        $this->load->model('Customer_log_model');
+        $view_data['customer_data'] = $this->Customer_model->get_customer_info($customer_id);
         $view_data['rows']          = $this->Customer_log_model->get_customer_log($customer_id);
 
-		// user is entering a log (instead of auto-generated)
-		if ($view_data['log'] != "") {
+        // user is entering a log (instead of auto-generated)
+        if ($view_data['log'] != "") {
             // The third parameter is set to 1
-			// to indicate that it's a manual user entry (not automatically generated)
+            // to indicate that it's a manual user entry (not automatically generated)
             $this->_create_customer_log($customer_id, $view_data['log'], 1);
-			redirect('/customer/show_customer_log/'.$customer_id);
-		}
+            redirect('/customer/show_customer_log/'.$customer_id);
+        }
 
         /** itodo css lost lead */
-		$view_data['css_files'] = array(//			base_url() . auto_version('css/customer/customer_log.css')
-		);
-		$view_data['js_files'] = array(
-			base_url() . auto_version('js/customer/customer_log.js')
-		);
+        $view_data['css_files'] = array(//          base_url() . auto_version('css/customer/customer_log.css')
+        );
+        $view_data['js_files'] = array(
+            base_url() . auto_version('js/customer/customer_log.js')
+        );
 
-		$view_data['menu_on'] = true;
-		$view_data['selected_menu'] = 'customers';
+        $view_data['menu_on'] = true;
+        $view_data['selected_menu'] = 'customers';
         $view_data['main_content'] = 'customer/customer_log';
         $this->load->view('includes/bootstrapped_template', $view_data);
     }
 
     function set_order_by($field_name)
-	{
-		// Assign which field the ordering will be based on
+    {
+        // Assign which field the ordering will be based on
         $this->session->set_userdata('customer_order_by', $field_name);
 
-		// Choose ascending/descending order depending on session variable
-		$customer_order = $this->session->userdata('customer_order');
+        // Choose ascending/descending order depending on session variable
+        $customer_order = $this->session->userdata('customer_order');
         if (isset($customer_order))
-		{
-			if ($customer_order == 'ASC')
+        {
+            if ($customer_order == 'ASC')
                 $this->session->set_userdata('customer_order', 'DESC');
             else {
                 $this->session->set_userdata('customer_order', 'ASC');
             }
         } else
             $this->session->set_userdata('customer_order', 'DESC');
-		redirect('/customer/show_customers/');
-	}
+        redirect('/customer/show_customers/');
+    }
 
-	// validation
+    // validation
 
     function get_customers_AJAX()
     {
@@ -692,8 +692,8 @@ class Customer extends MY_Controller {
             if (strlen($query) > 0) {
                 $filters               = array('search_query' => addslashes($query));
                 $filters['company_id'] = $this->company_id;
-				$filters['offset'] = 25; // show 25 results only
-				$filters['only_static_customer_info'] = true; // fetch customer info only without payment/charges etc.
+                $filters['offset'] = 25; // show 25 results only
+                $filters['only_static_customer_info'] = true; // fetch customer info only without payment/charges etc.
                 $data['rows']          = $this->Customer_model->get_customers($filters);
 
                 $rows = json_encode($data['rows']);
@@ -702,8 +702,8 @@ class Customer extends MY_Controller {
         }
     }
    
-	// check if customer exists by searching the customer's name
-	function get_customer_by_name()
+    // check if customer exists by searching the customer's name
+    function get_customer_by_name()
     {
         $name = sqli_clean($this->security->xss_clean($this->input->get('name')));
 
@@ -712,16 +712,16 @@ class Customer extends MY_Controller {
                 $customer = $this->Customer_model->get_customer_by_name($name, $this->company_id);
                 if ($customer)
                 {
-                	echo json_encode($customer);
-                	return;
+                    echo json_encode($customer);
+                    return;
                 }
             }
-		}
-		
+        }
+        
         echo json_encode(false);
-	}
-	
-	// validation
+    }
+    
+    // validation
 
     function delete_customer_JSON()
     {
@@ -751,10 +751,10 @@ class Customer extends MY_Controller {
         }
         echo json_encode($result);
     }
-	
-	// create booking log in the database
-	// by default, the log is considered to be automatically generated from events that happens in booking
-	// such as: check-in, check-out, create/cancel reservation, and other changes in booking information
+    
+    // create booking log in the database
+    // by default, the log is considered to be automatically generated from events that happens in booking
+    // such as: check-in, check-out, create/cancel reservation, and other changes in booking information
 
     function get_customer_info_in_JSON($customer_id)
     {
@@ -767,21 +767,21 @@ class Customer extends MY_Controller {
         $json                       = json_encode($customer_info);
 
         echo $json;
-	}
+    }
     
-	function get_all_unpaid_bookings_AJAX()
-	{
-		$customer_id = sqli_clean($this->security->xss_clean($this->input->post('customer_id')));
+    function get_all_unpaid_bookings_AJAX()
+    {
+        $customer_id = sqli_clean($this->security->xss_clean($this->input->post('customer_id')));
 
-		$filters = Array(
-			'show_paid' => 'unpaid_only',
-			'booking_customer_id' => $customer_id
-			);
-		
-		$bookings = $this->Booking_model->get_bookings($filters);
-		echo json_encode($bookings);
-	}
-	
+        $filters = Array(
+            'show_paid' => 'unpaid_only',
+            'booking_customer_id' => $customer_id
+            );
+        
+        $bookings = $this->Booking_model->get_bookings($filters);
+        echo json_encode($bookings);
+    }
+    
     function get_customer_bookings_AJAX()
     {
         
@@ -834,11 +834,11 @@ class Customer extends MY_Controller {
                 $this->permission->check_access_to_customer_id($this->user_id, $customer_id);
 
                 if (isset($order)) 
-                {			
+                {           
                     if ($order == 'asc')
-                        $this->session->set_userdata('booking_order', 'ASC');			
+                        $this->session->set_userdata('booking_order', 'ASC');           
                     else
-                        $this->session->set_userdata('booking_order', 'DESC');			
+                        $this->session->set_userdata('booking_order', 'DESC');          
                 } else 
                     $this->session->set_userdata('booking_order', 'DESC');
 
@@ -852,7 +852,7 @@ class Customer extends MY_Controller {
                 //$data['company'] = $this->Company_model->get_company($this->company_id);
 
 
-                switch ($booking_status) {		
+                switch ($booking_status) {      
                     case "reservation" : $state = '0'; break;
                     case "checkin" : $state = '1'; break;
                     case "checkout" : $state = '2'; break;
@@ -865,7 +865,7 @@ class Customer extends MY_Controller {
                     'end_date' => $end_date,
                     'show_paid' => $show_paid,
                     'order_by' => $order_by,
-                    'order'	=> "DESC", // this is for booking id, for balance we appended it in order_by
+                    'order' => "DESC", // this is for booking id, for balance we appended it in order_by
                     'state' => $state,
                     'group' => $groups,
                     'statement_date' => $statement_date
@@ -891,9 +891,9 @@ class Customer extends MY_Controller {
 
                 $filters['with_booking_statements'] = true;
                 // if the dates entered are in valid format (yyyy-mm-dd), otherwise clear the dates
-                if (!$this->_is_valid_date($start_date) || !$this->_is_valid_date($start_date) ) {			
+                if (!$this->_is_valid_date($start_date) || !$this->_is_valid_date($start_date) ) {          
                     $filters['start_date'] = '';
-                    $filters['end_date'] = '';	            	
+                    $filters['end_date'] = '';                  
                 }
                 if(!$this->_is_valid_date($statement_date)){
                    $filters['statement_date'] = '';
@@ -903,13 +903,13 @@ class Customer extends MY_Controller {
                     $filters['show_only_checked_in_and_checked_out'] = true;
                 }
                 
-                $data['payment_types'] = $this->Payment_model->get_payment_types($this->company_id);	
-                $bookings = $this->Booking_model->get_bookings($filters+array('booking_customer_id' => $customer_id));	
+                $data['payment_types'] = $this->Payment_model->get_payment_types($this->company_id);    
+                $bookings = $this->Booking_model->get_bookings($filters+array('booking_customer_id' => $customer_id));  
             }
         }  
         
-		foreach ($bookings as $index => $booking)
-		{
+        foreach ($bookings as $index => $booking)
+        {
             $next_room_charge_selling_date = max($booking['check_in_date'], $this->selling_date);
             $last_room_charge = $this->Charge_model->get_last_applied_charge($booking['booking_id'], $booking['charge_type_id'], null, true);
             if(isset($last_room_charge['selling_date']) && $last_room_charge['selling_date']){
@@ -1010,8 +1010,8 @@ class Customer extends MY_Controller {
     
     function add_folio_AJAX($folio_name = null, $booking_id = null, $customer_id = null, $for = null)
     {
-		$first_folio_id = $last_insert_id = null;
-		
+        $first_folio_id = $last_insert_id = null;
+        
         $data['booking_id'] = $booking_id ? $booking_id : sqli_clean($this->security->xss_clean($this->input->post('booking_id')));
         $data['customer_id'] = $customer_id ? $customer_id : sqli_clean($this->security->xss_clean($this->input->post('customer_id')));
         $data['folio_name'] = $folio_name ? $folio_name : sqli_clean($this->security->xss_clean($this->input->post('folio_name')));
@@ -1054,16 +1054,16 @@ class Customer extends MY_Controller {
         }
     }
     
-	function insert_payments_AJAX()
-	{
-		$bookings = $this->input->post('bookings');
+    function insert_payments_AJAX()
+    {
+        $bookings = $this->input->post('bookings');
         $customer_id = sqli_clean($this->security->xss_clean($this->input->post('customer_id')));
-		$selling_date = sqli_clean($this->security->xss_clean($this->input->post('payment_date')));
-	 	$payment_type_id = sqli_clean($this->security->xss_clean($this->input->post('payment_type_id')));
-	 	$total_balance = sqli_clean($this->security->xss_clean($this->input->post('total_balance')));
-	 	$description = sqli_clean($this->security->xss_clean($this->input->post('description')));
-	 	$cvc = sqli_clean($this->security->xss_clean($this->input->post('cvc')));
-	 	$distribute_equal_amount = $this->input->post('distribute_equal_amount');
+        $selling_date = sqli_clean($this->security->xss_clean($this->input->post('payment_date')));
+        $payment_type_id = sqli_clean($this->security->xss_clean($this->input->post('payment_type_id')));
+        $total_balance = sqli_clean($this->security->xss_clean($this->input->post('total_balance')));
+        $description = sqli_clean($this->security->xss_clean($this->input->post('description')));
+        $cvc = sqli_clean($this->security->xss_clean($this->input->post('cvc')));
+        $distribute_equal_amount = $this->input->post('distribute_equal_amount');
         // $folio_id = sqli_clean($this->security->xss_clean($this->input->post('folio_id')));
         $capture_payment = sqli_clean($this->security->xss_clean(trim($this->input->post('capture_payment_type'))));
       
@@ -1073,14 +1073,14 @@ class Customer extends MY_Controller {
         $round_total_amount = (round($equal_amount,2)) * $no_of_bookings;
         $amount_diff = round(($round_total_amount - $total_balance), 2);
         
-		$company_data =  $this->Company_model->get_company($this->company_id);
-		$capture_payment_type = $company_data['manual_payment_capture'];
-		$capture_payment_type = ($capture_payment != 'authorize_only') ? false : true;
-		
+        $company_data =  $this->Company_model->get_company($this->company_id);
+        $capture_payment_type = $company_data['manual_payment_capture'];
+        $capture_payment_type = ($capture_payment != 'authorize_only') ? false : true;
+        
         $i = 1;
         $errors = array();
-		foreach ($bookings as $booking)
-		{
+        foreach ($bookings as $booking)
+        {
             $balance = $booking['balance'];
             
             if($distribute_equal_amount == "Yes")
@@ -1106,16 +1106,16 @@ class Customer extends MY_Controller {
                 break;
             }
             
-			$data = Array(
-				"user_id" => $this->user_id,
-				"booking_id" => $booking['booking_id'],
-				"selling_date" => $selling_date,
-				"amount" => $amount,
-				"customer_id" => $customer_id,
-				"payment_type_id" => $payment_type_id,
-				"description" => $description,
+            $data = Array(
+                "user_id" => $this->user_id,
+                "booking_id" => $booking['booking_id'],
+                "selling_date" => $selling_date,
+                "amount" => $amount,
+                "customer_id" => $customer_id,
+                "payment_type_id" => $payment_type_id,
+                "description" => $description,
                 "date_time" => gmdate("Y-m-d H:i:s")
-			);
+            );
             $card_data = $this->Card_model->get_active_card($customer_id, $this->company_id);
             $data['credit_card_id'] = "";
             if(isset($card_data) && $card_data){
@@ -1160,12 +1160,12 @@ class Customer extends MY_Controller {
                 $invoice_log_data['new_amount'] = $amount;
                 if($invoice_log_data['charge_or_payment_id'])
                 {
-					$folio_data = $this->Folio_model->get_folios($booking['booking_id']);
+                    $folio_data = $this->Folio_model->get_folios($booking['booking_id']);
 
                     $folio_id = (isset($folio_data) && count($folio_data) > 0) ? $folio_data[0]['id'] : 0;
 
                     $this->Payment_model->insert_payment_folio(array('payment_id' => $response['payment_id'], 'folio_id' => $folio_id));
-					
+                    
                     $invoice_log_data['log'] = $company_data['manual_payment_capture'] ? 'Payment Authorized' : 'Payment Captured';
                     $this->Invoice_log_model->insert_log($invoice_log_data);
                 }
@@ -1173,19 +1173,19 @@ class Customer extends MY_Controller {
             }
             $i++;
             $remaining_balance -= $amount; 
-		}
+        }
 
         if (!empty($errors)) {
             echo json_encode($errors);
         } else {
             echo json_encode($response);
         }
-	}
+    }
 
-	function get_customer_AJAX()
-	{
-		$customer_id = sqli_clean($this->security->xss_clean($this->input->post('customer_id')));
-		$customer = $this->Customer_model->get_customer($customer_id);
+    function get_customer_AJAX()
+    {
+        $customer_id = sqli_clean($this->security->xss_clean($this->input->post('customer_id')));
+        $customer = $this->Customer_model->get_customer($customer_id);
                 
         if($customer['cc_number'])
            $customer['cc_number'] = "";
@@ -1206,30 +1206,32 @@ class Customer extends MY_Controller {
                     $card_details['cc_number_encrypted'] = $card_details['cc_number'];
                     $card_details['cc_number'] = 'XXXX XXXX XXXX '.substr(base64_decode($card_details['cc_number']), -4);
                 }
+                $token = isset(json_decode($card_details['customer_meta_data'], true)['token']) && json_decode($card_details['customer_meta_data'], true)['token'] ? json_decode($card_details['customer_meta_data'], true)['token'] : json_decode($card_details['customer_meta_data'], true)['pci_token'];
                 $customer['cc_number_encrypted'] = isset($card_details['cc_number_encrypted']) && $card_details['cc_number_encrypted'] ? $card_details['cc_number_encrypted'] : null;
                 $customer['cc_number'] = $card_details['cc_number'];
                 $customer['cc_expiry_month'] = $card_details['cc_expiry_month'];
                 $customer['cc_expiry_year'] = $card_details['cc_expiry_year'];
                 $customer['cc_tokenex_token'] = $card_details['cc_tokenex_token'];
                 $customer['cc_cvc_encrypted'] = $card_details['cc_cvc_encrypted'];
-                $customer['customer_pci_token'] = json_decode($card_details['customer_meta_data'], true)['token'] ?? null;
+                $customer['customer_pci_token'] = $token ?? null;
                 $customer['token_source'] = json_decode($card_details['customer_meta_data'], true)['source'] ?? null;
             }
 
         echo json_encode($customer);
-	}
+    }
 
-	function create_customer_AJAX()
-	{
+    function create_customer_AJAX()
+    {
         $error     = false;
         $error_msg = '';
 
         $customer_data               = $this->security->xss_clean($this->input->post('customer_data', TRUE));
 
         // prx($customer_data);
-		
+
 		$customer_data['customer_name'] = sqli_clean($this->security->xss_clean($customer_data['customer_name']));
 		$customer_data['customer_type'] = sqli_clean($this->security->xss_clean($customer_data['customer_type_id']));
+
         $customer_data['company_id'] = $this->company_id;
 
         $cvc = $customer_data['cvc'];
@@ -1238,12 +1240,19 @@ class Customer extends MY_Controller {
         if(isset($customer_data['cc_token']) && $customer_data['cc_token'])
             $cc_token = $customer_data['cc_token'];
 
+        $customer_create_data['customer_data'] = $customer_data;
+
         unset($customer_data['cvc']);
         unset($customer_data['cc_number']);
         unset($customer_data['cc_token']);
+        unset($customer_data['kovena_vault_token']);
 
-        $customer_id                 = $this->Customer_model->create_customer($customer_data);
+        $customer_id = $this->Customer_model->create_customer($customer_data);
         
+        $customer_create_data['customer_data']['customer_id'] = $customer_id;
+        apply_filters('post.build.customer', $customer_create_data);
+        unset($customer_create_data);
+
         $post_customer_data = $customer_data;
         $post_customer_data['customer_id'] = $customer_id;
 
@@ -1308,7 +1317,7 @@ class Customer extends MY_Controller {
             }
         } else if($cc_token){
             $card_details['cc_number'] = $cc_number;
-            $meta['token'] = $cc_token;
+            $meta['pci_token'] = $cc_token;
             $meta['source'] = 'pci_booking';
             $card_details['customer_meta_data'] = json_encode($meta);
         }
@@ -1334,7 +1343,7 @@ class Customer extends MY_Controller {
             }
             if (isset($customer_data['customer_fields']))
             {
-                $this->Customer_model->update_customer_fields($customer_id, $customer_data['customer_fields']);	
+                $this->Customer_model->update_customer_fields($customer_id, $customer_data['customer_fields']); 
             }
         }
        
@@ -1343,7 +1352,7 @@ class Customer extends MY_Controller {
         $data['error_msg']   = $error_msg;
 
         echo json_encode($data);
-	}
+    }
 
     /**
      * @param $token
@@ -1370,7 +1379,7 @@ class Customer extends MY_Controller {
 
 		$customer_data['customer_name'] = sqli_clean($this->security->xss_clean($customer_data['customer_name']));
         $customer_data['customer_type'] = sqli_clean($this->security->xss_clean($customer_data['customer_type_id']));
-		
+
         $cvc = $customer_data['cvc'];
         $cc_number = $customer_data['cc_number'];
 
@@ -1492,7 +1501,7 @@ class Customer extends MY_Controller {
        
         if (isset($customer_data['customer_fields']))
         {
-        	$this->Customer_model->update_customer_fields($customer_id, $customer_data['customer_fields']);	
+            $this->Customer_model->update_customer_fields($customer_id, $customer_data['customer_fields']); 
         }
         
         $data['error']     = $error;
@@ -1626,7 +1635,7 @@ class Customer extends MY_Controller {
 
         /*if (isset($customer_data['customer_fields']))
         {
-        	$this->Customer_model->update_customer_fields($customer_id, $customer_data['customer_fields']);	
+            $this->Customer_model->update_customer_fields($customer_id, $customer_data['customer_fields']); 
         }*/
         if($row == "success"){
             $data['res']     = "success";
@@ -1641,7 +1650,7 @@ class Customer extends MY_Controller {
 
     function get_customer_types()
     {
-    	$data = array();
+        $data = array();
 
         if(!is_null($customer_types = $this->Customer_type_model->get_customer_types($this->company_id, false, true)))
         {
@@ -1720,19 +1729,19 @@ class Customer extends MY_Controller {
         {
             $customer_types[] = $val;
         }
-    	echo json_encode($customer_types);
+        echo json_encode($customer_types);
     }
 
     function get_customer_fields()
     {
-    	$result = $this->Customer_field_model->get_customer_fields_for_customer_form($this->company_id);
-    	echo json_encode($result);
+        $result = $this->Customer_field_model->get_customer_fields_for_customer_form($this->company_id);
+        echo json_encode($result);
     }
 
     function get_common_customer_fields()
     {
-    	$result = $this->Customer_field_model->get_customer_fields_for_customer_form($this->company_id, true);
-    	echo json_encode($result);
+        $result = $this->Customer_field_model->get_customer_fields_for_customer_form($this->company_id, true);
+        echo json_encode($result);
     }
 
     function download_csv_export()
@@ -1900,20 +1909,20 @@ class Customer extends MY_Controller {
         }
     }
     function get_customer_card_AJAX()
-	{
-		$customer_id = sqli_clean($this->security->xss_clean($this->input->post('customer_id')));
-		$customer = $this->Card_model->get_customer_cards($customer_id);
+    {
+        $customer_id = sqli_clean($this->security->xss_clean($this->input->post('customer_id')));
+        $customer = $this->Card_model->get_customer_cards($customer_id);
         echo json_encode($customer);
-	}
+    }
     function get_customer_card_AJAX_by_Id()
-	{
-		$customer_id = sqli_clean($this->security->xss_clean($this->input->post('customer_id')));
+    {
+        $customer_id = sqli_clean($this->security->xss_clean($this->input->post('customer_id')));
         $customer_card_id = sqli_clean($this->security->xss_clean($this->input->post('customer_card_id')));
-		$customer = $this->Card_model->get_customer_card_by_id($customer_id, $customer_card_id);
+        $customer = $this->Card_model->get_customer_card_by_id($customer_id, $customer_card_id);
         echo json_encode($customer);
-	}
+    }
     function get_customer_card_data()
-	{
+    {
         
         $booking_id = sqli_clean($this->security->xss_clean($this->input->post('booking_id')));
         
@@ -1932,15 +1941,15 @@ class Customer extends MY_Controller {
         echo json_encode($cus_assay); 
            
         
-		
-	}
+        
+    }
     function get_customer_card_AJAX_by_Id_customer_table()
-	{
-		$customer_id = $this->input->post('customer_id');
+    {
+        $customer_id = $this->input->post('customer_id');
        // $customer_card_id = $this->input->post('customer_card_id');
-		$customer = $this->Card_model->get_customer_card_by_id_customer_table($customer_id);
+        $customer = $this->Card_model->get_customer_card_by_id_customer_table($customer_id);
         echo json_encode($customer);
-	}
+    }
     
     function insert_card_details(){
        $error     = false;
@@ -2008,10 +2017,10 @@ class Customer extends MY_Controller {
         $card_token = sqli_clean($this->security->xss_clean($this->input->post('card_token'))); 
         $booking_id = sqli_clean($this->security->xss_clean($this->input->post('booking_id'))); 
 
-		$cards = $this->Card_model->get_token_cards($card_token);
-		if (!$cards || $cards && count($cards) <= 1) {
-			$this->tokenex->delete_token($card_token);
-		}
+        $cards = $this->Card_model->get_token_cards($card_token);
+        if (!$cards || $cards && count($cards) <= 1) {
+            $this->tokenex->delete_token($card_token);
+        }
         
         $customer_data = array(
                         'customer_id' =>$customer_id,
@@ -2019,7 +2028,7 @@ class Customer extends MY_Controller {
                     );
         apply_filters('post.delete.payment_source', $customer_data);
 
-		$del_result = $this->Card_model->delete_customer_card($customer_id, $card_id, $this->company_id);
+        $del_result = $this->Card_model->delete_customer_card($customer_id, $card_id, $this->company_id);
 
        
         if($del_result){

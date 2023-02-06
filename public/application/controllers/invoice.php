@@ -184,7 +184,8 @@ class Invoice extends MY_Controller {
             unset($data['customers'][$key]['cc_cvc_encrypted']);
             
             $card_data = isset($customer['customer_id']) ? $this->Card_model->get_active_card($customer['customer_id'], $this->company_id) : null;
-           
+            $token = isset($card_data['customer_meta_data']) && $card_data['customer_meta_data'] ? (isset(json_decode($card_data['customer_meta_data'], true)['token']) && json_decode($card_data['customer_meta_data'], true)['token'] ? json_decode($card_data['customer_meta_data'], true)['token'] : json_decode($card_data['customer_meta_data'], true)['pci_token']) : null;
+            
             if(isset($card_data) && $card_data){
                 $data['customers'][$key]['cc_number'] = $card_data['cc_number'];
                 $data['customers'][$key]['cc_expiry_month'] = $card_data['cc_expiry_month'];
@@ -192,7 +193,7 @@ class Invoice extends MY_Controller {
                 $data['customers'][$key]['cc_tokenex_token'] = $card_data['cc_tokenex_token'];
                 $data['customers'][$key]['cc_cvc_encrypted'] = $card_data['cc_cvc_encrypted'];
                 $data['customers'][$key]['evc_card_status'] = $card_data['evc_card_status'];
-                $data['customers'][$key]['customer_meta_token'] = isset($card_data['customer_meta_data']) && $card_data['customer_meta_data'] && isset(json_decode($card_data['customer_meta_data'], true)['token']) ? json_decode($card_data['customer_meta_data'], true)['token'] : null;
+                $data['customers'][$key]['customer_meta_token'] = isset($card_data['customer_meta_data']) && $card_data['customer_meta_data'] && (isset(json_decode($card_data['customer_meta_data'], true)['pci_token']) || isset(json_decode($card_data['customer_meta_data'], true)['token'])) ? $token : null;
             }
         }
         // for company logo
@@ -886,7 +887,9 @@ class Invoice extends MY_Controller {
                 $invoice_log_data['log'] = 'Charge Updated';
                 $this->Invoice_log_model->insert_log($invoice_log_data); 
 
-                $charge_changes[$key]['selling_date'] = get_base_formatted_date($charge['selling_date']);
+                if(isset($charge['selling_date']) && $charge['selling_date']){
+                    $charge_changes[$key]['selling_date'] = get_base_formatted_date($charge['selling_date']);
+                }
 
                 $charge_id = $charge['charge_id'];
             }

@@ -9,6 +9,16 @@ var customerId;
 
     var commonCustomerFields = [];
 
+    if(!innGrid.ajaxCache.commonCustomerFields) {
+        $.getJSON(getBaseURL() + 'booking/get_customer_data_on_pageload',
+            function (data) {
+                innGrid.ajaxCache.commonCustomerFields = data.common_customer_fields;
+                console.log(innGrid.ajaxCache.commonCustomerFields);
+                commonCustomerFields = data.common_customer_fields;
+            }
+        );
+    }
+
     // dynamically load required js
     var scripts = [
         'js/jquery.payment.js'
@@ -307,9 +317,9 @@ var customerId;
 
             if (isTokenizationEnabled == true) {
                 console.log('customer-data',customer);
-                console.log('channexpci',innGrid.isChannePCIEnabled);
+                console.log('Kovena',innGrid.isKovenaEnabled);
                 var sensitiveCardNumber =
-                    ((innGrid.isChannePCIEnabled || innGrid.isPCIBookingEnabled) && customer.customer_pci_token ? '<a style="position: absolute; right: 26px; top: 7px; z-index: 9999;" title = "Show Card Number" class="show_cc" data-cc_number_encrypted="' + customer.cc_number_encrypted + '" data-cc_number="' + customer.cc_number + '" data-customer_pci_token="' + customer.customer_pci_token + '" data-token_source="' + customer.token_source + '" data-cc_detail="card_number" href="javascript:"><i class="fa fa-eye" ></i></a><input type="hidden" class="customer_id" data-cc_token="' + customer.cc_tokenex_token + '" data-cc_cvc="' + customer.cc_cvc_encrypted + '" value="' + customer.customer_id + '"/>' : '');
+                    (((innGrid.isChannePCIEnabled || innGrid.isPCIBookingEnabled) && customer.token_source != 'kovena') && customer.customer_pci_token ? '<a style="position: absolute; right: 26px; top: 7px; z-index: 9999;" title = "Show Card Number" class="show_cc" data-cc_number_encrypted="' + customer.cc_number_encrypted + '" data-cc_number="' + customer.cc_number + '" data-customer_pci_token="' + customer.customer_pci_token + '" data-token_source="' + customer.token_source + '" data-cc_detail="card_number" href="javascript:"><i class="fa fa-eye" ></i></a><input type="hidden" class="customer_id" data-cc_token="' + customer.cc_tokenex_token + '" data-cc_cvc="' + customer.cc_cvc_encrypted + '" value="' + customer.customer_id + '"/>' : '');
                 var sensitiveCardCVC = (customer.cc_cvc_encrypted ? '<a style="position: absolute; right: 26px; top: 7px; z-index: 9999;" title = "Show Card CVC" class="show_cc" data-cc_number_encrypted="' + customer.cc_number_encrypted + '" data-cc_number="' + customer.cc_number + '" data-cc_detail="card_cvc" href="javascript:"><i class="fa fa-eye" ></i></a>' : '');
 
                 $customer_form.append(
@@ -571,6 +581,8 @@ var customerId;
 
                             var customerData = that._fetchCustomerData();
 
+                            console.log('customerData',customerData);
+
                             var update_create_client = function(data) {
                                 data = _.isUndefined(data) ? null : data;
                                 var token = null,
@@ -692,14 +704,7 @@ var customerId;
                                         return;
                                     }
                                 });
-                            // if(isTokenizationEnabled == 1 && $('#credit_card_iframe')[0].src)
-                            // {
-                            //     $('#credit_card_iframe')[0].contentWindow.postMessage('validate', '*');
-                            // }
-                            // else
-                            // {
-                            // update_create_client();
-                            // }
+                            
 
                             if (typeof nexioGateway !== "undefined" && nexioGateway) {
                                 var myIframe = window.document.getElementById('myIframe');
@@ -712,7 +717,24 @@ var customerId;
                                     update_create_client();
                                 }
                                 
+                            } 
+                            else if (typeof kovenaGateway !== "undefined" && kovenaGateway && innGrid.isKovenaEnabled == 1) {
+                                console.log('widget',widget);
+                                widget.trigger('submit_form');
+                                widget.load();
+
+                                setTimeout(function(){
+                                    customerData.kovena_vault_token = $("input[name='payment_source_token']").val();             
+                                    console.log('Kovena vault token',customerData.kovena_vault_token);
+                                    if(!customerData.kovena_vault_token && customerData.kovena_vault_token ==''){
+                                        alert("one time token not found" );
+                                        return false;
                             } else {
+                                        update_create_client();
+                                    }
+                                },4500);
+                            }
+                            else {
 
                                 if($("#myIframe")[0] && $("#myIframe")[0].contentWindow){
 
@@ -723,7 +745,7 @@ var customerId;
                                         var cardData = $("#myIframe").contents().find("body").html();
                                         console.log(cardData);
                                         update_create_client(cardData);
-                                    },1500);
+                                    },2500);
                                 } else {
                                     var cardData = [];
                                     update_create_client(cardData);
@@ -756,136 +778,11 @@ var customerId;
             if (customer.customer_type_id !== undefined)
                 $("[name='customer_type_id']").val(customer.customer_type_id)
 
-            if (isTokenizationEnabled == 1) // global variable
-            {
-                $.get(getBaseURL() + "customer/get_credit_card_frame", { customer_id: customer.customer_id },
-                    function(data) {
-                        if (data) {
-                            data = JSON.parse(data);
-                            if (data.error) {
-                                $('#button-update-customer').attr('disabled', false);
-                            } else if (typeof data.iframe_url !== "undefined") {
-                                if (
-                                    (innGrid.isCCVisualizationEnabled && innGrid.featureSettings.selectedPaymentGateway) ||
-                                    (innGrid.isCCVisualizationEnabled && !innGrid.featureSettings.selectedPaymentGateway) ||
-                                    (!innGrid.isCCVisualizationEnabled && innGrid.featureSettings.selectedPaymentGateway)
-                                ) {
-                                    $('.cc_field').show();
-                                } else {
-                                    $('.cc_field').hide();
-                                }
-                                $('#credit_card_iframe').attr('src', data.iframe_url);
-                                if (window.addEventListener) {
-                                    addEventListener("message", that._iframe_listener, false);
-                                } else {
-                                    attachEvent("onmessage", that._iframe_listener);
-                                }
-                            }
-                        }
-                    }
-                );
-                if (customer.customer_id) {
-                    $.get(getBaseURL() + "settings/accounting/cc_tokenization_status", { customer_id: customer.customer_id },
-                        function(data) {
-                            if (data) {
-                                data = JSON.parse(data);
-                                if (customer.cc_tokenex_token) {
-                                    $('#card-image').hide();
-                                    $('#detokenize-card').attr('src', getBaseURL() + 'images/cards/eye.png').show();
-                                    data.push('Tokenex');
-                                }
-                                if (data.length > 0) {
-                                    $('#cc_tokenization_status').html('<span class="btn btn-success" style="cursor:help;">' + l("Card Tokenized", true) + ' (' + data.join(', ') + ')</span>');
-                                }
-                            }
-                        }
-                    );
-                }
-                $('#button-update-customer').attr('disabled', true); // disable create or update customer button utill iframe loads
-            }
+            
             $("#customer-modal").find("form.modal-body").attr('autocomplete', 'none');
             $("#customer-modal").find(".modal-content").find('input.form-control').attr('autocomplete', 'none');
         },
-        _iframe_listener: function(event) {
-            if (event.origin === 'https://htp.tokenex.com' || event.origin === 'https://test-htp.tokenex.com') {
-                var message = JSON.parse(event.data);
-                switch (message.event) {
-                    case 'load':
-                        $('#button-update-customer').attr('disabled', false);
-                        break;
-                    case 'focus':
-                        $('#credit_card_iframe')[0].contentWindow.postMessage('enablePrettyFormat', '*');
-                        if (message.data.value) {
-                            $('#masked-card-number-label').hide();
-                        }
-                        break;
-                    case 'cardTypeChange':
-                        var supportedCardTypes = ["americanExpress", "diners", "discover", "jcb", "masterCard", "visa"];
-                        if (message.data.possibleCardType && $.inArray(message.data.possibleCardType, supportedCardTypes) > -1) {
-                            $('#card-image').attr('src', getBaseURL() + 'images/cards/' + message.data.possibleCardType + '.jpg').show();
-                        } else {
-                            $('#card-image').hide();
-                        }
-                        break;
-                    case 'validation':
-                        if (!message.data.isValid && message.data.validator == "required") {
-                            $('#masked-card-number-label').show();
-                        }
-
-                        if (!message.data.isValid) {
-                            //field failed validation
-                            if (message.data.validator == "invalid" && innGrid.deferredCreditCardValidation &&
-                                typeof innGrid.deferredCreditCardValidation.resolve === "function") {
-                                innGrid.deferredCreditCardValidation.reject('invalid');
-                            } else if (message.data.validator == "required" && innGrid.deferredCreditCardValidation &&
-                                typeof innGrid.deferredCreditCardValidation.resolve === "function") {
-                                innGrid.deferredCreditCardValidation.reject('required');
-                            }
-                        } else {
-                            //validation valid!
-                            if (innGrid.deferredCreditCardValidation && typeof innGrid.deferredCreditCardValidation.resolve === "function") {
-                                innGrid.deferredCreditCardValidation.resolve();
-                            }
-                        }
-                        break;
-                    case 'post':
-                        if (!message.data.success) {
-                            // use message.data.error                            
-                            innGrid.deferredCreditCardValidation.reject(message.data.error);
-                        } else {
-                            //get token! message.data.token
-                            var cvc = $('input[name="cvc"]').val();
-                            if (cvc == "***") {
-                                cvc = null; // cvc is already in db
-                            }
-                            if (cvc) {
-                                $.ajax({
-                                    type: "POST",
-                                    url: getBaseURL() + "customer/get_cc_cvc_encrypted",
-                                    data: {
-                                        token: message.data.token,
-                                        cvc: cvc
-                                    },
-                                    dataType: "json",
-                                    success: function(data) {
-                                        if (data.success) {
-                                            message.data.cc_cvc_encrypted = data.cc_cvc_encrypted;
-                                            innGrid.deferredWaitForTokenization.resolve(message.data);
-                                        } else
-                                            innGrid.deferredWaitForTokenization.resolve(message.data);
-                                    },
-                                    error: function(error) {
-                                        innGrid.deferredWaitForTokenization.resolve(message.data);
-                                    }
-                                });
-                            } else {
-                                innGrid.deferredWaitForTokenization.resolve(message.data);
-                            }
-                        }
-                        break;
-                }
-            }
-        },
+       
         _fetchCustomerData: function() {
 
             var $customerModal = $("#customer-modal");
@@ -1060,17 +957,12 @@ var customerId;
                 }
             });
                     $('#display-cc-details').modal('show');
-
-            // var iframe = document.createElement('iframe');
-            // iframe.src = getBaseURL() + "customer/get_credit_card_number?customer_pci_token=" + customer_pci_token;
-            // iframe.height = '300px';
-            // iframe.width = '100%';
-            // iframe.style = 'border-style: none';
-
-            // console.log('iframe', iframe);
-
             
         } else {
+
+            var imageUrl = getBaseURL() + 'images/loading.gif'
+            $('<img class="loader-img" src="'+imageUrl+'" style="width: 7%;margin: -25px -25px;float: right;"/>').insertAfter(this);
+
             var iframe = document.createElement('iframe');
             iframe.src = getBaseURL() + "customer/get_credit_card_number?customer_pci_token=" + customer_pci_token;
             iframe.height = '300px';
@@ -1080,7 +972,23 @@ var customerId;
             console.log('iframe', iframe);
 
             $('#display-cc-details').find('.modal-body').html(iframe);
-            $('#display-cc-details').modal('show');
+
+            setTimeout(function(){
+
+                console.log($('#display-cc-details').find('.modal-body').find('iframe').contents().find("body").html().trim());
+                var responseBody = $('#display-cc-details').find('.modal-body').find('iframe').contents().find("body").html().trim();
+                console.log('responseBody',responseBody);
+                if (responseBody == undefined || responseBody == 'card not found\n' || responseBody == 'card not found' || responseBody == null) {
+                    console.log('in');
+                    $("#display-cc-details").find('iframe').contents().find("body").html("Card details are no longer viewable");
+                    $('#display-cc-details').modal('show');
+                    $('.loader-img').hide();
+                } else {
+                    $('#display-cc-details').modal('show');
+                    $('.loader-img').hide();
+                }
+
+            },3000);
         }
     });
 

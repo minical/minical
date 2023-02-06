@@ -284,6 +284,13 @@
                                 <?php echo l('invoice').' '.l('logs'); ?>
                             </a>
                         </li>
+                        <?php if ($this->review_management_settings) { ?>
+                            <li role="presentation">
+                                <a role="menuitem" id="feedback-email-button" tabindex="-1" href="#">
+                                    <?php echo l('Email Customer Feedback Request'); ?>
+                                </a>
+                            </li>
+                        <?php } ?>
                     </ul>
                     <?php
                     endif; ?>
