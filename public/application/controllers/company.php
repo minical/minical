@@ -96,7 +96,8 @@ class Company extends MY_controller
 	}
     
     function get_partners_in_JSON(){
-        $data = $this->Whitelabel_partner_model->get_partners();
+       $array['is_deleted'] = '0';
+        $data = $this->Whitelabel_partner_model->get_partners($array,false);
         echo json_encode($data);
     }
 
