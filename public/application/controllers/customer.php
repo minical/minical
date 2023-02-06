@@ -1228,9 +1228,10 @@ class Customer extends MY_Controller {
         $customer_data               = $this->security->xss_clean($this->input->post('customer_data', TRUE));
 
         // prx($customer_data);
-		
-        $customer_data['customer_name'] = sqli_clean($this->security->xss_clean($customer_data['customer_name']));
-        
+
+		$customer_data['customer_name'] = sqli_clean($this->security->xss_clean($customer_data['customer_name']));
+		$customer_data['customer_type'] = sqli_clean($this->security->xss_clean($customer_data['customer_type_id']));
+
         $customer_data['company_id'] = $this->company_id;
 
         $cvc = $customer_data['cvc'];
@@ -1376,8 +1377,9 @@ class Customer extends MY_Controller {
         $customer_id   = sqli_clean($this->security->xss_clean($this->input->post('customer_id')));
         $customer_data = ($this->security->xss_clean($this->input->post('customer_data', TRUE)));
 
-        $customer_data['customer_name'] = sqli_clean($this->security->xss_clean($customer_data['customer_name']));
-        
+		$customer_data['customer_name'] = sqli_clean($this->security->xss_clean($customer_data['customer_name']));
+        $customer_data['customer_type'] = sqli_clean($this->security->xss_clean($customer_data['customer_type_id']));
+
         $cvc = $customer_data['cvc'];
         $cc_number = $customer_data['cc_number'];
 
