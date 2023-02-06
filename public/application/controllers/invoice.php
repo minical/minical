@@ -315,8 +315,18 @@ class Invoice extends MY_Controller {
                         else
                         {
                             $cn = (isset($explode_name[0]) && $explode_name[0] ? $explode_name[0] : '').'_'.(isset($explode_name[1]) && $explode_name[1] ? $explode_name[1] : '');
-                            if(isset($data['booking_customer'][$cn]) && $data['booking_customer'][$cn] != "")
-                                $value = $data['booking_customer'][$cn];
+                            if(isset($data['booking_customer'][$cn]) && $data['booking_customer'][$cn] != "") {
+                                
+                                if($cn == 'customer_type') {
+                                    $cn = 'customer_type_id';
+                                    $this->load->model('customer_type_model');
+                                    $customer_type = $this->customer_type_model->get_customer_type($data['booking_customer'][$cn]); 
+                                    $value = $customer_type[0]['name'];
+                                }
+                                else {
+                                    $value = $data['booking_customer'][$cn];
+                                }
+                            }
                         }
                     }
 

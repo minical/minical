@@ -790,8 +790,7 @@ var customerId;
             // fetch general customer data
             var customerData = {
                 customer_name: $.trim($customerModal.find("[name='customer_name']").val()),
-                //customer_type_id: $.trim($customerModal.find("[name='customer_type_id']").val()),
-                customer_type_id: $.trim($('select[name="customer_type_id"]').find(":selected").text()),
+                customer_type_id: $.trim($customerModal.find("[name='customer_type_id']").val()),
                 email: $.trim($customerModal.find("[name='customer-email']").val()),
                 phone: $.trim($customerModal.find("[name='phone']").val()),
                 phone2: $.trim($customerModal.find("[name='phone2']").val()),
