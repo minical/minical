@@ -1033,7 +1033,7 @@ class Auth extends MY_Controller
             foreach ($active_extensions as $extension) {
 
                 if($this->is_super_admin == 1){
-                    if(isset($extension['extension_name']) && $extension['extension_name'] != 'reseller_package'){
+                    if(isset($extension['extension_name']) && $extension['extension_name'] != 'reseller_package' && $extension['extension_name'] != 'subscription' && $extension['extension_name'] != 'vendor_monthly_report'){
                         $new_extensions[] = array(
                             'extension_name' => $extension['extension_name'],
                             'company_id' => $company_id,
@@ -1041,7 +1041,7 @@ class Auth extends MY_Controller
                         );
                     }
                 } else {
-                    if(isset($extension['extension_name']) && $extension['extension_name'] != 'reseller_package'){
+                    if(isset($extension['extension_name']) && $extension['extension_name'] != 'reseller_package'  && $extension['extension_name'] != 'subscription' && $extension['extension_name'] != 'vendor_monthly_report'){
                         $new_extensions[] = array(
                             'extension_name' => $extension['extension_name'],
                             'company_id' => $company_id,
