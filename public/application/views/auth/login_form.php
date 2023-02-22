@@ -62,9 +62,13 @@ class="text-center"
 		<?php echo anchor('/auth/forgot_password/', 'Forgot Password?'); ?>
 		<br/>
 
-		<?php if(show_registration_link()) {
-		 	echo anchor('/auth/register', "Don't have an account? Sign-up with us!"); 
-		} ?>
+		<?php
+        if($whitelabel_detail['name'] != "The Lobby Boy"){
+			if(show_registration_link()) {
+			 	echo anchor('/auth/register', "Don't have an account? Sign-up with us!"); 
+			} 
+        }
+		?>
 
         
         <br/>
