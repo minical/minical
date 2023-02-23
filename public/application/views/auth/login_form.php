@@ -63,7 +63,7 @@ class="text-center"
 		<br/>
 
 		<?php
-        if($whitelabel_detail['name'] != "The Lobby Boy"){
+        if($whitelabel_detail['domain'] != "app.thelobbyboy.com"){
 			if(show_registration_link()) {
 			 	echo anchor('/auth/register', "Don't have an account? Sign-up with us!"); 
 			} 
