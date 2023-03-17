@@ -555,7 +555,7 @@ function get_total_companies($extension_name = null, $is_extension_active = fals
 	{
 		$data = array (
 			'company_id' => $company_id,
-			'to' => $email,
+			'email_to' => $email,
 			'email_type' => $email_type,
 			'date_sent' => $date_sent
 		);

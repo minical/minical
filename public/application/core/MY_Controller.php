@@ -336,6 +336,7 @@ class MY_Controller extends CI_Controller {
 
             $whitelabelinfo = $this->ci->session->userdata('white_label_information');
 
+            $this->vendor_currency_id = $whitelabelinfo['currency_id'];
             $admin_user_ids = $this->Whitelabel_partner_model->get_partner_detail();
             $this->is_super_admin = (($user && isset($user['email']) && $user['email'] == SUPER_ADMIN) || ($admin_user_ids && isset($admin_user_ids['admin_user_id']) && $this->user_id == $admin_user_ids['admin_user_id']));
 
@@ -343,7 +344,8 @@ class MY_Controller extends CI_Controller {
             $this->user_permission = ($user && isset($user['permission']) && $user['permission']) ? $user['permission'] : '';
 
             $this->is_partner_owner = ($admin_user_ids && isset($admin_user_ids['admin_user_id']) && $this->user_id == $admin_user_ids['admin_user_id']);
-
+            $this->is_partner_admin = ($this->user_id == $admin_user_ids['admin_user_id'] ) ? 1 :0;
+            
             $common_booking_sources = json_decode(COMMON_BOOKING_SOURCES, true);
             $i = 0;
             $booking_sources = $this->Booking_source_model->get_common_booking_sources_settings($this->company_id);
