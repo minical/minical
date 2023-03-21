@@ -406,6 +406,11 @@
         <div class="col-xs-4 text-right padding-right-zero padding-left-zero-wep">
              
             <address class="text-gapp book-wep">
+                <strong ><?php echo l('Invoice Create Date'); ?>:</strong> <span id="invoice-create-date">
+                <?php echo isset($invoice_create_data['date_time']) && $invoice_create_data['date_time'] ? date('Y-m-d h:i A', strtotime($invoice_create_data['date_time']))  : ''; 
+                ?>
+                </span><br/>
+                
                 <strong class="invoice_booking_id"><?php echo l('booking').' '.l('id'); ?>:</strong>
                 <input type="text" class="text-right m-119 m-024" id="booking_id" disabled value="<?php
                 // add 8 leading zeroes

@@ -281,7 +281,7 @@ data-keyboard="false" style="z-index: 9999;"
       <div class="modal-header">
         <h4 class="modal-title">
             <?php echo l('Subscription Notice', true); ?>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> -->
         </h4>        
       </div>
       <div class="modal-body">
