@@ -127,5 +127,28 @@ class Booking_log_model extends CI_Model {
 		$result = $q->result();
 		
 		return $result;
+    }
+
+    function get_booking_createdate($booking_id)
+    {		
+        $sql = "
+			SELECT bl.*
+			FROM booking_log as bl
+			WHERE 
+				bl.booking_id = '$booking_id' AND
+            bl.log in('OTA Booking created','Booking created')
+			ORDER BY date_time ASC limit 0,1
+		";
+		
+		$q = $this->db->query($sql);
+		
+		if ($this->db->_error_message())
+		{
+			show_error($this->db->_error_message());
+		}
+		
+		$result = $q->result_array();
+
+		return $result[0];
     }	
 }

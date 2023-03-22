@@ -17,6 +17,7 @@ class Invoice extends MY_Controller {
         $this->load->model('Tax_model');
         $this->load->model('Customer_model');
         $this->load->model('Booking_model');
+        $this->load->model('Booking_log_model');
         $this->load->model('Booking_extra_model');
         $this->load->model('Booking_room_history_model');
         $this->load->model('Card_model');
@@ -212,7 +213,7 @@ class Invoice extends MY_Controller {
         }
 
         $data['folios'] = $this->Folio_model->get_folios($booking_id);
-                
+        $data['invoice_create_data'] = $this->Booking_log_model->get_booking_createdate($booking_id);        
         $first_folio_id = isset($data['folios'][0]) && isset($data['folios'][0]['id']) ? $data['folios'][0]['id'] : null;
         
         $folio_id = $folio_id ? $folio_id : $first_folio_id;
