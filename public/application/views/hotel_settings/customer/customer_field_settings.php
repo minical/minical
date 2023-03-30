@@ -76,9 +76,21 @@
                             <input type="checkbox" name="show_on_invoice" autocomplete="off" <?php
                                     echo (
                                             isset($customer_field['name']) && (
-                                                    $customer_field['name'] == 'Phone' ||
+                                                    (
+                                                        !(
+                                                            $this->vendor_id == 3 || 
+                                                            $this->vendor_id == 14
+                                                        ) && 
+                                                        $customer_field['name'] == 'Phone'
+                                                    ) ||
+                                                    (
+                                                        !(
+                                                            $this->vendor_id == 3 || 
+                                                            $this->vendor_id == 14
+                                                        ) && 
+                                                        $customer_field['name'] == 'Email'
+                                                    ) ||
                                                     $customer_field['name'] == 'Fax' ||
-                                                    $customer_field['name'] == 'Email' ||
                                                     $customer_field['name'] == 'Address' ||
                                                     $customer_field['name'] == 'Address 2' ||
                                                     $customer_field['name'] == 'City' ||

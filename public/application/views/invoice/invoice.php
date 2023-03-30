@@ -383,9 +383,9 @@
                     $customer_address = implode(", ", $customer_address);
                     echo ($customer_address) ? l('Address', true).": ".$customer_address."<br/>":'';
 
-                    echo ($booking_customer['phone']) ? l('Phone', true).": ".$booking_customer['phone']."<br/>":'';
-                    echo ($booking_customer['fax']) ? l('Fax', true).": ".$booking_customer['fax']."<br/>":'';
-                    echo ($booking_customer['email']) ? l('Email', true).": <span id='customer-email'>".$booking_customer['email']."</span><br/>":'';
+                    echo (array_search('Phone', array_column($customer_fields, 'name')) !== FALSE && $booking_customer['phone']) ? l('Phone', true).": ".$booking_customer['phone']."<br/>":'';
+                    echo (array_search('Fax', array_column($customer_fields, 'name')) !== FALSE && $booking_customer['fax']) ? l('Fax', true).": ".$booking_customer['fax']."<br/>":'';
+                    echo (array_search('Email', array_column($customer_fields, 'name')) !== FALSE && $booking_customer['email']) ? l('Email', true).": <span id='customer-email'>".$booking_customer['email']."</span><br/>":'';
 
                     if (isset($booking_customer['customer_fields']) && count($booking_customer['customer_fields']) > 0) {
                         foreach ($booking_customer['customer_fields'] as $customer_field) {

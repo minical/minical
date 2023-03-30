@@ -339,6 +339,8 @@ class Invoice extends MY_Controller {
                 }
             }
 
+            $data['customer_fields'] = $customer_fields;
+
             $data['booking_customer']['customer_fields'] = [];
             foreach ($customer_fields as $customer_field) {
                 if(!(
