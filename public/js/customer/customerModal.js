@@ -111,36 +111,36 @@ var customerId;
 
             }
         });
-        //		}
-        //		else
-        //		{
-        //			that.customerTypes = innGrid.ajaxCache.customerTypes;
+        //      }
+        //      else
+        //      {
+        //          that.customerTypes = innGrid.ajaxCache.customerTypes;
         //
-        //			if (options.customer_id) {
-        //				$.ajax({
-        //					type: "POST",
-        //					url: getBaseURL() + "customer/get_customer_AJAX",
-        //					data: {
-        //						customer_id: options.customer_id
-        //					},
-        //					dataType: "json",
-        //					success: function (data) {
-        //						that.customerData = data;
-        //						that.deferredCustomerTypes.resolve();
-        //					}
-        //				});
-        //			}
-        //			else
-        //			{
-        //				innGrid.ajaxCache.customerTypes = {
-        //					customer_id: options.customer_id,
-        //					customer_name: options.customer_name
-        //				}
-        //				that.customerData = innGrid.ajaxCache.customerTypes;
-        //				that.deferredCustomerTypes.resolve();
-        //				options.onload();
-        //			}
-        //		}
+        //          if (options.customer_id) {
+        //              $.ajax({
+        //                  type: "POST",
+        //                  url: getBaseURL() + "customer/get_customer_AJAX",
+        //                  data: {
+        //                      customer_id: options.customer_id
+        //                  },
+        //                  dataType: "json",
+        //                  success: function (data) {
+        //                      that.customerData = data;
+        //                      that.deferredCustomerTypes.resolve();
+        //                  }
+        //              });
+        //          }
+        //          else
+        //          {
+        //              innGrid.ajaxCache.customerTypes = {
+        //                  customer_id: options.customer_id,
+        //                  customer_name: options.customer_name
+        //              }
+        //              that.customerData = innGrid.ajaxCache.customerTypes;
+        //              that.deferredCustomerTypes.resolve();
+        //              options.onload();
+        //          }
+        //      }
 
         if (!innGrid.ajaxCache.customerFields) {
             $.ajax({
@@ -595,7 +595,7 @@ var customerId;
                                     cc_cvc_encrypted = data.cc_cvc_encrypted;
                                 }
 
-                                if (data && data.length > 0){
+                                if (data && data.length > 0 && innGrid.isCardknoxEnabled == 0 ){
                                     var cardData = data.split('_');
                                     if(cardData){
                                         console.log('customerData',customerData);
@@ -605,6 +605,17 @@ var customerId;
                                         customerData.cc_token = cardData[0];
                                         customerData.cc_expiry_month = cardData[2].substring(0, 2);
                                         customerData.cc_expiry_year = cardData[2].substring(4);
+                                    }
+                                }else if(data && data.length > 0 && innGrid.isCardknoxEnabled == 1){
+                                    console.log('else')
+
+                                    if (data) {
+                                       customerData = data[0];
+                                       customerData.cc_number =  data[0].cc_number;
+                                        customerData.cvc =  data[0].cc_cvc_encrypted;
+                                        customerData.cc_token = data[0].cc_token ?data[0].cc_token:null;
+                                        customerData.cc_expiry_month = data[0].cc_expiry_month;
+                                        customerData.cc_expiry_year = data[0].cc_expiry_year;
                                     }
                                 }
 
@@ -733,6 +744,65 @@ var customerId;
                                         update_create_client();
                                     }
                                 },4500);
+                            }
+                            // typeof cardknoxGateway !== "undefined" && cardknoxGateway &&
+                            else if( innGrid.isCardknoxEnabled == 1) {
+                                if ($('#payment-form').html()) {
+
+                                    $('#submit-btn').trigger('click');
+                                    var imageUrl = getBaseURL() + 'images/loading.gif'
+                                    $('<img class="loader-img" src="'+imageUrl+'" style=""/>').insertBefore($('#button-update-customer'));
+                                    
+                                    save_customer_cardknox_card(customerId);
+
+                                    setTimeout(function(){
+
+                                        let customerToken = $('#customer-token').text();
+                                        let customerError = $('#customer-error').text();
+                                        
+                                        console.log(customerToken)
+                                        if (customerToken == ''|| customerToken == null|| customerToken == undefined) {
+                                            console.log(customerError)
+                                            alert(customerError);
+                                            $('#customer-modal').find('.close').trigger('click');
+                                            
+                                        } else {
+                                            
+                                                let xName = $("input[name=customer_name]").val();
+                                                let xMonth = document.getElementById("month").value;
+                                                let xYear = document.getElementById("year").value;
+                                            
+                                                let card_number_token = document.querySelector("[data-ifields-id='card-number-token']").value;
+                                                let cvv_token = document.querySelector("[data-ifields-id='cvv-token']").value;
+                                                let last_four_card_number = card_number_token.substring(0, 17).substring(12, 16);
+                                                console.log(card_number_token);
+                                                // console.log(cvv_token);
+
+                                                // if (customerToken =='' || card_number_token =='' || xMonth =='' || xYear =='') {
+                                                //     // $('#button-update-customer').prop('disabled', 'true');
+                                                //  $('#button-update-customer').removeProp('disabled');
+
+                                                //  $('.loader-img').remove();
+                                                    
+                                                //  return false;
+                                                // } else {
+                                                    $('#button-update-customer').removeProp('disabled');
+
+                                                    customerData.cardknox_token = customerToken;
+                                                    customerData.customer_name = xName;
+                                                    customerData.customer_id =  customerId ? customerId :'';
+                                                    customerData.cc_expiry_month = xMonth;
+                                                    customerData.cc_expiry_year = xYear;
+                                                    customerData.cc_number = "XXXX XXXX XXXX "  + last_four_card_number;
+                                                    console.log(customerData)
+                                                    update_create_client(customerData);
+                                        }
+
+                                    },12000);
+                                    
+                                } 
+                                
+                                
                             }
                             else {
 

@@ -1206,7 +1206,15 @@ class Customer extends MY_Controller {
                     $card_details['cc_number_encrypted'] = $card_details['cc_number'];
                     $card_details['cc_number'] = 'XXXX XXXX XXXX '.substr(base64_decode($card_details['cc_number']), -4);
                 }
-                $token = isset(json_decode($card_details['customer_meta_data'], true)['token']) && json_decode($card_details['customer_meta_data'], true)['token'] ? json_decode($card_details['customer_meta_data'], true)['token'] : json_decode($card_details['customer_meta_data'], true)['pci_token'];
+
+                if (isset(json_decode($card_details['customer_meta_data'], true)['token']) && json_decode($card_details['customer_meta_data'], true)['token']) {
+                    $token = json_decode($card_details['customer_meta_data'], true)['token'];
+                } elseif(json_decode($card_details['customer_meta_data'], true)['source'] == 'pci_booking') {
+                    $token = json_decode($card_details['customer_meta_data'], true)['pci_token'];
+                } elseif (json_decode($card_details['customer_meta_data'], true)['source'] == 'cardknox') {
+                    $token = json_decode($card_details['customer_meta_data'], true)['cardknox_token'];
+                }
+                
                 $customer['cc_number_encrypted'] = isset($card_details['cc_number_encrypted']) && $card_details['cc_number_encrypted'] ? $card_details['cc_number_encrypted'] : null;
                 $customer['cc_number'] = $card_details['cc_number'];
                 $customer['cc_expiry_month'] = $card_details['cc_expiry_month'];
@@ -1227,17 +1235,22 @@ class Customer extends MY_Controller {
 
         $customer_data               = $this->security->xss_clean($this->input->post('customer_data', TRUE));
 
-        // prx($customer_data);
+        // prx($customer_data); die();
 
-		$customer_data['customer_name'] = sqli_clean($this->security->xss_clean($customer_data['customer_name']));
+        $customer_data['customer_name'] = sqli_clean($this->security->xss_clean($customer_data['customer_name']));
 
         $customer_data['company_id'] = $this->company_id;
 
         $cvc = $customer_data['cvc'];
         $cc_number = $customer_data['cc_number'];
         $cc_token = '';
+        $cardknox_token = '';
+
         if(isset($customer_data['cc_token']) && $customer_data['cc_token'])
             $cc_token = $customer_data['cc_token'];
+        if(isset($customer_data['cardknox_token']) && $customer_data['cardknox_token'])
+        $cardknox_token = $customer_data['cardknox_token'];
+
 
         $customer_create_data['customer_data'] = $customer_data;
 
@@ -1245,6 +1258,7 @@ class Customer extends MY_Controller {
         unset($customer_data['cc_number']);
         unset($customer_data['cc_token']);
         unset($customer_data['kovena_vault_token']);
+        unset($customer_data['cardknox_token']);
 
         $customer_id = $this->Customer_model->create_customer($customer_data);
         
@@ -1320,6 +1334,12 @@ class Customer extends MY_Controller {
             $meta['source'] = 'pci_booking';
             $card_details['customer_meta_data'] = json_encode($meta);
         }
+        else if($cardknox_token){
+            $card_details['cc_number'] = $cc_number;
+            $meta['cardknox_token'] = $cardknox_token;
+            $meta['source'] = 'cardknox';
+            $card_details['customer_meta_data'] = json_encode($meta);
+        }
 
         $customer_data['cc_number'] = "";
         $customer_data['cc_expiry_month'] = "";
@@ -1376,7 +1396,7 @@ class Customer extends MY_Controller {
         $customer_id   = sqli_clean($this->security->xss_clean($this->input->post('customer_id')));
         $customer_data = ($this->security->xss_clean($this->input->post('customer_data', TRUE)));
 
-		$customer_data['customer_name'] = sqli_clean($this->security->xss_clean($customer_data['customer_name']));
+        $customer_data['customer_name'] = sqli_clean($this->security->xss_clean($customer_data['customer_name']));
 
         $cvc = $customer_data['cvc'];
         $cc_number = $customer_data['cc_number'];
