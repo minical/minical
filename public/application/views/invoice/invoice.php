@@ -403,14 +403,17 @@
                     <strong><?php echo l('invoice'); ?> #:</strong>
                     <?php echo str_pad((isset($invoice_number))?$invoice_number:0, 8, "0", STR_PAD_LEFT); ?>
                 </div>
-         <div class="pull-right create-wep">
+          <?php if(isset($this->is_custom_invoice_enabled) && $this->is_custom_invoice_enabled == true) { ?>
+            <div class="pull-right create-wep">
                 <strong ><?php 
-                $invoice_createdate = isset($invoice_create_data['date_time']) && $invoice_create_data['date_time'] ? date('Y-m-d h:i A', strtotime($invoice_create_data['date_time']))  : '';
+
+                $invoice_createdate = isset($invoice_create_data['date_time']) && $invoice_create_data['date_time'] ? date('Y-m-d h:i A', strtotime($invoice_create_data['date_time']))  : date('h:i A', strtotime($booking_detail['check_in_date']));
                 echo l('Invoice Create Date'); ?>:</strong> <span data-invoice_createdate="<?php echo $invoice_createdate;?>" id="invoice-create-date">
                 <?php echo $invoice_createdate; 
                 ?>
                 </span><br/>
-            </div>       
+            </div>
+            <?php }?>     
         <div class="col-xs-4 text-right padding-right-zero padding-left-zero-wep">
              
             <address class="text-gapp book-wep">
