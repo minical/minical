@@ -1159,6 +1159,22 @@ function get_total_companies($extension_name = null, $is_extension_active = fals
 		
 		return NULL;
     }
+
+    function get_companies_by_state($state){
+    	$sql = "SELECT c.* ,cs.* FROM company AS c 
+    	INNER JOIN company_subscription AS cs ON c.company_id = cs.company_id 
+    	WHERE c.is_deleted = 0 AND cs.subscription_state = '$state'";
+		$q = $this->db->query($sql);
+
+		if ($this->db->_error_message())
+		{
+			show_error($this->db->_error_message());
+		}
+
+		$result = $q->result_array();
+
+		return $result;
+    }
 }
 
 
