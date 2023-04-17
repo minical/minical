@@ -1813,38 +1813,38 @@ class Auth extends MY_Controller
             //itodo fix this
             $is_manual = ($subscription['payment_method'] == 'manual');
             switch ($subscription['subscription_state']) {
-//                case 'soft_failure':
-                // case 'past_due':
-                // case 'unpaid':                  
-                //     $response = array(
-                //         'is_blocking' => 0,
-                //         'message'     => 'Your account payment is past due. '.($is_manual
-                //                 ? 'Please contact '.$reply_to_email
-                //                 : 'Please update your payment details. '),
-                //         'show_link'   => 1,
-                //         'state'       => $subscription['subscription_state']
-                //     );
-                //     break;
-                // case 'trial_ended':
-                //     $response = array(
-                //         'is_blocking' => 0,
-                //         'message'     => 'Thank you for trying minical! To set up your recurring subscription '.($is_manual
-                //                 ? 'please contact '.$reply_to_email
-                //                 : 'please update your payment details. '),
-                //         'show_link'   => 1,
-                //         'state'       => $subscription['subscription_state']
-                //     );
-                //     break;
-                // case 'canceled':
-                //     $response = array(
-                //         'is_blocking' => 1,
-                //         'message'     => 'Your account is about to be suspended. '.($is_manual
-                //                 ? 'Please contact '.$reply_to_email
-                //                 : 'Please update your payment details. '),
-                //         'show_link'   => $is_manual ? 0 : 1,
-                //         'state'       => $subscription['subscription_state']
-                //     );
-                //     break;
+               case 'deleted':
+                case 'past_due':
+                case 'unpaid':                  
+                    $response = array(
+                        'is_blocking' => 0,
+                        'message'     => 'Your account payment is past due. '.($is_manual
+                                ? 'Please contact '.$reply_to_email
+                                : 'Please update your payment details. '),
+                        'show_link'   => 1,
+                        'state'       => $subscription['subscription_state']
+                    );
+                    break;
+                case 'trial_ended':
+                    $response = array(
+                        'is_blocking' => 0,
+                        'message'     => 'Thank you for trying minical! To set up your recurring subscription '.($is_manual
+                                ? 'please contact '.$reply_to_email
+                                : 'please update your payment details. '),
+                        'show_link'   => 1,
+                        'state'       => $subscription['subscription_state']
+                    );
+                    break;
+                case 'canceled':
+                    $response = array(
+                        'is_blocking' => 1,
+                        'message'     => 'Your account is about to be suspended. '.($is_manual
+                                ? 'Please contact '.$reply_to_email
+                                : 'Please update your payment details. '),
+                        'show_link'   => $is_manual ? 0 : 1,
+                        'state'       => $subscription['subscription_state']
+                    );
+                    break;
                 // case 'suspended':
                 //     $response = array(
                 //         'is_blocking' => 1,
@@ -1855,7 +1855,7 @@ class Auth extends MY_Controller
                 //     break;
             }
         }
-//        $this->session->set_flashdata('flash', 'value');
+        $this->session->set_flashdata('flash', 'value');
         echo json_encode($response);
     }
 
