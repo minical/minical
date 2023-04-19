@@ -1043,6 +1043,33 @@ class Charge_model extends CI_Model {
         $q = $this->db->query($sql);
 
     }
+
+    function update_booking_charges($old_booking_ids, $new_booking_ids) {
+
+    	$i = 0; $data = array();
+    	foreach ($old_booking_ids as $key => $value) {
+    		if($value) {
+    			$data[] = " WHEN booking_id = $value THEN $new_booking_ids[$i]";
+    		}
+			$i++;
+    	}
+
+		$sql = "UPDATE
+				    `charge` AS c
+				LEFT JOIN charge_type AS ct
+				ON
+				    ct.id = c.charge_type_id SET `booking_id` = CASE ";
+				
+		foreach ($data as $k => $val) {
+    		$sql .= $val;
+    	}
+
+		$sql .= " END
+				WHERE
+				    `ct`.`company_id` = '$this->company_id' AND `ct`.`is_deleted` = 0";
+
+		$q = $this->db->query($sql);
+    }
   
     function get_last_applied_charge($booking_id, $charge_type_id, $end_date = null, $only_night_audit_charge = false)
 	{

@@ -9,19 +9,18 @@ class Import_mapping_model extends CI_Model {
 
     function insert_import_mapping($data)
     {
-
         $this->db->insert('import_mapping', $data);
 
-        $query = $this->db->query('select LAST_INSERT_ID( ) AS last_id');
-        $result = $query->result_array();
-        if(isset($result[0]))
-        {
-            return $result[0]['last_id'];
-        }
-        else
-        {
-            return null;
-        }
+        // $query = $this->db->query('select LAST_INSERT_ID( ) AS last_id');
+        // $result = $query->result_array();
+        // if(isset($result[0]))
+        // {
+        //     return $result[0]['last_id'];
+        // }
+        // else
+        // {
+        //     return null;
+        // }
     }
 
     function get_mapping_customer_id($customer_id){

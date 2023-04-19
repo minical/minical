@@ -18,6 +18,8 @@ class MY_Controller extends CI_Controller {
     public $current_payment_gateway;
     public $is_super_admin;
     public $all_active_modules;
+    public $cache_values;
+    public $import_insert_batch;
 
 
     public function __construct()

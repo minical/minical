@@ -388,6 +388,27 @@ class Room_type_model extends CI_Model {
         //TO DO: error reporting for update fail.
         return TRUE;
     }
+
+    function update_charge_type_room_types($old_charge_type_ids, $new_charge_type_ids){
+
+        $i = 0; $data = array();
+        foreach ($old_charge_type_ids as $key => $value) {
+            if($value && isset($new_charge_type_ids[$i]) && $new_charge_type_ids[$i]) {
+                $data[] = " WHEN default_room_charge = $value THEN $new_charge_type_ids[$i] ";
+            }
+            $i++;
+        }
+
+        $sql = "UPDATE `room_type` SET `default_room_charge` = CASE ";
+        foreach ($data as $k => $val) {
+            $sql .= $val;
+        }
+                    
+        $sql .= " ELSE `default_room_charge`
+                    END";
+
+        $q = $this->db->query($sql);
+    }
     
     //Delete currency and all related room rate entries
     function delete_room_type($room_type_id)
