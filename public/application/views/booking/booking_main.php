@@ -526,11 +526,15 @@
             var trial_expiry_date = $('#trial_expiry_date').val();
             if(trial_expiry_date != '' && subscription_state == 'trialing')
             {
+                // var nd = new Date(trial_expiry_date);
+                // var current_date = new Date();
+                // var diff_date =  nd - current_date;
+                // var days = Math.floor(((diff_date % 31536000000) % 2628000000)/86400000);
                 var nd = new Date(trial_expiry_date);
                 var current_date = new Date();
-                var diff_date =  nd - current_date;
-                var days = Math.floor(((diff_date % 31536000000) % 2628000000)/86400000);
-                
+                var diff_date =  nd.getTime() - current_date.getTime();
+                var days = diff_date / (1000 * 3600 * 24);
+                var days = Math.floor(days);
                 var url = '<?php echo base_url(); ?>settings/company/view_subscription';
                 if(days <= 5 && days >= 0)
                 {
