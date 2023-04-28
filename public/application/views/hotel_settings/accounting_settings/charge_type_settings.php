@@ -32,7 +32,7 @@
 		<th class="text-left"><?php echo l('applicable_taxes'); ?></th>
 		<th class="text-center"><?php echo l($this->default_room_singular).' '.l('Charge',true); ?></th>
                 <th class="text-center"><?php echo l('report_ad_tax_exempt'); ?></th>
-		<th class="text-center"><?php echo l('delete_booking'); ?></th>                
+		<th class="text-center"><?php echo l('delete'); ?></th>                
 	</tr>
 	<?php //foreach ($other_charge_types as $charge_type) : ?>
 	<?php foreach ($all_charge_types as $charge_type) : ?>
