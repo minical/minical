@@ -468,7 +468,7 @@ class Migration_create_base extends CI_Migration {
 
 			),
 		));
-		// $this->dbforge->add_key("customer_id",true);
+		$this->dbforge->add_key("customer_id",true);
 		$this->dbforge->create_table("booking_staying_customer_list", TRUE);
 		$this->db->query('ALTER TABLE  `booking_staying_customer_list` ENGINE = InnoDB');
 
@@ -816,7 +816,7 @@ class Migration_create_base extends CI_Migration {
 
 			),
 		));
-		// $this->dbforge->add_key("charge_type_id",true);
+		$this->dbforge->add_key("charge_type_id",true);
 		$this->dbforge->create_table("charge_type_tax_list", TRUE);
 		$this->db->query('ALTER TABLE  `charge_type_tax_list` ENGINE = InnoDB');
 
