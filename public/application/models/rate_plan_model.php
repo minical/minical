@@ -304,6 +304,27 @@ class Rate_plan_model extends CI_Model {
         }
         return true;
     }
+
+    function update_rate_plan_room_types($old_rate_plan_ids, $new_rate_plan_ids){
+
+        $i = 0; $data = array();
+    	foreach ($old_rate_plan_ids as $key => $value) {
+    		if($value && isset($new_rate_plan_ids[$i]) && $new_rate_plan_ids[$i]) {
+    			$data[] = " WHEN default_room_charge = $value THEN $new_rate_plan_ids[$i] ";
+    		}
+			$i++;
+    	}
+
+    	$sql = "UPDATE `room_type` SET `default_room_charge` = CASE ";
+    	foreach ($data as $k => $val) {
+    		$sql .= $val;
+    	}
+
+		$sql .= " ELSE `default_room_charge`
+				    END";
+
+		$q = $this->db->query($sql);
+    }
         
     function delete_custom_rate_plan($rate_plan_id)
     {
