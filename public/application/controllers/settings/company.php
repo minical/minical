@@ -1185,7 +1185,9 @@ class Company extends MY_Controller
 
             if(empty($get_import_rate_plan)) {
 
-                $cache_rate_plan_array_count[$rate['Name'].'_'.$room_type_id][] = array(
+                if(isset($rate['Rate Plan Id']) && $rate['Rate Plan Id']) {
+
+                    $cache_rate_plan_array_count[$rate['Rate Plan Id']][] = array(
                     "rate_plan_name" => $rate['Name'] == '' ? null : $rate['Name'],
                     "room_type_id" => $room_type_id,
                     "company_id" => $this->company_id,
@@ -1196,6 +1198,7 @@ class Company extends MY_Controller
                 );
 
                 $cache_rate_plan_data[] = array(
+                        "old_rate_plan_id" => $rate['Rate Plan Id'],
                     "rate_plan_name" => $rate['Name'] == '' ? null : $rate['Name'],
                     "room_type_id" => $room_type_id,
                     "company_id" => $this->company_id,
@@ -1207,31 +1210,41 @@ class Company extends MY_Controller
 
                 $old_rate_plan_ids[] = $rate['Rate Plan Id'];
             }
+
+            }
         }
 
         foreach($cache_rate_plan_array_count as $key => $val) {
-            $rate_plan_count[] = count($cache_rate_plan_array_count[$key]);
+            $rate_plan_count[$key] = count($cache_rate_plan_array_count[$key]);
         }
 
         $cache_rate_plan_data = array_values(array_map("unserialize", array_unique(array_map("serialize", $cache_rate_plan_data))));
+        $old_rate_plan_ids = array_values(array_unique($old_rate_plan_ids));
+
+        foreach ($cache_rate_plan_data as $key => $val) {
+            unset($cache_rate_plan_data[$key]['old_rate_plan_id']);
+        }
 
         for($i = 0; $i < count($cache_rate_plan_data); $i++) {
             $cache_image_group_data[] = Array("image_type_id" => RATE_PLAN_IMAGE_TYPE_ID);
         }
 
-        $new_rate_plan_ids1 = $this->_create_rate_plan($cache_rate_plan_data, $old_rate_plan_ids, $cache_image_group_data, $rate_plan_count);
+        $rate_plan_ids_array = $this->_create_rate_plan($cache_rate_plan_data, $old_rate_plan_ids, $cache_image_group_data, $rate_plan_count);
 
-        $id = 0;
-        foreach ($value as $rate) {
+        $inserted_rate_plan_ids = $rate_plan_ids_array['inserted_rate_plan_ids'];
+        $new_rate_plan_ids = $rate_plan_ids_array['new_rate_plan_ids'];
 
-            $new_rate_plan_ids[] = $new_rate_plan_ids1[$id];
+        foreach ($value as $key => $rate) {
 
-            $rates = null;
+            if(
+                isset($rate['Rate Plan Id']) && 
+                $rate['Rate Plan Id']
+            ) {
 
-            if(empty($rates)){
+                $rt_plan_id = $inserted_rate_plan_ids[$rate['Rate Plan Id']][0];
 
                 $cache_rate_array[] = Array(
-                        'rate_plan_id' => $new_rate_plan_ids1[$id],
+                    'rate_plan_id' => $rt_plan_id,
                         'base_rate' => $rate['Base Rate'] == '' ? null : $rate['Base Rate'],
                         'adult_1_rate' => $rate['Adult Rate 1'] ? $rate['Adult Rate 1'] : null,
                         'adult_2_rate' => $rate['Adult Rate 2'] ? $rate['Adult Rate 2'] : null,
@@ -1258,19 +1271,12 @@ class Company extends MY_Controller
                         'sunday' => $rate['Sunday']== '' ? null : $rate['Sunday']
                     );
             }
-
-            $id++;
         }
 
         $new_rate_plan_ids = array_values(array_unique($new_rate_plan_ids));
-        $old_rate_plan_ids = array_values(array_unique($old_rate_plan_ids));
+        // $old_rate_plan_ids = array_values(array_unique($old_rate_plan_ids));
 
         $this->Rate_plan_model->update_rate_plan_room_types($old_rate_plan_ids, $new_rate_plan_ids);
-
-        // for($i = 0; $i < count($new_rate_plan_ids); $i++) {
-        //     $room_rate_plan = $this->Rate_plan_model->update_room_rate_plan($new_rate_plan_ids[$i], $old_rate_plan_ids[$i]);
-        // }
-
 
         $first_rate_ids = $first_date_range_ids = $all_rate_ids = $all_date_range_ids = array();
 
@@ -1291,16 +1297,36 @@ class Company extends MY_Controller
             }
         }
 
+        $rate_id_count = count($cache_rate_array);
+
         foreach($first_rate_ids as $k => $val) {
+            
+            if($rate_id_count > 100) {
             for($a = 0; $a < 100; $a++) {
                 $all_rate_ids[] = $val++;
             }
+            } else if($rate_id_count > 0 && $rate_id_count < 100) {
+                for($a = 0; $a < $rate_id_count; $a++) {
+                    $all_rate_ids[] = $val++;
+                }
+            }
+            $rate_id_count = $rate_id_count - 100;
         }
 
+        $date_range_id_count = count($cache_rate_array);
+
         foreach($first_date_range_ids as $k => $val) {
+            
+            if($date_range_id_count > 100) {
             for($a = 0; $a < 100; $a++) {
                 $all_date_range_ids[] = $val++;
             }
+            } else if($date_range_id_count > 0 && $date_range_id_count < 100) {
+                for($a = 0; $a < $date_range_id_count; $a++) {
+                    $all_date_range_ids[] = $val++;
+                }
+            }
+            $date_range_id_count = $date_range_id_count - 100;
         }
 
         $date_range_x_rate_array = array();
@@ -1369,7 +1395,6 @@ class Company extends MY_Controller
         $first_rate_plan_ids = array();
         $all_rate_plan_ids = array();
         $new_rate_plan_ids = array();
-
         for ($i = 0, $total = count($rate_plan_data); $i < $total; $i = $i + 100)
         {
             $import_rate_plan_batch = array_slice($rate_plan_data, $i, 100);
@@ -1383,10 +1408,20 @@ class Company extends MY_Controller
             }
         }
 
+        $count = count($rate_plan_data);
+
         foreach($first_rate_plan_ids as $k => $val) {
+            
+            if($count > 100) {
             for($a = 0; $a < 100; $a++) {
                 $all_rate_plan_ids[] = $val++;
             }
+            } else if($count > 0 && $count < 100) {
+                for($a = 0; $a < $count; $a++) {
+                    $all_rate_plan_ids[] = $val++;
+                }
+            }
+            $count = $count - 100;
         }
 
         for($j = 0; $j < count($rate_plan_data); $j++){
@@ -1410,16 +1445,18 @@ class Company extends MY_Controller
         $inserted_rate_plan_ids = array();
 
         $k = 0;
+        // prx($new_rate_plan_ids);
         foreach($rate_plan_count as $key => $value) {
             for($i = 0; $i < $value; $i++){
-                $inserted_rate_plan_ids[] = $new_rate_plan_ids[$k];
+                $inserted_rate_plan_ids[$old_rate_plan_ids[$k]][] = $new_rate_plan_ids[$k];
             }
             $k++;
         }
 
-        $new_rate_plan_ids = $inserted_rate_plan_ids;
-
-        return $new_rate_plan_ids;
+        return array(
+            'new_rate_plan_ids' => $new_rate_plan_ids,
+            'inserted_rate_plan_ids' => $inserted_rate_plan_ids
+        );
     }
 
     function import_customers_csv($value)
