@@ -243,7 +243,8 @@
 								<?php if($employee['activated'] != 1){ ?>
 									<div class="btn btn-primary btn-sm btn-block resend_email"><?php echo l('Resend activation email', true); ?></div>
 								<?php } ?>
-								<?php 
+								<?php $edit_hidden_btn = $employee['permission'] == 'is_owner' ? 'class="btn-success btn btn-sm btn-block col-sm-6 edit-user-info hidden"' : 'class="btn-success btn btn-sm btn-block col-sm-6 edit-user-info"';
+								$delete_hidden_btn = $employee['permission'] == 'is_owner' ? 'class="btn-sm btn btn-block btn-danger delete_employee col-sm-6 hidden"' : 'class="btn-sm btn btn-block btn-danger delete_employee col-sm-6"';
 									if (
 											$this->session->userdata('user_role') == "is_admin" ||
 											(
@@ -254,10 +255,10 @@
 
 									) 
 									{
-										echo '<div class="btn-success btn btn-sm btn-block col-sm-6 edit-user-info">
+										echo '<div '.$edit_hidden_btn.'>
 												'.l("Edit", true).'
 											</div>
-											<div class="btn-sm btn btn-block btn-danger delete_employee col-sm-6">
+											<div '.$delete_hidden_btn.'>
 												'.l("Delete", true).'
 											</div>'; 
                                         echo '<div class="clearfix"></div>';
