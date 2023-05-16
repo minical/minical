@@ -577,3 +577,10 @@
         ?>
 	});
 </script>
+
+<?php 
+$myVar = getenv('CARDKNOX_IFIELD_KEY');
+    echo "<script>
+    const myVar = '" . $myVar . "';
+        </script>";
+?>

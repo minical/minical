@@ -584,6 +584,8 @@ var customerId;
                             console.log('customerData',customerData);
 
                             var update_create_client = function(data) {
+                                console.log('data',data);
+
                                 data = _.isUndefined(data) ? null : data;
                                 var token = null,
                                     cc_tokenex_token = null,
@@ -595,7 +597,9 @@ var customerId;
                                     cc_cvc_encrypted = data.cc_cvc_encrypted;
                                 }
 
-                                if (data && data.length > 0){
+                                if (data && data.length > 0 && $('#payment-form').html() == undefined  ){
+                                    console.log('data',data);
+
                                     var cardData = data.split('_');
                                     if(cardData){
                                         console.log('customerData',customerData);
@@ -606,12 +610,24 @@ var customerId;
                                         customerData.cc_expiry_month = cardData[2].substring(0, 2);
                                         customerData.cc_expiry_year = cardData[2].substring(4);
                                     }
+                                }else if(data && data.length > 0 && innGrid.isCardknoxEnabled == 1 && $('#payment-form').html()){
+                                    console.log('data',data);
+
+                                    if (data) {
+                                       customerData = data[0];
+                                       customerData.cc_number =  data[0].cc_number;
+                                        customerData.cvc =  data[0].cc_cvc_encrypted;
+                                        customerData.cc_token = data[0].cc_token ?data[0].cc_token:null;
+                                        customerData.cc_expiry_month = data[0].cc_expiry_month;
+                                        customerData.cc_expiry_year = data[0].cc_expiry_year;
+                                    }
                                 }
 
                                 console.log('customerData',customerData);
 
                                 if (customer.customer_id) // new customer
                                 {
+                                    console.log(customer.customer_id)
                                     // update customer
                                     $.ajax({
                                         type: "POST",
@@ -625,6 +641,7 @@ var customerId;
                                         dataType: "json",
                                         success: function(data) {
                                             if (data.error && data.error_msg) {
+                                                console.log(data)
                                                 alert(data.error_msg);
                                             } else {
                                                 // update customer token's name
@@ -733,6 +750,60 @@ var customerId;
                                         update_create_client();
                                     }
                                 },4500);
+                            }
+                            // typeof cardknoxGateway !== "undefined" && cardknoxGateway &&
+                            else if( innGrid.isCardknoxEnabled == 1 && $('#payment-form').html()) {
+                                // if ($('#payment-form').html()) {
+
+                                    $('#submit-btn').trigger('click');
+                                    var imageUrl = getBaseURL() + 'images/loading.gif'
+                                    $('<img class="loader-img" src="'+imageUrl+'" style=""/>').insertBefore($('#button-update-customer'));
+                                    
+                                    save_customer_cardknox_card(customerId);
+
+                                    setTimeout(function(){
+
+                                        let customerToken = $('#customer-token').text();
+                                        let customerError = $('#customer-error').text();
+                                        let customerCvvToken = $('#cvv-token').text();
+
+                                        
+                                        console.log(customerCvvToken)
+                                        if (customerToken == ''|| customerToken == null|| customerToken == undefined) {
+                                            console.log(customerError)
+                                            alert(customerError);
+                                            $('#customer-modal').find('.close').trigger('click');
+                                            
+                                        } else {
+                                            
+                                                let xName = $("input[name=customer_name]").val();
+                                                let xMonth = document.getElementById("month").value;
+                                                let xYear = document.getElementById("year").value;
+                                            
+                                                let card_number_token = document.querySelector("[data-ifields-id='card-number-token']").value;
+                                                
+                                                let last_four_card_number = card_number_token.substring(0, 17).substring(12, 16);
+
+                                                console.log(card_number_token);
+
+                                                $('#button-update-customer').removeProp('disabled');
+
+                                                customerData.cardknox_token = customerToken;
+                                                customerData.cardknox_cvv_token = customerCvvToken;
+                                                customerData.customer_name = xName;
+                                                // customerData.customer_id =  customerId ? customerId :'';
+                                                customerData.cc_expiry_month = xMonth;
+                                                customerData.cc_expiry_year = xYear;
+                                                customerData.cc_number = "XXXX XXXX XXXX "  + last_four_card_number;
+                                                console.log(customerData)
+                                                update_create_client(customerData);
+                                        }
+
+                                    },12000);
+                                    
+                                // } 
+                                
+                                
                             }
                             else {
 

@@ -185,8 +185,26 @@ class Invoice extends MY_Controller {
             unset($data['customers'][$key]['cc_cvc_encrypted']);
             
             $card_data = isset($customer['customer_id']) ? $this->Card_model->get_active_card($customer['customer_id'], $this->company_id) : null;
-            $token = isset($card_data['customer_meta_data']) && $card_data['customer_meta_data'] ? (isset(json_decode($card_data['customer_meta_data'], true)['token']) && json_decode($card_data['customer_meta_data'], true)['token'] ? json_decode($card_data['customer_meta_data'], true)['token'] : json_decode($card_data['customer_meta_data'], true)['pci_token']) : null;
-            
+            // $token = isset($card_data['customer_meta_data']) && $card_data['customer_meta_data'] ? (isset(json_decode($card_data['customer_meta_data'], true)['token']) && json_decode($card_data['customer_meta_data'], true)['token'] ? json_decode($card_data['customer_meta_data'], true)['token'] : json_decode($card_data['customer_meta_data'], true)['pci_token']) : null;
+
+            $token = "";
+            if (isset($card_data['customer_meta_data']) && $card_data['customer_meta_data'] ) {
+
+                if (isset(json_decode($card_data['customer_meta_data'], true)['token']) && json_decode($card_data['customer_meta_data'], true)['token']) {
+                    $token = json_decode($card_data['customer_meta_data'], true)['token'];
+                }else{
+                    if (json_decode($card_data['customer_meta_data'], true)['source'] == 'pci_booking') {
+                        $token = json_decode($card_data['customer_meta_data'], true)['pci_token'];
+                    } elseif (json_decode($card_data['customer_meta_data'], true)['source'] == 'cardknox') {
+                        $token = json_decode($card_data['customer_meta_data'], true)['cardknox_token'];
+                    } else {
+                        $token = json_decode($card_data['customer_meta_data'], true)['token'];
+                    }
+                }
+            }
+
+
+
             if(isset($card_data) && $card_data){
                 $data['customers'][$key]['cc_number'] = $card_data['cc_number'];
                 $data['customers'][$key]['cc_expiry_month'] = $card_data['cc_expiry_month'];
@@ -194,7 +212,7 @@ class Invoice extends MY_Controller {
                 $data['customers'][$key]['cc_tokenex_token'] = $card_data['cc_tokenex_token'];
                 $data['customers'][$key]['cc_cvc_encrypted'] = $card_data['cc_cvc_encrypted'];
                 $data['customers'][$key]['evc_card_status'] = $card_data['evc_card_status'];
-                $data['customers'][$key]['customer_meta_token'] = isset($card_data['customer_meta_data']) && $card_data['customer_meta_data'] && (isset(json_decode($card_data['customer_meta_data'], true)['pci_token']) || isset(json_decode($card_data['customer_meta_data'], true)['token'])) ? $token : null;
+                $data['customers'][$key]['customer_meta_token'] = $token ?? null;
             }
         }
         // for company logo
