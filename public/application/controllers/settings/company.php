@@ -651,10 +651,24 @@ class Company extends MY_Controller
             $get_bookings = $this->Booking_model->get_bookings_company($this->company_id);
 
             if($get_bookings){
+                $delete_booking_ids = array();
                 foreach ($get_bookings as $key => $booking) {
-                    $this->Charge_model->delete_charges($booking['booking_id']);
-                    $this->Payment_model->delete_payments($booking['booking_id']);
+                    $delete_booking_ids[] = $booking['booking_id'];
                 }
+
+                for ($i = 0, $total = count($delete_booking_ids); $i < $total; $i = $i + 500)
+                {
+                    $delete_booking_batch = array_slice($delete_booking_ids, $i, 500);
+
+                    $this->Charge_model->delete_charges($delete_booking_ids, true);
+                    $this->Payment_model->delete_payments($delete_booking_ids, true);
+
+                    if ($this->db->_error_message())
+                    {
+                        show_error($this->db->_error_message());
+                    }
+                }
+
                 $this->Booking_model->delete_bookings($this->company_id);
             }
             $this->Booking_source_model->delete_booking_sources($this->company_id);

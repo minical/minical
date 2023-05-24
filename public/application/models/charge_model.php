@@ -1232,11 +1232,15 @@ class Charge_model extends CI_Model {
 		
 	}
 
-    function delete_charges($booking_id){
+    function delete_charges($booking_id, $is_batch = false){
 
         $data = Array('is_deleted' => 1);
+
+        if($is_batch)
+        	$this->db->where_in('booking_id', $booking_id);
+        else
         $this->db->where('booking_id', $booking_id);
-        // echo $this->db->last_query();die;
+        
         $this->db->update("charge", $data);
 
         if ($this->db->_error_message())
