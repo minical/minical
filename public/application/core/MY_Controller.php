@@ -129,6 +129,7 @@ class MY_Controller extends CI_Controller {
         $this->booking_confirmation_email = false;
         $this->invoice_email = false;
         $this->is_custom_invoice_enabled = false;
+        $this->is_nestpay_enabled = false;
         $this->review_management_settings = false;
 
         if($get_active_modules){
@@ -154,6 +155,9 @@ class MY_Controller extends CI_Controller {
                 }
                 if($value['extension_name'] == 'custom_invoice'){
                     $this->is_custom_invoice_enabled = true;
+                }
+                if($value['extension_name'] == 'nestpay_integration'){
+                     $this->is_nestpay_enabled = true;
                 }
                 if($value['extension_name'] == 'review_management_settings'){
                     $this->review_management_settings = true;

@@ -299,7 +299,26 @@
             </div>
         </div>
     </div>
-
+<!--Show success or error message-->
+<?php 
+if(isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true) {
+    if($this->session->flashdata('payment_success_message'))
+    {
+?>
+        <div class="alert alert-success">
+            <h3><b><?php echo $this->session->flashdata('payment_success_message'); ?></b></h3>
+        </div>
+<?php
+    }
+    else if($this->session->flashdata('payment_error_message'))
+    {
+?>
+        <div class="alert alert-danger">
+           <h3><b> <?php echo $this->session->flashdata('payment_error_message'); ?></b></h3>
+        </div>
+<?php
+    } }
+?>
 
 
 <div class="main-card mb-3 card">
