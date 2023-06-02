@@ -2,7 +2,9 @@
             load_translations($this->session->userdata('online_language_id'));
         }
         else{
-            load_translations($company_data['default_language']);
+           if(isset($company_data['default_language']) && $company_data['default_language']) {
+            	load_translations($company_data['default_language']);
+			}
         } 
 
 $files = get_asstes_files($this->module_assets_files, $this->router->fetch_module(), $this->controller_name, $this->function_name);
@@ -13,6 +15,13 @@ $files = get_asstes_files($this->module_assets_files, $this->router->fetch_modul
 
 
         ?>
+
+<?php 
+$ifieldKey = getenv('CARDKNOX_IFIELD_KEY');
+	echo "<script>
+    const ifieldKey = '" . $ifieldKey . "';
+        </script>";
+?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -35,7 +44,9 @@ $files = get_asstes_files($this->module_assets_files, $this->router->fetch_modul
 		<link rel="stylesheet" type="text/css" href="<?php echo $path; ?>" />
 		<?php endforeach; ?>
 		<?php endif; 
-		echo html_entity_decode(html_entity_decode($company_data['booking_engine_tracking_code'] , ENT_COMPAT));
+		if(isset($company_data['booking_engine_tracking_code']) && $company_data['booking_engine_tracking_code']) {
+		   echo html_entity_decode(html_entity_decode($company_data['booking_engine_tracking_code'] , ENT_COMPAT));
+		}
 		
 		?>
 		
@@ -75,11 +86,11 @@ $files = get_asstes_files($this->module_assets_files, $this->router->fetch_modul
 				<div class="row">
 					<div class="col-md-3">
 						<?php echo l('You are now making a reservation at').":";
-							// ensure there's http:// in front of URL
-							$website = $company_data['website'];
-							if (!preg_match("~^(?:f|ht)tps?://~i", $website)) {
-						        $website = "https://" . $website;
-						    }
+							// ensure there's http:// in front of URL   
+								$website = $company_data['website'];
+								if (!preg_match("~^(?:f|ht)tps?://~i", $website)) {
+							        $website = "https://" . $website;
+							    }
 						?>
                         <h4 style="margin-top: 4px;"><a href="<?php echo $website; ?>"><?php echo $company_data['name']; ?></a></h4>
 					</div>
@@ -87,12 +98,12 @@ $files = get_asstes_files($this->module_assets_files, $this->router->fetch_modul
 						<div class="row bs-wizard hidden-xs" style="border-bottom:0;">
 					        <div class="col-xs-4 bs-wizard-step 
 					        <?php 
-					        	if ($current_step == 1) 
-					        		echo "active";
-					        	elseif ($current_step > 1)
-					        		echo "complete"; 
-					        	else 
-					        		echo "disabled";
+						        	if ($current_step == 1) 
+						        		echo "active";
+						        	elseif ($current_step > 1)
+						        		echo "complete"; 
+						        	else 
+						        		echo "disabled";
 					        ?>">
                                 <div class="text-center bs-wizard-stepnum" style="font-size: 15px;"><?php echo l('Select Dates', 1); ?></div>
 					          	<div class="progress"><div class="progress-bar"></div></div>
@@ -125,7 +136,7 @@ $files = get_asstes_files($this->module_assets_files, $this->router->fetch_modul
 					        </div>
 					        
 					        <div class="col-xs-4 bs-wizard-step 
-					        <?php 
+					        <?php
 					        	if ($current_step == 3) 
 					        		echo "complete"; 
 					        	else 
@@ -164,7 +175,7 @@ $files = get_asstes_files($this->module_assets_files, $this->router->fetch_modul
 						<address>
 							<?php
 								echo "<strong> ".l('Contact information').": </strong><br/>";
-								echo ($company_data['address'] != "")?"".$company_data['address']."<br/>":'';
+        							echo ($company_data['address'] != "")?"".$company_data['address']."<br/>":'';
 								echo ($company_data['city'] != "")?$company_data['city']:'';
 								echo ($company_data['region'] != "")?", ".$company_data['region']."<br/>":'';
 								echo ($company_data['postal_code'] != "")?" ".$company_data['postal_code']:'';

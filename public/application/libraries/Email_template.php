@@ -19,6 +19,7 @@ class Email_template {
         $this->ci->load->model('Booking_source_model');
         $this->ci->load->model('Tax_model');
         $this->ci->load->model('Whitelabel_partner_model');
+        $this->ci->load->model('Currency_model');
 
         $this->ci->load->library('Email');
         $this->ci->load->helper('language_translation_helper');
@@ -480,6 +481,8 @@ class Email_template {
             }
         }
         
+        $default_currency       = $this->ci->Currency_model->get_default_currency($company_id);
+        $currency_symbol = isset($default_currency['currency_code']) ? $default_currency['currency_code'] : null;
 
         //Send confirmation email
         $email_data = array (
@@ -487,7 +490,7 @@ class Email_template {
             'extra_tax_rates' => $extra_tax_rates,
             'selling_date' => $company['selling_date'],
             'booking_id' => $booking_id,
-
+            'currency_symbol' => $currency_symbol,
             'customer_name' => $customer_info['customer_name'],
 
             'customer_address' => $customer_info['address'],
@@ -1249,13 +1252,16 @@ class Email_template {
 
         $extras = $this->ci->Booking_extra_model->get_booking_extras($booking_id);
 
+        $default_currency       = $this->ci->Currency_model->get_default_currency($company_id);
+        $currency_symbol = isset($default_currency['currency_code']) ? $default_currency['currency_code'] : null;
+
         //Send confirmation email
         $email_data = array (
             'extras' => $extras,
             'booking_id' => $booking_id,
 
             'customer_name' => $customer_info['customer_name'],
-
+            'currency_symbol' => $currency_symbol,
             'customer_address' => $customer_info['address'],
             'customer_city' => $customer_info['city'],
             'customer_region' => $customer_info['region'],

@@ -275,4 +275,41 @@ class Image extends MY_Controller
 
         print json_encode($response);
     }
+
+    function vendor_upload_to_s3 ($myId) {
+
+        $output_filename = generate_guid();
+
+        $filename = $_FILES["file"]["tmp_name"];
+        list($width, $height) = getimagesize($filename);
+
+        if ($this->_upload_to_s3($_FILES["file"]["tmp_name"], $output_filename))
+        {
+            $image_data = Array(
+                "image_group_id" => $myId,
+                "filename" => $output_filename
+            );
+
+            if($this->Image_model->get_images($myId)) {
+            	$this->Image_model->update_image($image_data);
+            } else {
+            	$this->Image_model->insert_image($image_data);
+            }
+
+            $response = array(
+                "status" => 'success',
+                "url" => $this->image_url.$this->company_id."/".$output_filename,
+                "width" => $width,
+                "height" => $height
+            );
+        }
+        else
+        {
+            $response = array(
+                "status" => 'fail!'
+            );
+        }
+
+        print json_encode($response);
+    }
 }

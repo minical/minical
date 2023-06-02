@@ -108,28 +108,28 @@ innGrid.loadRateDetail = function(ratePlanID, startDate, roomTypeID) {
 								"<b>"+rate.date+"</b><br/>"+
 								"<b>"+dayOfWeek+"</b><br/>"+"";
                 tableHTML = tableHTML + adult_rate_1 +"";
-                if(user_role=='is_admin' && rate.supplied_adult_1_rate!=null){
+                if(user_role=='is_admin' && rate.supplied_adult_1_rate!=null && rate.supplied_adult_1_rate != 0){
                     tableHTML = tableHTML + 
                         " ("+ supplied_adult_rate_1 +") <br/>";
                 }else{
                     tableHTML = tableHTML + "<br>";
                 }
                 tableHTML = tableHTML + adult_rate_2 +"";
-                if(user_role=='is_admin' && rate.supplied_adult_2_rate!=null){
+                if(user_role=='is_admin' && rate.supplied_adult_2_rate!=null && rate.supplied_adult_2_rate != 0){
                     tableHTML = tableHTML + 
                         " ("+ supplied_adult_rate_2 +") <br/>";
                 }else{
                     tableHTML = tableHTML + "<br>";
                 }
                 tableHTML = tableHTML + adult_rate_3 +"";                
-                if(user_role=='is_admin' && rate.supplied_adult_3_rate!=null){
+                if(user_role=='is_admin' && rate.supplied_adult_3_rate!=null && rate.supplied_adult_3_rate != 0){
                     tableHTML = tableHTML + 
                         " ("+ supplied_adult_rate_3 +") <br/>";
                 }else{
                     tableHTML = tableHTML + "<br>";
                 }
                 tableHTML = tableHTML + adult_rate_4 +"";
-                if(user_role=='is_admin' && rate.supplied_adult_4_rate!=null){
+                if(user_role=='is_admin' && rate.supplied_adult_4_rate!=null && rate.supplied_adult_4_rate != 0){
                     tableHTML = tableHTML + 
                         " ("+ supplied_adult_rate_4 +") <br/>";
                 }else{
