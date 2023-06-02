@@ -468,7 +468,7 @@ class Migration_create_base extends CI_Migration {
 
 			),
 		));
-		$this->dbforge->add_key("customer_id",true);
+		// $this->dbforge->add_key("customer_id",true);
 		$this->dbforge->create_table("booking_staying_customer_list", TRUE);
 		$this->db->query('ALTER TABLE  `booking_staying_customer_list` ENGINE = InnoDB');
 
@@ -816,7 +816,7 @@ class Migration_create_base extends CI_Migration {
 
 			),
 		));
-		$this->dbforge->add_key("charge_type_id",true);
+		// $this->dbforge->add_key("charge_type_id",true);
 		$this->dbforge->create_table("charge_type_tax_list", TRUE);
 		$this->db->query('ALTER TABLE  `charge_type_tax_list` ENGINE = InnoDB');
 
@@ -2002,6 +2002,20 @@ class Migration_create_base extends CI_Migration {
 				'default' => '1 month',
 
 			),
+			'cost_amount' => array(
+				'type' => 'BIGINT',
+				'constraint' => 20,
+				'unsigned' => TRUE,
+				'null' => TRUE,
+
+			),
+			'tax' => array(
+				'type' => 'BIGINT',
+				'constraint' => 20,
+				'unsigned' => TRUE,
+				'null' => TRUE,
+
+			),
 			'renewal_cost' => array(
 				'type' => 'DECIMAL',
 				'constraint' => "10,2",
@@ -2074,6 +2088,11 @@ class Migration_create_base extends CI_Migration {
 				'constraint' => 1,
 				'null' => FALSE,
 				'default' => '1',
+
+			),
+			'meta_data' => array(
+				'type' => 'TEXT',
+				'null' => TRUE,
 
 			),
 		));

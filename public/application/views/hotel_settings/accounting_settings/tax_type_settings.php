@@ -31,7 +31,7 @@
 		<th><?php echo l('tax_rate'); ?></th>
 		<th><?php echo l('unit'); ?></th>
 		<th><?php echo l('Tax Inclusive'); ?></th>
-		<th><?php echo l('delete_booking'); ?></th>
+		<th><?php echo l('delete'); ?></th>
 	</tr>
 
 	<?php if(isset($tax_types)):?>

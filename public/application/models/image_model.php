@@ -59,6 +59,19 @@ class Image_model extends CI_Model {
 
 	}
 
+    function update_image($data)
+    {
+        // $data = (object) $data;        
+        $this->db->where("image_group_id", $data['image_group_id']);
+        $this->db->update("image", $data);
+        
+        if ($this->db->_error_message()) // error checking
+            show_error($this->db->_error_message());
+
+        // return $this->db->insert_id();
+
+    }
+
 	// temporarily, we'll require company_id parameter, because not all filesnames are unique.
 	// later on though, once all filenames are unique, we can get rid of the company_id condition.
     function delete_image($filename, $image_group_id)

@@ -64,6 +64,12 @@ class Permission_model extends CI_Model {
                     ($function_name === 'card_token_success' || $function_name === 'card_token_failure'|| $function_name ==='get_tokenization_response' || $function_name ===  'card_over_phone_success')
                 )
             ) ||
+            (
+                $controller_name === "cardknox_controller" && 
+                (
+                    ($function_name === 'save_customer_cardknox_card' )
+                )
+            ) ||
 
             (
                 $controller_name === "customer" && 

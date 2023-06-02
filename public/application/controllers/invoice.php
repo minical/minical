@@ -185,8 +185,30 @@ class Invoice extends MY_Controller {
             unset($data['customers'][$key]['cc_cvc_encrypted']);
             
             $card_data = isset($customer['customer_id']) ? $this->Card_model->get_active_card($customer['customer_id'], $this->company_id) : null;
-            $token = isset($card_data['customer_meta_data']) && $card_data['customer_meta_data'] ? (isset(json_decode($card_data['customer_meta_data'], true)['token']) && json_decode($card_data['customer_meta_data'], true)['token'] ? json_decode($card_data['customer_meta_data'], true)['token'] : isset(json_decode($card_data['customer_meta_data'], true)['pci_token'])) : null;
             
+          $token = "";
+            if(
+                isset($card_data['customer_meta_data']) && 
+                $card_data['customer_meta_data']
+            ) {
+                if (
+                    isset(json_decode($card_data['customer_meta_data'], true)['token']) && 
+                    json_decode($card_data['customer_meta_data'], true)['token']
+                ) {
+                    $token = json_decode($card_data['customer_meta_data'], true)['token'];
+                } else {
+                    if (
+                        json_decode($card_data['customer_meta_data'], true)['source'] == 'pci_booking'
+                    ) {
+                        $token = json_decode($card_data['customer_meta_data'], true)['pci_token'];
+                    } elseif (json_decode($card_data['customer_meta_data'], true)['source'] == 'cardknox') {
+                        $token = json_decode($card_data['customer_meta_data'], true)['cardknox_token'];
+                    } else {
+                        $token = json_decode($card_data['customer_meta_data'], true)['token'];
+                    }
+                }
+            }
+          
             if(isset($card_data) && $card_data){
                 $data['customers'][$key]['cc_number'] = $card_data['cc_number'];
                 $data['customers'][$key]['cc_expiry_month'] = $card_data['cc_expiry_month'];
@@ -194,7 +216,7 @@ class Invoice extends MY_Controller {
                 $data['customers'][$key]['cc_tokenex_token'] = $card_data['cc_tokenex_token'];
                 $data['customers'][$key]['cc_cvc_encrypted'] = $card_data['cc_cvc_encrypted'];
                 $data['customers'][$key]['evc_card_status'] = $card_data['evc_card_status'];
-                $data['customers'][$key]['customer_meta_token'] = isset($card_data['customer_meta_data']) && $card_data['customer_meta_data'] && (isset(json_decode($card_data['customer_meta_data'], true)['pci_token']) || isset(json_decode($card_data['customer_meta_data'], true)['token'])) ? $token : null;
+                $data['customers'][$key]['customer_meta_token'] = $token ?? null;
             }
         }
         // for company logo
@@ -316,8 +338,18 @@ class Invoice extends MY_Controller {
                         else
                         {
                             $cn = (isset($explode_name[0]) && $explode_name[0] ? $explode_name[0] : '').'_'.(isset($explode_name[1]) && $explode_name[1] ? $explode_name[1] : '');
-                            if(isset($data['booking_customer'][$cn]) && $data['booking_customer'][$cn] != "")
-                                $value = $data['booking_customer'][$cn];
+                            if(isset($data['booking_customer'][$cn]) && $data['booking_customer'][$cn] != "") {
+                                
+                                if($cn == 'customer_type') {
+                                    $cn = 'customer_type_id';
+                                    $this->load->model('customer_type_model');
+                                    $customer_type = $this->customer_type_model->get_customer_type($data['booking_customer'][$cn]); 
+                                    $value = $customer_type[0]['name'];
+                                }
+                                else {
+                                    $value = $data['booking_customer'][$cn];
+                                }
+                            }
                         }
                     }
 
@@ -328,6 +360,8 @@ class Invoice extends MY_Controller {
                     );
                 }
             }
+
+            $data['customer_fields'] = $customer_fields;
 
             $data['booking_customer']['customer_fields'] = [];
             foreach ($customer_fields as $customer_field) {

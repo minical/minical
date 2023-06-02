@@ -18,6 +18,8 @@ class MY_Controller extends CI_Controller {
     public $current_payment_gateway;
     public $is_super_admin;
     public $all_active_modules;
+    public $cache_values;
+    public $import_insert_batch;
 
 
     public function __construct()
@@ -131,6 +133,7 @@ class MY_Controller extends CI_Controller {
         $this->is_custom_invoice_enabled = false;
         $this->is_nestpay_enabled = false;
         $this->review_management_settings = false;
+        $this->is_cardknox_enabled = false;
 
         if($get_active_modules){
             foreach ($get_active_modules as $key => $value) {
@@ -161,6 +164,9 @@ class MY_Controller extends CI_Controller {
                 }
                 if($value['extension_name'] == 'review_management_settings'){
                     $this->review_management_settings = true;
+                }
+                if($value['extension_name'] == 'cardknox-integration'){
+                    $this->is_cardknox_enabled = true;
                 }
 
 

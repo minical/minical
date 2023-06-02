@@ -1026,7 +1026,7 @@ class CI_Form_validation {
 	 */
 	function valid_email($str)
 	{
-		return ( ! preg_match("/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix", $str)) ? FALSE : TRUE;
+		return ( ! preg_match("/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,12}$/ix", $str)) ? FALSE : TRUE;
 	}
 
 	// --------------------------------------------------------------------
