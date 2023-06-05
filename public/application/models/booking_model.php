@@ -2259,7 +2259,7 @@ class Booking_model extends CI_Model {
                             '".$this->selling_date."' <= DATE(brh.check_in_date)
                         ) OR
                         b.state = '".INHOUSE."' OR b.state = '".CHECKOUT."' $where_state
-                    ) AND
+                    ) AND brh.room_id != 0 AND
                     di.date >= '$start_date' AND 
                     di.date <= '$end_date' AND
                     (

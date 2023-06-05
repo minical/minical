@@ -149,6 +149,6 @@ class Booking_log_model extends CI_Model {
 		
 		$result = $q->result_array();
 
-		return $result[0];
+		return isset($result[0]) && $result[0] ? $result[0] : null;
     }	
 }
