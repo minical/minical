@@ -196,14 +196,27 @@ class Booking_room_history_model extends CI_Model {
     }
 
     // return the latest (most recent check-out-date) row that has corresponding booking_id
-    function get_latest_booking_room_history($booking_id) {
-        $sql = "
-            SELECT *
-            FROM booking_block
-            WHERE booking_id = '$booking_id'
-            order by check_in_date DESC
-            LIMIT 1
-        ";
+    function get_latest_booking_room_history($booking_id, $is_booking_details = false) {
+
+        if($is_booking_details) {
+
+            $sql = "
+                SELECT *
+                FROM booking_block as bb
+                LEFT JOIN booking as b on b.booking_id = bb.booking_id 
+                WHERE bb.booking_id = '$booking_id'
+                order by bb.check_in_date DESC
+                LIMIT 1
+            ";
+        } else {
+            $sql = "
+                SELECT *
+                FROM booking_block
+                WHERE booking_id = '$booking_id'
+                order by check_in_date DESC
+                LIMIT 1
+            ";
+        }
        
         $q = $this->db->query($sql);
 

@@ -55,7 +55,7 @@ class Calendar extends MY_Controller
 			$this->_create_booking_log($booking_id, $changes);
 
 			$this->Booking_room_history_model->update_check_out_date($booking_room_history_data, $end2);
-			$this->_update_booking_rate_plan($booking_id, $destination);
+			$this->_update_booking_rate_plan($booking_id, $destination, $end1);
 			$this->Booking_model->update_booking_balance($booking_id);
             
 			echo l("success",true);
@@ -113,7 +113,7 @@ class Calendar extends MY_Controller
 			return true;
 		}
 		
-		$latest_booking_room_history_data = $this->Booking_room_history_model->get_latest_booking_room_history($booking_id);
+		$latest_booking_room_history_data = $this->Booking_room_history_model->get_latest_booking_room_history($booking_id, true);
 		
 		//print_r($latest_booking_room_history_data);
 		//echo $latest_booking_room_history_data['booking_id'].", ".$latest_booking_room_history_data['room_id']."<br/>";
@@ -145,7 +145,13 @@ class Calendar extends MY_Controller
 			
 			$this->_combine_booking_blocks($booking_id);
 
-            $this->_update_booking_rate_plan($booking_id, $destination);
+			if(
+				isset($latest_booking_room_history_data['is_ota_booking']) &&
+				$latest_booking_room_history_data['is_ota_booking'] != 1
+			) {
+				$this->_update_booking_rate_plan($booking_id, $destination);
+			}
+            
             $this->Booking_model->update_booking_balance($booking_id);
             
 			echo "success";
@@ -217,7 +223,7 @@ class Calendar extends MY_Controller
 		$this->Booking_log_model->insert_log($log_data);
 	}
 
-	function _update_booking_rate_plan($booking_id, $data)
+	function _update_booking_rate_plan($booking_id, $data, $prev_checkout_date = null)
 	{
 		$booking = $this->Booking_model->get_booking($booking_id);
 
@@ -237,6 +243,10 @@ class Calendar extends MY_Controller
 	        $date_end = $data['check_out_date'];
 	        $adult_count = $booking['adult_count'];
 	        $children_count = $booking['children_count'];
+
+	        if($prev_checkout_date) {
+				$date_start = $prev_checkout_date;
+			}
 
 	        $this->load->library('rate');
 	        $rate_array = $this->rate->get_rate_array($parent_rate_plan_id, $date_start, $date_end, $adult_count, $children_count);
