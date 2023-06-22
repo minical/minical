@@ -236,6 +236,14 @@ var bookingModalInvoker = function ($) {
                 {id: 14, name: '14 '+l('adults')}
             ];
 
+            var adultOption = [];
+
+            for (var i = 15; i <= 100; i++) {
+                adultOption.push({id:i, name: i+' adults'});
+            }
+
+            this.adultsCount = this.adultsCount.concat(adultOption);
+
             this.childrenCount = [
                 {id: 0, name: 'no '+l('children')},
                 {id: 1, name: '1 '+l('child')},
@@ -253,6 +261,14 @@ var bookingModalInvoker = function ($) {
                 {id: 13, name: '13 '+l('children')},
                 {id: 14, name: '14 '+l('children')}
             ];
+
+            var childOption = [];
+
+            for (var i = 15; i <= 99; i++) {
+                childOption.push({id:i, name: i+' children'});
+            }
+
+            this.childrenCount = this.childrenCount.concat(childOption);
 
             this.sources = [];
             this.customColors = [
