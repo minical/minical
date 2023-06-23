@@ -623,7 +623,7 @@ class Company extends MY_Controller
         //$view_data['company_api_key'] = $this->Company_model->get_company_api_permission($this->company_id);
         
         if(!$view_data['company_data']['calendar_days']) {
-            $width = $_COOKIE['width'];
+            $width = isset($_COOKIE['width']) && $_COOKIE['width'] ? $_COOKIE['width'] : 1200;
             $days_before_today = intval(round($width / 400));
             $days_after_today = intval(round($width / 60));
 

@@ -4,6 +4,9 @@
 var _createBookingLock = false;
 var bookingDetails = [];
 
+var width = $("body").width();
+setCookie('width',width);
+
 var bookingModalInvoker = function ($) {
     "use strict";
 
