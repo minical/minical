@@ -425,20 +425,20 @@
                 <br/>
                 <?php if(!$read_only || !$company['hide_room_name'])
                 {
-                 echo($company['default_room_singular']); ?>: <?php echo (isset($room_detail['room_name'])) ? $room_detail['room_name']: l('Not Assigned', true) ; ?><br/>
+                    echo($company['default_room_singular']); ?>: <?php echo (isset($room_detail['room_name'])) ? $room_detail['room_name']: l('Not Assigned', true) ; ?><br/>
                 <?php 
                 }
-                 echo($company['default_room_type']);?>: <?php echo (isset($room_detail['room_type_name']))?$room_detail['room_type_name']:''; ?><br/>
+                    echo($company['default_room_type']);?>: <?php echo (isset($room_detail['room_type_name']))?$room_detail['room_type_name']:''; ?><br/>
                 <?php echo l('check_in_date'); ?>: <span id="check-in-date">
 
-                <?php echo isset($this->enable_hourly_booking) ? get_local_formatted_date($booking_detail['check_in_date']).' '.date('h:i A', strtotime($booking_detail['check_in_date'])) : get_local_formatted_date($booking_detail['check_in_date']);
+                <?php echo isset($this->enable_hourly_booking) && $this->enable_hourly_booking ? get_local_formatted_date($booking_detail['check_in_date']).' '.date('h:i A', strtotime($booking_detail['check_in_date'])) : get_local_formatted_date($booking_detail['check_in_date']);
                 ?>
                     
                 </span><br/>
                 
                 <?php echo l('check_out_date'); ?>: <span id="check-out-date">
                 
-                <?php echo isset($this->enable_hourly_booking) ? get_local_formatted_date($booking_detail['check_out_date']).' '.date('h:i A', strtotime($booking_detail['check_out_date'])) : get_local_formatted_date($booking_detail['check_out_date']);
+                <?php echo isset($this->enable_hourly_booking) && $this->enable_hourly_booking ? get_local_formatted_date($booking_detail['check_out_date']).' '.date('h:i A', strtotime($booking_detail['check_out_date'])) : get_local_formatted_date($booking_detail['check_out_date']);
                 ?>
 
                 </span><br/>
