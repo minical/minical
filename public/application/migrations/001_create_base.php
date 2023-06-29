@@ -1758,6 +1758,11 @@ class Migration_create_base extends CI_Migration {
 				'null' => FALSE,
 				'default' => '0',
 			),
+			'calendar_days' => array(
+				'type' => 'TINYINT',
+				'constraint' => 2,
+				'null' => TRUE
+			),
 		));
 		$this->dbforge->add_key("company_id",true);
 		$this->dbforge->create_table("company", TRUE);

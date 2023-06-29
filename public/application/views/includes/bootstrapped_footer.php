@@ -103,6 +103,7 @@
     innGrid.isKovenaEnabled = parseInt('<?=(($this->is_kovena_enabled) ? 1 : 0)?>');
     innGrid.isCardknoxEnabled = parseInt('<?=(($this->is_cardknox_enabled) ? 1 : 0)?>');
     innGrid.isPartnerOwner = parseInt('<?=(isset($this->is_partner_admin) && ($this->is_partner_admin == 1) ? 1 : 0)?>');
+    innGrid.featureSettings.calendarDays = '<?=(isset($this->calendar_days) ? $this->calendar_days : '')?>';
     
     // subscription plans
     var STARTER = "<?php echo STARTER; ?>";

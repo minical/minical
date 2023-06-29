@@ -789,6 +789,16 @@
             <h4 style="padding-bottom:20px;border-bottom: 2px solid #DDDDDD"><b><?php echo l('APPEARANCE', true); ?></b>
             </h4></div>
         <div style="padding-top:10px">
+
+            <div class="form-group features-div-padding  form-inline">
+                <label for="calendar_days">
+                    <?= l("Show number of days on Calendar", true); ?>
+                </label>
+                <input type="number" name="calendar_days" class="form-control"
+                       value="<?php echo $company_data['calendar_days']; ?>" size=50
+                       placeholder="<?php echo l('Calendar Days', true); ?>" min="10" max="30" />
+            </div>
+
             <div class="form-group features-div-padding  form-inline">
                 <label for="ui_theme">
                     <?= l("UI Theme", true); ?>

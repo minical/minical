@@ -591,7 +591,8 @@ class Company extends MY_Controller
                 'restrict_booking_dates_modification' => $this->input->post('restrict_booking_dates_modification'),
                 'restrict_checkout_with_balance' => $this->input->post('restrict_checkout_with_balance'),
                 'show_guest_group_invoice' => $this->input->post('show_guest_group_invoice'),
-                'restrict_cvc_not_mandatory' => $this->input->post('restrict_cvc_not_mandatory')
+                'restrict_cvc_not_mandatory' => $this->input->post('restrict_cvc_not_mandatory'),
+                'calendar_days' => $this->input->post('calendar_days')
             );
             $this->Company_model->update_company($this->company_id, $company_data);
             $this->_create_employee_log("Feature settings updated");
@@ -620,6 +621,16 @@ class Company extends MY_Controller
         $this->load->model('Whitelabel_partner_model');
         $view_data['company_data'] = $this->Company_model->get_company($this->company_id);
         //$view_data['company_api_key'] = $this->Company_model->get_company_api_permission($this->company_id);
+        
+        if(!$view_data['company_data']['calendar_days']) {
+            $width = isset($_COOKIE['width']) && $_COOKIE['width'] ? $_COOKIE['width'] : 1200;
+            $days_before_today = intval(round($width / 400));
+            $days_after_today = intval(round($width / 60));
+
+            $total_days = intval($days_before_today + $days_after_today);
+            $view_data['company_data']['calendar_days'] = $total_days;
+        }
+
         $company_partner_id = isset($this->company_partner_id) && $this->company_partner_id ? $this->company_partner_id : 1;
         $view_data['partner'] = $this->Whitelabel_partner_model->get_partner_detail($company_partner_id);
         $view_data['feature_setting_enabled'] = $this->company_subscription_level == ELITE ? true : false;

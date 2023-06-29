@@ -1,5 +1,9 @@
 $(function (){
 
+    var width = $("body").width();
+
+    setCookie('width',width);
+
     $("select[name='require_paypal_payment']").change(function () {
         if($("select[name='require_paypal_payment']").val() === '1')
         {
@@ -109,6 +113,14 @@ $(function (){
 
     $('.form_feature_settings').on('submit', function (e) {
         e.preventDefault();
+
+        var width = $("body").width();
+
+        var daysBeforeToday = Math.round(width / 400);
+        var daysAfterToday = Math.round(width / 60);
+
+        var calendarDays = parseInt(daysBeforeToday + daysAfterToday);
+
         var post_data = {
             'is_total_balance_include_forecast' : $('input[name="is_total_balance_include_forecast"]').prop('checked') ? 1 : 0,
             'ui_theme' : $('#ui_theme').val(),
@@ -153,7 +165,8 @@ $(function (){
             'restrict_booking_dates_modification' : $('input[name="restrict_booking_dates_modification"]').prop('checked') ? 1 : 0,
             'restrict_checkout_with_balance' : $('input[name="restrict_checkout_with_balance"]').prop('checked') ? 1 : 0,
             'show_guest_group_invoice' : $('input[name="show_guest_group_invoice"]').prop('checked') ? 1 : 0,
-            'restrict_cvc_not_mandatory' : $('input[name="restrict_cvc_not_mandatory"]').prop('checked') ? 1 : 0
+            'restrict_cvc_not_mandatory' : $('input[name="restrict_cvc_not_mandatory"]').prop('checked') ? 1 : 0,
+            'calendar_days' :  $('input[name="calendar_days"]').val() == calendarDays ? calendarDays : $('input[name="calendar_days"]').val()
         };
         $.ajax({
             type   : "POST",

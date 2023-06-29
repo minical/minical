@@ -125,9 +125,17 @@ innGrid.buildCalendar = function (rooms) {
     var sellingDate = moment($("#sellingDate").val()).toDate();
 
     var width = $("body").width();
+
     var daysBeforeToday = Math.round(width / 400);
     var daysAfterToday = Math.round(width / 60);
 
+    if(innGrid.featureSettings.calendarDays) {
+        var calendarDays = innGrid.featureSettings.calendarDays;
+    } else {
+        var calendarDays = daysBeforeToday + daysAfterToday;
+    }
+
+    console.log('calendarDays',calendarDays);
     var calStartDate = moment(sellingDate).subtract(daysBeforeToday, 'days').toDate();
 
     var calResourceAreaWidth = localStorage.getItem('resourceAreaWidth');
@@ -185,7 +193,7 @@ innGrid.buildCalendar = function (rooms) {
             customMonthView: {
                 type: 'resourceTimeline',
                 slotDuration: '24:00:00',
-                duration: {days: daysBeforeToday + daysAfterToday},
+                duration: {days: parseInt(calendarDays)},
                 buttonText: l('Monthly View', true),
                 columnHeader: false,
                 slotLabelFormat: [
