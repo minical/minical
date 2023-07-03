@@ -6747,7 +6747,8 @@ var bookingModalInvoker = function ($) {
                                 roomTypeDIV.find("[name='rate']").val(rate);
                                 $.post(getBaseURL() + "rate_plan/get_tax_amount_from_rate_plan_JSON/",
                                     {
-                                        rate_plan_id: roomTypeDIV.find('.charge-with option:selected').val()
+                                        rate_plan_id: roomTypeDIV.find('.charge-with option:selected').val(),
+                                        rate: rate
                                     },
                                     function (tax) {
                                         var taxedRate = rate * (1 + parseFloat(tax.percentage)) + parseFloat(tax.flat_rate);
