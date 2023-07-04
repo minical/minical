@@ -47,7 +47,7 @@
 					<div class="modal-body form-horizontal">
 					</div>
 					<div class="modal-footer">
-                        <button type="button" class="btn btn-danger pull-left" id="delete_company_button" data-dismiss="modal">
+                        <button type="button" class="btn btn-danger pull-left hidden" id="delete_company_button" data-dismiss="modal">
 							Soft Delete
 						</button>
                         <?php if(!$is_salesperson){ ?>
