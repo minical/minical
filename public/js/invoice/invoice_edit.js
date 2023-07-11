@@ -1655,12 +1655,23 @@ $(function() {
             $.ajax({
                 url: getBaseURL() + 'invoice/is_payment_available',
                 method: 'post',
+                dataType: 'json',
                 data: {
                     booking_id: $("#booking_id").val(),
                     customer_id: $("[name='customer_id']").val()
                 },
                 success: function(available) {
-                    console.log(available);
+                    console.log('available',available);
+
+                    if(parseInt(available) != 1) {
+
+                        var error_html = available.error.type + '\n\nPlease check the logs in your Stripe account from here\n' + "<a href='"+available.error.request_log_url+"' target='_blank'>"+available.error.request_log_url+"</a>" ;
+                        // alert(available.error);
+                        $('#display-errors').find('.modal-body').html(error_html.replace(/\n/g, '<br/>'));
+                        $('#display-errors').modal('show');
+                        available = 0;
+                    }
+
                     parseInt(available) == 1 ? d.resolve() : d.reject();
                 }
             });
@@ -1801,8 +1812,10 @@ $(function() {
                 }
             })
             .fail(function() {
-                alert(l('Gateway transaction unavailable', true));
-                location.reload();
+                if($('input[name="current_payment_gateway"]').val() != 'stripe-integration') {
+                    alert(l('Gateway transaction unavailable', true));
+                    location.reload();
+                }
             });
 
     });

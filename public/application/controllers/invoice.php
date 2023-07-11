@@ -811,7 +811,18 @@ class Invoice extends MY_Controller {
         } else {
             $available  = $this->paymentgateway->isGatewayPaymentAvailableForBooking($booking_id, $customer_id);
         }
-        echo $available ? 1 : 0;
+
+        if(
+            $this->current_payment_gateway == 'stripe-integration' && 
+            is_array($available) && 
+            $available['type'] == 'invalid_request_error') {
+
+            $error = $available;
+
+            echo json_encode(array('success' => false, 'error' => $error));
+        } else {
+            echo 1;
+        }
     }
 
     function save_invoice()

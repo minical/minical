@@ -50,6 +50,7 @@
                                 endforeach;
                                 ?>
                             </select>
+                            <input type="hidden" name="current_payment_gateway" value="<?php echo $this->current_payment_gateway; ?>">
                         </div>
                     </div>
 
