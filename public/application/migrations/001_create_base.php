@@ -1763,6 +1763,12 @@ class Migration_create_base extends CI_Migration {
 				'constraint' => 2,
 				'null' => TRUE
 			),
+			'restrict_edit_after_checkout' => array(
+				'type' => 'TINYINT',
+				'constraint' => 1,
+				'null' => FALSE,
+				'default' => '0',
+			),
 		));
 		$this->dbforge->add_key("company_id",true);
 		$this->dbforge->create_table("company", TRUE);

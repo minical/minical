@@ -592,7 +592,8 @@ class Company extends MY_Controller
                 'restrict_checkout_with_balance' => $this->input->post('restrict_checkout_with_balance'),
                 'show_guest_group_invoice' => $this->input->post('show_guest_group_invoice'),
                 'restrict_cvc_not_mandatory' => $this->input->post('restrict_cvc_not_mandatory'),
-                'calendar_days' => $this->input->post('calendar_days')
+                'calendar_days' => $this->input->post('calendar_days'),
+                'restrict_edit_after_checkout' => $this->input->post('restrict_edit_after_checkout')
             );
             $this->Company_model->update_company($this->company_id, $company_data);
             $this->_create_employee_log("Feature settings updated");
