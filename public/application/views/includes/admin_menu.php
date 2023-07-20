@@ -25,7 +25,7 @@
 				<a href="<?php echo base_url(); ?>admin/property_list">Property List</a>
 			</li>
 		   <?php }  ?>
-		   <?php if($this->is_super_admin && $this->is_partner_admin){ ?>
+		   <?php if($this->user_email != SUPER_ADMIN && $this->is_partner_owner){ ?>
 				<li>
 					<a href="<?php echo base_url()."admin/usage_report/".$this->vendor_id?>">Partner Usage</a>
 				</li>
