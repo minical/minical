@@ -17,7 +17,10 @@
     $registration_flag = 1;
     if(isset($permissions) && $permissions != NULL)
     {
-        if(!in_array('access_to_extensions', $permissions))
+        if(
+            !in_array('access_to_extensions', $permissions) &&
+            !in_array('is_owner', $permissions)
+        )
         {
             $registration_flag = 0;
         }
