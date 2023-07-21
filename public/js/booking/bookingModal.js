@@ -3,12 +3,10 @@
  */
 var _createBookingLock = false;
 var bookingDetails = [];
-
-var width = $("body").width();
-setCookie('width',width);
-
+var allow_sate=0;
 var bookingModalInvoker = function ($) {
     "use strict";
+	
 
     var defaults = {};
     var defaultRoomCharge = {};
@@ -239,14 +237,6 @@ var bookingModalInvoker = function ($) {
                 {id: 14, name: '14 '+l('adults')}
             ];
 
-            var adultOption = [];
-
-            for (var i = 15; i <= 100; i++) {
-                adultOption.push({id:i, name: i+' adults'});
-            }
-
-            this.adultsCount = this.adultsCount.concat(adultOption);
-
             this.childrenCount = [
                 {id: 0, name: 'no '+l('children')},
                 {id: 1, name: '1 '+l('child')},
@@ -264,14 +254,6 @@ var bookingModalInvoker = function ($) {
                 {id: 13, name: '13 '+l('children')},
                 {id: 14, name: '14 '+l('children')}
             ];
-
-            var childOption = [];
-
-            for (var i = 15; i <= 99; i++) {
-                childOption.push({id:i, name: i+' children'});
-            }
-
-            this.childrenCount = this.childrenCount.concat(childOption);
 
             this.sources = [];
             this.customColors = [
@@ -1717,6 +1699,18 @@ var bookingModalInvoker = function ($) {
                     if (data.booking.state == 3) {
                         $('.guest_fields_row').addClass('hidden');
                     }
+					if (data.allow_change_state == 0) {
+						var d = new Date();
+						var month = d.getMonth()+1;
+var day = d.getDate();
+
+var output = d.getFullYear() + '-' +
+    ((''+month).length<2 ? '0' : '') + month + '-' +
+    ((''+day).length<2 ? '0' : '') + day;
+						if(data.booking.check_out_date < output){
+                        $('select[name="state"]').attr("disabled","true");
+						}
+                    }
                 },
                 error: function () {
                     console.log("booking not accesible for this company/user");
@@ -1726,6 +1720,8 @@ var bookingModalInvoker = function ($) {
             }); // -- ajax call
         },
         _getBookingTypePanel: function () {
+			
+			//console.log(this.allow_state+'asdfas');
             var that = this;
             var state = this.booking.state;
 
@@ -4230,6 +4226,7 @@ var bookingModalInvoker = function ($) {
                 }
             });
         },
+		
         _getBookingTypes: function (state) {
 
             var that = this;
@@ -6747,8 +6744,7 @@ var bookingModalInvoker = function ($) {
                                 roomTypeDIV.find("[name='rate']").val(rate);
                                 $.post(getBaseURL() + "rate_plan/get_tax_amount_from_rate_plan_JSON/",
                                     {
-                                        rate_plan_id: roomTypeDIV.find('.charge-with option:selected').val(),
-                                        rate: rate
+                                        rate_plan_id: roomTypeDIV.find('.charge-with option:selected').val()
                                     },
                                     function (tax) {
                                         var taxedRate = rate * (1 + parseFloat(tax.percentage)) + parseFloat(tax.flat_rate);
@@ -7508,6 +7504,7 @@ var bookingModalInvoker = function ($) {
 
     // prefetch data after 4s of page load
     setTimeout(preFetchData, 1000);
+
 };
 
 setTimeout(function () {
