@@ -1165,7 +1165,7 @@ class Booking extends MY_Controller
         $available_room_types = $this->get_available_room_types_in_JSON($booking['check_in_date'], $booking['check_out_date'], false);
 
         $available_rooms = $this->get_available_rooms_in_AJAX($booking['check_in_date'], $booking['check_out_date'], $booking['current_room_type_id'], $booking_id, $booking['current_room_id'], false);
-
+        $faetures = $this->Company_model->get_company($this->company_id);
         $response = array(
             'success' => 'true',
             'booking' => $booking,
@@ -1173,7 +1173,8 @@ class Booking extends MY_Controller
             'group_info' => $group_booking_info,
             'rate_plan' => $rate_plan,
             'available_room_types' => $available_room_types,
-            'available_rooms' => $available_rooms
+            'available_rooms' => $available_rooms,
+            'allow_change_state' => isset($faetures["allow_change_previous_booking_status"]) ? $faetures["allow_change_previous_booking_status"] : 0,
         );
 
         echo json_encode($response);

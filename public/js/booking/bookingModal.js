@@ -1717,12 +1717,25 @@ var bookingModalInvoker = function ($) {
                     if (data.booking.state == 3) {
                         $('.guest_fields_row').addClass('hidden');
                     }
+                    //alert(data.allow_change_state);
+                    if (data.allow_change_state == 0) {
+                        var d = new Date();
+                        var month = d.getMonth()+1;
+                    var day = d.getDate();
+
+                    var output = d.getFullYear() + '-' +
+                    ((''+month).length < 2 ? '0' : '') + month + '-' +
+                    ((''+day).length < 2 ? '0' : '') + day;
+                        if(data.booking.check_out_date < output){
+                        $('select[name="state"]').attr("disabled","true");
+                        }
+                    }
                 },
                 error: function () {
                     console.log("booking not accesible for this company/user");
                     //that._closeBookingModal();
                 }
-
+         
             }); // -- ajax call
         },
         _getBookingTypePanel: function () {

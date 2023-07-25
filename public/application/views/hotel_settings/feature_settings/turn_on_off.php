@@ -685,6 +685,16 @@
             <div class="form-group features-div-padding ">
                 <div class="checkbox checbox-switch switch-primary">
                     <label>
+                        <input type="checkbox" name="allow_change_previous_booking_status" id="allow_change_previous_booking_status"
+                               <?= $company_data['allow_change_previous_booking_status'] == 1 ? 'checked=checked' : ''; ?>/>
+                        <span></span>
+                    </label>
+                    <label for="allow_change_previous_booking_status"><b><?= l("Allow Change Previous booking status", true); ?></b></label>
+                </div>
+            </div>
+            <div class="form-group features-div-padding ">
+                <div class="checkbox checbox-switch switch-primary">
+                    <label>
                         <input type="checkbox" name="auto_no_show"
                                <?= $company_data['auto_no_show'] == 1 ? 'checked=checked' : ''; ?>/>
                         <span></span>

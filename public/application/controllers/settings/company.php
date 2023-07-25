@@ -532,7 +532,8 @@ class Company extends MY_Controller
         $faetures = $this->Company_model->get_company($this->company_id);
         $required_features = array(
             "hide_decimal_places" => isset($faetures["hide_decimal_places"]) ? $faetures["hide_decimal_places"] : "",
-            "make_guest_field_mandatory" => isset($faetures["make_guest_field_mandatory"]) ? $faetures["make_guest_field_mandatory"] : ""
+            "make_guest_field_mandatory" => isset($faetures["make_guest_field_mandatory"]) ? $faetures["make_guest_field_mandatory"] : "",
+            "allow_change_previous_booking_status" => isset($faetures["allow_change_previous_booking_status"]) ? $faetures["allow_change_previous_booking_status"] : 0
         );
         echo json_encode($required_features);
     }
@@ -593,7 +594,8 @@ class Company extends MY_Controller
                 'show_guest_group_invoice' => $this->input->post('show_guest_group_invoice'),
                 'restrict_cvc_not_mandatory' => $this->input->post('restrict_cvc_not_mandatory'),
                 'calendar_days' => $this->input->post('calendar_days'),
-                'restrict_edit_after_checkout' => $this->input->post('restrict_edit_after_checkout')
+                'restrict_edit_after_checkout' => $this->input->post('restrict_edit_after_checkout'),
+                'allow_change_previous_booking_status' => $this->input->post('allow_change_previous_booking_status')
             );
             $this->Company_model->update_company($this->company_id, $company_data);
             $this->_create_employee_log("Feature settings updated");
