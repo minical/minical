@@ -166,7 +166,9 @@ $(function (){
             'restrict_checkout_with_balance' : $('input[name="restrict_checkout_with_balance"]').prop('checked') ? 1 : 0,
             'show_guest_group_invoice' : $('input[name="show_guest_group_invoice"]').prop('checked') ? 1 : 0,
             'restrict_cvc_not_mandatory' : $('input[name="restrict_cvc_not_mandatory"]').prop('checked') ? 1 : 0,
-            'calendar_days' :  $('input[name="calendar_days"]').val() == calendarDays ? calendarDays : $('input[name="calendar_days"]').val()
+            'restrict_edit_after_checkout' : $('input[name="restrict_edit_after_checkout"]').prop('checked') ? 1 : 0,
+            'calendar_days' :  $('input[name="calendar_days"]').val() == calendarDays ? calendarDays : $('input[name="calendar_days"]').val(),
+            'allow_change_previous_booking_status' : $('input[name="allow_change_previous_booking_status"]').prop('checked') ? 1 : 0,
         };
         $.ajax({
             type   : "POST",

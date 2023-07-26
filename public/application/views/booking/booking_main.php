@@ -541,10 +541,14 @@
             var trial_expiry_date = $('#trial_expiry_date').val();
             if(trial_expiry_date != '' && subscription_state == 'trialing')
             {
-                var nd = new Date(trial_expiry_date);
-                var current_date = new Date();
-                var diff_date =  nd - current_date;
-                var days = Math.floor(((diff_date % 31536000000) % 2628000000)/86400000);
+                 const startDate = new Date(trial_expiry_date);
+                 const currentDate = new Date();
+
+                // Calculate the time difference in milliseconds
+                const timeDiff = Math.abs(currentDate.getTime() - startDate.getTime());
+
+                // Convert the time difference to days
+                const days = Math.ceil(timeDiff / (1000 * 3600 * 24));
                 
                 var url = '<?php echo base_url(); ?>settings/company/view_subscription';
                 if(days <= 5 && days >= 0)

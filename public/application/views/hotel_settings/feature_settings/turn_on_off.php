@@ -672,7 +672,26 @@
                     <label for="restrict_cvc_not_mandatory"><b><?= l("CVC not mandatory with the credit card details", true); ?></b></label>
                 </div>
             </div>
-
+            <div class="form-group features-div-padding ">
+                <div class="checkbox checbox-switch switch-primary">
+                    <label>
+                        <input type="checkbox" name="restrict_edit_after_checkout" id="restrict_edit_after_checkout"
+                               <?= $company_data['restrict_edit_after_checkout'] == 1 ? 'checked=checked' : ''; ?>/>
+                        <span></span>
+                    </label>
+                    <label for="restrict_edit_after_checkout"><b><?= l("Restrict edit booking invoice after booking checkout", true); ?></b></label>
+                </div>
+            </div>
+            <div class="form-group features-div-padding ">
+                <div class="checkbox checbox-switch switch-primary">
+                    <label>
+                        <input type="checkbox" name="allow_change_previous_booking_status" id="allow_change_previous_booking_status"
+                               <?= $company_data['allow_change_previous_booking_status'] == 1 ? 'checked=checked' : ''; ?>/>
+                        <span></span>
+                    </label>
+                    <label for="allow_change_previous_booking_status"><b><?= l("Allow Change Previous booking status", true); ?></b></label>
+                </div>
+            </div>
             <div class="form-group features-div-padding ">
                 <div class="checkbox checbox-switch switch-primary">
                     <label>

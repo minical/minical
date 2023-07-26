@@ -22,6 +22,10 @@ innGrid.checkForEnter = function(event) {
     }
 }
 
+var booking_state_val = $('#booking_state').val();
+    if(booking_state_val == 2 && innGrid.restrictEditAfterCheckout == 1){
+     $('.editable_tr td').removeClass('editable_td');
+    }
 //Adds charge or payment to invoice
 innGrid.addNewCharge = function() {
     // Make sure a charge type or payment type has been entered.

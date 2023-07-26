@@ -231,7 +231,7 @@
 
 <input type="hidden" name="pos_booking_id" class="pos_booking_id" value="<?php echo $booking_detail['booking_id']; ?>">
 <input type="hidden" name="default_charge_name" class="default_charge_name" value="<?php echo $company['default_charge_name']; ?>">
-
+<input type="hidden" name="booking_state" class="booking_state" id="booking_state" value="<?php echo $booking_detail['state']; ?>">
 
 <!--bootstrap popover-->
 <div id="popover-update-folio-name" class="hide">
@@ -542,6 +542,12 @@
 
                 <tbody>
                 <?php
+                $click_desible ="";
+                if($this->restrict_edit_after_checkout == 1 &&  $booking_detail['state'] == 2 ){
+
+                    $click_desible ="disabled";
+
+                }
                 if (isset($charges)):
                     foreach($charges as $charge):
                         ?>
@@ -738,6 +744,7 @@
                                     id="button-add-charge"
                                     class="btn btn-success form-control"
                                     style="width:200px;"
+                                    <?php echo $click_desible; ?>
                             >
                                 <?php echo l('add').' '.l('charge'); ?>
                             </button>
