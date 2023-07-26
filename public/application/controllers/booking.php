@@ -1520,6 +1520,7 @@ class Booking extends MY_Controller
             $room['room_id'] = $available_rooms[$i]['room_id'];
 
             $booking_batch[$i] = $booking_data;
+            $booking_batch[$i]['adult_count'] = $room['adult_count'];
         }
         $booking_ids = $this->Booking_model->insert_booking_batch($booking_batch);
 

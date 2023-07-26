@@ -1735,7 +1735,7 @@ var bookingModalInvoker = function ($) {
                     console.log("booking not accesible for this company/user");
                     //that._closeBookingModal();
                 }
-         
+
             }); // -- ajax call
         },
         _getBookingTypePanel: function () {
@@ -4863,7 +4863,9 @@ var bookingModalInvoker = function ($) {
                     use_rate_plan: useRatePlan,
                     rate_plan_id: ratePlanID,
                     charge_type_id: chargeTypeID,
-                    pay_period: $(this).find("[name='pay_period']").val()
+                    pay_period: $(this).find("[name='pay_period']").val(),
+                    adult_count: $(this).find("[name='adult_count'] option:selected").val(),
+                    children_count: $(this).find("[name='children_count'] option:selected").val()
                 });
 
             });
