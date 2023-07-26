@@ -79,7 +79,7 @@ INSERT INTO `property_build` VALUES (1,1,'Hotel','{\r\n      \"unit_name\":{\r\n
 --
 
 /*!40000 ALTER TABLE `otas` DISABLE KEYS */;
-INSERT INTO `otas` VALUES (1,'channex','Channex'),(2,'hotellink','HotelLink'),(3,'booking_dot_com','Booking.com'),(4,'expedia','Expedia'),(5,'airbnb','Airbnb'),(6,'siteminder','Siteminder'),(7,'myallocator','Myallocator'),(8,'agoda','Agoda'),(9,'obe','Online Booking Engine');
+INSERT INTO `otas` VALUES (1,'channex','Channex'),(2,'hotellink','HotelLink'),(3,'booking_dot_com','Booking.com'),(4,'expedia','Expedia'),(5,'airbnb','Airbnb'),(6,'siteminder','Siteminder'),(7,'myallocator','Myallocator'),(8,'agoda','Agoda'),(9,'obe','Online Booking Engine'),(10,'maximojo','Maximojo');
 /*!40000 ALTER TABLE `otas` ENABLE KEYS */;
 
 
