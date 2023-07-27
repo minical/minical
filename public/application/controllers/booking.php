@@ -2265,6 +2265,8 @@ class Booking extends MY_Controller
             $end_date = $booking_existing_data['check_out_date'];
         }
 
+        $this->Booking_model->update_booking($booking_id, array('state' => $new_state));
+
         $update_availability_data = array(
                         'start_date' => $start_date,
                         'end_date' => $end_date,

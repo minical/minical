@@ -7095,6 +7095,7 @@ var bookingModalInvoker = function ($) {
                     check_out_date: moment(innGrid._getBaseFormattedDate($('#booking_detail').find("[name='check_out_date']").val()) + ' ' + that.convertTimeFormat($('#booking_detail').find("[name='check_out_time']").val())).format('YYYY-MM-DD HH:mm:ss'),
                     room_booking_ar: roomBookingArr,
                     update_date: true,
+                    state: $('#booking-modal select[name="state"]').val(),
                     rooms: data.rooms
                 }
             };
