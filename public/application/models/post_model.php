@@ -12,21 +12,43 @@ class Post_model extends CI_Model {
         $this->db->insert('postmeta', $data);
         return $this->db->insert_id();
     }
+	
+	function get_found_rows()
+    {
+        $sql = "SELECT FOUND_ROWS() as count;";
+
+        $q = $this->db->query($sql);
+
+		if ($this->db->_error_message())
+		{
+			show_error($this->db->_error_message());
+		}
+
+        if ($q)
+		{
+            $result = $q->row_array(0);
+
+            return $result['count'];
+		}
+
+        return 0;
+    }
 
     function get_post($post)
     {
+		
         $this->db->select('*');
        
         if(isset($post) && is_array($post) && count($post) > 0){
             foreach($post as $key=>$value){
              $this->db->where($key, $value);      
             }
-        }elseif(is_int($post))
+        } else if (is_numeric($post))
         {
+			
             $this->db->where('post_id', $post);   
         }
 
-        $this->db->where('is_deleted', 0); 
         $query = $this->db->get('posts');
         if ($this->db->_error_message())
         {
@@ -37,6 +59,8 @@ class Post_model extends CI_Model {
 
         return $result_array;
     }
+	
+	
 
     function edit_post(array $post = null)
     {
