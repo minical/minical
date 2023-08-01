@@ -76,7 +76,7 @@
 			<th><?php echo l('Name', true); ?></th>
 			<th><?php echo l('status'); ?></th>
 			<th><?php echo l('role'); ?></th>
-			<th><?php echo l('permissions'); ?></th>
+			<!-- <th><?php echo l('permissions'); ?></th> -->
 			<th><?php echo l('email'); ?></th>
 			<th><?php echo l('Actions'); ?></th>
 		</tr>
@@ -110,7 +110,12 @@
 					unset($employees[$key]);
 				}
 			}
-
+			
+			// $employees = array_values($employees);
+			// if(!$this->is_partner_owner) {
+			// 	unset($employees[0]);
+			// }
+			// prx($employees);
 			foreach ($employees as $employee) : ?>
 				
 				<?php 
@@ -121,7 +126,7 @@
 						$this->session->userdata('user_role') == "is_admin" 
 					): //Hide admin account?>
 						
-                    <tr>
+                    <tr class="<?php //echo ($this->is_partner_owner) && $employee['permission'] == 'is_owner' ? 'hidden' : ''; ?>">
 							<td id="<?php echo $employee['user_id']; ?>" class="employee-name">
 								<span><?php echo $employee['first_name'] . ' ' . $employee['last_name'];?></span>
                                 <input required type="text" class="hidden form-control" name="employee-name" value="<?php echo $employee['first_name'] . ' ' . $employee['last_name'];?>" />
@@ -137,12 +142,15 @@
 							</td>
 							<td>
                                 <?php 
-                                if(isset($can_edit_employees) && $can_edit_employees){									
+                                if(isset($can_edit_employees) && $can_edit_employees){	
                                 ?>
                                 <select name ="user-role-change" onChange="userRoleChange(this)">
                                     <option <?php if ($employee['permission'] == 'is_owner'): echo 'selected'; else: echo ''; endif; ?> value="is_owner"><?php echo l('Owner', true); ?></option>
                                     <option <?php if ($employee['permission'] == 'is_employee'): echo 'selected'; else: echo ''; endif; ?> value="is_employee" ><?php echo l('Employee', true); ?></option>
 									<option <?php if ($employee['permission'] == 'is_housekeeping'): echo 'selected'; else: echo ''; endif; ?> value="is_housekeeping" ><?php echo l('Housekeeper', true); ?></option>
+                                	<?php foreach ($roles as $k=> $v) { ?>
+                                		<option <?php if ($employee['permission'] == 'is_new_role' && $employee['role_id'] == $v['role_id']): echo 'selected'; else: echo ''; endif; ?> value="is_new_role" data-role_id="<?php echo $v['role_id']; ?>" data-role_name="<?php echo $v['role']; ?>"><?php echo $v['role']; ?></option>
+                                	<?php } ?>
                                 </select>
 								<?php
                                 }else{
@@ -156,8 +164,8 @@
 								?>
 							</td>
 
-							<?php if (!$can_edit_employees) : ?>
-								<td><?php 
+							<?php //if (!$can_edit_employees) : ?>
+								<!-- <td><?php 
 									if ($employee['permission'] == 'is_owner') 
 										echo l('Owner', true);
 									elseif ($employee['permission'] == 'is_employee') 
@@ -166,10 +174,10 @@
 										echo l('Housekeeper', true); 
 									else
 									echo $employee['permission']; ?>
-								</td>
-							<?php else : ?>
-								<?php if ($employee['permission'] == 'is_employee') { ?>						
-									<td class="permissions">
+								</td> -->
+							<?php //else : ?>
+								<?php //if ($employee['permission'] == 'is_employee') { ?>						
+									<!-- <td class="permissions">
 										
 										<?php
 											foreach ($permission_types as $permission_type):
@@ -221,9 +229,9 @@
 										<?php
 											endforeach;
 										?>
-									</td>			
-							  <?php } else { ?>
-									<td class="permissions"><?php 
+									</td> -->			
+							  <?php //} else { ?>
+									<!-- <td class="permissions"><?php 
 										if ($employee['permission'] == 'is_owner') 
 											echo l('owner', true);
 										elseif ($employee['permission'] == 'is_employee') 
@@ -231,9 +239,9 @@
 										elseif ($employee['permission'] == 'is_housekeeping') 
 											echo '<input class="user-permission hidden" type="checkbox" name="is_housekeeping-checkbox" autocomplete="off" value="is_housekeeping" checked=checked> '.l('Housekeeping', true); 
 										else
-											echo $employee['permission']; ?></td>
-								<?php } ?>
-							<?php endif; ?>
+											echo $employee['permission']; ?></td> -->
+								<?php //} ?>
+							<?php //endif; ?>
 							
 							<td class="employee_email"><span><?php echo $employee['email']; ?></span><input required type="email" class="hidden form-control" name="employee-email" value="<?php echo $employee['email'];?>" /></td>
 							

@@ -8,6 +8,7 @@ class User extends MY_Controller
         parent::__construct();
 
 		$this->load->model('User_model');
+		$this->load->model('User_role_model');
 		$this->load->model('Employee_log_model');
 	}
 
@@ -61,6 +62,49 @@ class User extends MY_Controller
 		$data = array (
 			'message' => 'User permission changed'
 		);
+		
+		echo json_encode($data);
+	}
+
+	function change_role_permission() 
+	{
+		$role_id = $this->input->post('role_id');		
+		$permission = $this->input->post('permission');		
+		$is_checked = $this->input->post('is_checked');	
+        
+		$all_assigned_user = $this->User_role_model->get_users_by_role($role_id, $this->company_id);
+
+		if($all_assigned_user) {
+	        $role_detail = $this->User_role_model->get_role_detail($role_id);
+			if ($is_checked =="true")
+			{
+	            if($permission == 'bookings_view_only') 
+	            {
+	                $this->User_role_model->remove_other_permissions($this->company_id, $role_id, $permission);
+	            }
+
+	            if($all_assigned_user) {
+		            foreach ($all_assigned_user as $key => $value) {
+		            	$this->User_role_model->add_user_permission($this->company_id, $value['user_id'], $permission, $role_id);
+		            }
+		        }
+			}
+			else
+			{
+				$this->User_role_model->remove_user_permission($this->company_id, $role_id, $permission);			
+			}
+			$this->_create_user_log("Change <b>$permission</b> permission for user '{$role_detail['role']}'");
+			//TO DO: error checking
+			$data = array (
+				'success' => true,
+				'message' => 'Role permission changed'
+			);
+		} else {
+			$data = array (
+				'success' => false,
+				'message' => l('Firstly assign any user with this role, then provide permissions', true)
+			);
+		}
 		
 		echo json_encode($data);
 	}

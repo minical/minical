@@ -28,6 +28,7 @@ class Company extends MY_Controller
         $this->load->model('Tax_price_bracket_model');
         $this->load->model('Room_location_model');
         $this->load->model('Statement_model');
+        $this->load->model('User_role_model');
 
         $this->load->library('email');
         $this->load->library('form_validation');
@@ -247,12 +248,15 @@ class Company extends MY_Controller
         if (!is_null($employees = $this->Company_model->get_user_list($this->company_id, true))) {
             $data['employees'] = $employees;
         }
+        if (!is_null($roles = $this->User_role_model->get_all_roles($this->company_id, true))) {
+            $data['roles'] = $roles;
+        }
 
         //Get all user permissions
         if (!is_null($company_permissions = $this->Company_model->get_all_user_permissions($this->company_id))) {
             $data['company_permissions'] = $company_permissions;
         }
-
+// prx($data);
         $data['selected_sidebar_link'] = 'Team';
         $data['main_content']          = 'hotel_settings/company/employees';
         $data['js_files']              = array(base_url().auto_version('js/hotel-settings/employees.js'));
@@ -319,7 +323,13 @@ class Company extends MY_Controller
 
             //Check if company permission already added
             if (is_null($role = $this->User_model->get_user_role($user_id, $company_id))) {
-                $this->User_model->add_user_permission($company_id, $user_id, 'is_employee', $add_default_permissions = true);
+                
+                $role_data = $this->User_role_model->get_role_id($company_id, 'is_new_employee');
+                if($role_data) {
+                    $this->User_role_model->add_user_permission($company_id, $user_id, 'is_new_role', $role_data['role_id'], $add_default_permissions = true);
+                } else {
+                    $this->User_model->add_user_permission($company_id, $user_id, 'is_employee', $add_default_permissions = true);
+                }
             }
 
             return $user_id;
@@ -417,6 +427,13 @@ class Company extends MY_Controller
         $user_name = $this->input->post('user_name');
         $user_email = $this->input->post('user_email');
         $new_user_role = $this->input->post('new_user_role');
+        $role_name = $this->input->post('role_name');
+        
+        $role_id = $this->input->post('role_id');
+        if($role_id) {
+            $role_name = $this->input->post('role_name');
+        }
+
         if($new_user_role)
         {
             $this->User_model->remove_all_user_permissions($this->company_id, $user_id);
@@ -424,8 +441,27 @@ class Company extends MY_Controller
             if($new_user_role == 'is_owner'){
                 $this->User_model->add_user_permission($this->company_id, $user_id, 'is_admin');
             }
+
+            if($new_user_role == 'is_new_role'){
+
+                $user_role_permissions = $this->User_role_model->get_role_permissions($this->company_id, $role_id);
+
+                if($user_role_permissions) {
+                    $this->User_role_model->add_user_permission($this->company_id, $user_id, $user_role_permissions, $role_id);
+                }
+            }
             
-            $this->User_model->add_user_permission($this->company_id, $user_id, $new_user_role);
+            if($new_user_role == 'is_new_role') {
+                if($role_name == 'Support Staff') {
+                    $this->User_role_model->add_user_permission($this->company_id, $user_id, 'is_owner', $role_id);
+                }
+                else {
+                    $this->User_role_model->add_user_permission($this->company_id, $user_id, $new_user_role, $role_id);
+                }
+            }
+            else {
+                $this->User_model->add_user_permission($this->company_id, $user_id, $new_user_role);
+            }
 
             $user_detail = $this->User_model->get_user_profile($user_id);
             $this->_create_employee_log("Change '$new_user_role' role for user '{$user_detail['first_name']}'");
@@ -2640,5 +2676,138 @@ class Company extends MY_Controller
                 show_error($this->db->_error_message());
             }
         }
+    }
+
+    function roles()
+    {
+
+
+        $partner_data = $this->User_role_model->get_main_property_partner($this->vendor_id);
+
+        if(
+            isset($partner_data['company_id']) &&
+            $partner_data['company_id']
+        ) {
+            $existing_staff_role = $this->User_role_model->get_staff_role($partner_data['company_id']);
+
+            if(empty($existing_staff_role)){
+                $data = array(
+                    array(
+                        'role' => 'Support Staff',
+                        'company_id' => $this->company_id,
+                        'user_id' => $this->user_id,
+                        'role_slug' => 'is_support_staff',
+                        'is_existed' => 1,
+                        'created_at' => gmdate('Y-m-d H:i:s'),
+                        'updated_at' => gmdate('Y-m-d H:i:s')
+                    )
+                );
+
+                $this->User_role_model->create_roles($data);
+            }
+        }
+
+        $this->form_validation->set_rules('role_name', 'Role', 'required|trim');
+
+        //Add role
+        if ($this->form_validation->run() == true) {
+            $this->load->model('tank_auth/users');
+            $role_name = $this->input->post('role_name');
+
+            $role_id = $this->_add_role($role_name, $this->company_id, $this->user_id);
+
+            redirect('settings/company/roles');
+        }
+
+        $data['can_edit_roles'] = $this->session->userdata('user_role') == 'is_admin'
+            || $this->session->userdata('user_role') == 'is_owner'
+            || $this->User_role_model->check_for_permission('can_change_settings');
+
+        //Get roles list
+        $data['roles'] = $this->User_role_model->get_all_roles($this->company_id);
+        $data['user_count'] = $this->User_role_model->get_roles_assigned_users($this->company_id);
+
+        //Get all user permissions
+        if (!is_null($company_permissions = $this->User_role_model->get_all_user_permissions($this->company_id))) {
+            $data['company_permissions'] = $company_permissions;
+        }
+
+        $data['selected_sidebar_link'] = 'Roles';
+        $data['main_content']          = 'hotel_settings/company/roles';
+        $data['js_files']              = array(base_url().auto_version('js/hotel-settings/user_roles.js'));
+
+        // prx($data);
+
+        $this->load->view('includes/bootstrapped_template', $data);
+
+    }
+
+    function _add_role($role, $company_id, $user_id)
+    {
+        // if role doesn't exist in company
+        if (!$this->User_role_model->role_exists_in_company($role, $company_id, $user_id)){
+            
+            $slug = strtolower(str_replace(" ", "_", $role));
+
+            $data = array(
+                'role' => $role,
+                'company_id' => $company_id,
+                'user_id' => $user_id,
+                'role_slug' => 'is_'.$slug,
+                'created_at' => gmdate('Y-m-d H:i:s'),
+                'updated_at' => gmdate('Y-m-d H:i:s')
+            );
+
+            $role_id = $this->User_role_model->create_role($data);
+
+            //$this->User_role_model->add_user_permission($company_id, $user_id, 'is_new_role', $role_id, $add_default_permissions = true);
+
+            return $role_id;
+        }
+    }
+
+    function update_roles_AJAX(){
+        $role_id = $this->input->post('role_id');
+        $role_name = $this->input->post('role_name');
+        $data['role'] = isset($role_name) ? $role_name : '';
+        $slug = strtolower(str_replace(" ", "_", $role_name));
+        $data['role_slug'] = isset($role_name) ? 'is_'.$slug : '';
+        $data['updated_at'] = isset($role_name) ? gmdate('Y-m-d H:i:s') : '';
+        $this->User_role_model->update_role_profile($role_id, $data);
+        $this->_create_employee_log("Change role name '{$role_id}'");
+    }
+
+    function remove_role()
+    {
+        $data['isSuccess'] = false;
+        $data['message']   = 'Role already assigned to user';
+
+        $role_id = $this->input->post('role_id');
+
+        $user_role_permissions = $this->User_role_model->get_role_permissions($this->company_id, $role_id, true);
+
+        if(empty($user_role_permissions)) {
+
+            $role_detail = $this->User_role_model->get_role_by_id($this->company_id, $role_id);
+
+            $this->User_role_model->remove_role($this->company_id, $role_id);
+
+            $data['isSuccess'] = true;
+            $data['message']   = 'Role removed';
+
+            $this->_create_employee_log("Role '{$role_detail['role']}' removed");
+        }
+
+        echo json_encode($data);
+    }
+
+    function show_user_permissions($role_id) {
+        $data['user_permissions'] = $this->User_role_model->get_role_permissions($this->company_id, $role_id, true);
+
+        $data['role'] = $this->User_role_model->get_role_by_id($this->company_id, $role_id);
+
+        $data['company_permissions'] = $this->User_role_model->get_all_user_permissions($this->company_id);
+
+        $this->load->view('hotel_settings/company/show_user_permissions', $data);
     }
 }

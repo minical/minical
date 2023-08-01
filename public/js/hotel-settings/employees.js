@@ -125,6 +125,13 @@ $(function() {
 function userRoleChange(obj)
 {
     var currentSelectedval = $(obj).val();
+    var selectedOption = $(obj).find('option:selected');
+    var roleID = selectedOption.data('role_id');
+    var roleName = selectedOption.data('role_name');
+
+    console.log('roleID',roleID);
+    console.log('roleName',roleName);
+
     var allEmployees = $('select[name="user-role-change"]').map(function(){return $(this).val()});
     if(currentSelectedval == 'is_employee' && $.inArray('is_owner', allEmployees) == -1)
     {
@@ -147,7 +154,7 @@ function userRoleChange(obj)
             }
         });
     }
-    else
+    else if(currentSelectedval == 'is_owner')
     {
         var confirmval = confirm(l('Do you really want this employee to be owner of this company?', true));
         if(confirmval == true){
@@ -165,6 +172,30 @@ function userRoleChange(obj)
                 }
             });
         }else{
+            $(obj).val('is_employee');
+        }
+    }
+
+    else if(currentSelectedval == 'is_new_role')
+    {
+        var confirmval = confirm(l('Do you really want this user to be '+roleName+' of this company?', true));
+        if(confirmval == true){
+            $.ajax({
+                url: getBaseURL()+'settings/company/update_users_AJAX',
+                type: "POST",
+                data: {
+                    user_id: $(obj).parent().parent().find('.employee-name').attr('id'),
+                    new_user_role: $(obj).val(),
+                    role_id: roleID,
+                    role_name: roleName,
+                },
+                success: function(data){
+                    if(data == ''){
+                       location.reload();
+                    }
+                }
+            });
+        } else {
             $(obj).val('is_employee');
         }
     }

@@ -135,7 +135,7 @@ function get_total_companies($extension_name = null, $is_extension_active = fals
             $this->db->where('up.user_id', $user_id);
             $this->db->where('c.company_id = up.company_id');
             $this->db->where('c.is_deleted','0');
-            $this->db->where_in('up.permission', array('is_employee', 'is_manager', 'is_owner', 'is_admin', 'is_housekeeping'));
+            $this->db->where_in('up.permission', array('is_employee', 'is_manager', 'is_owner', 'is_admin', 'is_housekeeping', 'is_new_role'));
             $this->db->group_by('c.company_id');
 
             $query = $this->db->get();
@@ -322,7 +322,7 @@ function get_total_companies($extension_name = null, $is_extension_active = fals
 		$this->db->where('users.id = user_profiles.user_id');
 		$this->db->where('user_permissions.user_id = user_profiles.user_id');
 		$this->db->where('user_permissions.company_id', $company_id);
-		$this->db->where_in('permission', array('is_employee', 'is_manager', 'is_owner', 'is_admin', 'is_housekeeping'));
+		$this->db->where_in('permission', array('is_employee', 'is_manager', 'is_owner', 'is_admin', 'is_housekeeping', 'is_new_role'));
 		$this->db->order_by('user_permissions.user_id');
 
 		$query = $this->db->get();
@@ -341,7 +341,7 @@ function get_total_companies($extension_name = null, $is_extension_active = fals
 		$this->db->from('user_permissions');
 
 		$this->db->where('company_id', $company_id);
-		$this->db->where_not_in('permission', array('is_employee', 'is_manager', 'is_owner', 'is_admin'));
+		$this->db->where_not_in('permission', array('is_employee', 'is_new_role', 'is_owner', 'is_admin'));
 
 		$this->db->order_by('user_id');
 

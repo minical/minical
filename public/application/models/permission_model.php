@@ -270,6 +270,7 @@ class Permission_model extends CI_Model {
                     (
                         (
                             $controller_name == 'company' && $function_name != "delete" &&
+                            $controller_name == 'company' && $function_name != "roles" &&
                             $controller_name == 'company' && $function_name != "get_company_in_JSON"
                         ) ||
                         $controller_name == 'room_inventory' ||

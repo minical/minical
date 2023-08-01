@@ -1,123 +1,223 @@
 <?php
 
-class User_model extends CI_Model {
+class User_role_model extends CI_Model {
 
     function __construct()
     {
         // Call the Model constructor
         parent::__construct();
-    }
+    }    
 
-    function validate($email, $password)
+    function create_role($data)
     {
-        $this->db->where('email', $email);
-        $this->db->where('password', $password);
-        $this->db->where('verified', 1);
-        $query = $this->db->get('user');
+        $data = (object) $data;
+        $this->db->insert("user_roles", $data);
 
-        if($query->num_rows == 1)
+        //return $this->db->insert_id();
+        $query = $this->db->query('select LAST_INSERT_ID( ) AS last_id');
+        $result = $query->result_array();
+        if(isset($result[0]))
         {
-            return true;
+            return $result[0]['last_id'];
         }
-        return false;
+        else
+        {
+            return null;
+        }
     }
 
-    function validate_employee_account($email)
-    {
-        $update_data = array (
-            'password' => $this->input->post('password'),
-            'verified' => 1
-        );
-        $this->db->where('email', $email);
-        $this->db->update('user', $update_data);
-        return true;
+    function create_roles($data){
+        $this->db->insert_batch('user_roles', $data);
     }
 
-    function create_user($first_name, $last_name, $email, $password, $company_id)
-    {
-        //create primary account
-        $new_member_insert_data = array(
-            'first_name' => $first_name,
-            'last_name' => $last_name,
-            'email' => $email,
-            'password' => $password,
-            'company_id' => $company_id,
-            'verified' => 1
-        );
-        $insert = $this->db->insert('user', $new_member_insert_data);
+    function get_role_by_id($company_id, $role_id) {
+        $this->db->from("user_roles");
+        $this->db->where('role_id', $role_id);
+        $this->db->where('company_id', $company_id);
+        $this->db->where('is_deleted', 0);
 
-        //get newly created uid
-        $this->db->select('user_id');
-        $this->db->where('email', $email);
-        $query = $this->db->get('user');
+        $query = $this->db->get();
+        if ($query->num_rows >= 1)
+        {
+            return $query->row_array();
+        }
 
-        if ($this->db->_error_message()) // error checking
+        return NULL;
+    }
+
+    function get_all_roles($company_id, $is_existed = true) {
+        $this->db->from("user_roles");
+        $this->db->where('company_id', $company_id);
+        $this->db->where('is_deleted', 0);
+
+        if(!$is_existed){
+            $this->db->where('is_existed', 0);
+        }
+        $this->db->order_by('role_id');
+
+        $query = $this->db->get();
+        //echo $this->db->last_query();
+        if ($query->num_rows >= 1)
+        {
+            return $query->result_array();
+        }
+
+        return NULL;
+    }
+
+    function get_staff_role($company_id) {
+        $this->db->from("user_roles");
+        $this->db->where('company_id', $company_id);
+        $this->db->where('is_deleted', 0);
+        $this->db->where('role', 'Support Staff');
+
+        $this->db->order_by('role_id');
+
+        $query = $this->db->get();
+        //echo $this->db->last_query();
+        if ($query->num_rows >= 1)
+        {
+            return $query->result_array();
+        }
+
+        return NULL;
+    }
+
+    function get_role_id($company_id, $role_slug) {
+        $this->db->from("user_roles");
+        $this->db->where('company_id', $company_id);
+        $this->db->where('role_slug', $role_slug);
+        $this->db->where('is_deleted', 0);
+
+        $query = $this->db->get();
+        if ($query->num_rows >= 1)
+        {
+            return $query->row_array();
+        }
+
+        return NULL;
+    }
+
+    function get_roles_assigned_users($company_id) {
+
+        $this->db->select('user_roles.role_id');
+        $this->db->select('(SELECT COALESCE(COUNT(user_permissions.role_id), 0) FROM user_permissions WHERE user_permissions.role_id = user_roles.role_id AND user_permissions.company_id = '.$company_id.' AND user_permissions.permission = "is_new_role") AS total_users', FALSE);
+        $this->db->from('user_roles');
+        $this->db->where('user_roles.company_id', $company_id);
+        $this->db->where('user_roles.is_deleted', 0);
+        $this->db->group_by('user_roles.role_id'); 
+
+        $query = $this->db->get();
+        if ($query->num_rows >= 1)
+        {
+            return $query->result_array();
+        }
+
+        return NULL;
+    }
+
+    function get_role_permissions($company_id, $role_id, $is_new_role = false) {
+        $this->db->from("user_roles");
+        $this->db->from("user_permissions");
+
+        // $this->db->where('user_permissions.user_id = user_roles.user_id');
+        $this->db->where('user_permissions.role_id = user_roles.role_id');
+        $this->db->where('user_permissions.company_id', $company_id);
+        $this->db->where('user_roles.company_id', $company_id);
+        $this->db->where('user_roles.role_id', $role_id);
+        $this->db->where('user_permissions.role_id', $role_id);
+        $this->db->where('user_roles.is_deleted', 0);
+
+        if($is_new_role)
+            $this->db->where_in('permission', array('is_new_role'));
+        else
+            $this->db->where_not_in('permission', array('is_new_role'));
+        $this->db->order_by('user_roles.role_id');
+
+        $query = $this->db->get();
+        //echo $this->db->last_query();
+        if ($query->num_rows >= 1)
+        {
+            return $query->result_array();
+        }
+
+        return NULL;
+    }
+
+    function remove_role($company_id, $role_id){
+        $this->db->where('role_id', $role_id);
+        $this->db->where('company_id', $company_id);
+        $query = $this->db->update('user_roles', array('is_deleted' => 1));
+    }
+
+    function get_main_property_partner($partner_id){
+
+        if($partner_id)
+        {
+            $sql = "SELECT 
+                        c.company_id,
+                        c.name 
+                    FROM whitelabel_partner AS wp 
+                    INNER JOIN company AS c ON wp.id = c.partner_id 
+                    INNER JOIN user_permissions AS up ON wp.admin_user_id = up.user_id AND up.company_id = c.company_id 
+                    WHERE c.is_deleted = 0 AND 
+                    wp.id = '$partner_id' 
+                    ORDER by up.permission_id ASC 
+                    LIMIT 1";
+
+            $query = $this->db->query($sql);
+
+            if ($this->db->_error_message()) // error checking
             show_error($this->db->_error_message());
 
-        foreach ($query->result() as $row)
-        {
-            $user_id = $row->user_id;
-        }
-
-        return $user_id;
+            $result =  $query->row_array();
+        
+            return $result;
+        } 
+        return null;
+      
     }
 
-    function add_user_permission($company_id, $user_id, $permission, $add_default_permissions = false)
+    function add_user_permission($company_id, $user_id, $permission, $role_id, $add_default_permissions = false)
     {
-        $user_permissions_data = array(
-            'company_id' => $company_id,
-            'user_id' => $user_id,
-            'permission' => $permission
-        );
-        $query = $this->db->insert('user_permissions', $user_permissions_data);
+        if(!is_array($permission)) {
+            $user_permissions_data = array(
+                'company_id' => $company_id,
+                'user_id' => $user_id,
+                'permission' => $permission,
+                'role_id' => $role_id
+            );
+            $query = $this->db->insert('user_permissions', $user_permissions_data);
+        }
+        
 
         if ($this->db->_error_message()) // error checking
             show_error($this->db->_error_message());
 		
-		if($add_default_permissions) {
-			// add other default permissions
-			$default_permissions = array(
-				array("permission" => "access_to_bookings",		"company_id" => $company_id, "user_id" => $user_id),
-				array("permission" => "access_to_customers",	"company_id" => $company_id, "user_id" => $user_id),
-				array("permission" => "access_to_rooms",		"company_id" => $company_id, "user_id" => $user_id),
-				array("permission" => "can_view_reports",		"company_id" => $company_id, "user_id" => $user_id),
-				array("permission" => "access_to_ledger_reports","company_id" => $company_id, "user_id" => $user_id),
-                array("permission" => "can_edit_invoices",      "company_id" => $company_id, "user_id" => $user_id),
-				array("permission" => "can_post_charges_payments",		"company_id" => $company_id, "user_id" => $user_id),
-                array("permission" => "can_modify_charges",		"company_id" => $company_id, "user_id" => $user_id),
-                array("permission" => "can_modify_charges",     "company_id" => $company_id, "user_id" => $user_id),
-				array("permission" => "access_to_extensions",	"company_id" => $company_id, "user_id" => $user_id)
-			);
-			$this->db->insert_batch('user_permissions', $default_permissions);
-		}
-        return true;
-    }
+		if(is_array($permission)) {
 
-    function add_teams($company_id, $user_id, $permission){
-
-        if(is_array($permission)){
-            $permission_data = array();
-            foreach ($permission as $key => $value) {
-                $permission_data[] = array(
-                    'company_id' => $company_id,
-                    'user_id' => $user_id,
-                    'permission' => $value
-                );
-            }
-
-            $this->db->insert_batch('user_permissions', $permission_data);
-        }else{
-            $user_permissions_data = array(
-                'company_id' => $company_id,
-                'user_id' => $user_id,
-                'permission' => $permission
+            foreach($permission as $perm)
+            {
+    			$default_permissions = array(
+    				array("permission" => $perm['permission'], "company_id" => $company_id, "user_id" => $user_id, 'role_id' => $role_id),
+    			);
+    			$this->db->insert_batch('user_permissions', $default_permissions);
+    		}
+        } elseif($add_default_permissions) {
+            $default_permissions = array(
+                array("permission" => "access_to_bookings", "company_id" => $company_id, "user_id" => $user_id, 'role_id' => $role_id),
+                array("permission" => "access_to_customers", "company_id" => $company_id, "user_id" => $user_id, 'role_id' => $role_id),
+                array("permission" => "access_to_rooms", "company_id" => $company_id, "user_id" => $user_id, 'role_id' => $role_id),
+                array("permission" => "can_view_reports", "company_id" => $company_id, "user_id" => $user_id, 'role_id' => $role_id),
+                array("permission" => "access_to_ledger_reports", "company_id" => $company_id, "user_id" => $user_id, 'role_id' => $role_id),
+                array("permission" => "can_edit_invoices", "company_id" => $company_id, "user_id" => $user_id, 'role_id' => $role_id),
+                array("permission" => "can_post_charges_payments", "company_id" => $company_id, "user_id" => $user_id, 'role_id' => $role_id),
+                array("permission" => "can_modify_charges", "company_id" => $company_id, "user_id" => $user_id, 'role_id' => $role_id),
+                array("permission" => "access_to_extensions", "company_id" => $company_id, "user_id" => $user_id, 'role_id' => $role_id)
             );
-            $query = $this->db->insert('user_permissions', $user_permissions_data);
+            $this->db->insert_batch('user_permissions', $default_permissions);
         }
-
-
         return true;
-
     }
 
     function get_company_id($user_id){
@@ -125,9 +225,9 @@ class User_model extends CI_Model {
         return $this->db->get()->row();
     }
 
-    function remove_user_permission($company_id, $user_id, $permission)
+    function remove_user_permission($company_id, $role_id, $permission)
     {
-        $this->db->where('user_id', $user_id);
+        $this->db->where('role_id', $role_id);
         $this->db->where('company_id', $company_id);
         $this->db->where('permission', $permission);
 
@@ -137,10 +237,10 @@ class User_model extends CI_Model {
         return true;
     }
     
-    function remove_other_permissions($company_id, $user_id, $permission)
+    function remove_other_permissions($company_id, $role_id, $permission)
     {
         $this->db->query("DELETE FROM `user_permissions`
-                        WHERE `user_id` =  '$user_id'
+                        WHERE `role_id` =  '$role_id'
                         AND `company_id` =  '$company_id'
                         AND (`permission` =  'access_to_bookings'
                         OR `permission` =  'can_edit_invoices'
@@ -173,7 +273,7 @@ class User_model extends CI_Model {
         $role = null;
         $this->db->where('user_id', $user_id);
         $this->db->where('company_id', $company_id);
-        $this->db->where_in('permission', array('is_employee', 'is_manager', 'is_owner', 'is_admin', 'is_housekeeping', 'is_new_role'));
+        $this->db->where_in('permission', array('is_employee', 'is_manager', 'is_owner', 'is_admin', 'is_housekeeping'));
 
         $query = $this->db->get('user_permissions');
 
@@ -209,27 +309,29 @@ class User_model extends CI_Model {
         return $role;
     }
 
-    function get_user_by_email($email)
+    function get_users_by_role($role_id, $company_id)
     {
-        $this->db->from('users');
-        $this->db->where('LOWER(email)', $email);
+        $this->db->from('user_permissions');
+        $this->db->where('role_id', $role_id);
+        $this->db->where('company_id', $company_id);
+        $this->db->group_by("user_id");
         $query = $this->db->get();
 
-        //echo $this->db->last_query();
         if ($query->num_rows >= 1)
         {
             $results = $query->result_array();
-            return $results[0]; //roles are stored in the same column as permission
+            return $results; 
         }
-        return false;
+        return null;
     }
 
-    function user_exists_in_company($email, $company_id)
+    function role_exists_in_company($role, $company_id, $user_id)
     {
-        $this->db->from('users as u, user_permissions as up');
-        $this->db->where('u.id = up.user_id');
-        $this->db->where('LOWER(u.email)', $email);
-        $this->db->where('up.company_id', $company_id);
+        $this->db->from('user_roles');
+        $this->db->where('user_id', $user_id);
+        $this->db->where('role', $role);
+        $this->db->where('company_id', $company_id);
+        $this->db->where('is_deleted', 0);
         $query = $this->db->get();
 
         //echo $this->db->last_query();
@@ -341,19 +443,17 @@ class User_model extends CI_Model {
         $query = $this->db->update('users', $data);
     }
 
-    function update_user_profile($user_id, $data)
+    function update_role_profile($role_id, $data)
     {
-        $this->db->where('user_id', $user_id);
-        $query = $this->db->update('user_profiles', $data);
+        $this->db->where('role_id', $role_id);
+        $query = $this->db->update('user_roles', $data);
     }
 
-    function get_user_profile($user_id)
+    function get_role_detail($role_id)
     {
-
         $this->db->select('*');
-        $this->db->from('users');
-        $this->db->join('user_profiles', 'user_profiles.user_id = users.id', 'left');
-        $this->db->where('users.id', $user_id);
+        $this->db->from('user_roles');
+        $this->db->where('role_id', $role_id);
 
         $query = $this->db->get();
 
@@ -558,6 +658,26 @@ class User_model extends CI_Model {
             return $results['total_users'];
         }
         return null;
+    }
+
+    function get_all_user_permissions($company_id)
+    {
+        $this->db->from('user_permissions');
+
+        $this->db->where('company_id', $company_id);
+        $this->db->where('role_id IS NOT NULL');
+        $this->db->where_not_in('permission', array('is_employee', 'is_manager', 'is_owner', 'is_admin'));
+
+        $this->db->order_by('user_id');
+
+        $query = $this->db->get();
+
+        if ($query->num_rows >= 1)
+        {
+            return $query->result_array();
+        }
+
+        return NULL;
     }
 }
 
