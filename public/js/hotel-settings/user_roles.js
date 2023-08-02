@@ -2,7 +2,7 @@
 $(function() {
 
     $('.user_roles').click(function () {
-        var roleID = $(this).attr('id');
+        var roleID = $(this).parent('tr').find('.role-name').attr('id');
         
         $.ajax({
             url: getBaseURL()+'settings/company/show_user_permissions/' + roleID,

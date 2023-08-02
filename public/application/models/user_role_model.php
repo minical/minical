@@ -118,16 +118,29 @@ class User_role_model extends CI_Model {
 
     function get_roles_assigned_permissions($company_id) {
 
-        $this->db->select('user_roles.role_id');
-        $this->db->select('(SELECT COALESCE(COUNT(user_permissions.role_id), 0) FROM user_permissions WHERE user_permissions.role_id = user_roles.role_id AND user_permissions.company_id = '.$company_id.' AND (user_permissions.permission != "is_new_role" OR user_permissions.permission != "is_owner" OR user_permissions.permission != "is_employee")) AS total_permissions', FALSE);
-        $this->db->from('user_roles');
-        $this->db->where('user_roles.company_id', $company_id);
-        $this->db->where('user_roles.is_deleted', 0);
-        // $this->db->group_by('user_roles.role_id'); 
-        $this->db->group_by('user_permissions.permission'); 
+        $sql = "SELECT
+            ur.role_id,
+            COALESCE(
+                COUNT(DISTINCT up.permission),
+                0
+            ) AS permission_count
+        FROM
+            `user_roles` AS ur
+        LEFT JOIN `user_permissions` AS up
+        ON
+            ur.role_id = up.role_id AND up.permission NOT IN(
+                'is_new_role',
+                'is_owner',
+                'is_employee'
+            )
+        WHERE
+            ur.company_id = $company_id AND ur.is_deleted = 0
+        GROUP BY
+            ur.role_id";
 
-        $query = $this->db->get(); lq();
-        if ($query->num_rows >= 1)
+        $query = $this->db->query($sql);
+
+        if ($query)
         {
             return $query->result_array();
         }

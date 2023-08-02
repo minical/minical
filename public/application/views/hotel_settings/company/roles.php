@@ -42,12 +42,17 @@
 						if(!empty($roles)) : 
 							foreach ($roles as $role) : ?>
 	                    		<tr>
-									<td id="<?php echo $role['role_id']; ?>" data-user_id="<?php echo $role['user_id']; ?>" class="role-name <?php echo !$role['is_existed'] ? 'user_roles' : '';  ?>">
+									<td id="<?php echo $role['role_id']; ?>" data-user_id="<?php echo $role['user_id']; ?>" class="role-name">
 		                                <span><?php echo $role['role'];?></span>
 		                                <input required type="text" class="hidden form-control" name="role-name" value="<?php echo $role['role'];?>" />
 									</td>
-									<td>
-										
+									<td <?php if(!$role['is_existed']) { ?> style="background-color: #BDD8F3; border: solid 1px black;" <?php } ?> class="permission_count <?php echo !$role['is_existed'] ? 'user_roles' : '';  ?>">
+										<?php foreach ($permission_count as $key => $value) {
+											if($value['role_id'] == $role['role_id'] && !$role['is_existed']) {
+												echo $value['permission_count'];
+												echo '  <i class="glyphicon glyphicon-lock" aria-hidden="true" style="margin-right: 3px;"></i>';
+											}
+										} ?>
 									</td>
 									<td class="user_count">
 										<?php foreach ($user_count as $key => $value) {
