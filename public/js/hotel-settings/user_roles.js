@@ -2,7 +2,7 @@
 $(function() {
 
     $('.user_roles').click(function () {
-        var roleID = $(this).find('.role-name').attr('id');
+        var roleID = $(this).attr('id');
         
         $.ajax({
             url: getBaseURL()+'settings/company/show_user_permissions/' + roleID,
@@ -48,8 +48,7 @@ $(function() {
                                     $(this).attr('value') == 'can_edit_invoices' ||
                                     $(this).attr('value') == 'can_post_charges_payments' ||
                                     $(this).attr('value') == 'can_modify_charges' ||
-                                    $(this).attr('value') == 'can_delete_bookings' ||
-                                    $(this).attr('value') == 'can_delete_payments'
+                                    $(this).attr('value') == 'can_delete_bookings'
                                 )
                             )
                             {
@@ -65,7 +64,16 @@ $(function() {
                             if($(this).attr('value') != 'bookings_view_only')
                             {
                                 $(this).prop("disabled", false);
-                            }
+                            } 
+                            // if(
+                            //     $(this).attr('value') == 'access_to_bookings' ||
+                            //     $(this).attr('value') == 'can_edit_invoices' ||
+                            //     $(this).attr('value') == 'can_post_charges_payments' ||
+                            //     $(this).attr('value') == 'can_modify_charges' ||
+                            //     $(this).attr('value') == 'can_delete_bookings'
+                            // ){
+                            //     $(this).prop("disabled", true);
+                            // }
                             
                         });
                     }

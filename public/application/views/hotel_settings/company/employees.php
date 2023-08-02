@@ -68,7 +68,7 @@
 
 <div class="container-fluid">
 	<h3><?php echo l('Modify existing users', true); ?></h3>
-	<p><?php echo l("Only the 'owner' can change permissions.", true); ?></p>
+	<p><?php echo l("Only the 'owner' can change roles.", true); ?></p>
 	<br />
 	<div class="table-responsive">
 	<table class="table table-striped table-bordered">
@@ -144,12 +144,33 @@
                                 <?php 
                                 if(isset($can_edit_employees) && $can_edit_employees){	
                                 ?>
-                                <select name ="user-role-change" onChange="userRoleChange(this)">
-                                    <option <?php if ($employee['permission'] == 'is_owner'): echo 'selected'; else: echo ''; endif; ?> value="is_owner"><?php echo l('Owner', true); ?></option>
-                                    <option <?php if ($employee['permission'] == 'is_employee'): echo 'selected'; else: echo ''; endif; ?> value="is_employee" ><?php echo l('Employee', true); ?></option>
+                                <select name ="user-role-change" class="form-control" onChange="userRoleChange(this)">
+                                    <option <?php if ($employee['permission'] == ''): echo 'selected'; else: echo ''; endif; ?> value=""><?php echo '-- '.l('Select Role', true).' --'; ?></option>
+                                    <option <?php if ($employee['permission'] == 'is_owner' && !$employee['role_id']): echo 'selected'; else: echo ''; endif; ?> value="is_owner"><?php echo l('Owner', true); ?></option>
+                                    <!-- <option <?php if ($employee['permission'] == 'is_employee'): echo 'selected'; else: echo ''; endif; ?> value="is_employee" ><?php echo l('Employee', true); ?></option> -->
 									<option <?php if ($employee['permission'] == 'is_housekeeping'): echo 'selected'; else: echo ''; endif; ?> value="is_housekeeping" ><?php echo l('Housekeeper', true); ?></option>
                                 	<?php foreach ($roles as $k=> $v) { ?>
-                                		<option <?php if ($employee['permission'] == 'is_new_role' && $employee['role_id'] == $v['role_id']): echo 'selected'; else: echo ''; endif; ?> value="is_new_role" data-role_id="<?php echo $v['role_id']; ?>" data-role_name="<?php echo $v['role']; ?>"><?php echo $v['role']; ?></option>
+                                		<option 
+                                			<?php if (
+                                					$employee['permission'] == 'is_new_role' && 
+                                					$employee['role_id'] == $v['role_id']
+                                				) {
+                                					echo 'selected';
+                                				} else if (
+                                					$employee['permission'] == 'is_owner' && 
+                                					$employee['role_id'] == $v['role_id']
+                                				) {
+                                					echo 'selected';
+                                				}else if (
+                                					$employee['permission'] == 'is_employee' && 
+                                					$employee['role_id'] == $v['role_id']
+                                				) {
+                                					echo 'selected';
+                                				} else {
+                                					echo '';
+                                				} ?> 
+                                			value="is_new_role" data-role_id="<?php echo $v['role_id']; ?>" data-role_name="<?php echo $v['role']; ?>"><?php echo $v['role']; ?>
+                            			</option>
                                 	<?php } ?>
                                 </select>
 								<?php

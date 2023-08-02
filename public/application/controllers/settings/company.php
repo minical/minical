@@ -324,9 +324,9 @@ class Company extends MY_Controller
             //Check if company permission already added
             if (is_null($role = $this->User_model->get_user_role($user_id, $company_id))) {
                 
-                $role_data = $this->User_role_model->get_role_id($company_id, 'is_new_employee');
+                $role_data = $this->User_role_model->get_role_id($company_id, 'is_employee');
                 if($role_data) {
-                    $this->User_role_model->add_user_permission($company_id, $user_id, 'is_new_role', $role_data['role_id'], $add_default_permissions = true);
+                    $this->User_role_model->add_user_permission($company_id, $user_id, 'is_employee', $role_data['role_id'], $add_default_permissions = true);
                 } else {
                     $this->User_model->add_user_permission($company_id, $user_id, 'is_employee', $add_default_permissions = true);
                 }
@@ -446,7 +446,7 @@ class Company extends MY_Controller
 
                 $user_role_permissions = $this->User_role_model->get_role_permissions($this->company_id, $role_id);
 
-                if($user_role_permissions) {
+                if($user_role_permissions && $role_name != 'Support Staff') {
                     $this->User_role_model->add_user_permission($this->company_id, $user_id, $user_role_permissions, $role_id);
                 }
             }
@@ -454,6 +454,9 @@ class Company extends MY_Controller
             if($new_user_role == 'is_new_role') {
                 if($role_name == 'Support Staff') {
                     $this->User_role_model->add_user_permission($this->company_id, $user_id, 'is_owner', $role_id);
+                }
+                else if($role_name == 'Employee') {
+                    $this->User_role_model->add_user_permission($this->company_id, $user_id, 'is_employee', $role_id);
                 }
                 else {
                     $this->User_role_model->add_user_permission($this->company_id, $user_id, $new_user_role, $role_id);
@@ -2700,11 +2703,38 @@ class Company extends MY_Controller
                         'is_existed' => 1,
                         'created_at' => gmdate('Y-m-d H:i:s'),
                         'updated_at' => gmdate('Y-m-d H:i:s')
+                    ),
+                    array(
+                        'role' => 'Employee',
+                        'company_id' => $this->company_id,
+                        'user_id' => $this->user_id,
+                        'role_slug' => 'is_employee',
+                        'is_existed' => 0,
+                        'created_at' => gmdate('Y-m-d H:i:s'),
+                        'updated_at' => gmdate('Y-m-d H:i:s')
                     )
                 );
 
                 $this->User_role_model->create_roles($data);
             }
+        }
+
+        $existing_role = $this->User_role_model->get_all_roles($this->company_id);
+
+        if(empty($existing_role)){
+            $data = array(
+                array(
+                    'role' => 'Employee',
+                    'company_id' => $this->company_id,
+                    'user_id' => $this->user_id,
+                    'role_slug' => 'is_employee',
+                    'is_existed' => 0,
+                    'created_at' => gmdate('Y-m-d H:i:s'),
+                    'updated_at' => gmdate('Y-m-d H:i:s')
+                )
+            );
+
+            $this->User_role_model->create_roles($data);
         }
 
         $this->form_validation->set_rules('role_name', 'Role', 'required|trim');
@@ -2726,6 +2756,7 @@ class Company extends MY_Controller
         //Get roles list
         $data['roles'] = $this->User_role_model->get_all_roles($this->company_id);
         $data['user_count'] = $this->User_role_model->get_roles_assigned_users($this->company_id);
+        $data['permission_count'] = $this->User_role_model->get_roles_assigned_permissions($this->company_id);
 
         //Get all user permissions
         if (!is_null($company_permissions = $this->User_role_model->get_all_user_permissions($this->company_id))) {
@@ -2779,24 +2810,25 @@ class Company extends MY_Controller
 
     function remove_role()
     {
-        $data['isSuccess'] = false;
-        $data['message']   = 'Role already assigned to user';
+        // $data['isSuccess'] = false;
+        // $data['message']   = 'Role already assigned to user';
 
         $role_id = $this->input->post('role_id');
 
-        $user_role_permissions = $this->User_role_model->get_role_permissions($this->company_id, $role_id, true);
+        //$user_role_permissions = $this->User_role_model->get_role_permissions($this->company_id, $role_id, true);
 
-        if(empty($user_role_permissions)) {
+        //if(empty($user_role_permissions)) {
 
             $role_detail = $this->User_role_model->get_role_by_id($this->company_id, $role_id);
 
             $this->User_role_model->remove_role($this->company_id, $role_id);
+            $this->User_role_model->delete_role_permissions($this->company_id, $role_id);
 
             $data['isSuccess'] = true;
             $data['message']   = 'Role removed';
 
             $this->_create_employee_log("Role '{$role_detail['role']}' removed");
-        }
+        //}
 
         echo json_encode($data);
     }

@@ -33,6 +33,7 @@
 				<table class="table table-striped table-bordered">
 					<tr>
 						<th><?php echo l('role'); ?></th>
+						<th><?php echo l('Permissions'); ?></th>
 						<th><?php echo l('Users'); ?></th>
 						<th><?php echo l('Action'); ?></th>
 					</tr>
@@ -40,10 +41,13 @@
 
 						if(!empty($roles)) : 
 							foreach ($roles as $role) : ?>
-	                    		<tr class="user_roles">
-									<td id="<?php echo $role['role_id']; ?>" data-user_id="<?php echo $role['user_id']; ?>" class="role-name">
+	                    		<tr>
+									<td id="<?php echo $role['role_id']; ?>" data-user_id="<?php echo $role['user_id']; ?>" class="role-name <?php echo !$role['is_existed'] ? 'user_roles' : '';  ?>">
 		                                <span><?php echo $role['role'];?></span>
 		                                <input required type="text" class="hidden form-control" name="role-name" value="<?php echo $role['role'];?>" />
+									</td>
+									<td>
+										
 									</td>
 									<td class="user_count">
 										<?php foreach ($user_count as $key => $value) {

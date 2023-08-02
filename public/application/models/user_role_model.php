@@ -101,13 +101,32 @@ class User_role_model extends CI_Model {
     function get_roles_assigned_users($company_id) {
 
         $this->db->select('user_roles.role_id');
-        $this->db->select('(SELECT COALESCE(COUNT(user_permissions.role_id), 0) FROM user_permissions WHERE user_permissions.role_id = user_roles.role_id AND user_permissions.company_id = '.$company_id.' AND user_permissions.permission = "is_new_role") AS total_users', FALSE);
+        $this->db->select('(SELECT COALESCE(COUNT(user_permissions.role_id), 0) FROM user_permissions WHERE user_permissions.role_id = user_roles.role_id AND user_permissions.company_id = '.$company_id.' AND (user_permissions.permission = "is_new_role" OR user_permissions.permission = "is_owner" OR user_permissions.permission = "is_employee")) AS total_users', FALSE);
         $this->db->from('user_roles');
         $this->db->where('user_roles.company_id', $company_id);
         $this->db->where('user_roles.is_deleted', 0);
         $this->db->group_by('user_roles.role_id'); 
 
         $query = $this->db->get();
+        if ($query->num_rows >= 1)
+        {
+            return $query->result_array();
+        }
+
+        return NULL;
+    }
+
+    function get_roles_assigned_permissions($company_id) {
+
+        $this->db->select('user_roles.role_id');
+        $this->db->select('(SELECT COALESCE(COUNT(user_permissions.role_id), 0) FROM user_permissions WHERE user_permissions.role_id = user_roles.role_id AND user_permissions.company_id = '.$company_id.' AND (user_permissions.permission != "is_new_role" OR user_permissions.permission != "is_owner" OR user_permissions.permission != "is_employee")) AS total_permissions', FALSE);
+        $this->db->from('user_roles');
+        $this->db->where('user_roles.company_id', $company_id);
+        $this->db->where('user_roles.is_deleted', 0);
+        // $this->db->group_by('user_roles.role_id'); 
+        $this->db->group_by('user_permissions.permission'); 
+
+        $query = $this->db->get(); lq();
         if ($query->num_rows >= 1)
         {
             return $query->result_array();
@@ -129,9 +148,10 @@ class User_role_model extends CI_Model {
         $this->db->where('user_roles.is_deleted', 0);
 
         if($is_new_role)
-            $this->db->where_in('permission', array('is_new_role'));
+            $this->db->where_in('permission', array('is_new_role','is_employee'));
         else
-            $this->db->where_not_in('permission', array('is_new_role'));
+            $this->db->where_not_in('permission', array('is_new_role','is_employee'));
+        $this->db->group_by('user_permissions.permission');
         $this->db->order_by('user_roles.role_id');
 
         $query = $this->db->get();
@@ -232,6 +252,34 @@ class User_role_model extends CI_Model {
         $this->db->where('permission', $permission);
 
         $this->db->delete('user_permissions');
+
+        //TODO: report error on failure
+        return true;
+    }
+
+    function delete_role_permissions($company_id, $role_id)
+    {
+        $this->db->where('role_id', $role_id);
+        $this->db->where('company_id', $company_id);
+        $this->db->where_not_in('permission', ['is_new_role', 'is_employee']);
+
+        $this->db->delete('user_permissions');
+
+        $this->update_role_permissions($company_id, $role_id);
+
+        //TODO: report error on failure
+        return true;
+    }
+
+    function update_role_permissions($company_id, $role_id)
+    {
+        $this->db->where('role_id', $role_id);
+        $this->db->where('company_id', $company_id);
+
+        $data['permission'] = '';
+        $data['role_id'] = null;
+
+        $this->db->update('user_permissions', $data);
 
         //TODO: report error on failure
         return true;
