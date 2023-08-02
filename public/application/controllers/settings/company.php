@@ -326,7 +326,19 @@ class Company extends MY_Controller
                 
                 $role_data = $this->User_role_model->get_role_id($company_id, 'is_employee');
                 if($role_data) {
-                    $this->User_role_model->add_user_permission($company_id, $user_id, 'is_employee', $role_data['role_id'], $add_default_permissions = true);
+                    //$this->User_role_model->add_user_permission($company_id, $user_id, 'is_employee', $role_data['role_id'], $add_default_permissions = true);
+
+                    $user_role_permissions = $this->User_role_model->get_role_permissions($company_id, $role_data['role_id']);
+
+                    $user_role_permissions[] = array(
+                                                'role_id' => $role_data['role_id'],
+                                                'company_id' => $company_id,
+                                                'user_id' => $user_id,
+                                                'permission' => 'is_employee'
+                                            );
+                    // prx($user_role_permissions);
+                    $this->User_role_model->add_user_permission($company_id, $user_id, $user_role_permissions, $role_data['role_id']);
+
                 } else {
                     $this->User_model->add_user_permission($company_id, $user_id, 'is_employee', $add_default_permissions = true);
                 }
