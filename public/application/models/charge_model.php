@@ -197,6 +197,11 @@ class Charge_model extends CI_Model {
 		{
 			$where = " AND (b.state = '4' OR b.state = '5')";
 		}
+
+		$is_charge_type_deleted = "";
+		if(!is_deleted_chargetype_linked_with_charge($company_id)) {
+			$is_charge_type_deleted = " ct.is_deleted = '0' AND ";
+		}
 		
 		// Get detailed charge information
 		$sql = "select 
@@ -217,7 +222,8 @@ class Charge_model extends CI_Model {
 				WHERE
 					ch.charge_type_id = ct.id AND 
 					ch.is_deleted = '0' AND 
-					ct.is_deleted = '0' AND 
+					$is_charge_type_deleted
+					#ct.is_deleted = '0' AND 
 					b.company_id = '$company_id'  AND 					
 					ct.company_id = '$company_id'  AND 
 					b.booking_id = ch.booking_id $employee_sql $start_time_sql $end_time_sql AND
@@ -823,10 +829,17 @@ class Charge_model extends CI_Model {
 		}
 		
 		$company_id = $this->session->userdata('current_company_id');
+
+		$is_charge_type_deleted = "";
+		if(!is_deleted_chargetype_linked_with_charge($company_id)) {
+			$is_charge_type_deleted = " AND ct.is_deleted = '0' ";
+		}
+
 		$sql = "
 				SELECT DISTINCT ct.id, ct.name
 				FROM charge_type as ct
-				WHERE ct.company_id = '$company_id' AND ct.is_deleted = '0'";
+				WHERE ct.company_id = '$company_id' $is_charge_type_deleted
+				#AND ct.is_deleted = '0'";
 		$q = $this->db->query($sql);		
 		$charge_type_array = $q->result_array();		
 		$str_array = $unique_charges = Array();		
@@ -903,13 +916,19 @@ class Charge_model extends CI_Model {
         }	
 		
 		$company_id = $this->session->userdata('current_company_id');
+
+		$is_charge_type_deleted = "";
+		if(!is_deleted_chargetype_linked_with_charge($company_id)) {
+			$is_charge_type_deleted = " AND ct.is_deleted = '0' ";
+		}
 		
 		$sql = "
 				SELECT DISTINCT ct.id, ct.name
 				FROM charge_type as ct
 				WHERE 
-					ct.company_id = '$company_id' AND
-					ct.is_deleted = '0'
+					ct.company_id = '$company_id'
+					$is_charge_type_deleted
+					#AND ct.is_deleted = '0'
 				";
 				
 		$q = $this->db->query($sql);		
@@ -1239,7 +1258,7 @@ class Charge_model extends CI_Model {
         if($is_batch)
         	$this->db->where_in('booking_id', $booking_id);
         else
-        $this->db->where('booking_id', $booking_id);
+            $this->db->where('booking_id', $booking_id);
         
         $this->db->update("charge", $data);
 

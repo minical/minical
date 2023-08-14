@@ -166,7 +166,7 @@ class Charge_type_model extends CI_Model {
 	function get_charge_type_by_id($charge_type_id)
 	{			
 		$this->db->where('id', $charge_type_id);
-		$this->db->where('is_deleted', 0);
+		// $this->db->where('is_deleted', 0);
 		$charge_type_query = $this->db->get('charge_type');
 		if ($charge_type_query->num_rows >= 1) 
 		{
@@ -299,6 +299,20 @@ class Charge_type_model extends CI_Model {
             show_error($this->db->_error_message());
         }
     }
+
+    function get_deleted_charge_types($company_id)
+	{		
+		$this->db->from('charge as c');
+		$this->db->join('charge_type as ct', 'ct.id = c.charge_type_id', 'left');
+		$this->db->where('ct.company_id', $company_id);
+		$this->db->where('c.is_deleted', 0);
+		$this->db->where('ct.is_deleted', 1);
+		$this->db->order_by("id", "asc");
+		$charge_type_query = $this->db->get();
+		if ($charge_type_query->num_rows >= 1) 
+			return $charge_type_query->result_array();
+		return NULL;
+	}
 }
 
 /* End of file - charge_type_model.php */

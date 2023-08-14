@@ -274,4 +274,16 @@ function timeAgo($time_ago)
     
 }
 
+function is_deleted_chargetype_linked_with_charge($company_id) {
+    $CI = & get_instance();
+
+    $dct = $CI->Charge_type_model->get_deleted_charge_types($company_id);
+
+    if($dct) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 ?>
