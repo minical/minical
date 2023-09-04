@@ -1166,6 +1166,33 @@ class Booking extends MY_Controller
 
         $available_rooms = $this->get_available_rooms_in_AJAX($booking['check_in_date'], $booking['check_out_date'], $booking['current_room_type_id'], $booking_id, $booking['current_room_id'], false);
         $faetures = $this->Company_model->get_company($this->company_id);
+
+        $end_date = date('Y-m-d', strtotime($booking['check_out_date']));
+        $start_date = date('Y-m-d', strtotime($booking['check_in_date']));
+        $datetime1 = date_create($start_date);
+        $datetime2 = date_create($end_date);
+        $interval = date_diff($datetime1, $datetime2);
+        $number_of_days = $interval->format('%a');
+
+        $allow_state_change = true;
+
+        if($number_of_days == 0) {
+            $company_id = $this->company_id;
+            $company_time_zone = $this->Company_model->get_time_zone($company_id);
+            
+            $actual_time = convert_to_local_time(new DateTime(), $company_time_zone)->format("H:i:s");
+
+            $booking_check_in_date = explode(' ', $booking['check_in_date']);
+            $booking_check_in_time = $booking_check_in_date[1];
+
+            $booking_check_out_date = explode(' ', $booking['check_out_date']);
+            $booking_check_out_time = $booking_check_out_date[1];
+
+            if($actual_time > $booking_check_out_time) {
+                $allow_state_change = false;
+            }
+        }
+
         $response = array(
             'success' => 'true',
             'booking' => $booking,
@@ -1174,6 +1201,7 @@ class Booking extends MY_Controller
             'rate_plan' => $rate_plan,
             'available_room_types' => $available_room_types,
             'available_rooms' => $available_rooms,
+            'allow_state_change' => $allow_state_change,
             'allow_change_state' => isset($faetures["allow_change_previous_booking_status"]) ? $faetures["allow_change_previous_booking_status"] : 0,
         );
 
@@ -1747,11 +1775,13 @@ class Booking extends MY_Controller
             $booking_check_out_time = $booking_check_out_date[1];
 
             if (
-                (
                     $booking_check_in_time <= $actual_time && 
                     $booking_check_out_time >= $actual_time
-                ) || $actual_time > $booking_check_out_time
             ) {
+
+            } else if($actual_time > $booking_check_out_time) {
+                echo json_encode(array('response' => 'failure', 'message' => l("The check-in time has already passed, please adjust the time to enable check-in", true)));
+                return;
             } else {
                 echo json_encode(array('response' => 'failure', 'message' => l("You can't check in as of now. It's not yet time for the booking to be checked in.", true)));
                 return;

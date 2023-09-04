@@ -1717,6 +1717,11 @@ var bookingModalInvoker = function ($) {
                     if (data.booking.state == 3) {
                         $('.guest_fields_row').addClass('hidden');
                     }
+
+                    if (data.booking.state == 0 && !data.allow_state_change) {
+                        $('select[name="state"]').attr("disabled","true");
+                        $('#button-check-in').prop("disabled", true);
+                    }
                     //alert(data.allow_change_state);
                     if (data.allow_change_state == 0) {
                         var d = new Date();
