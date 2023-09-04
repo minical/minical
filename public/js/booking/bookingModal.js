@@ -4495,7 +4495,7 @@ var bookingModalInvoker = function ($) {
                             // Restrict check out if customer has a balance.
                             var bookingData = that._fetchBookingData();
                             var balance = parseInt(that.booking.balance_without_forecast);
-                            if (balance != '0' && that.booking.restrict_checkout_with_balance == 1) {
+                            if (balance != '0' && that.booking.restrict_checkout_with_balance == 1 && !innGrid.enableHourlyBooking) {
                                 //alert('This reservation cannot be checked out as the stay has not started yet');
                                 $('#reservation-message')
                                     .modal('show')
@@ -5218,6 +5218,8 @@ var bookingModalInvoker = function ($) {
             //     alert('you are exceeding total customer count limit');
             //     return false;
             // }
+
+            data.number_of_days = $("[name='number_of_days']").val();
 
             $.ajax({
                 type: "POST",

@@ -1648,6 +1648,116 @@ class Booking extends MY_Controller
             }
         }
 
+        // convert forecast charges into custom charges for hourly bookings
+
+        if(
+            isset($new_data['number_of_days']) && 
+            $new_data['number_of_days'] == 0 &&
+            $new_state == CHECKOUT
+        )
+        {
+
+            // check if payment is done or not
+            if(empty($payment_details))
+            {
+                if(($booking_existing_data['balance'] || $booking_existing_data['balance_without_forecast']) && $this->restrict_checkout_with_balance)
+                {
+                    echo json_encode(array('response' => 'failure', 'message' => l('You are unable to checkout with a balance on the invoice', true)));
+                    return;
+                }
+            } else {
+
+                $final_amount = 0;
+                foreach($payment_details as $payment)
+                {
+                    $final_amount += $payment['amount'];
+                }
+
+                if($booking_existing_data['rate'] != $final_amount){
+                    echo json_encode(array('response' => 'failure', 'message' => l('You are unable to checkout with a balance on the invoice', true)));
+                    return;
+                }
+            }
+
+            $charge_data = Array(
+                            'amount' => $new_data['booking']['rate'],
+                            'booking_id' => $booking_id,
+                            'date_time' => gmdate('Y-m-d H:i:s'),
+                            'customer_id' => isset($new_data['customers']['paying_customer']['customer_id']) ? $new_data['customers']['paying_customer']['customer_id'] : null,
+                            'user_id' => $this->user_id,
+                            'pay_period' => DAILY,
+                            'is_night_audit_charge' => 0
+                        );
+
+            $charge_data['selling_date'] = date('Y-m-d', strtotime($this->selling_date));
+
+            if(
+                isset($new_data['rooms'][0]['use_rate_plan']) && 
+                $new_data['rooms'][0]['use_rate_plan']
+            ) {
+                $charge_data['description'] = "Hourly Booking Charge #".$booking_id;
+
+                $rp_data = $this->Rate_plan_model->get_rate_plan($new_data['rooms'][0]['rate_plan_id']);
+                $charge_data['charge_type_id'] = $rp_data['charge_type_id'];
+
+            } else {
+                $charge_data['description'] = "Hourly Booking Charge";
+                $charge_data['charge_type_id'] = $new_data['rooms'][0]['charge_type_id'];
+            }
+
+            $last_hourly_charge = $this->Charge_model->get_last_applied_charge($booking_id, $charge_data['charge_type_id'], null, false);
+
+            if(empty($last_hourly_charge)){
+
+                $charge_id = $this->Charge_model->insert_charge($charge_data);
+
+                //invoice log 
+                $this->load->model('Invoice_log_model');
+                $invoice_log_data = array();
+                $invoice_log_data['date_time'] = gmdate('Y-m-d h:i:s');
+                $invoice_log_data['booking_id'] = $booking_id;
+                $invoice_log_data['user_id'] = $this->user_id;
+                $invoice_log_data['action_id'] = ADD_CHARGE;
+                $invoice_log_data['charge_or_payment_id'] = $charge_id;
+                $invoice_log_data['new_amount'] = $charge_data['amount'];
+                // Added item description in invoice log
+                $invoice_log_data['log'] = 'Charge Added';
+
+                $this->Invoice_log_model->insert_log($invoice_log_data);
+            }
+            $charge_data = array();
+
+            $this->Booking_model->update_booking_balance($booking_id);
+        }
+
+        if(
+            isset($new_data['number_of_days']) && 
+            $new_data['number_of_days'] == 0 &&
+            $new_state == INHOUSE
+        ) {
+            $company_id = $this->company_id;
+            $company_time_zone = $this->Company_model->get_time_zone($company_id);
+            
+            $actual_time = convert_to_local_time(new DateTime(), $company_time_zone)->format("H:i:s");
+
+            $booking_check_in_date = explode(' ', $new_data['rooms'][0]['check_in_date']);
+            $booking_check_in_time = $booking_check_in_date[1];
+
+            $booking_check_out_date = explode(' ', $new_data['rooms'][0]['check_out_date']);
+            $booking_check_out_time = $booking_check_out_date[1];
+
+            if (
+                (
+                    $booking_check_in_time <= $actual_time && 
+                    $booking_check_out_time >= $actual_time
+                ) || $actual_time > $booking_check_out_time
+            ) {
+            } else {
+                echo json_encode(array('response' => 'failure', 'message' => l("You can't check in as of now. It's not yet time for the booking to be checked in.", true)));
+                return;
+            }
+        }
+
         if (isset($cancelled_group_booking) && $cancelled_group_booking == 'cancelled') {
             $booking['state'] = $new_data['booking']['state'];
             // update booking data
