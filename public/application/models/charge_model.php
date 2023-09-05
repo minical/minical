@@ -843,14 +843,26 @@ class Charge_model extends CI_Model {
 		$q = $this->db->query($sql);		
 		$charge_type_array = $q->result_array();		
 		$str_array = $unique_charges = Array();		
-		foreach($charge_type_array as $row){
-            if(in_array($row['name'], $unique_charges)){
-                continue;
-            }
-            $unique_charges[] = $row['name'];
-			$str_array[] = "SUM(IF(charge_type_id='".$row['id']."', amount,' ')) AS ".$this->db->escape($row['name']);
-			$str_array_sum[] = "SUM(IF(report_table.charge_type_id='".$row['id']."', amount,' ')) AS ".$this->db->escape($row['name']);
+		// foreach($charge_type_array as $row){
+  //           if(in_array($row['name'], $unique_charges)){
+  //               continue;
+  //           }
+  //           $unique_charges[] = $row['name'];
+		// 	$str_array[] = "SUM(IF(charge_type_id='".$row['id']."', amount,' ')) AS ".$this->db->escape($row['name']);
+		// 	$str_array_sum[] = "SUM(IF(report_table.charge_type_id='".$row['id']."', amount,' ')) AS ".$this->db->escape($row['name']);
+		// }
+
+
+		foreach (array_reverse($charge_type_array, true) as $key => $row) {
+		    if (!in_array($row['name'], $unique_charges)) {
+		        $unique_charges[] = $row['name'];
+				$str_array[] = "SUM(IF(charge_type_id='".$row['id']."', amount,' ')) AS ".$this->db->escape($row['name']);
+				$str_array_sum[] = "SUM(IF(report_table.charge_type_id='".$row['id']."', amount,' ')) AS ".$this->db->escape($row['name']);
+		    }
 		}
+
+		$str_array = array_reverse($str_array);
+		$str_array_sum = array_reverse($str_array_sum);
 		$charge_types_str = implode(", ", $str_array);
 		$charge_types_str_sum = implode(", ", $str_array_sum);
 		$sql = "	
