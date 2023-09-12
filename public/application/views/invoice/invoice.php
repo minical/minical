@@ -443,6 +443,9 @@
                 ?>
 
                 </span><br/>
+
+                <?php echo l('Booking Source', true); ?>: <?php echo get_booking_source($booking_detail['source']); ?>
+
                <span id="booking-field">
                 <?php
 

@@ -286,4 +286,58 @@ function is_deleted_chargetype_linked_with_charge($company_id) {
     }
 }
 
+function get_booking_source($source) {
+
+    $CI = & get_instance();
+
+    $common_booking_sources = json_decode(COMMON_BOOKING_SOURCES, true);
+    $coomon_sources_setting = $CI->Booking_source_model->get_common_booking_sources_settings($CI->company_id);
+    $sort_order = 0;
+    foreach($common_booking_sources as $id => $name)
+    {
+        if(!(isset($coomon_sources_setting[$id]) && $coomon_sources_setting[$id]['is_hidden'] == 1))
+        {
+            $source_data[] = array(
+                'id' => $id,
+                'name' => $name,
+                'sort_order' => isset($coomon_sources_setting[$id]) ? $coomon_sources_setting[$id]['sort_order'] : $sort_order
+            );
+        }
+        $sort_order++;
+    }
+
+    $booking_sources = $CI->Booking_source_model->get_booking_source($CI->company_id);
+    if (!empty($booking_sources)) {
+        foreach ($booking_sources as $booking_source) {
+            if($booking_source['is_hidden'] != 1)
+            {
+                $source_data[] = array(
+                    'id' => $booking_source['id'],
+                    'name' => $booking_source['name'],
+                    'sort_order' => $booking_source['sort_order']
+                );
+            }
+        }
+    }
+    usort($source_data, function($a, $b) {
+        return $a['sort_order'] - $b['sort_order'];
+    });
+
+    $booking_sources = $source_data;
+
+    $booking_source = '';
+
+    if($booking_sources){
+        foreach ($booking_sources as $key => $value) {
+            if($value['id'] == $source)
+            {
+                $booking_source = $value['name'];
+                break;
+            }
+        }
+    }
+
+    return $booking_source;
+}
+
 ?>
