@@ -125,10 +125,23 @@ class Folio_model extends CI_Model {
                 
         }
         elseif (!empty($data['payment_id'])) {
+
+            $this->db->select('*');
             $this->db->where("payment_id", $data['payment_id']);
-            $this->db->update("payment_folio", array("folio_id" => $data['folio_id']));
-            if($this->db->affected_rows()) {
-                return true;
+            $query = $this->db->get('payment_folio');
+
+            if($query->row_array()) {
+                $this->db->where("payment_id", $data['payment_id']);
+                $this->db->update("payment_folio", array("folio_id" => $data['folio_id']));
+                if($this->db->affected_rows()) {
+                    return true;
+                }
+            } else {
+                $insert_data = array('payment_id' => $data['payment_id'], 'folio_id' => $data['folio_id']);
+                $this->db->insert("payment_folio", $insert_data); 
+                if($this->db->affected_rows()) {
+                    return true;
+                } 
             }
         }
     }
