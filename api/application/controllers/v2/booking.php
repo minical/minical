@@ -2208,4 +2208,38 @@ class Booking extends MY_Controller
         
         $this->response($company_data, 200); // 200 being the HTTP response code
     }
+
+    function update_booking_type_post(){
+        $company_id = $this->post('company_id');
+        $booking_id = $this->post('booking_id');
+        $booking_type = $this->post('booking_type');
+
+        if(!$company_id) {
+            $this->response(array('status' => false, 'error' => 'Company ID is missing.'), 200);
+        }
+
+        if(!$booking_id) {
+            $this->response(array('status' => false, 'error' => 'Booking ID is missing.'), 200);
+        }
+
+        if($booking_type == '') {
+            $this->response(array('status' => false, 'error' => 'Booking Type is missing.'), 200);
+        }
+
+        $booking_data = $this->Booking_model->get_company_by_booking($booking_id);
+
+        if(!$booking_data) {
+            $this->response(array('status' => false, 'error' => 'Booking ID is Invalid.'), 200);
+        }
+
+        if(!is_numeric($booking_type)){
+            $this->response(array('status' => false, 'error' => 'Booking Type is Invalid.'), 200);
+        }
+
+        $update_data = array('state' => $booking_type);
+
+        $this->Booking_model->update_booking($update_data, $booking_id);
+        
+        $this->response(array('status' => true, 'message' => 'Booking Type is updated successfully.'), 200);
+    }
 }
