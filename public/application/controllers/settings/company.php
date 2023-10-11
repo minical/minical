@@ -1510,7 +1510,7 @@ class Company extends MY_Controller
             //     $cache_customer_type[$customer['Customer Type']] = $get_customer_type;
             // }
 
-            if(empty($get_customer_type) && !in_array($customer['Customer Type'], $customer_types)){
+            if(empty($get_customer_type) && !in_array($customer['Customer Type'], $customer_types) && $customer['Customer Type'] != ''){
                 $customer_type_id = $this->Customer_type_model->create_customer_type($this->company_id, $customer['Customer Type']);
 
                 $customer_types[] = $customer['Customer Type'];
@@ -2553,11 +2553,13 @@ class Company extends MY_Controller
 
         if($customer_types){
             foreach ($customer_types as $customer_type) {
-                $existing_customer_type = $this->Customer_type_model->get_customer_type_by_name($this->company_id,$customer_type['name']);
+                if(isset($customer_type['name']) && $customer_type['name']) {
+                    $existing_customer_type = $this->Customer_type_model->get_customer_type_by_name($this->company_id,$customer_type['name']);
 
-                if(empty($existing_customer_type)){
+                    if(empty($existing_customer_type)){
 
-                    $customer_type = $this->Customer_type_model->create_customer_type($this->company_id, $customer_type['name']);
+                        $customer_type = $this->Customer_type_model->create_customer_type($this->company_id, $customer_type['name']);
+                    }
                 }
             }
         }
