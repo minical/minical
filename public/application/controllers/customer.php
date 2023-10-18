@@ -694,7 +694,7 @@ class Customer extends MY_Controller {
                 $filters['company_id'] = $this->company_id;
                 $filters['offset'] = 25; // show 25 results only
                 $filters['only_static_customer_info'] = true; // fetch customer info only without payment/charges etc.
-                $data['rows']          = $this->Customer_model->get_customers($filters);
+                $data['rows'] = $this->Customer_model->search_customers($filters);
 
                 $rows = json_encode($data['rows']);
                 echo($rows);

@@ -313,7 +313,7 @@ class Booking extends MY_Controller
             // cc details, masked
             if(isset($booking['card']) && isset($booking['card']['number'])){
                 $cc_tokenex_token = $cc_cvc_encrypted = NULL;
-                $cc_data = $this->get_tokenex_token_and_encrypted_cvc($booking['card']['number'], $booking['card']['cvc'], $company_id);
+                $cc_data = array();//$this->get_tokenex_token_and_encrypted_cvc($booking['card']['number'], $booking['card']['cvc'], $company_id);
                 if(isset($cc_data['token_ex_token']))
                 {
                     $cc_tokenex_token = $cc_data['token_ex_token']; // tokenex token 
