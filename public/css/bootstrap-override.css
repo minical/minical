@@ -3786,11 +3786,6 @@
       left:auto
   }
 
-  @media (min-width: 375px){
-      .modal-body {
-        margin-top: 15px !important;
-      }
-
   @media (min-width: 576px){
       .dropdown-menu-sm-right{
           right:0;

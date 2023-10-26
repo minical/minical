@@ -1053,7 +1053,7 @@ var bookingModalInvoker = function ($) {
                 this.$modalBody.before(
                     $("<div/>", {
                         class: "col-lg-3 sidebar-wrapper " + (that.booking.booking_id ? '' : 'hidden'),
-                        style: "padding: 0px 15px 0px 0px;"
+                        style: "padding: 0px 15px 25px 0px;"
                     }).append(
                         $("<ul/>", {
                             class: "nav nav-tabs tabs-left left-sidebar left-sidebar-fix-wep",
