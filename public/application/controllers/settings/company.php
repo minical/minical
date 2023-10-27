@@ -1755,7 +1755,8 @@ class Company extends MY_Controller
 
             if(empty($booking_id)){
                 
-
+                $this->load->helper("guid");
+                $guid = generate_guid();
                 $cache_booking_data[] = Array(
                     "rate" => $booking['Rate'] == '' ? null : $booking['Rate'],
                     "adult_count" => $booking['Adult Count'] == '' ? null : $booking['Adult Count'],
@@ -1772,7 +1773,8 @@ class Company extends MY_Controller
                     "pay_period" => isset($pay_period) ? $pay_period : 0,
                     "source" => $source ? $source : 0 ,
                     "company_id" => $this->company_id,
-                    "state" => isset($state) ? $state : 0
+                    "state" => isset($state) ? $state : 0,
+                    "invoice_hash" => $guid
                 );
 
                 $old_booking_ids[] = $booking['Booking Id'];
