@@ -33,7 +33,7 @@ class Cron extends CI_Controller
 
 		$this->load->model('Company_model');
 		
-		$companies = $this->Company_model->get_all_companies(true);
+		$companies = $this->Company_model->get_all_companies(true, 'channex');
 		
 		if($companies) {
 			foreach ($companies as $company)
@@ -227,7 +227,7 @@ class Cron extends CI_Controller
     function full_sync(){
     	$this->load->model(array('Company_model'));
 
-    	$companies = $this->Company_model->get_all_companies(true);
+    	$companies = $this->Company_model->get_all_companies(true, 'channex');
 		
 		foreach ($companies as $company)
 		{
