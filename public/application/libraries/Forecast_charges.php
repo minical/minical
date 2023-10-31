@@ -159,6 +159,14 @@ class Forecast_charges
                 }
 
                 $rate_plan   = $this->ci->Rate_plan_model->get_rate_plan($booking_details['rate_plan_id']);
+                
+                if(
+                    isset($booking_details['is_ota_booking']) && 
+                    $booking_details['is_ota_booking']
+                ) {
+                    $rate_plan['charge_type_id'] = SYSTEM_ROOM_NO_TAX;
+                }
+
                 $charge_type = $this->ci->Charge_type_model->get_charge_type_by_id($rate_plan['charge_type_id']);
 
 				$rate_plan_id = $booking_details['rate_plan_id'];

@@ -887,6 +887,7 @@ class Booking_model extends CI_Model {
                 b.add_daily_charge,
                 b.residual_rate,
                 b.balance,
+                b.is_ota_booking,
                 r.room_name,
                 $select_column
                 (

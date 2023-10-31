@@ -263,6 +263,14 @@ class Night_audit {
                     } else {
                         // In case there's a bug where Booking is assigned with DELETED rate plan.
                         // That will halt the entire night audit.
+
+                        if(
+                            isset($booking['is_ota_booking']) && 
+                            $booking['is_ota_booking']
+                        ) {
+                            $rate['charge_type_id'] = SYSTEM_ROOM_NO_TAX;
+                        }
+                        
                         if (isset($rate['charge_type_id']))
                         {
                             $charge_data[] = Array(
