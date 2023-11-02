@@ -324,7 +324,7 @@ class Booking extends MY_Controller
                 }
                 
                 $booking_customer += array(
-                    'cc_number'         => $booking['card']['number'],
+                    'cc_number'         => 'XXXX XXXX XXXX '.substr($booking['card']['number'], -4),
                     'cc_expiry_month'   => isset($booking['card']['exp_month']) ? $booking['card']['exp_month'] : null,
                     'cc_expiry_year'    => isset($booking['card']['exp_year']) ? $booking['card']['exp_year'] : null,
                     'cc_tokenex_token'  => $cc_tokenex_token,
@@ -652,31 +652,31 @@ class Booking extends MY_Controller
                 return false;
             }
 
-            // cc details, masked
-            if(isset($booking['card']) && isset($booking['card']['number'])){
+            if(
+                isset($booking['card']) && 
+                isset($booking['card']['number'])
+            ){
                 $cc_tokenex_token = $cc_cvc_encrypted = NULL;
-                
-                $cc_data = array();//$this->get_tokenex_token_and_encrypted_cvc($booking['card']['number'], $booking['card']['cvc'], $company_id);
-                if(isset($cc_data['token_ex_token']))
+
+                if(isset($booking['card']['token']))
                 {
-                    $cc_tokenex_token = $cc_data['token_ex_token']; // tokenex token 
+                    $cc_tokenex_token = $booking['card']['token']; // tokenex token 
                 }
-                if(isset($cc_data['cvc_encrypted']))
+                if(isset($booking['card']['cvc']))
                 {
-                    $cc_cvc_encrypted = $cc_data['cvc_encrypted']; // encrypted format
+                    $cc_cvc_encrypted = $booking['card']['cvc']; // encrypted format
                 }
                 
                 $booking_customer += array(
-                    'cc_number'         => $booking['card']['number'],
+                    'cc_number'         => 'XXXX XXXX XXXX '.substr($booking['card']['number'], -4),
                     'cc_expiry_month'   => isset($booking['card']['exp_month']) ? $booking['card']['exp_month'] : null,
                     'cc_expiry_year'    => isset($booking['card']['exp_year']) ? $booking['card']['exp_year'] : null,
-                    'cc_tokenex_token'  => $cc_tokenex_token,
-                    'cc_cvc_encrypted'  => $cc_cvc_encrypted,
+                    'cc_tokenex_token'  => null,
+                    'cc_cvc_encrypted'  => null,
                     'card_holder_name'  => (isset($booking['card']['name']) ? $booking['card']['name'] : "")
                 );
-                
-                
             }
+
             // check if this customer has stayed in this hotel before. 
             // (by checking email) if so, update the profile
             $booking_customer_id = null;
@@ -695,17 +695,9 @@ class Booking extends MY_Controller
                 }
             }
             
-            //check card is evc or not  
-            $isEVC = 0;
-            if(isset($booking['card']) && isset($booking_customer['card_holder_name']) && isset($booking['source'])){
-                if($booking['source'] == 'expedia' && $booking_customer['card_holder_name'] == 'Expedia VirtualCard'){
-                    $isEVC = 1;
-                } 
-            }
-            
             // if customer already exists, update it. otherwise, create new customer
             $card_data = null;
-            if(isset($booking['card']) && isset($booking_customer['cc_tokenex_token'])){
+            if(isset($booking['card'])){
                 $card_data = array(
                     'customer_name' => isset($booking_customer['customer_name']) ? $booking_customer['customer_name'] : null,
                     'company_id' => isset($booking_customer['company_id']) ? $booking_customer['company_id'] : null,
@@ -715,12 +707,18 @@ class Booking extends MY_Controller
                     'cc_tokenex_token' => isset($booking_customer['cc_tokenex_token']) ? $booking_customer['cc_tokenex_token'] : null,
                     'cc_cvc_encrypted' => isset($booking_customer['cc_cvc_encrypted']) ? $booking_customer['cc_cvc_encrypted'] : null,
                     'card_name' => isset($booking_customer['card_holder_name']) ? $booking_customer['card_holder_name'] : null,
-                    'evc_card_status' => $isEVC,
-                    'is_primary' => 1    
+                    'is_primary' => 1,   
                 ); 
+
+                $meta['token'] = $cc_tokenex_token ? $cc_tokenex_token : null;
+
+                // if(isset($booking['is_card_virtual']) && $booking['is_card_virtual'])
+                //     $meta['is_card_virtual'] = 1;
+
+                $card_data['customer_meta_data'] = json_encode($meta);
+
             }
                     
-       
             if ($booking_customer_id)
             {
                 unset($booking_customer['cc_number']);
@@ -733,7 +731,7 @@ class Booking extends MY_Controller
                 
                 $booking_customer['customer_id'] = $booking_customer_id;
                 $this->Customer_model->update_customer($booking_customer);
-                
+
                 if($card_data) {
                     $card_data['customer_id'] = $booking_customer_id;
                     $this->Card_model->update_customer_card($card_data);
@@ -749,10 +747,62 @@ class Booking extends MY_Controller
                 unset($booking_customer['card_holder_name']);
                 
                 $booking_customer_id = $this->Customer_model->create_customer($booking_customer);
-                
+
                 if($card_data) {
                     $card_data['customer_id'] = $booking_customer_id;
                     $this->Card_model->create_customer_card($card_data);
+                }
+            }
+
+            $customer_data = array(
+                "customer_id" => $booking_customer_id,
+                "first_name" =>  $booking_customer['customer_name'] ?? null,
+                "email" => $booking_customer['email'] ?? null,
+                "payment_source" => array(
+                    "address_line1" => $booking_customer['address'] ?? null,
+                    "address_city" => $booking_customer['city'] ?? null,
+                    "address_state" =>  $booking_customer['state'] ?? null,
+                    "address_country" => $booking_customer['country'] ?? null,
+                    "address_postcode" => $booking_customer['postal_code'] ?? null,
+                    "phone" => $booking_customer['phone'] ?? null,
+                    "card_name" => "%CARDHOLDER_NAME%",
+                    "card_number" => "%CARD_NUMBER%",
+                    "expire_month" => "%EXPIRATION_MM%",
+                    "expire_year" => "%EXPIRATION_YYYY%",
+                    "card_ccv" => "%SERVICE_CODE%",
+                ),
+            );
+
+            if(isset($company_detail['gateway_meta_data']) && $company_detail['gateway_meta_data']) {
+                $company_gateway_meta_data = json_decode($company_detail['gateway_meta_data'], true);
+
+                if(
+                    isset($company_gateway_meta_data['gateway_id']) &&
+                    $company_gateway_meta_data['gateway_id']
+                ) {
+                    $customer_data['gateway_id'] = $company_gateway_meta_data['gateway_id'];
+                }
+            }
+
+            if(isset($cc_tokenex_token) && $cc_tokenex_token != ''){
+                $customer_data['company_id'] = $company_id;
+                $customer_data['pci_token'] = $cc_tokenex_token;
+                $pci_customer_response = apply_filters('post.add.pci_customer', $customer_data);
+
+                if (isset($pci_customer_response['customer_response']['success']) && $pci_customer_response['customer_response']['success'] == true)
+                {
+                    if(isset($pci_customer_response['customer_response']['customer_id'])){
+                        $meta['customer_id'] = $pci_customer_response['customer_response']['customer_id'];
+                        $meta['payment_source_id'] = $pci_customer_response['customer_response']['payment_source_id'];
+                        $meta['token'] = $pci_customer_response['customer_response']['customer_id'];
+                        $meta['vault_token'] = $pci_customer_response['customer_response']['vault_token'];
+                        $meta['source'] = $pci_customer_response['customer_response']['source'];
+                    } elseif(isset($pci_customer_response['customer_response']['card_token'])){
+                        $meta['nexio_token'] = $pci_customer_response['customer_response']['card_token'];
+                    }
+                    $data['customer_meta_data'] = json_encode($meta);
+                    $data['customer_id'] = $booking_customer_id;
+                    $this->Card_model->update_customer_card($data);
                 }
             }
 
