@@ -886,7 +886,16 @@ class Booking extends MY_Controller
             {
                 $warning = implode(", and ", $warning_array);
             }
-
+            $payment_details = $this->Payment_model->get_payments($booking['booking_id']);
+            $booking['payment_total'] = 0;
+             if (isset($payment_details)){
+                foreach($payment_details as $payment)
+                {
+                $booking['payment_total'] += $payment['amount'];
+                }
+            }else{
+                $booking['payment_total'] = 0;
+            }
             // TODO: Check if booking already has custom color assigned. Otherwise, just make them red
             if ($warning != "")
             {
