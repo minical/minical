@@ -1323,6 +1323,36 @@ class Booking extends MY_Controller
         $this->response($payments, 200);
     }
 
+    function show_booking_detail_post()
+    {
+        $company_id = $this->post('company_id');
+        $booking_id = $this->post('pms_booking_id');
+        $ota_booking_id = $this->post('ota_booking_id');
+
+        if(!$company_id) {
+            $this->response(array('status' => false, 'error' => 'Company ID is missing.'), 200);
+        }
+
+        $config['per_page'] = 30;
+        $config['uri_segment'] = 3;
+
+        $filters['per_page'] = $config['per_page'];
+
+        if($booking_id)
+            $filters['booking_id'] = $booking_id;
+
+        if($ota_booking_id)
+            $filters['ota_booking_id'] = $ota_booking_id;
+
+        $bookings = $this->Booking_model->get_bookings($filters, $company_id);
+
+        if($bookings && count($bookings) > 0)
+            $this->response($bookings, 200);
+        else
+            $this->response(array('status' => false, 'error' => 'No bookings found.'), 200);
+
+    }
+
     function show_bookings_post()
     {
         $company_id = $this->post('company_id');
