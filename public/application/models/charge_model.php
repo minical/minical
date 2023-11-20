@@ -458,7 +458,8 @@ class Charge_model extends CI_Model {
 										c.selling_date <= '$end_date' AND
 										$booking_state_where_condition AND
 										cb.is_deleted != '1' AND
-										ct2.company_id = '$company_id' AND
+										#ct2.company_id = '$company_id' AND
+										#IF(cb.is_ota_booking = 1, ct2.company_id = '0', ct2.company_id = '$company_id') AND
 										cb.company_id = '$company_id' AND
 										ct2.id = c.charge_type_id
 										$get_room_charges_only_sql
@@ -842,7 +843,7 @@ class Charge_model extends CI_Model {
 				#AND ct.is_deleted = '0'";
 		$q = $this->db->query($sql);		
 		$charge_type_array = $q->result_array();		
-		$str_array = $unique_charges = Array();		
+		$str_array = $str_array_sum = $unique_charges = Array();		
 		// foreach($charge_type_array as $row){
   //           if(in_array($row['name'], $unique_charges)){
   //               continue;
