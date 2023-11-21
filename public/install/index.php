@@ -59,7 +59,7 @@ $mysqli_connection = @mysqli_connect("$dbHost", "$dbUser", "$dbPass", "$dbName")
                         <tr>
                             <td>PHP version</td>
                             <td><?php echo phpversion(); ?></td>
-                            <td>7.2.0 or higher</td>
+                            <td>7.3.0 or 7.4.27</td>
                             <td>
                                 <?php
                                 if (phpversion() == null) {
