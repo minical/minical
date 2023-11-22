@@ -65,17 +65,18 @@ innGrid.updateRoomType = function(roomType) {
         
 	//Populate updates to standard room type information
 	$.post(getBaseURL() + 'settings/room_inventory/update_room_type_AJAX', {
-			room_type_id: roomTypeId,
-			room_type_name: roomTypeName,
-			acronym: roomTypeAcronym,
-			description: description,
-            max_occupancy: maxOccupancy,
-            min_occupancy: minOccupancy,
-			max_adults: maxAdults,
-			max_children: maxChildren,
-			can_be_sold_online: canBeSoldOnline,
-            default_room_charge: defaultRoomCharge,
-            prevent_inline_booking: preventInlineBooking
+            room_type_id: btoa(unescape(encodeURIComponent(roomTypeId))),
+            room_type_name: btoa(unescape(encodeURIComponent(roomTypeName))),
+            acronym: btoa(unescape(encodeURIComponent(roomTypeAcronym))),
+            description: description,
+            max_occupancy: btoa(unescape(encodeURIComponent(maxOccupancy))),
+            min_occupancy: btoa(unescape(encodeURIComponent(minOccupancy))),
+            max_adults: btoa(unescape(encodeURIComponent(maxAdults))),
+            max_children: btoa(unescape(encodeURIComponent(maxChildren))),
+            can_be_sold_online: btoa(unescape(encodeURIComponent(canBeSoldOnline))),
+            default_room_charge: btoa(unescape(encodeURIComponent(defaultRoomCharge))),
+            prevent_inline_booking: btoa(unescape(encodeURIComponent(preventInlineBooking)))
+
 		}, function (result) {
                     if(result.error == 'error')
                     {
@@ -118,16 +119,16 @@ innGrid.createRoomType = function(roomType) {
     //Populate updates to standard room type information
     $.post(getBaseURL() + 'settings/room_inventory/create_room_type', {
             // room_type_id: roomTypeId,
-            room_type_name: roomTypeName,
-            acronym: roomTypeAcronym,
+            room_type_name: btoa(unescape(encodeURIComponent(roomTypeName))),
+            acronym: btoa(unescape(encodeURIComponent(roomTypeAcronym))),
             description: description,
-            max_occupancy: maxOccupancy,
-            min_occupancy: minOccupancy,
-            max_adults: maxAdults,
-            max_children: maxChildren,
-            can_be_sold_online: canBeSoldOnline,
-            default_room_charge: defaultRoomCharge,
-            prevent_inline_booking: preventInlineBooking
+            max_occupancy: btoa(unescape(encodeURIComponent(maxOccupancy))),
+            min_occupancy: btoa(unescape(encodeURIComponent(minOccupancy))),
+            max_adults: btoa(unescape(encodeURIComponent(maxAdults))),
+            max_children: btoa(unescape(encodeURIComponent(maxChildren))),
+            can_be_sold_online: btoa(unescape(encodeURIComponent(canBeSoldOnline))),
+            default_room_charge: btoa(unescape(encodeURIComponent(defaultRoomCharge))),
+            prevent_inline_booking: btoa(unescape(encodeURIComponent(preventInlineBooking)))
         }, function (result) {
                     if(result.error == 'error')
                     {
