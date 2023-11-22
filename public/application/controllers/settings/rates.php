@@ -267,12 +267,12 @@ class Rates extends MY_Controller
             $extras = $this->security->xss_clean($this->input->post('extras'));
             // rate plan data
             $rate_plan_data = array(
-                'rate_plan_name' => $this->security->xss_clean($this->input->post('rate_plan_name')),
-                'currency_id' => $this->security->xss_clean($this->input->post('currency_id')),
-                'charge_type_id' => $this->security->xss_clean($this->input->post('charge_type_id')),
+                'rate_plan_name' => base64_decode($this->security->xss_clean($this->input->post('rate_plan_name'))),
+                'currency_id' => base64_decode($this->security->xss_clean($this->input->post('currency_id'))),
+                'charge_type_id' => base64_decode($this->security->xss_clean($this->input->post('charge_type_id'))),
                 //'description' => $this->input->post('description'),
                 'description' => isset($unsanitized_post['description']) ? $unsanitized_post['description'] : "",
-                'is_shown_in_online_booking_engine' => $this->security->xss_clean($this->input->post('is_shown_in_online_booking_engine')),
+                'is_shown_in_online_booking_engine' => base64_decode($this->security->xss_clean($this->input->post('is_shown_in_online_booking_engine'))),
             );
             // Store data for the room type
             foreach ($room_type_ids as $typeId) {
@@ -472,13 +472,13 @@ class Rates extends MY_Controller
 		global $unsanitized_post;
 		$rate_plan_id = $this->security->xss_clean($this->input->post('rate_plan_id'));
 		$rate_plan_data = array(
-			'rate_plan_name' => $this->security->xss_clean($this->input->post('rate_plan_name')),
-			'room_type_id' => $this->security->xss_clean($this->input->post('room_type_id')),
-			'currency_id' => $this->security->xss_clean($this->input->post('currency_id')),
-			'charge_type_id' => $this->security->xss_clean($this->input->post('charge_type_id')),
-			//'description' => $this->input->post('description'),
+			'rate_plan_name' => base64_decode($this->security->xss_clean($this->input->post('rate_plan_name'))),
+            'room_type_id' => base64_decode($this->security->xss_clean($this->input->post('room_type_id'))),
+            'currency_id' => base64_decode($this->security->xss_clean($this->input->post('currency_id'))),
+            'charge_type_id' => base64_decode($this->security->xss_clean($this->input->post('charge_type_id'))),
+            //'description' => $this->input->post('description'),
             'description' => isset($unsanitized_post['description']) ? $unsanitized_post['description'] : "" ,
-			'is_shown_in_online_booking_engine' => $this->security->xss_clean($this->input->post('is_shown_in_online_booking_engine')),
+            'is_shown_in_online_booking_engine' => base64_decode($this->security->xss_clean($this->input->post('is_shown_in_online_booking_engine'))),
         );
 
 		//update room type

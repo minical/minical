@@ -116,12 +116,12 @@ innGrid.updateRatePlan = function(ratePlan) {
 	//Populate updates to standard room type information
 	$.post(getBaseURL() + 'settings/rates/update_rate_plan_AJAX', {
 			rate_plan_id: ratePlanID,
-			rate_plan_name: ratePlanName,
-			room_type_id: roomTypeID,
-			charge_type_id: chargeTypeID,
-			currency_id: currencyID,
-			description: description,
-			is_shown_in_online_booking_engine: isShownInOnlineBookingEngine,
+            rate_plan_name: btoa(unescape(encodeURIComponent(ratePlanName))),
+            room_type_id: btoa(unescape(encodeURIComponent(roomTypeID))),
+            charge_type_id: btoa(unescape(encodeURIComponent(chargeTypeID))),
+            currency_id: btoa(unescape(encodeURIComponent(currencyID))),
+            description: description,
+            is_shown_in_online_booking_engine: btoa(unescape(encodeURIComponent(isShownInOnlineBookingEngine))),
             extras: extraIds,
         }, function (result) {
 				ratePlan.find(".updated-message").removeClass("hidden");
@@ -150,12 +150,12 @@ innGrid.addRatePlan = function(ratePlan) {
 	//Populate updates to standard room type information
 	if (roomTypeID != null && ratePlanName != "") {
 		$.post(getBaseURL() + 'settings/rates/create_rate_plan_AJAX', {
-				rate_plan_name: ratePlanName,
-				room_type_id: roomTypeID,
-				charge_type_id: chargeTypeID,
-				currency_id: currencyID,
-				description: description,
-				is_shown_in_online_booking_engine: isShownInOnlineBookingEngine,
+				rate_plan_name: btoa(unescape(encodeURIComponent(ratePlanName))),
+                room_type_id: roomTypeID,
+                charge_type_id: btoa(unescape(encodeURIComponent(chargeTypeID))),
+                currency_id: btoa(unescape(encodeURIComponent(currencyID))),
+                description: description,
+                is_shown_in_online_booking_engine: btoa(unescape(encodeURIComponent(isShownInOnlineBookingEngine))),
 				extras: extraIds,
 			}, function (result) {
 				ratePlan.find(".updated-message").removeClass("hidden");
