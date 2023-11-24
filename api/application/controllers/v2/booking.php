@@ -626,6 +626,29 @@ class Booking extends MY_Controller
 
             
             $this->Booking_model->update_booking_balance($booking_id);
+
+            // update channex availability
+            $query = http_build_query(
+                array(
+                    'start_date'                => $booking['check_in_date'],
+                    'end_date'                  => $booking['check_out_date'],
+                    'room_type_id'              => $pms_room_type_id,
+                    'company_id'                => $company_id,
+                    'update_from'               => 'extension'
+                )
+            );
+
+            $req = $this->call_api($this->config->item('app_url'),'/cron/update_channex_availability?'.$query, array(), array(), 'GET');
+
+            // $this->_send_booking_emails(
+            //     $booking['ota_booking_id'],
+            //     $pms_room_type_id, 
+            //     $booking['booking_type'],
+            //     $booking['check_in_date'], 
+            //     $booking['check_out_date'],
+            //     $company_id,
+            //     $booking_id
+            // );
             
             return $booking_id;
         }

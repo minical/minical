@@ -542,4 +542,30 @@ class Cron extends CI_Controller
         	
         }
     }
+    function update_channex_availability(){
+    	$start_date = $this->input->get('start_date');
+    	$end_date = $this->input->get('end_date');
+    	$room_type_id = $this->input->get('room_type_id');
+    	$company_id = $this->input->get('company_id');
+    	$update_from = $this->input->get('update_from');
+
+        $update_availability_data = array(
+                        'start_date' => $start_date,
+                        'end_date' => $end_date,
+                        'room_type_id' => $room_type_id,
+                        'company_id' => $company_id,
+                        'update_from' => $update_from
+                    );
+
+        $api_url = base_url();
+        $method = "cron/channex_availability/".$company_id;
+        $headers = array(
+                "Content-Type: application/json",
+            );
+
+        $response = $this->channex_call_api($api_url, $method, $update_availability_data, $headers);
+
+        echo json_encode(array('resp' => $response));
+        
+    }
 }
