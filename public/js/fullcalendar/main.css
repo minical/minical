@@ -146,3 +146,8 @@
 .vip :hover {
     background-color: #DAA520;
 }
+
+.fc-event-container,
+.fc-title {
+    color: black;            /* default TEXT color */
+}
