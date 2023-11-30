@@ -225,7 +225,7 @@ class Charge_model extends CI_Model {
 					$is_charge_type_deleted
 					#ct.is_deleted = '0' AND 
 					b.company_id = '$company_id'  AND 					
-					ct.company_id = '$company_id'  AND 
+					#ct.company_id = '$company_id'  AND 
 					b.booking_id = ch.booking_id $employee_sql $start_time_sql $end_time_sql AND
 					b.is_deleted = '0' 
 					$where AND
@@ -939,7 +939,7 @@ class Charge_model extends CI_Model {
 				SELECT DISTINCT ct.id, ct.name
 				FROM charge_type as ct
 				WHERE 
-					ct.company_id = '$company_id'
+					(ct.company_id = '$company_id' OR ct.company_id = 0)
 					$is_charge_type_deleted
 					#AND ct.is_deleted = '0'
 				";
