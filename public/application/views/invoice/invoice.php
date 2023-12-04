@@ -334,7 +334,10 @@
                 echo ($company['website'] != "")?"Website: ".$company['website']."<br/>":'';
                 echo $company['GST_number'];
                 ?>
-                <?php echo '<p class="invoice-header">'.$company['invoice_email_header'].'</p>'; ?>
+                <!-- <?php echo '<p class="invoice-header">'.$company['invoice_email_header'].'</p>'; ?> -->
+                <?php if($this->vendor_id != 9) { ?>
+                    <?php echo '<p class="invoice-header">'.$company['invoice_header'].'</p>'; ?>
+                <?php } ?>
         </div>
         <div class="col-xs-4 invoice_heading_div padding-left-zero-wep">
             <address class="form-inline text-gapp billed-gap">
@@ -464,6 +467,12 @@
 
         </div>
     </div> <!-- /.container -->
+
+    <?php if($this->vendor_id == 9) { ?>
+        <div class="col-sm-12">
+            <?php echo '<p class="invoice-header">'.$company['invoice_header'].'</p>'; ?>
+        </div>
+    <?php } ?>
 
     <div class="col-md-12 row charges-and-payments">
         <?php if(!$read_only) { ?>
