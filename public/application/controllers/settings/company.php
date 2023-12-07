@@ -811,6 +811,7 @@ class Company extends MY_Controller
                     }
                     if (isset($csv_data['settings'])) {
                         $this->import_company_setting($csv_data['settings']);
+                        update_customer_field($this->company_id);
                     }
 
                     unlink($location);

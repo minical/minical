@@ -340,4 +340,39 @@ function get_booking_source($source) {
     return $booking_source;
 }
 
+function update_customer_field($company_id)
+{
+    $CI = & get_instance();
+
+    $common_customer_fields = json_decode(COMMON_CUSTOMER_FIELDS, true);
+    
+    foreach($common_customer_fields as $key => $value)
+    {
+        $data = array(
+            'customer_field_id' => $key,
+            'company_id' => $company_id,
+            'show_on_customer_form' => 1,
+            'show_on_registration_card' => 0,
+            'is_deleted' => 0,
+        );
+        
+        $data['show_on_in_house_report'] = 0;
+        if($key == -1 OR $key == -2 OR $key == -13){
+            $data['show_on_in_house_report'] = 1;
+        }
+
+        $data['show_on_invoice'] = 1;
+        if($key == -2 OR $key == -5 OR $key == -13){
+            $data['show_on_invoice'] = 0;
+        }
+
+        $data['is_required'] = 0;
+        if($key == -1){
+            $data['is_required'] = 1;
+        }
+       
+        $CI->Customer_field_model->update_common_customer_fields_settings($company_id, $key, $data);        
+    }
+}
+
 ?>
