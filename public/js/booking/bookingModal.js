@@ -4857,8 +4857,8 @@ var bookingModalInvoker = function ($) {
                 }
 
                 rooms.push({
-                    check_in_date: moment(innGrid._getBaseFormattedDate($("[name='check_in_date']").val()) + ' ' + that.convertTimeFormat($("[name='check_in_time']").val())).format('YYYY-MM-DD HH:mm:ss'),
-                    check_out_date: moment(innGrid._getBaseFormattedDate($("[name='check_out_date']").val()) + ' ' + that.convertTimeFormat($("[name='check_out_time']").val())).format('YYYY-MM-DD HH:mm:ss'),
+                    check_in_date: innGrid.enableHourlyBooking == 1 ? moment(innGrid._getBaseFormattedDate($("[name='check_in_date']").val()) + ' ' + that.convertTimeFormat($("[name='check_in_time']").val())).format('YYYY-MM-DD HH:mm:ss') : moment(innGrid._getBaseFormattedDate($("[name='check_in_date']").val()) + ' ' + '00:00:00').format('YYYY-MM-DD HH:mm:ss'),
+                    check_out_date: innGrid.enableHourlyBooking == 1 ? moment(innGrid._getBaseFormattedDate($("[name='check_out_date']").val()) + ' ' + that.convertTimeFormat($("[name='check_out_time']").val())).format('YYYY-MM-DD HH:mm:ss') : moment(innGrid._getBaseFormattedDate($("[name='check_out_date']").val()) + ' ' + '00:00:00').format('YYYY-MM-DD HH:mm:ss'),
                     // for single booking
                     room_id: $(this).find("[name='room_id']").val(),
                     // for group booking
