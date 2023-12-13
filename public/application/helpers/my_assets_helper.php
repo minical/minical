@@ -344,6 +344,8 @@ function update_customer_field($company_id)
 {
     $CI = & get_instance();
 
+    $CI->load->model('Customer_field_model');
+
     $common_customer_fields = json_decode(COMMON_CUSTOMER_FIELDS, true);
     
     foreach($common_customer_fields as $key => $value)

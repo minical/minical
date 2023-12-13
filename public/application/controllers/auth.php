@@ -853,6 +853,7 @@ class Auth extends MY_Controller
         
         // create company in minical
         $company_id = $this->Company_model->create_company($company_data);
+        update_customer_field($company_id);
 
         $api_key = md5(uniqid(rand(), true));
         $this->Company_model->insert_company_api_key($company_id, $api_key);
