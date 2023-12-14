@@ -1343,6 +1343,11 @@ class Booking extends MY_Controller
         }
 
         $payments = $this->Payment_model->get_payments($booking_id, false);
+
+        if(empty($payments)) {
+            $this->response(array('data' => 'No payment made.'), 200);
+        }
+
         $this->response($payments, 200);
     }
 
