@@ -567,7 +567,9 @@ class Email_template {
 
         $from_email = isset($whitelabelinfo['do_not_reply_email']) && $whitelabelinfo['do_not_reply_email'] ? $whitelabelinfo['do_not_reply_email'] : (isset($company['email']) && $company['email'] ? $company['email'] : 'donotreply@minical.io');
 
-        $this->ci->email->from($from_email, $company['name']);
+        $email_from = isset($this->ci->avoid_dmarc_blocking) && $this->ci->avoid_dmarc_blocking ? $from_email : $company['email'];
+
+        $this->ci->email->from($email_from, $company['name']);
         $this->ci->email->to($email_list);
         $this->ci->email->reply_to($email_data['company_email']);
 
@@ -1334,7 +1336,9 @@ class Email_template {
 
         $from_email = isset($whitelabelinfo['do_not_reply_email']) && $whitelabelinfo['do_not_reply_email'] ? $whitelabelinfo['do_not_reply_email'] : 'donotreply@minical.io';
 
-        $this->ci->email->from($from_email);
+        $email_from = isset($this->ci->avoid_dmarc_blocking) && $this->ci->avoid_dmarc_blocking ? $from_email : $company['email'];
+
+        $this->ci->email->from($email_from);
         $this->ci->email->to($email_list);
         $this->ci->email->reply_to($customer_info['email']);
 
