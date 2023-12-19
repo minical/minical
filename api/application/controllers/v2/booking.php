@@ -611,7 +611,7 @@ class Booking extends MY_Controller
 
             $log_data = array(
                 'selling_date' => $company['selling_date'],
-                'user_id' => 2, //User_id 2 is Online Reservation
+                'user_id' => 0, //User_id 0 is System user (null null)
                 'booking_id' => $booking_id,                  
                 'date_time' => gmdate('Y-m-d H:i:s'),
                 'log' => 'OTA Booking created',
