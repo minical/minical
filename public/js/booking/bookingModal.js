@@ -6066,8 +6066,8 @@ var bookingModalInvoker = function ($) {
                 return;
             }
 
-            var checkInDate = moment(innGrid._getBaseFormattedDate(that.$modalBody.find("input[name='check_in_date']").val()) + ' ' + that.convertTimeFormat(that.$modalBody.find("[name='check_in_time']").val())).format('YYYY-MM-DD HH:mm:ss');
-            var checkOutDate = moment(innGrid._getBaseFormattedDate(that.$modalBody.find("input[name='check_out_date']").val()) + ' ' + that.convertTimeFormat(that.$modalBody.find("[name='check_out_time']").val())).format('YYYY-MM-DD HH:mm:ss');
+            var checkInDate = innGrid.enableHourlyBooking == 1 ? moment(innGrid._getBaseFormattedDate(that.$modalBody.find("input[name='check_in_date']").val()) + ' ' + that.convertTimeFormat(that.$modalBody.find("[name='check_in_time']").val())).format('YYYY-MM-DD HH:mm:ss') : moment(innGrid._getBaseFormattedDate(that.$modalBody.find("input[name='check_in_date']").val()) + ' ' + '00:00:00').format('YYYY-MM-DD HH:mm:ss');
+            var checkOutDate = innGrid.enableHourlyBooking == 1 ? moment(innGrid._getBaseFormattedDate(that.$modalBody.find("input[name='check_out_date']").val()) + ' ' + that.convertTimeFormat(that.$modalBody.find("[name='check_out_time']").val())).format('YYYY-MM-DD HH:mm:ss') : moment(innGrid._getBaseFormattedDate(that.$modalBody.find("input[name='check_out_date']").val()) + ' ' + '00:00:00').format('YYYY-MM-DD HH:mm:ss');
 
             var roomTypeDDL = $("<select/>", {
                 title: 'Room Type',
