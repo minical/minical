@@ -1836,16 +1836,16 @@ class Auth extends MY_Controller
                         'state'       => $subscription['subscription_state']
                     );
                     break;
-                case 'canceled':
-                    $response = array(
-                        'is_blocking' => 1,
-                        'message'     => 'Your account is about to be suspended. '.($is_manual
-                                ? 'Please contact '.$reply_to_email
-                                : 'Please update your payment details. '),
-                        'show_link'   => $is_manual ? 0 : 1,
-                        'state'       => $subscription['subscription_state']
-                    );
-                    break;
+                // case 'canceled':
+                //     $response = array(
+                //         'is_blocking' => 1,
+                //         'message'     => 'Your account is about to be suspended. '.($is_manual
+                //                 ? 'Please contact '.$reply_to_email
+                //                 : 'Please update your payment details. '),
+                //         'show_link'   => $is_manual ? 0 : 1,
+                //         'state'       => $subscription['subscription_state']
+                //     );
+                //     break;
                 // case 'suspended':
                 //     $response = array(
                 //         'is_blocking' => 1,
