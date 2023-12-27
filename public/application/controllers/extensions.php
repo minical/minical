@@ -589,6 +589,10 @@ class Extensions extends MY_Controller
 
     function show_vendors_extensions(){
 
+        $this->load->model('Admin_model');
+        $company_data = $this->Admin_model->get_single_company_admin_panel_info($this->company_id);
+        $data['company_data'] = $company_data;
+        
         $all_active_modules = $this->all_active_modules;
 
         if($this->is_super_admin != 1){

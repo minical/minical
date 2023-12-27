@@ -105,9 +105,11 @@
                                 <label class="extension-box" style="padding-right: 1.5rem !important;">
                                     <input type="checkbox" class="extension-status-button" data-status="<?php echo $extension['is_active']; ?>" name="<?php echo $extension['extension_folder_name']; ?>"
                                         <?= $extension['is_active'] ? 'checked=checked' : ''; ?>/>
-                                    <?php if($this->user_permission != 'is_employee'){ ?>
+                                    <?php if($this->user_permission != 'is_employee'){ 
+                                            if($extension['extension_name'] != 'Vendor Core Features' && $extension['extension_name'] != 'Subscription' && $extension['extension_name'] != 'Vendor monthly report') { 
+                                        ?>
                                         <span></span>
-                                    <?php } ?>
+                                    <?php } }?>
                                 </label>
                             </div>
                         </div>

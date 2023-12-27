@@ -1194,6 +1194,21 @@ class Admin_model extends CI_Model {
         $this->db->where('company_group_id', $company_group_id);
 		$this->db->delete('company_groups_x_company');
     }
+
+    function get_single_company_admin_panel_info($company_id)
+    {
+        $this->db->from('company_admin_panel_info');
+        $this->db->where('company_id', $company_id);
+        
+        $query = $this->db->get();
+        
+        if($query->num_rows() >= 1)
+        {
+            return $query->row_array();
+        }
+        
+        return NULL;
+    }
 }
 	
 ?>
