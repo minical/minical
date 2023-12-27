@@ -104,7 +104,31 @@
                         </select>
 					</div>
 				</div>
-
+				<?php if($this->is_nestpay_enabled){ ?>
+				<div class="form-group">
+					<label class="col-sm-3 control-label">
+						<?php echo l('Select Policy', true); ?><span style="color:red;">*</span>
+					</label>
+					<div class="col-sm-9">
+				
+						<select name="policy_name" class="select-policy form-control" style="width: 70%;" required>
+							<option value="0"> Select Policy</option>
+                            <?php
+                            if(isset($polices) && $polices !=''){
+                            foreach($polices as $policy) { 
+                            		$pdetails =  json_decode($policy['option_value'],true);
+                            		?>
+								<option value="<?= $policy['option_id'];?>" 
+									<?php 
+										if (isset($rate_plan['policy_code']) && $policy['option_id'] == $rate_plan['policy_code']) {echo " SELECTED=SELECTED ";}
+									  ?>>
+                                 	<?= $pdetails['policy_title'];?>
+                             	</option>
+                           <?php }}  ?>
+                        </select>
+					</div>
+				</div>
+                 <?php }  ?>
 
 				<div class="form-group">
 					<label for="description" class="col-sm-3 control-label">

@@ -1398,7 +1398,8 @@ class Booking extends MY_Controller
                 "company_id" => $this->company_id,
                 "is_selectable" => '0',
                 "room_type_id" => $room['room_type_id'],
-                "parent_rate_plan_id" => $booking_data['rate_plan_id']
+                "parent_rate_plan_id" => $booking_data['rate_plan_id'],
+                "policy_code"=> $rate_plan_data['policy_code']
             );
 
             // create rates
@@ -1720,7 +1721,8 @@ class Booking extends MY_Controller
                             "company_id" => $this->company_id,
                             "is_selectable" => '0',
                             "room_type_id" => $room['room_type_id'],
-                            "parent_rate_plan_id" => $room['rate_plan_id']
+                            "parent_rate_plan_id" => $room['rate_plan_id'],
+                            "policy_code"=> $rate_plan_data['policy_code']
                         );
 
                         // create rates
@@ -1985,7 +1987,8 @@ class Booking extends MY_Controller
                             "company_id" => $this->company_id,
                             "is_selectable" => '0',
                             "room_type_id" => $room['room_type_id'],
-                            "parent_rate_plan_id" => $booking['rate_plan_id']
+                            "parent_rate_plan_id" => $booking['rate_plan_id'],
+                            "policy_code"=> $rate_plan_data['policy_code']
                         );
 
                         // create rates

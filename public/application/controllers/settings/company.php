@@ -111,6 +111,8 @@ class Company extends MY_Controller
                 'postal_code'         => $this->input->post('company_postal_code'),
                 'number_of_rooms'     => $this->input->post('number_of_rooms'),
                 'website'             => $this->input->post('company_website'),
+                'bussiness_name'      => $this->input->post('bussiness_name'),
+                'bussiness_number'    => $this->input->post('bussiness_number'),
                 'email'               => $this->input->post('company_email'),
                 'fax'                 => $this->input->post('company_fax'),
                 'time_zone'           => $this->input->post('time_zone'),

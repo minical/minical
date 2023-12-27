@@ -352,6 +352,7 @@ class Rates extends MY_Controller
         $data['charge_types'] = $this->Charge_type_model->get_room_charge_types($this->company_id);
         $data['currencies'] = $this->Currency_model->get_available_currency_list($this->company_id);
         $data['extras'] = $this->Extra_model->get_extras($this->company_id);
+        $data['polices'] = $this->Rate_plan_model->get_policy('payment_policy',$this->company_id);
         $data['allow_free_bookings'] = $this->allow_free_bookings;
 
         $default_currency = $this->Currency_model->get_default_currency($this->company_id);
@@ -376,6 +377,7 @@ class Rates extends MY_Controller
 		$data['currencies'] = $this->Currency_model->get_available_currency_list($this->company_id);
 		$data['room_types'] = $this->Room_type_model->get_room_types($this->company_id);
 		$data['extras'] = $this->Extra_model->get_extras($this->company_id);
+        $data['polices'] = $this->Rate_plan_model->get_policy('payment_policy',$this->company_id);
 		$data['rate_plan'] = $this->Rate_plan_model->get_rate_plan($rate_plan_id);
         $data['company_id'] = $this->company_id;
         

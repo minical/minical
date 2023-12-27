@@ -300,6 +300,26 @@
             </div>
         </div>
     </div>
+<!--Show success or error message-->
+<?php 
+if(isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true) {
+    if($this->session->flashdata('payment_success_message'))
+    {
+?>
+        <div class="alert alert-success">
+            <h3><b><?php echo $this->session->flashdata('payment_success_message'); ?></b></h3>
+        </div>
+<?php
+    }
+    else if($this->session->flashdata('payment_error_message'))
+    {
+?>
+        <div class="alert alert-danger">
+           <h3><b> <?php echo $this->session->flashdata('payment_error_message'); ?></b></h3>
+        </div>
+<?php
+    } }
+?>
 
 
 
@@ -331,8 +351,10 @@
                 echo ($company['phone'] != "")?"Phone: ".$company['phone']."<br/>":'';
                 echo ($company['fax'] != "")?"Fax: ".$company['fax']."<br/>":'';
                 echo ($company['email'] != "")?"Email: <span id='company-email'>".$company['email']."</span><br/>":'';
-                echo ($company['website'] != "")?"Website: ".$company['website']."<br/>":'';
+                echo ($company['website'] != "")?"Website / Bussiness name: ".$company['website']."<br/>":'';
                 echo $company['GST_number'];
+                echo ($company['bussiness_name'] != "")?"Bussiness number: ".$company['bussiness_name']."<br/>":'';
+                echo ($company['bussiness_number'] != "")?"Fiscal Number: ".$company['bussiness_number']."<br/>":'';
                 ?>
                 <?php echo '<p class="invoice-header">'.$company['invoice_email_header'].'</p>'; ?>
         </div>
@@ -875,13 +897,13 @@
                                             $charge_id = substr($payment['gateway_charge_id'], 0, 20) . '...';
                                             printf(
                                                 '%s %s',
-                                                $payment['amount'] > 0 && $charge_id ? 'Charge ID:' : ($charge_id ? 'Refund ID:' : ''),
+                                                $payment['amount'] > 0 && $charge_id ? 'Charge ID:' : ($charge_id ? ($payment['selected_gateway'] = 'nestpay') ? " " :'Refund ID:' : ''),
                                                 $charge_id
                                             ); 
                                         }else{
                                             printf(
                                                 '%s %s',
-                                                $payment['amount'] > 0 && $payment['gateway_charge_id'] ? 'Charge ID:' : ($payment['gateway_charge_id'] ? 'Refund ID:' : ''),
+                                                $payment['amount'] > 0 && $payment['gateway_charge_id'] ? 'Charge ID:' : ($payment['gateway_charge_id'] ?($payment['selected_gateway'] = 'nestpay') ? " ": 'Refund ID:' : ''),
                                                 $payment['gateway_charge_id']
                                             ); 
                                         }

@@ -370,6 +370,22 @@ class Rate_plan_model extends CI_Model {
             show_error($this->db->_error_message());
         }
     }
+    function get_policy($option_name,$company_id){
+
+        $this->db->select('*');
+        $this->db->where('option_name', $option_name);
+        $this->db->where('company_id', $company_id);
+        
+        $query = $this->db->get('options');
+        if ($this->db->_error_message())
+        {
+            show_error($this->db->_error_message());
+        }
+        $result = $query->result_array();
+
+        return $result;
+
+    }
 }
 
 /* End of file - rate_model.php */

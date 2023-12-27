@@ -113,6 +113,14 @@ innGrid.updateRatePlan = function(ratePlan) {
 	var chargeTypeID = ratePlan.find('[name="charge-type-id"]').val();
 	var isShownInOnlineBookingEngine = ratePlan.find('[name="is-shown-in-online-booking-engine"]').val();
 	var extraIds = ratePlan.find('[name="extra[]"]').val();
+	var policy_id = ratePlan.find('[name="policy_name"]').val();
+    
+	if(innGrid.isNestPayEnabled == 1){
+		if(policy_id == 0){
+			alert('Please Select any cancellation policy for ratePlan');
+			return false;
+		}
+	}
 	//Populate updates to standard room type information
 	$.post(getBaseURL() + 'settings/rates/update_rate_plan_AJAX', {
 			rate_plan_id: ratePlanID,
@@ -123,6 +131,7 @@ innGrid.updateRatePlan = function(ratePlan) {
 			description: description,
 			is_shown_in_online_booking_engine: isShownInOnlineBookingEngine,
             extras: extraIds,
+            policy_code :policy_id,
         }, function (result) {
 				ratePlan.find(".updated-message").removeClass("hidden");
                 innGrid.updateRates("","",ratePlanID);
@@ -147,6 +156,14 @@ innGrid.addRatePlan = function(ratePlan) {
 	var chargeTypeID = ratePlan.find('[name="charge-type-id"]').val();
 	var isShownInOnlineBookingEngine = ratePlan.find('[name="is-shown-in-online-booking-engine"]').val();
 	var extraIds = ratePlan.find('[name="extra[]"]').val();
+	var policy_id = ratePlan.find('[name="policy_name"]').val();
+    
+	if(innGrid.isNestPayEnabled == 1){
+		if(policy_id == 0){
+			alert('Please Select any cancellation policy for ratePlan');
+			return false;
+		}
+	}
 	//Populate updates to standard room type information
 	if (roomTypeID != null && ratePlanName != "") {
 		$.post(getBaseURL() + 'settings/rates/create_rate_plan_AJAX', {
@@ -157,6 +174,7 @@ innGrid.addRatePlan = function(ratePlan) {
 				description: description,
 				is_shown_in_online_booking_engine: isShownInOnlineBookingEngine,
 				extras: extraIds,
+				policy_code :policy_id,
 			}, function (result) {
 				ratePlan.find(".updated-message").removeClass("hidden");
 				$(result.new_rate_plan_ids).each(function (e, ratePlanID) {

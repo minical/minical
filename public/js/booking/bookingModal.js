@@ -897,6 +897,7 @@ var bookingModalInvoker = function ($) {
                             }).append(
                                 $("<a/>", {
                                     'href': '#booking_detail',
+                                    'id': 'booking_detail_tab',
                                     'data-toggle': "tab",
                                     'text': l('booking_detail')
                                 }).on('click', function (e) {
@@ -974,6 +975,7 @@ var bookingModalInvoker = function ($) {
                                 $("<li/>").append(
                                     $("<a/>", {
                                         'href': '#housekeeping',
+                                        'id': 'housekeeping_tab',
                                         'data-toggle': "tab",
                                         'text': l('housekeeping')
                                     }).on('click', function (e) {
@@ -1002,6 +1004,7 @@ var bookingModalInvoker = function ($) {
                                 }).append(
                                     $("<a/>", {
                                         'href': '#history',
+                                        'id': 'history_tab',
                                         'data-toggle': "tab",
                                         'text': l('history')
                                     }).on('click', function (e) {
@@ -1029,6 +1032,7 @@ var bookingModalInvoker = function ($) {
                                 $("<li/>").append(
                                     $("<a/>", {
                                         'href': '#extras',
+                                        'id': 'extras_tab',
                                         'data-toggle': "tab",
                                         'text': l('Products')
                                     })
@@ -1063,6 +1067,7 @@ var bookingModalInvoker = function ($) {
                             }).append(
                                 $("<a/>", {
                                     'href': '#booking_detail',
+                                    'id': 'booking_detail_tab',
                                     'data-toggle': "tab",
                                     'text': l('booking_detail')
                                 }).on('click', function (e) {
@@ -1145,6 +1150,7 @@ var bookingModalInvoker = function ($) {
                                 $("<li/>").append(
                                     $("<a/>", {
                                         'href': '#housekeeping',
+                                        'id': 'housekeeping_tab',
                                         'data-toggle': "tab",
                                         'text': l('housekeeping')
                                     }).on('click', function (e) {
@@ -1174,6 +1180,7 @@ var bookingModalInvoker = function ($) {
                                 ).append(
                                     $("<a/>", {
                                         'href': '#history',
+                                        'id': 'history_tab',
                                         'data-toggle': "tab",
                                         'text': l('history')
                                     }).on('click', function (e) {
@@ -1201,6 +1208,7 @@ var bookingModalInvoker = function ($) {
                                 $("<li/>").append(
                                     $("<a/>", {
                                         'href': '#extras',
+                                        'id': 'extras_tab',
                                         'data-toggle': "tab",
                                         'text': l('Products')
                                     })
@@ -4379,6 +4387,12 @@ var bookingModalInvoker = function ($) {
                         $("<span/>", {
                             class: "h4",
                             html: l('Edit') + ' ' + l(innGrid.featureSettings.defaultRoomSingular) + " (" + l('id') + ": " + this.booking.booking_id + ") " + l('balance') + ": <a class='booking_balance' href='" + getBaseURL() + "invoice/show_invoice/" + this.booking.booking_id + "'>" + number_format(this.booking.balance, 2, ".", "") + "</a> "
+                        })
+                    ).prepend(
+                        $("<input/>", {
+                            type: "hidden",
+                            id: "booking_id",
+                            value: this.booking.booking_id
                         })
                     )
                 } else {

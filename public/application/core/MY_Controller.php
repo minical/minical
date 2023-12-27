@@ -133,6 +133,7 @@ class MY_Controller extends CI_Controller {
         $this->is_custom_invoice_enabled = false;
         $this->review_management_settings = false;
         $this->is_cardknox_enabled = false;
+        $this->is_nestpay_enabled = false;
 
         if($get_active_modules){
             foreach ($get_active_modules as $key => $value) {
@@ -163,6 +164,9 @@ class MY_Controller extends CI_Controller {
                 }
                 if($value['extension_name'] == 'cardknox-integration'){
                     $this->is_cardknox_enabled = true;
+                }
+                 if($value['extension_name'] == 'nestpay_integration'){
+                     $this->is_nestpay_enabled = true;
                 }
 
 

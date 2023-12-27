@@ -70,7 +70,14 @@ class Permission_model extends CI_Model {
                     ($function_name === 'save_customer_cardknox_card' )
                 )
             ) ||
+            (
+                $controller_name === "nestpay_integration" && 
+                (
+                    $function_name === 'nestpay_response_ok_fail_url' || $function_name === 'get_nestpay_post_bookingengine' || $function_name ===  'nestpay_bookingengine_ok_fail_url'
+                )
+            )
 
+             ||
             (
                 $controller_name === "customer" && 
                 (
