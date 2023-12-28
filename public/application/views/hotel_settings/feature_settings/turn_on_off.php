@@ -760,7 +760,7 @@
                 <b><?php echo l('INVOICE', true); ?></b></h4></div>
         <div style="padding-top:10px">
 
-            <div class="form-group features-div-padding  form-inline">
+            <!-- <div class="form-group features-div-padding  form-inline">
                 <label for="payment_capture">
                     <?= l("Payment Capture", true); ?>
                 </label>
@@ -775,7 +775,7 @@
                     </option>
                 </select>
                
-            </div>
+            </div> -->
 
            
 
