@@ -3785,6 +3785,7 @@
       right:0;
       left:auto
   }
+
   @media (min-width: 576px){
       .dropdown-menu-sm-right{
           right:0;

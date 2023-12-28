@@ -953,4 +953,23 @@ class Channex_model extends CI_Model {
         $this->db->where_in('xml_log_id', $xml_log_ids);
         $this->db->delete('ota_xml_logs');
     }
+
+    function get_channex_extra_charges($company_id)
+    {
+        $this->db->from('ota_x_company as oxc');      
+        $this->db->where('oxc.is_active = 1');
+        $this->db->where('oxc.company_id', $company_id);
+        
+        $query = $this->db->get();
+        
+        if ($this->db->_error_message()) // error checking
+            show_error($this->db->_error_message());
+                    
+        if ($query->num_rows >= 1) 
+        {
+            $result =  $query->row_array();
+            return $result;
+        }
+        return NULL;
+    }
 }

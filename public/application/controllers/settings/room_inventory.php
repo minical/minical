@@ -284,15 +284,15 @@ class Room_inventory extends MY_Controller {
         // $room_type_id = $this->security->xss_clean($this->input->post('room_type_id'));
         
         $data = array(
-            'name' => $this->security->xss_clean($this->input->post('room_type_name')),
-            'acronym' => $this->security->xss_clean($this->input->post('acronym')),
-            'max_occupancy' => $this->security->xss_clean($this->input->post('max_occupancy')),
-            'min_occupancy' => $this->security->xss_clean($this->input->post('min_occupancy')),
-            'max_adults' => $this->security->xss_clean($this->input->post('max_adults')),
-            'max_children' => $this->security->xss_clean($this->input->post('max_children')),
-            'can_be_sold_online' => $this->security->xss_clean($this->input->post('can_be_sold_online')) ? $this->security->xss_clean($this->input->post('can_be_sold_online')) : 0,
-            'default_room_charge' => $this->input->post('default_room_charge') ? $this->input->post('default_room_charge') : null,
-            'prevent_inline_booking' => $this->input->post('prevent_inline_booking'),
+            'name' => base64_decode($this->security->xss_clean($this->input->post('room_type_name'))),
+            'acronym' => base64_decode($this->security->xss_clean($this->input->post('acronym'))),
+            'max_occupancy' => base64_decode($this->security->xss_clean($this->input->post('max_occupancy'))),
+            'min_occupancy' => base64_decode($this->security->xss_clean($this->input->post('min_occupancy'))),
+            'max_adults' => base64_decode($this->security->xss_clean($this->input->post('max_adults'))),
+            'max_children' => base64_decode($this->security->xss_clean($this->input->post('max_children'))),
+            'can_be_sold_online' => $this->security->xss_clean($this->input->post('can_be_sold_online')) ? base64_decode($this->security->xss_clean($this->input->post('can_be_sold_online'))) : 0,
+            'default_room_charge' => $this->input->post('default_room_charge') ? base64_decode($this->input->post('default_room_charge')) : null,
+            'prevent_inline_booking' => base64_decode($this->input->post('prevent_inline_booking')),
             'description' => isset($unsanitized_post['description']) ? $unsanitized_post['description'] : null,
             'company_id' => $this->company_id
         );
@@ -301,10 +301,10 @@ class Room_inventory extends MY_Controller {
 
         if ($this->form_validation->run() == TRUE) {
             
-            $max_occupancy = $this->input->post('max_occupancy') ? $this->input->post('max_occupancy') : 4;
-            $min_occupancy = $this->input->post('min_occupancy') ? $this->input->post('min_occupancy') : 4;
-            $max_adults = $this->input->post('max_adults');
-            $max_children = $this->input->post('max_children');
+            $max_occupancy = $this->input->post('max_occupancy') ? base64_decode($this->input->post('max_occupancy')) : 4;
+            $min_occupancy = $this->input->post('min_occupancy') ? base64_decode($this->input->post('min_occupancy')) : 4;
+            $max_adults = base64_decode($this->input->post('max_adults'));
+            $max_children = base64_decode($this->input->post('max_children'));
             $total = $max_adults + $max_children;
             
             if($min_occupancy > $max_occupancy)
@@ -435,18 +435,18 @@ class Room_inventory extends MY_Controller {
         global $unsanitized_post;
         $this->form_validation->set_rules('room_type_id', 'Room Type ID', 'trim');
 
-        $room_type_id = $this->security->xss_clean($this->input->post('room_type_id'));
+        $room_type_id = base64_decode($this->security->xss_clean($this->input->post('room_type_id')));
         
         $data = array(
-            'name' => $this->security->xss_clean($this->input->post('room_type_name')),
-            'acronym' => $this->security->xss_clean($this->input->post('acronym')),
-            'max_occupancy' => $this->security->xss_clean($this->input->post('max_occupancy')),
-            'min_occupancy' => $this->security->xss_clean($this->input->post('min_occupancy')),
-            'max_adults' => $this->security->xss_clean($this->input->post('max_adults')),
-            'max_children' => $this->security->xss_clean($this->input->post('max_children')),
-            'can_be_sold_online' => $this->security->xss_clean($this->input->post('can_be_sold_online')) ? $this->security->xss_clean($this->input->post('can_be_sold_online')) : 0,
-            'default_room_charge' => $this->input->post('default_room_charge') ? $this->input->post('default_room_charge') : null,
-            'prevent_inline_booking' => $this->input->post('prevent_inline_booking'),
+             'name' => base64_decode($this->security->xss_clean($this->input->post('room_type_name'))),
+            'acronym' => base64_decode($this->security->xss_clean($this->input->post('acronym'))),
+            'max_occupancy' => base64_decode($this->security->xss_clean($this->input->post('max_occupancy'))),
+            'min_occupancy' => base64_decode($this->security->xss_clean($this->input->post('min_occupancy'))),
+            'max_adults' => base64_decode($this->security->xss_clean($this->input->post('max_adults'))),
+            'max_children' => base64_decode($this->security->xss_clean($this->input->post('max_children'))),
+            'can_be_sold_online' => $this->security->xss_clean($this->input->post('can_be_sold_online')) ? base64_decode($this->security->xss_clean($this->input->post('can_be_sold_online'))) : 0,
+            'default_room_charge' => $this->input->post('default_room_charge') ? base64_decode($this->input->post('default_room_charge')) : null,
+            'prevent_inline_booking' => base64_decode($this->input->post('prevent_inline_booking')),
             'description' => isset($unsanitized_post['description']) ? $unsanitized_post['description'] : null
         );
         $file_name = $this->security->xss_clean($this->input->post('file_name'));
@@ -454,10 +454,10 @@ class Room_inventory extends MY_Controller {
 
         if ($this->form_validation->run() == TRUE) {
             
-            $max_occupancy = $this->input->post('max_occupancy') ? $this->input->post('max_occupancy') : 4;
-            $min_occupancy = $this->input->post('min_occupancy') ? $this->input->post('min_occupancy') : 4;
-            $max_adults = $this->input->post('max_adults');
-            $max_children = $this->input->post('max_children');
+            $max_occupancy = $this->input->post('max_occupancy') ? base64_decode($this->input->post('max_occupancy')) : 4;
+            $min_occupancy = $this->input->post('min_occupancy') ? base64_decode($this->input->post('min_occupancy')) : 4;
+            $max_adults = base64_decode($this->input->post('max_adults'));
+            $max_children = base64_decode($this->input->post('max_children'));
             $total = $max_adults + $max_children;
             
             if($min_occupancy > $max_occupancy)

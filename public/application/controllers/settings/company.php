@@ -813,6 +813,7 @@ class Company extends MY_Controller
                     }
                     if (isset($csv_data['settings'])) {
                         $this->import_company_setting($csv_data['settings']);
+                        update_customer_field($this->company_id);
                     }
 
                     unlink($location);
@@ -1512,7 +1513,7 @@ class Company extends MY_Controller
             //     $cache_customer_type[$customer['Customer Type']] = $get_customer_type;
             // }
 
-            if(empty($get_customer_type) && !in_array($customer['Customer Type'], $customer_types)){
+            if(empty($get_customer_type) && !in_array($customer['Customer Type'], $customer_types) && $customer['Customer Type'] != ''){
                 $customer_type_id = $this->Customer_type_model->create_customer_type($this->company_id, $customer['Customer Type']);
 
                 $customer_types[] = $customer['Customer Type'];
@@ -1757,7 +1758,8 @@ class Company extends MY_Controller
 
             if(empty($booking_id)){
                 
-
+                $this->load->helper("guid");
+                $guid = generate_guid();
                 $cache_booking_data[] = Array(
                     "rate" => $booking['Rate'] == '' ? null : $booking['Rate'],
                     "adult_count" => $booking['Adult Count'] == '' ? null : $booking['Adult Count'],
@@ -1774,7 +1776,8 @@ class Company extends MY_Controller
                     "pay_period" => isset($pay_period) ? $pay_period : 0,
                     "source" => $source ? $source : 0 ,
                     "company_id" => $this->company_id,
-                    "state" => isset($state) ? $state : 0
+                    "state" => isset($state) ? $state : 0,
+                    "invoice_hash" => $guid
                 );
 
                 $old_booking_ids[] = $booking['Booking Id'];
@@ -2555,11 +2558,13 @@ class Company extends MY_Controller
 
         if($customer_types){
             foreach ($customer_types as $customer_type) {
-                $existing_customer_type = $this->Customer_type_model->get_customer_type_by_name($this->company_id,$customer_type['name']);
+                if(isset($customer_type['name']) && $customer_type['name']) {
+                    $existing_customer_type = $this->Customer_type_model->get_customer_type_by_name($this->company_id,$customer_type['name']);
 
-                if(empty($existing_customer_type)){
+                    if(empty($existing_customer_type)){
 
-                    $customer_type = $this->Customer_type_model->create_customer_type($this->company_id, $customer_type['name']);
+                        $customer_type = $this->Customer_type_model->create_customer_type($this->company_id, $customer_type['name']);
+                    }
                 }
             }
         }

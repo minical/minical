@@ -143,6 +143,94 @@ class Customer_model extends CI_Model {
 		//echo $this->db->last_query();
 		return $result;
     }
+
+    function search_customers($filters, $is_csv = false)
+    {
+		
+		if($filters && isset($filters['only_static_customer_info']) && $filters['only_static_customer_info']) {
+			
+			// $where_conditions = $this->_customer_search_where_conditions($filters);
+			
+			// set order by
+			// set order
+			$order = "";
+			$order_by = "ORDER BY ";
+			if (isset($filters['order_by'])) {
+				// if both $star and $end are set, then return occupancies within range
+				if ($filters['order_by'] != "") {
+					$order_by = "ORDER BY ".$filters['order_by'];
+					$order = "ASC,";
+					if (isset($filters['order'])) {
+						if ($filters['order'] != "") {
+							if ($filters['order'] == 'DESC') {
+								$order = "DESC,";
+							}
+						}
+					}
+				}
+			}
+
+			
+			//set limit
+			$limit = "";
+			if (isset($filters['offset'])) {
+				$limit = "LIMIT ".intval($filters['offset']);
+				if (isset($filters['per_page'])) {
+					$limit = $limit.", ".$filters['per_page'];
+				}
+			}
+
+			$search_query = $filters['search_query'];
+
+			$company_id = $filters['company_id'];
+
+			$sql = "SELECT * FROM customer as c 
+					WHERE c.company_id = '$company_id'
+					AND c.is_deleted != '1'
+					AND customer_name like '%$search_query%'
+					GROUP BY c.customer_id
+
+					UNION
+
+					SELECT * FROM customer as c 
+					WHERE c.company_id = '$company_id'
+					AND c.is_deleted != '1'
+					AND customer_id = '$search_query'
+					GROUP BY c.customer_id
+
+					UNION
+
+					SELECT * FROM customer as c 
+					WHERE c.company_id = '$company_id'
+					AND c.is_deleted != '1'
+					AND phone like '%$search_query%'
+					GROUP BY c.customer_id
+
+					UNION
+
+					SELECT * FROM customer as c 
+					WHERE c.company_id = '$company_id'
+					AND c.is_deleted != '1'
+					AND email like '%$search_query%'
+					GROUP BY c.customer_id
+					
+					$order_by $order customer_name
+					$limit";
+		} else {
+			$sql = $this->_get_filtered_query($filters);
+		}
+		
+        $q = $this->db->query($sql);
+		
+		if ($this->db->_error_message())
+		{
+			show_error($this->db->_error_message());
+		}
+		
+		$result = $is_csv ? $q : $q->result();
+		//echo $this->db->last_query();
+		return $result;
+    }
 	
 	// return row count for pagination
 

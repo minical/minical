@@ -274,4 +274,107 @@ function timeAgo($time_ago)
     
 }
 
+function is_deleted_chargetype_linked_with_charge($company_id) {
+    $CI = & get_instance();
+
+    $dct = $CI->Charge_type_model->get_deleted_charge_types($company_id);
+
+    if($dct) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function get_booking_source($source) {
+
+    $CI = & get_instance();
+
+    $common_booking_sources = json_decode(COMMON_BOOKING_SOURCES, true);
+    $coomon_sources_setting = $CI->Booking_source_model->get_common_booking_sources_settings($CI->company_id);
+    $sort_order = 0;
+    foreach($common_booking_sources as $id => $name)
+    {
+        if(!(isset($coomon_sources_setting[$id]) && $coomon_sources_setting[$id]['is_hidden'] == 1))
+        {
+            $source_data[] = array(
+                'id' => $id,
+                'name' => $name,
+                'sort_order' => isset($coomon_sources_setting[$id]) ? $coomon_sources_setting[$id]['sort_order'] : $sort_order
+            );
+        }
+        $sort_order++;
+    }
+
+    $booking_sources = $CI->Booking_source_model->get_booking_source($CI->company_id);
+    if (!empty($booking_sources)) {
+        foreach ($booking_sources as $booking_source) {
+            if($booking_source['is_hidden'] != 1)
+            {
+                $source_data[] = array(
+                    'id' => $booking_source['id'],
+                    'name' => $booking_source['name'],
+                    'sort_order' => $booking_source['sort_order']
+                );
+            }
+        }
+    }
+    usort($source_data, function($a, $b) {
+        return $a['sort_order'] - $b['sort_order'];
+    });
+
+    $booking_sources = $source_data;
+
+    $booking_source = '';
+
+    if($booking_sources){
+        foreach ($booking_sources as $key => $value) {
+            if($value['id'] == $source)
+            {
+                $booking_source = $value['name'];
+                break;
+            }
+        }
+    }
+
+    return $booking_source;
+}
+
+function update_customer_field($company_id)
+{
+    $CI = & get_instance();
+
+    $CI->load->model('Customer_field_model');
+
+    $common_customer_fields = json_decode(COMMON_CUSTOMER_FIELDS, true);
+    
+    foreach($common_customer_fields as $key => $value)
+    {
+        $data = array(
+            'customer_field_id' => $key,
+            'company_id' => $company_id,
+            'show_on_customer_form' => 1,
+            'show_on_registration_card' => 0,
+            'is_deleted' => 0,
+        );
+        
+        $data['show_on_in_house_report'] = 0;
+        if($key == -1 OR $key == -2 OR $key == -13){
+            $data['show_on_in_house_report'] = 1;
+        }
+
+        $data['show_on_invoice'] = 1;
+        if($key == -2 OR $key == -5 OR $key == -13){
+            $data['show_on_invoice'] = 0;
+        }
+
+        $data['is_required'] = 0;
+        if($key == -1){
+            $data['is_required'] = 1;
+        }
+       
+        $CI->Customer_field_model->update_common_customer_fields_settings($company_id, $key, $data);        
+    }
+}
+
 ?>

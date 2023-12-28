@@ -152,7 +152,9 @@ class Extensions extends MY_Controller
             }
             $is_hosted_prod_service = getenv('IS_HOSTED_PROD_SERVICE');
 
-            if($is_hosted_prod_service && $_SERVER['HTTP_HOST'] != "app.minical.io" && $_SERVER['HTTP_HOST'] != "demo.minical.io"){
+            $white_label_info = $this->session->userdata('white_label_information');
+
+            if($is_hosted_prod_service && $_SERVER['HTTP_HOST'] != $white_label_info['domain'] && $_SERVER['HTTP_HOST'] != "app.minical.io" && $_SERVER['HTTP_HOST'] != "demo.minical.io"){
                 if($flag){
                     $module['is_active'] = 0;
                     $module['company_id'] = $this->company_id;

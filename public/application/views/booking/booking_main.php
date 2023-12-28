@@ -12,6 +12,21 @@
         }
     }    
 ?>
+
+<?php 
+    $registration_flag = 1;
+    if(isset($permissions) && $permissions != NULL)
+    {
+        if(
+            !in_array('access_to_extensions', $permissions) &&
+            !in_array('is_owner', $permissions)
+        )
+        {
+            $registration_flag = 0;
+        }
+    }    
+?>
+
 <div id="filter-booking" style="padding-top: 0px; padding-bottom:10px;display: none;">
     <div class="pull-left h4">
         <strong><?php echo l('filters'); ?></strong>
@@ -562,8 +577,10 @@
         innGrid.isDarkTheme = parseInt('<?=(isset($this->company_ui_theme) && $this->company_ui_theme == THEME_DARK ? 1 : 0)?>');
 
         var flag = <?php echo $flag; ?>;
-        
-        innGrid.hasBookingPermission = <?php echo $flag; ?>;      
+        innGrid.hasBookingPermission = <?php echo $flag; ?>; 
+
+        var reg_flag = <?php echo $registration_flag; ?>;
+        innGrid.hasExtensionsPermission = <?php echo $registration_flag; ?>;     
         
         
         <?php 

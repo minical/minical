@@ -356,7 +356,10 @@ if(isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true) {
                 echo ($company['bussiness_name'] != "")?"Bussiness number: ".$company['bussiness_name']."<br/>":'';
                 echo ($company['bussiness_number'] != "")?"Fiscal Number: ".$company['bussiness_number']."<br/>":'';
                 ?>
-                <?php echo '<p class="invoice-header">'.$company['invoice_email_header'].'</p>'; ?>
+                <!-- <?php echo '<p class="invoice-header">'.$company['invoice_email_header'].'</p>'; ?> -->
+                <?php if($this->vendor_id != 9) { ?>
+                    <?php echo '<p class="invoice-header">'.$company['invoice_header'].'</p>'; ?>
+                <?php } ?>
         </div>
         <div class="col-xs-4 invoice_heading_div padding-left-zero-wep">
             <address class="form-inline text-gapp billed-gap">
@@ -465,6 +468,9 @@ if(isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true) {
                 ?>
 
                 </span><br/>
+
+                <?php echo l('Booking Source', true); ?>: <?php echo get_booking_source($booking_detail['source']); ?>
+
                <span id="booking-field">
                 <?php
 
@@ -483,6 +489,12 @@ if(isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true) {
 
         </div>
     </div> <!-- /.container -->
+
+    <?php if($this->vendor_id == 9) { ?>
+        <div class="col-sm-12">
+            <?php echo '<p class="invoice-header">'.$company['invoice_header'].'</p>'; ?>
+        </div>
+    <?php } ?>
 
     <div class="col-md-12 row charges-and-payments">
         <?php if(!$read_only) { ?>

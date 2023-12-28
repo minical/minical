@@ -338,6 +338,7 @@ class MY_Controller extends CI_Controller {
             $this->booking_cancelled_with_balance = $company['booking_cancelled_with_balance'];
             $this->restrict_cvc_not_mandatory = $company['restrict_cvc_not_mandatory'];
             $this->restrict_edit_after_checkout = $company['restrict_edit_after_checkout'];
+            $this->restrict_checkout_with_balance = $company['restrict_checkout_with_balance'];
             $this->calendar_days = $company['calendar_days'];
             
             $user = $this->User_model->get_user_by_id($this->user_id);

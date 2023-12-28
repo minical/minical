@@ -26,7 +26,7 @@ class Company_model extends CI_Model {
 		}
 	}
     
-    function get_all_companies($is_ota_connected = false)
+    function get_all_companies($is_ota_connected = false, $ota_key = null)
 	{
 		$subscription_state = array('trialing','active');
 
@@ -37,8 +37,14 @@ class Company_model extends CI_Model {
 		if($is_ota_connected){
 			$this->db->join('ota_x_company as oxc','oxc.company_id=c.company_id','left');
 			$this->db->where('oxc.ota_manager_id IS NOT NULL');
+
+			if($ota_key){
+	            $this->db->join('ota_manager as om','om.id = oxc.ota_manager_id', 'left');
+	            $this->db->join('otas as o','o.id = om.ota_id', 'left');
+	            $this->db->where('o.key', $ota_key);
+	        }
 		}
-		
+
 		$this->db->where('c.is_deleted', 0);
 		$this->db->where_in('cs.subscription_state', $subscription_state);
 		$this->db->group_by('c.company_id');

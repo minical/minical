@@ -13,6 +13,7 @@ class Forecast_charges
 		$this->ci->load->model('Booking_model');
 		$this->ci->load->model('Booking_extra_model');
         $this->ci->load->model('Tax_model');
+        $this->ci->load->model('Channex_model');
         
         $this->ci->load->library('rate');
     }
@@ -159,6 +160,22 @@ class Forecast_charges
                 }
 
                 $rate_plan   = $this->ci->Rate_plan_model->get_rate_plan($booking_details['rate_plan_id']);
+                
+                if(
+                    isset($booking_details['is_ota_booking']) && 
+                    $booking_details['is_ota_booking']
+                ) {
+
+                    $oxc_data = $this->ci->Channex_model->get_channex_extra_charges($booking_details['company_id']);
+
+                    if(
+                        isset($oxc_data['is_extra_charge']) &&
+                        $oxc_data['is_extra_charge']
+                    ) {
+                        $rate_plan['charge_type_id'] = SYSTEM_ROOM_NO_TAX;
+                    }
+                }
+
                 $charge_type = $this->ci->Charge_type_model->get_charge_type_by_id($rate_plan['charge_type_id']);
 
 				$rate_plan_id = $booking_details['rate_plan_id'];

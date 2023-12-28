@@ -119,6 +119,20 @@
                     <label for="hide_room_name"><b><?= l("Hide room name in email invoice", true); ?></b></label>
                 </div>
             </div>
+
+            <div class="form-group features-div-padding ">
+                <?php $whitelabelinfo = $this->session->userdata('white_label_information');
+                $partner_name = isset($whitelabelinfo['name']) ? ucfirst($whitelabelinfo['name']) : $this->config->item('branding_name');
+                ?>
+                <div class="checkbox checbox-switch switch-primary">
+                    <label>
+                        <input type="checkbox" name="avoid_dmarc_blocking"
+                               <?= $company_data['avoid_dmarc_blocking'] == 1 ? 'checked=checked' : ''; ?>/>
+                        <span></span>
+                    </label>
+                    <label for="avoid_dmarc_blocking"><b><?= l("Use " . $partner_name . "’s email as sender to avoid blocking of your email because of domain’s DMARC policy", true); ?></b></label>
+                </div>
+            </div>
         </div>
     </div>
 

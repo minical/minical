@@ -310,6 +310,9 @@ define('SUPER_ADMIN', 'support@minical.io');
 define('DEFAULT_CURRENCY', 				'151');
 
 
+define('SYSTEM_ROOM_NO_TAX',              '8693');
+
+
 //Define the proper DOCUMENT_ROOT
 if (!isset($_SERVER['SERVER_NAME']) or $_SERVER['SERVER_NAME'] == 'localhost') {
 	define('DOC_ROOT', 'C:\xampp\htdocs\innGrid\\');

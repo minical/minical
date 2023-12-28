@@ -313,7 +313,7 @@ class Booking extends MY_Controller
             // cc details, masked
             if(isset($booking['card']) && isset($booking['card']['number'])){
                 $cc_tokenex_token = $cc_cvc_encrypted = NULL;
-                $cc_data = $this->get_tokenex_token_and_encrypted_cvc($booking['card']['number'], $booking['card']['cvc'], $company_id);
+                $cc_data = array();//$this->get_tokenex_token_and_encrypted_cvc($booking['card']['number'], $booking['card']['cvc'], $company_id);
                 if(isset($cc_data['token_ex_token']))
                 {
                     $cc_tokenex_token = $cc_data['token_ex_token']; // tokenex token 
@@ -324,7 +324,7 @@ class Booking extends MY_Controller
                 }
                 
                 $booking_customer += array(
-                    'cc_number'         => $booking['card']['number'],
+                    'cc_number'         => 'XXXX XXXX XXXX '.substr($booking['card']['number'], -4),
                     'cc_expiry_month'   => isset($booking['card']['exp_month']) ? $booking['card']['exp_month'] : null,
                     'cc_expiry_year'    => isset($booking['card']['exp_year']) ? $booking['card']['exp_year'] : null,
                     'cc_tokenex_token'  => $cc_tokenex_token,
@@ -611,7 +611,7 @@ class Booking extends MY_Controller
 
             $log_data = array(
                 'selling_date' => $company['selling_date'],
-                'user_id' => 2, //User_id 2 is Online Reservation
+                'user_id' => 0, //User_id 0 is System user (null null)
                 'booking_id' => $booking_id,                  
                 'date_time' => gmdate('Y-m-d H:i:s'),
                 'log' => 'OTA Booking created',
@@ -626,6 +626,29 @@ class Booking extends MY_Controller
 
             
             $this->Booking_model->update_booking_balance($booking_id);
+
+            // update channex availability
+            $query = http_build_query(
+                array(
+                    'start_date'                => $booking['check_in_date'],
+                    'end_date'                  => $booking['check_out_date'],
+                    'room_type_id'              => $pms_room_type_id,
+                    'company_id'                => $company_id,
+                    'update_from'               => 'extension'
+                )
+            );
+
+            $req = $this->call_api($this->config->item('app_url'),'/cron/update_channex_availability?'.$query, array(), array(), 'GET');
+
+            // $this->_send_booking_emails(
+            //     $booking['ota_booking_id'],
+            //     $pms_room_type_id, 
+            //     $booking['booking_type'],
+            //     $booking['check_in_date'], 
+            //     $booking['check_out_date'],
+            //     $company_id,
+            //     $booking_id
+            // );
             
             return $booking_id;
         }
@@ -652,31 +675,31 @@ class Booking extends MY_Controller
                 return false;
             }
 
-            // cc details, masked
-            if(isset($booking['card']) && isset($booking['card']['number'])){
+            if(
+                isset($booking['card']) && 
+                isset($booking['card']['number'])
+            ){
                 $cc_tokenex_token = $cc_cvc_encrypted = NULL;
-                
-                $cc_data = $this->get_tokenex_token_and_encrypted_cvc($booking['card']['number'], $booking['card']['cvc'], $company_id);
-                if(isset($cc_data['token_ex_token']))
+
+                if(isset($booking['card']['token']))
                 {
-                    $cc_tokenex_token = $cc_data['token_ex_token']; // tokenex token 
+                    $cc_tokenex_token = $booking['card']['token']; // tokenex token 
                 }
-                if(isset($cc_data['cvc_encrypted']))
+                if(isset($booking['card']['cvc']))
                 {
-                    $cc_cvc_encrypted = $cc_data['cvc_encrypted']; // encrypted format
+                    $cc_cvc_encrypted = $booking['card']['cvc']; // encrypted format
                 }
                 
                 $booking_customer += array(
-                    'cc_number'         => $booking['card']['number'],
+                    'cc_number'         => 'XXXX XXXX XXXX '.substr($booking['card']['number'], -4),
                     'cc_expiry_month'   => isset($booking['card']['exp_month']) ? $booking['card']['exp_month'] : null,
                     'cc_expiry_year'    => isset($booking['card']['exp_year']) ? $booking['card']['exp_year'] : null,
-                    'cc_tokenex_token'  => $cc_tokenex_token,
-                    'cc_cvc_encrypted'  => $cc_cvc_encrypted,
+                    'cc_tokenex_token'  => null,
+                    'cc_cvc_encrypted'  => null,
                     'card_holder_name'  => (isset($booking['card']['name']) ? $booking['card']['name'] : "")
                 );
-                
-                
             }
+
             // check if this customer has stayed in this hotel before. 
             // (by checking email) if so, update the profile
             $booking_customer_id = null;
@@ -695,17 +718,9 @@ class Booking extends MY_Controller
                 }
             }
             
-            //check card is evc or not  
-            $isEVC = 0;
-            if(isset($booking['card']) && isset($booking_customer['card_holder_name']) && isset($booking['source'])){
-                if($booking['source'] == 'expedia' && $booking_customer['card_holder_name'] == 'Expedia VirtualCard'){
-                    $isEVC = 1;
-                } 
-            }
-            
             // if customer already exists, update it. otherwise, create new customer
             $card_data = null;
-            if(isset($booking['card']) && isset($booking_customer['cc_tokenex_token'])){
+            if(isset($booking['card'])){
                 $card_data = array(
                     'customer_name' => isset($booking_customer['customer_name']) ? $booking_customer['customer_name'] : null,
                     'company_id' => isset($booking_customer['company_id']) ? $booking_customer['company_id'] : null,
@@ -715,12 +730,18 @@ class Booking extends MY_Controller
                     'cc_tokenex_token' => isset($booking_customer['cc_tokenex_token']) ? $booking_customer['cc_tokenex_token'] : null,
                     'cc_cvc_encrypted' => isset($booking_customer['cc_cvc_encrypted']) ? $booking_customer['cc_cvc_encrypted'] : null,
                     'card_name' => isset($booking_customer['card_holder_name']) ? $booking_customer['card_holder_name'] : null,
-                    'evc_card_status' => $isEVC,
-                    'is_primary' => 1    
+                    'is_primary' => 1,   
                 ); 
+
+                $meta['token'] = $cc_tokenex_token ? $cc_tokenex_token : null;
+
+                // if(isset($booking['is_card_virtual']) && $booking['is_card_virtual'])
+                //     $meta['is_card_virtual'] = 1;
+
+                $card_data['customer_meta_data'] = json_encode($meta);
+
             }
                     
-       
             if ($booking_customer_id)
             {
                 unset($booking_customer['cc_number']);
@@ -733,7 +754,7 @@ class Booking extends MY_Controller
                 
                 $booking_customer['customer_id'] = $booking_customer_id;
                 $this->Customer_model->update_customer($booking_customer);
-                
+
                 if($card_data) {
                     $card_data['customer_id'] = $booking_customer_id;
                     $this->Card_model->update_customer_card($card_data);
@@ -749,10 +770,62 @@ class Booking extends MY_Controller
                 unset($booking_customer['card_holder_name']);
                 
                 $booking_customer_id = $this->Customer_model->create_customer($booking_customer);
-                
+
                 if($card_data) {
                     $card_data['customer_id'] = $booking_customer_id;
                     $this->Card_model->create_customer_card($card_data);
+                }
+            }
+
+            $customer_data = array(
+                "customer_id" => $booking_customer_id,
+                "first_name" =>  $booking_customer['customer_name'] ?? null,
+                "email" => $booking_customer['email'] ?? null,
+                "payment_source" => array(
+                    "address_line1" => $booking_customer['address'] ?? null,
+                    "address_city" => $booking_customer['city'] ?? null,
+                    "address_state" =>  $booking_customer['state'] ?? null,
+                    "address_country" => $booking_customer['country'] ?? null,
+                    "address_postcode" => $booking_customer['postal_code'] ?? null,
+                    "phone" => $booking_customer['phone'] ?? null,
+                    "card_name" => "%CARDHOLDER_NAME%",
+                    "card_number" => "%CARD_NUMBER%",
+                    "expire_month" => "%EXPIRATION_MM%",
+                    "expire_year" => "%EXPIRATION_YYYY%",
+                    "card_ccv" => "%SERVICE_CODE%",
+                ),
+            );
+
+            if(isset($company_detail['gateway_meta_data']) && $company_detail['gateway_meta_data']) {
+                $company_gateway_meta_data = json_decode($company_detail['gateway_meta_data'], true);
+
+                if(
+                    isset($company_gateway_meta_data['gateway_id']) &&
+                    $company_gateway_meta_data['gateway_id']
+                ) {
+                    $customer_data['gateway_id'] = $company_gateway_meta_data['gateway_id'];
+                }
+            }
+
+            if(isset($cc_tokenex_token) && $cc_tokenex_token != ''){
+                $customer_data['company_id'] = $company_id;
+                $customer_data['pci_token'] = $cc_tokenex_token;
+                $pci_customer_response = apply_filters('post.add.pci_customer', $customer_data);
+
+                if (isset($pci_customer_response['customer_response']['success']) && $pci_customer_response['customer_response']['success'] == true)
+                {
+                    if(isset($pci_customer_response['customer_response']['customer_id'])){
+                        $meta['customer_id'] = $pci_customer_response['customer_response']['customer_id'];
+                        $meta['payment_source_id'] = $pci_customer_response['customer_response']['payment_source_id'];
+                        $meta['token'] = $pci_customer_response['customer_response']['customer_id'];
+                        $meta['vault_token'] = $pci_customer_response['customer_response']['vault_token'];
+                        $meta['source'] = $pci_customer_response['customer_response']['source'];
+                    } elseif(isset($pci_customer_response['customer_response']['card_token'])){
+                        $meta['nexio_token'] = $pci_customer_response['customer_response']['card_token'];
+                    }
+                    $data['customer_meta_data'] = json_encode($meta);
+                    $data['customer_id'] = $booking_customer_id;
+                    $this->Card_model->update_customer_card($data);
                 }
             }
 
@@ -1270,7 +1343,42 @@ class Booking extends MY_Controller
         }
 
         $payments = $this->Payment_model->get_payments($booking_id, false);
+
+        if(empty($payments)) {
+            $this->response(array('data' => 'No payment made.'), 200);
+        }
+
         $this->response($payments, 200);
+    }
+
+    function show_booking_detail_post()
+    {
+        $company_id = $this->post('company_id');
+        $booking_id = $this->post('pms_booking_id');
+        $ota_booking_id = $this->post('ota_booking_id');
+
+        if(!$company_id) {
+            $this->response(array('status' => false, 'error' => 'Company ID is missing.'), 200);
+        }
+
+        $config['per_page'] = 30;
+        $config['uri_segment'] = 3;
+
+        $filters['per_page'] = $config['per_page'];
+
+        if($booking_id)
+            $filters['booking_id'] = $booking_id;
+
+        if($ota_booking_id)
+            $filters['ota_booking_id'] = $ota_booking_id;
+
+        $bookings = $this->Booking_model->get_bookings($filters, $company_id);
+
+        if($bookings && count($bookings) > 0)
+            $this->response($bookings, 200);
+        else
+            $this->response(array('status' => false, 'error' => 'No bookings found.'), 200);
+
     }
 
     function show_bookings_post()
@@ -2207,5 +2315,39 @@ class Booking extends MY_Controller
         $company_data = $this->Company_model->get_company_data($company_id);
         
         $this->response($company_data, 200); // 200 being the HTTP response code
+    }
+
+    function update_booking_type_post(){
+        $company_id = $this->post('company_id');
+        $booking_id = $this->post('booking_id');
+        $booking_type = $this->post('booking_type');
+
+        if(!$company_id) {
+            $this->response(array('status' => false, 'error' => 'Company ID is missing.'), 200);
+        }
+
+        if(!$booking_id) {
+            $this->response(array('status' => false, 'error' => 'Booking ID is missing.'), 200);
+        }
+
+        if($booking_type == '') {
+            $this->response(array('status' => false, 'error' => 'Booking Type is missing.'), 200);
+        }
+
+        $booking_data = $this->Booking_model->get_company_by_booking($booking_id);
+
+        if(!$booking_data) {
+            $this->response(array('status' => false, 'error' => 'Booking ID is Invalid.'), 200);
+        }
+
+        if(!is_numeric($booking_type)){
+            $this->response(array('status' => false, 'error' => 'Booking Type is Invalid.'), 200);
+        }
+
+        $update_data = array('state' => $booking_type);
+
+        $this->Booking_model->update_booking($update_data, $booking_id);
+        
+        $this->response(array('status' => true, 'message' => 'Booking Type is updated successfully.'), 200);
     }
 }

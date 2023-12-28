@@ -720,6 +720,19 @@ class Booking_model extends CI_Model {
 
     function _build_get_bookings_sql_query_based_on_filters($filters, $company_id, $group_by1, $include_room_no_assigned = false, $include_customer_all_details = false) 
     {
+        $filters['is_ota_booking'] = false;
+
+        if(
+            isset($filters['ota_booking_id']) &&
+            $filters['ota_booking_id']
+        ) {
+            $ota_booking_data = $this->_get_ota_booking_data($filters['ota_booking_id']);
+        }
+
+        if($ota_booking_data){
+            $filters['is_ota_booking'] = true;
+        }
+
         $booking_fields_join = $customer_fields_join = '';
         $booking_fields_where_condition = $customer_fields_where_condition = '';
 
@@ -980,8 +993,8 @@ class Booking_model extends CI_Model {
                             ORDER BY booking_block.check_in_date DESC
                         ) as room_name,
                         
-                        min(check_in_date) as check_in_date,
-                        max(check_out_date) as check_out_date,
+                        min(brh.check_in_date) as check_in_date,
+                        max(brh.check_out_date) as check_out_date,
                         (
                             SELECT r.group_id 
                             FROM room as r 
@@ -1032,6 +1045,7 @@ class Booking_model extends CI_Model {
                     LEFT JOIN booking_x_group AS bxs ON bxs.booking_id = brh.booking_id 
                     LEFT JOIN booking_x_booking_linked_group AS bxblg ON bxblg.booking_id = brh.booking_id 
                     LEFT JOIN booking_linked_group AS blg ON blg.id = bxblg.booking_group_id
+                    LEFT JOIN ota_bookings as ob ON ob.pms_booking_id = b.booking_id
                     $join_statements
                     WHERE
                         $where_conditions
@@ -1170,6 +1184,38 @@ class Booking_model extends CI_Model {
         {
             $booking_customer_sql = "AND b.booking_customer_id = '".$filters['booking_customer_id']."'";
         }
+
+        // matching booking_id or ota_booking_id
+        $booking_sql = "";
+
+        if($filters['is_ota_booking']){
+            $booking_sql = "AND ob.ota_booking_id = '".$filters['ota_booking_id']."'";
+        } else if($filters['booking_id']) {
+            $booking_sql = "AND b.booking_id = '".$filters['booking_id']."'";
+        }
+
+        // if(
+        //     isset($filters['booking_id']) && 
+        //     $filters['booking_id'] && 
+        //     isset($filters['ota_booking_id']) &&
+        //     $filters['ota_booking_id']
+        // ) {
+        //     $booking_sql = "AND (b.booking_id = '".$filters['booking_id']."' OR ob.ota_booking_id = '".$filters['ota_booking_id']."')";
+        // }
+        // else if (
+        //     isset($filters['booking_id']) && 
+        //     $filters['booking_id'] && 
+        //     !isset($filters['ota_booking_id'])
+        // ) {
+        //     $booking_sql = "AND b.booking_id = '".$filters['booking_id']."'";
+        // } 
+        // else if(
+        //     !isset($filters['booking_id']) && 
+        //     isset($filters['ota_booking_id']) &&
+        //     $filters['ota_booking_id']
+        // ) {
+        //     $booking_sql = "AND ob.ota_booking_id = '".$filters['ota_booking_id']."'";
+        // } 
         
         // matching customer_id
         $staying_customer_sql = $staying_customer_name = "";
@@ -1209,6 +1255,7 @@ class Booking_model extends CI_Model {
             $time_sql
             $state_sql 
             $booking_customer_sql
+            $booking_sql
             $staying_customer_sql
             $staying_customer_name
             $search_sql
@@ -1231,7 +1278,6 @@ class Booking_model extends CI_Model {
         if (isset($filters['group_id']) && $filters['group_id']) 
         {
             $where_conditions .= ' AND r.group_id="'.$filters['group_id'].'"';
-//            $where_conditions .= ' AND bxblg.booking_group_id="'.$filters['group_id'].'"';
         }    
         if (isset($filters['reservation_type']) && $filters['reservation_type'] != '' && $filters['reservation_type'] != -1)
         {
@@ -1265,6 +1311,26 @@ class Booking_model extends CI_Model {
         return $where_conditions;
     }
 
+    function _get_ota_booking_data($ota_booking_id){
+        $sql = "SELECT 
+                    IF(ob.ota_booking_id IS NOT NULL, ob.ota_booking_id, NULL) as ota_booking_id
+                FROM
+                    ota_bookings as ob 
+                WHERE 
+                    ob.ota_booking_id = '$ota_booking_id'";
+
+        $q = $this->db->query($sql);
+
+        if ($this->db->_error_message()) 
+        {
+            show_error($this->db->_error_message());
+        }
+
+        $result = $q->row_array();       
+        
+        return $result;
+    }
+
     function get_recent_bookings($company_id) {
         
         $sql = "SELECT 
@@ -1274,6 +1340,7 @@ class Booking_model extends CI_Model {
                     bc.customer_name,
                     bc.email,
                     IF(bs.name IS NOT NULL, bs.name, IF(cbss.booking_source_id = 0, 'Walk-in / Telephone', cbss.booking_source_id)) as booking_source,
+                    IF(ob.ota_booking_id IS NOT NULL, ob.ota_booking_id, NULL) as ota_booking_id,
                     b.rate,
                     bl.date_time as booking_date,
                     rt.name as room_type,
@@ -1301,6 +1368,8 @@ class Booking_model extends CI_Model {
                     common_customer_type_setting as ccts ON ccts.customer_type_id = bc.customer_type_id
                 LEFT JOIN 
                     company as c ON c.company_id = b.company_id
+                LEFT JOIN 
+                    ota_bookings as ob ON ob.pms_booking_id = b.booking_id
                 WHERE 
                     (bl.date_time) >= (NOW() - INTERVAL 15 MINUTE) AND
                     c.company_id = $company_id

@@ -12,6 +12,11 @@ innGrid.reloadBookings = function () {
 			}
 		}
 	}
+
+	// Reload booking list
+	if (window.$('#booking_list_wrap').is('*')) {
+		window.$('#booking_list_wrap').load(window.parent.getBaseURL() + 'booking/show_booking_list');
+	}
 }
 
 innGrid.reloadCalendar = function () {

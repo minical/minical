@@ -53,7 +53,7 @@ miniCal documentation is available here [minical.doc](https://docs.minical.io/).
 ## Installation
 
 * Fork the repository `https://github.com/minical/minical` or clone it locally.
-* Install the stable version of PHP 7.3.0, MySQL 5.0.4, and OS-specific dependency tools.
+* Install the stable version of PHP 7.4.0, MySQL 5.0.4, and OS-specific dependency tools.
 * Create a MySql database with any name.
 * Do the basic [configuration updates](https://github.com/minical/minical/wiki/configuration) on the public->build.json file.
 * Create a new file named ".env" by copying the .env.example file which is located in the root. 

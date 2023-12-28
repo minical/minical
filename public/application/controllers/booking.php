@@ -1175,6 +1175,33 @@ class Booking extends MY_Controller
 
         $available_rooms = $this->get_available_rooms_in_AJAX($booking['check_in_date'], $booking['check_out_date'], $booking['current_room_type_id'], $booking_id, $booking['current_room_id'], false);
         $faetures = $this->Company_model->get_company($this->company_id);
+
+        $end_date = date('Y-m-d', strtotime($booking['check_out_date']));
+        $start_date = date('Y-m-d', strtotime($booking['check_in_date']));
+        $datetime1 = date_create($start_date);
+        $datetime2 = date_create($end_date);
+        $interval = date_diff($datetime1, $datetime2);
+        $number_of_days = $interval->format('%a');
+
+        $allow_state_change = true;
+
+        if($number_of_days == 0) {
+            $company_id = $this->company_id;
+            $company_time_zone = $this->Company_model->get_time_zone($company_id);
+            
+            $actual_time = convert_to_local_time(new DateTime(), $company_time_zone)->format("H:i:s");
+
+            $booking_check_in_date = explode(' ', $booking['check_in_date']);
+            $booking_check_in_time = $booking_check_in_date[1];
+
+            $booking_check_out_date = explode(' ', $booking['check_out_date']);
+            $booking_check_out_time = $booking_check_out_date[1];
+
+            if($actual_time > $booking_check_out_time) {
+                $allow_state_change = false;
+            }
+        }
+
         $response = array(
             'success' => 'true',
             'booking' => $booking,
@@ -1183,6 +1210,7 @@ class Booking extends MY_Controller
             'rate_plan' => $rate_plan,
             'available_room_types' => $available_room_types,
             'available_rooms' => $available_rooms,
+            'allow_state_change' => $allow_state_change,
             'allow_change_state' => isset($faetures["allow_change_previous_booking_status"]) ? $faetures["allow_change_previous_booking_status"] : 0,
         );
 
@@ -1530,6 +1558,7 @@ class Booking extends MY_Controller
             $room['room_id'] = $available_rooms[$i]['room_id'];
 
             $booking_batch[$i] = $booking_data;
+            $booking_batch[$i]['adult_count'] = $room['adult_count'];
         }
         $booking_ids = $this->Booking_model->insert_booking_batch($booking_batch);
 
@@ -1653,6 +1682,118 @@ class Booking extends MY_Controller
             if(isset($final_amount) && ($booking_existing_data['balance'] && $booking_existing_data['balance_without_forecast']) && !$this->booking_cancelled_with_balance)
             {
                 echo json_encode(array('response' => 'failure', 'message' => l('A payment has been made to the room(s). Please refund or delete the payment record and then cancel the reservation', true)));
+                return;
+            }
+        }
+
+        // convert forecast charges into custom charges for hourly bookings
+
+        if(
+            isset($new_data['number_of_days']) && 
+            $new_data['number_of_days'] == 0 &&
+            $new_state == CHECKOUT
+        )
+        {
+
+            // check if payment is done or not
+            if(empty($payment_details))
+            {
+                if(($booking_existing_data['balance'] || $booking_existing_data['balance_without_forecast']) && $this->restrict_checkout_with_balance)
+                {
+                    echo json_encode(array('response' => 'failure', 'message' => l('You are unable to checkout with a balance on the invoice', true)));
+                    return;
+                }
+            } else {
+
+                $final_amount = 0;
+                foreach($payment_details as $payment)
+                {
+                    $final_amount += $payment['amount'];
+                }
+
+                if($booking_existing_data['rate'] != $final_amount){
+                    echo json_encode(array('response' => 'failure', 'message' => l('You are unable to checkout with a balance on the invoice', true)));
+                    return;
+                }
+            }
+
+            $charge_data = Array(
+                            'amount' => $new_data['booking']['rate'],
+                            'booking_id' => $booking_id,
+                            'date_time' => gmdate('Y-m-d H:i:s'),
+                            'customer_id' => isset($new_data['customers']['paying_customer']['customer_id']) ? $new_data['customers']['paying_customer']['customer_id'] : null,
+                            'user_id' => $this->user_id,
+                            'pay_period' => DAILY,
+                            'is_night_audit_charge' => 0
+                        );
+
+            $charge_data['selling_date'] = date('Y-m-d', strtotime($this->selling_date));
+
+            if(
+                isset($new_data['rooms'][0]['use_rate_plan']) && 
+                $new_data['rooms'][0]['use_rate_plan']
+            ) {
+                $charge_data['description'] = "Hourly Booking Charge #".$booking_id;
+
+                $rp_data = $this->Rate_plan_model->get_rate_plan($new_data['rooms'][0]['rate_plan_id']);
+                $charge_data['charge_type_id'] = $rp_data['charge_type_id'];
+
+            } else {
+                $charge_data['description'] = "Hourly Booking Charge";
+                $charge_data['charge_type_id'] = $new_data['rooms'][0]['charge_type_id'];
+            }
+
+            $last_hourly_charge = $this->Charge_model->get_last_applied_charge($booking_id, $charge_data['charge_type_id'], null, false);
+
+            if(empty($last_hourly_charge)){
+
+                $charge_id = $this->Charge_model->insert_charge($charge_data);
+
+                //invoice log 
+                $this->load->model('Invoice_log_model');
+                $invoice_log_data = array();
+                $invoice_log_data['date_time'] = gmdate('Y-m-d h:i:s');
+                $invoice_log_data['booking_id'] = $booking_id;
+                $invoice_log_data['user_id'] = $this->user_id;
+                $invoice_log_data['action_id'] = ADD_CHARGE;
+                $invoice_log_data['charge_or_payment_id'] = $charge_id;
+                $invoice_log_data['new_amount'] = $charge_data['amount'];
+                // Added item description in invoice log
+                $invoice_log_data['log'] = 'Charge Added';
+
+                $this->Invoice_log_model->insert_log($invoice_log_data);
+            }
+            $charge_data = array();
+
+            $this->Booking_model->update_booking_balance($booking_id);
+        }
+
+        if(
+            isset($new_data['number_of_days']) && 
+            $new_data['number_of_days'] == 0 &&
+            $new_state == INHOUSE
+        ) {
+            $company_id = $this->company_id;
+            $company_time_zone = $this->Company_model->get_time_zone($company_id);
+            
+            $actual_time = convert_to_local_time(new DateTime(), $company_time_zone)->format("H:i:s");
+
+            $booking_check_in_date = explode(' ', $new_data['rooms'][0]['check_in_date']);
+            $booking_check_in_time = $booking_check_in_date[1];
+
+            $booking_check_out_date = explode(' ', $new_data['rooms'][0]['check_out_date']);
+            $booking_check_out_time = $booking_check_out_date[1];
+
+            if (
+                    $booking_check_in_time <= $actual_time && 
+                    $booking_check_out_time >= $actual_time
+            ) {
+
+            } else if($actual_time > $booking_check_out_time) {
+                echo json_encode(array('response' => 'failure', 'message' => l("The check-in time has already passed, please adjust the time to enable check-in", true)));
+                return;
+            } else {
+                echo json_encode(array('response' => 'failure', 'message' => l("You can't check in as of now. It's not yet time for the booking to be checked in.", true)));
                 return;
             }
         }
@@ -2275,6 +2416,8 @@ class Booking extends MY_Controller
         } else {
             $end_date = $booking_existing_data['check_out_date'];
         }
+
+        $this->Booking_model->update_booking($booking_id, array('state' => $new_state));
 
         $update_availability_data = array(
                         'start_date' => $start_date,

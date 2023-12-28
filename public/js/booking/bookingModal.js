@@ -1057,7 +1057,7 @@ var bookingModalInvoker = function ($) {
                 this.$modalBody.before(
                     $("<div/>", {
                         class: "col-lg-3 sidebar-wrapper " + (that.booking.booking_id ? '' : 'hidden'),
-                        style: "padding: 0px 15px 0px 0px;"
+                        style: "padding: 0px 15px 25px 0px;"
                     }).append(
                         $("<ul/>", {
                             class: "nav nav-tabs tabs-left left-sidebar left-sidebar-fix-wep",
@@ -1725,6 +1725,11 @@ var bookingModalInvoker = function ($) {
                     if (data.booking.state == 3) {
                         $('.guest_fields_row').addClass('hidden');
                     }
+
+                    if (data.booking.state == 0 && !data.allow_state_change) {
+                        $('select[name="state"]').attr("disabled","true");
+                        $('#button-check-in').prop("disabled", true);
+                    }
                     //alert(data.allow_change_state);
                     if (data.allow_change_state == 0) {
                         var d = new Date();
@@ -1743,7 +1748,7 @@ var bookingModalInvoker = function ($) {
                     console.log("booking not accesible for this company/user");
                     //that._closeBookingModal();
                 }
-         
+
             }); // -- ajax call
         },
         _getBookingTypePanel: function () {
@@ -4509,7 +4514,7 @@ var bookingModalInvoker = function ($) {
                             // Restrict check out if customer has a balance.
                             var bookingData = that._fetchBookingData();
                             var balance = parseInt(that.booking.balance_without_forecast);
-                            if (balance != '0' && that.booking.restrict_checkout_with_balance == 1) {
+                            if (balance != '0' && that.booking.restrict_checkout_with_balance == 1 && !innGrid.enableHourlyBooking) {
                                 //alert('This reservation cannot be checked out as the stay has not started yet');
                                 $('#reservation-message')
                                     .modal('show')
@@ -4866,8 +4871,8 @@ var bookingModalInvoker = function ($) {
                 }
 
                 rooms.push({
-                    check_in_date: moment(innGrid._getBaseFormattedDate($("[name='check_in_date']").val()) + ' ' + that.convertTimeFormat($("[name='check_in_time']").val())).format('YYYY-MM-DD HH:mm:ss'),
-                    check_out_date: moment(innGrid._getBaseFormattedDate($("[name='check_out_date']").val()) + ' ' + that.convertTimeFormat($("[name='check_out_time']").val())).format('YYYY-MM-DD HH:mm:ss'),
+                    check_in_date: innGrid.enableHourlyBooking == 1 ? moment(innGrid._getBaseFormattedDate($("[name='check_in_date']").val()) + ' ' + that.convertTimeFormat($("[name='check_in_time']").val())).format('YYYY-MM-DD HH:mm:ss') : moment(innGrid._getBaseFormattedDate($("[name='check_in_date']").val()) + ' ' + '00:00:00').format('YYYY-MM-DD HH:mm:ss'),
+                    check_out_date: innGrid.enableHourlyBooking == 1 ? moment(innGrid._getBaseFormattedDate($("[name='check_out_date']").val()) + ' ' + that.convertTimeFormat($("[name='check_out_time']").val())).format('YYYY-MM-DD HH:mm:ss') : moment(innGrid._getBaseFormattedDate($("[name='check_out_date']").val()) + ' ' + '00:00:00').format('YYYY-MM-DD HH:mm:ss'),
                     // for single booking
                     room_id: $(this).find("[name='room_id']").val(),
                     // for group booking
@@ -4877,7 +4882,9 @@ var bookingModalInvoker = function ($) {
                     use_rate_plan: useRatePlan,
                     rate_plan_id: ratePlanID,
                     charge_type_id: chargeTypeID,
-                    pay_period: $(this).find("[name='pay_period']").val()
+                    pay_period: $(this).find("[name='pay_period']").val(),
+                    adult_count: $(this).find("[name='adult_count'] option:selected").val(),
+                    children_count: $(this).find("[name='children_count'] option:selected").val()
                 });
 
             });
@@ -5230,6 +5237,8 @@ var bookingModalInvoker = function ($) {
             //     alert('you are exceeding total customer count limit');
             //     return false;
             // }
+
+            data.number_of_days = $("[name='number_of_days']").val();
 
             $.ajax({
                 type: "POST",
@@ -6071,8 +6080,8 @@ var bookingModalInvoker = function ($) {
                 return;
             }
 
-            var checkInDate = moment(innGrid._getBaseFormattedDate(that.$modalBody.find("input[name='check_in_date']").val()) + ' ' + that.convertTimeFormat(that.$modalBody.find("[name='check_in_time']").val())).format('YYYY-MM-DD HH:mm:ss');
-            var checkOutDate = moment(innGrid._getBaseFormattedDate(that.$modalBody.find("input[name='check_out_date']").val()) + ' ' + that.convertTimeFormat(that.$modalBody.find("[name='check_out_time']").val())).format('YYYY-MM-DD HH:mm:ss');
+            var checkInDate = innGrid.enableHourlyBooking == 1 ? moment(innGrid._getBaseFormattedDate(that.$modalBody.find("input[name='check_in_date']").val()) + ' ' + that.convertTimeFormat(that.$modalBody.find("[name='check_in_time']").val())).format('YYYY-MM-DD HH:mm:ss') : moment(innGrid._getBaseFormattedDate(that.$modalBody.find("input[name='check_in_date']").val()) + ' ' + '00:00:00').format('YYYY-MM-DD HH:mm:ss');
+            var checkOutDate = innGrid.enableHourlyBooking == 1 ? moment(innGrid._getBaseFormattedDate(that.$modalBody.find("input[name='check_out_date']").val()) + ' ' + that.convertTimeFormat(that.$modalBody.find("[name='check_out_time']").val())).format('YYYY-MM-DD HH:mm:ss') : moment(innGrid._getBaseFormattedDate(that.$modalBody.find("input[name='check_out_date']").val()) + ' ' + '00:00:00').format('YYYY-MM-DD HH:mm:ss');
 
             var roomTypeDDL = $("<select/>", {
                 title: 'Room Type',
@@ -7107,6 +7116,7 @@ var bookingModalInvoker = function ($) {
                     check_out_date: moment(innGrid._getBaseFormattedDate($('#booking_detail').find("[name='check_out_date']").val()) + ' ' + that.convertTimeFormat($('#booking_detail').find("[name='check_out_time']").val())).format('YYYY-MM-DD HH:mm:ss'),
                     room_booking_ar: roomBookingArr,
                     update_date: true,
+                    state: $('#booking-modal select[name="state"]').val(),
                     rooms: data.rooms
                 }
             };

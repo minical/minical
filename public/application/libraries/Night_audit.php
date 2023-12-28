@@ -30,6 +30,7 @@ class Night_audit {
 		$this->ci->load->model('Invoice_log_model');
 		$this->ci->load->model('Folio_model');
 		$this->ci->load->model('Card_model');
+        $this->ci->load->model('Channex_model');
 		
 		log_message('debug', "Night audit initialized");
 	}
@@ -263,6 +264,23 @@ class Night_audit {
                     } else {
                         // In case there's a bug where Booking is assigned with DELETED rate plan.
                         // That will halt the entire night audit.
+
+                        if(
+                            isset($booking['is_ota_booking']) && 
+                            $booking['is_ota_booking']
+                        ) {
+
+                            $oxc_data = $this->ci->Channex_model->get_channex_extra_charges($booking['company_id']);
+
+                            if(
+                                isset($oxc_data['is_extra_charge']) &&
+                                $oxc_data['is_extra_charge']
+                            ) {
+                                $rate['charge_type_id'] = SYSTEM_ROOM_NO_TAX;
+                            }
+                        }
+
+                        
                         if (isset($rate['charge_type_id']))
                         {
                             $charge_data[] = Array(

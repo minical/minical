@@ -197,6 +197,11 @@ class Charge_model extends CI_Model {
 		{
 			$where = " AND (b.state = '4' OR b.state = '5')";
 		}
+
+		$is_charge_type_deleted = "";
+		if(!is_deleted_chargetype_linked_with_charge($company_id)) {
+			$is_charge_type_deleted = " ct.is_deleted = '0' AND ";
+		}
 		
 		// Get detailed charge information
 		$sql = "select 
@@ -217,9 +222,10 @@ class Charge_model extends CI_Model {
 				WHERE
 					ch.charge_type_id = ct.id AND 
 					ch.is_deleted = '0' AND 
-					ct.is_deleted = '0' AND 
+					$is_charge_type_deleted
+					#ct.is_deleted = '0' AND 
 					b.company_id = '$company_id'  AND 					
-					ct.company_id = '$company_id'  AND 
+					#ct.company_id = '$company_id'  AND 
 					b.booking_id = ch.booking_id $employee_sql $start_time_sql $end_time_sql AND
 					b.is_deleted = '0' 
 					$where AND
@@ -452,7 +458,8 @@ class Charge_model extends CI_Model {
 										c.selling_date <= '$end_date' AND
 										$booking_state_where_condition AND
 										cb.is_deleted != '1' AND
-										ct2.company_id = '$company_id' AND
+										#ct2.company_id = '$company_id' AND
+										#IF(cb.is_ota_booking = 1, ct2.company_id = '0', ct2.company_id = '$company_id') AND
 										cb.company_id = '$company_id' AND
 										ct2.id = c.charge_type_id
 										$get_room_charges_only_sql
@@ -823,21 +830,40 @@ class Charge_model extends CI_Model {
 		}
 		
 		$company_id = $this->session->userdata('current_company_id');
+
+		$is_charge_type_deleted = "";
+		if(!is_deleted_chargetype_linked_with_charge($company_id)) {
+			$is_charge_type_deleted = " AND ct.is_deleted = '0' ";
+		}
+
 		$sql = "
 				SELECT DISTINCT ct.id, ct.name
 				FROM charge_type as ct
-				WHERE ct.company_id = '$company_id' AND ct.is_deleted = '0'";
+				WHERE ct.company_id = '$company_id' $is_charge_type_deleted
+				#AND ct.is_deleted = '0'";
 		$q = $this->db->query($sql);		
 		$charge_type_array = $q->result_array();		
-		$str_array = $unique_charges = Array();		
-		foreach($charge_type_array as $row){
-            if(in_array($row['name'], $unique_charges)){
-                continue;
-            }
-            $unique_charges[] = $row['name'];
-			$str_array[] = "SUM(IF(charge_type_id='".$row['id']."', amount,' ')) AS ".$this->db->escape($row['name']);
-			$str_array_sum[] = "SUM(IF(report_table.charge_type_id='".$row['id']."', amount,' ')) AS ".$this->db->escape($row['name']);
+		$str_array = $str_array_sum = $unique_charges = Array();		
+		// foreach($charge_type_array as $row){
+  //           if(in_array($row['name'], $unique_charges)){
+  //               continue;
+  //           }
+  //           $unique_charges[] = $row['name'];
+		// 	$str_array[] = "SUM(IF(charge_type_id='".$row['id']."', amount,' ')) AS ".$this->db->escape($row['name']);
+		// 	$str_array_sum[] = "SUM(IF(report_table.charge_type_id='".$row['id']."', amount,' ')) AS ".$this->db->escape($row['name']);
+		// }
+
+
+		foreach (array_reverse($charge_type_array, true) as $key => $row) {
+		    if (!in_array($row['name'], $unique_charges)) {
+		        $unique_charges[] = $row['name'];
+				$str_array[] = "SUM(IF(charge_type_id='".$row['id']."', amount,' ')) AS ".$this->db->escape($row['name']);
+				$str_array_sum[] = "SUM(IF(report_table.charge_type_id='".$row['id']."', amount,' ')) AS ".$this->db->escape($row['name']);
+		    }
 		}
+
+		$str_array = array_reverse($str_array);
+		$str_array_sum = array_reverse($str_array_sum);
 		$charge_types_str = implode(", ", $str_array);
 		$charge_types_str_sum = implode(", ", $str_array_sum);
 		$sql = "	
@@ -903,27 +929,43 @@ class Charge_model extends CI_Model {
         }	
 		
 		$company_id = $this->session->userdata('current_company_id');
+
+		$is_charge_type_deleted = "";
+		if(!is_deleted_chargetype_linked_with_charge($company_id)) {
+			$is_charge_type_deleted = " AND ct.is_deleted = '0' ";
+		}
 		
 		$sql = "
 				SELECT DISTINCT ct.id, ct.name
 				FROM charge_type as ct
 				WHERE 
-					ct.company_id = '$company_id' AND
-					ct.is_deleted = '0'
+					(ct.company_id = '$company_id' OR ct.company_id = 0)
+					$is_charge_type_deleted
+					#AND ct.is_deleted = '0'
 				";
 				
 		$q = $this->db->query($sql);		
 		$charge_type_array = $q->result_array();		
 		
 		$str_array = $unique_charges = Array();		
-		foreach($charge_type_array as $row)
-		{
-            if(in_array($row['name'], $unique_charges)){
-                continue;
-            }
-            $unique_charges[] = $row['name'];
-			$str_array[] = "SUM(IF(charge_type_id='".$row['id']."', amount,' ')) AS ".$this->db->escape($row['name']);
+		// foreach($charge_type_array as $row)
+		// {
+  //           if(in_array($row['name'], $unique_charges)){
+  //               continue;
+  //           }
+  //           $unique_charges[] = $row['name'];
+		// 	$str_array[] = "SUM(IF(charge_type_id='".$row['id']."', amount,' ')) AS ".$this->db->escape($row['name']);
+		// }
+
+		foreach (array_reverse($charge_type_array, true) as $key => $row) {
+		    if (!in_array($row['name'], $unique_charges)) {
+		        $unique_charges[] = $row['name'];
+				$str_array[] = "SUM(IF(charge_type_id='".$row['id']."', amount,' ')) AS ".$this->db->escape($row['name']);
+		    }
 		}
+
+		$str_array = array_reverse($str_array);
+		
 		$charge_types_str = implode(", ", $str_array);
 		
 		$sql = "	
@@ -1239,7 +1281,7 @@ class Charge_model extends CI_Model {
         if($is_batch)
         	$this->db->where_in('booking_id', $booking_id);
         else
-        $this->db->where('booking_id', $booking_id);
+            $this->db->where('booking_id', $booking_id);
         
         $this->db->update("charge", $data);
 

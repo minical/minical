@@ -22,6 +22,7 @@ $ENVIRONMENT = $ENVIRONMENT ? $ENVIRONMENT : 'production';
 
 $config['app_environment'] = $ENVIRONMENT;
 $config['base_url']	= getenv('API_URL'); // localhost
+$config['app_url']	= getenv('PROJECT_URL');
 
 
 /*
