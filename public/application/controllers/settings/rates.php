@@ -273,6 +273,7 @@ class Rates extends MY_Controller
                 //'description' => $this->input->post('description'),
                 'description' => isset($unsanitized_post['description']) ? $unsanitized_post['description'] : "",
                 'is_shown_in_online_booking_engine' => $this->security->xss_clean($this->input->post('is_shown_in_online_booking_engine')),
+                'policy_code'=> $this->input->post('policy_code') !="" ? $this->security->xss_clean($this->input->post('policy_code')) : null,
             );
             // Store data for the room type
             foreach ($room_type_ids as $typeId) {
@@ -481,6 +482,7 @@ class Rates extends MY_Controller
 			//'description' => $this->input->post('description'),
             'description' => isset($unsanitized_post['description']) ? $unsanitized_post['description'] : "" ,
 			'is_shown_in_online_booking_engine' => $this->security->xss_clean($this->input->post('is_shown_in_online_booking_engine')),
+            'policy_code'=> $this->input->post('policy_code') !="" ? $this->security->xss_clean($this->input->post('policy_code')) : null, 
         );
 
 		//update room type

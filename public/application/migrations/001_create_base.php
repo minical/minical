@@ -1775,6 +1775,16 @@ class Migration_create_base extends CI_Migration {
 				'null' => FALSE,
 				'default' => '1',
 			),
+			'bussiness_name' => array(
+				'type' => 'VARCHAR',
+				'constraint' => 45,
+				'null' => TRUE,
+			),
+			'bussiness_number' => array(
+				'type' => 'VARCHAR',
+				'constraint' => 45,
+				'null' => TRUE,
+			),
 		));
 		$this->dbforge->add_key("company_id",true);
 		$this->dbforge->create_table("company", TRUE);
