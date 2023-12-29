@@ -272,7 +272,7 @@ class Rates extends MY_Controller
                 'charge_type_id' => base64_decode($this->security->xss_clean($this->input->post('charge_type_id'))),
                 //'description' => $this->input->post('description'),
                 'description' => isset($unsanitized_post['description']) ? $unsanitized_post['description'] : "",
-                'is_shown_in_online_booking_engine' => $this->security->xss_clean($this->input->post('is_shown_in_online_booking_engine')),
+                'is_shown_in_online_booking_engine' => base64_decode($this->security->xss_clean($this->input->post('is_shown_in_online_booking_engine'))),
                 'policy_code'=> $this->input->post('policy_code') !="" ? $this->security->xss_clean($this->input->post('policy_code')) : null,
 
             );
@@ -482,7 +482,7 @@ class Rates extends MY_Controller
             'charge_type_id' => base64_decode($this->security->xss_clean($this->input->post('charge_type_id'))),
             //'description' => $this->input->post('description'),
             'description' => isset($unsanitized_post['description']) ? $unsanitized_post['description'] : "" ,
-			      'is_shown_in_online_booking_engine' => $this->security->xss_clean($this->input->post('is_shown_in_online_booking_engine')),
+			      'is_shown_in_online_booking_engine' => base64_decode($this->security->xss_clean($this->input->post('is_shown_in_online_booking_engine'))),
             'policy_code'=> $this->input->post('policy_code') !="" ? $this->security->xss_clean($this->input->post('policy_code')) : null, 
         );
 
