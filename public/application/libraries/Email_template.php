@@ -46,6 +46,20 @@ class Email_template {
     {
         $booking = $this->ci->Booking_model->get_booking_detail($booking_id);
         $company = $this->ci->Company_model->get_company($booking['company_id']);
+
+        // Allow send invoice emails only for paying customers
+        if(
+            isset($company['subscription_state']) && 
+            $company['subscription_state'] != 'active'
+        ) {
+
+            $customer_details = $this->ci->Customer_model->get_customer_info($booking['booking_customer_id']);
+
+            echo "Sending emails is allowed for paying accounts only";
+            return false;
+        }
+
+
         $whitelabelinfo = null;
         $white_label_detail = $this->ci->Whitelabel_partner_model->get_partners(array('id' => $company['partner_id']));
         
@@ -227,6 +241,22 @@ class Email_template {
         $booking_data = $this->ci->Booking_model->get_booking_detail($booking_id);
         $company_id = $this->ci->Booking_model->get_company_id($booking_id);
         $company = $this->ci->Company_model->get_company($company_id);
+
+        // Allow send booking confirmation emails only for paying customers
+        if(
+            isset($company['subscription_state']) && 
+            $company['subscription_state'] != 'active'
+        ) {
+
+            $customer_details = $this->ci->Customer_model->get_customer_info($booking_data['booking_customer_id']);
+
+            return array(
+                "success" => false,
+                "message" => "Sending emails is allowed for paying accounts only",
+                "customer_email" => $customer_details['email']
+            );
+        }
+
 
         $this->set_language($company['default_language']);
 
