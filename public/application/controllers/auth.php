@@ -191,15 +191,21 @@ class Auth extends MY_Controller
                     $employee_log_data['date_time'] = gmdate('Y-m-d H:i:s');
                     $this->Employee_log_model->insert_log($employee_log_data);
                 }
-				
+                
                 $employee_permission['permissions'] = $this->Employee_log_model->get_user_permission($this->session->userdata('current_company_id'),$this->session->userdata('user_id'));
-                 $this->session->set_userdata($employee_permission);	
+                $this->session->set_userdata($employee_permission);    
                  
                  // redirect('/booking');
+                $admin_user_ids = $this->Whitelabel_partner_model->get_whitelabel_admin_ids($this->session->userdata('user_id'));
 
-                if ($this->session->userdata('user_role') == "is_admin" || in_array("is_salesperson", $employee_permission['permissions']))
+                if (
+                    (
+                        $this->session->userdata('user_role') == "is_admin" || 
+                        in_array("is_salesperson", $employee_permission['permissions'])
+                    ) && $admin_user_ids[0] == $this->session->userdata('user_id')
+                )
                 {
-					redirect('/admin');
+                    redirect('/admin');
                 }               
                 elseif($this->session->userdata('user_role') == "is_housekeeping" || in_array("is_housekeeping", $employee_permission['permissions']))
                 {
