@@ -401,7 +401,14 @@ class CI_Security {
 				$str = preg_replace_callback("#<img\s+([^>]*?)(\s?/?>|$)#si", array($this, '_js_img_removal'), $str);
 			}
 
-			if (preg_match("/script/i", $str) OR preg_match("/xss/i", $str))
+			// if (preg_match("/script/i", $str) OR preg_match("/xss/i", $str))
+			// {
+			// 	$str = preg_replace("#<(/*)(script|xss)(.*?)\>#si", '[removed]', $str);
+			// }
+
+			$request_url = $_SERVER['REQUEST_URI'];
+			
+			if ($request_url != '/integrations/booking_engine' AND (preg_match("/script/i", $str) OR preg_match("/xss/i", $str)))
 			{
 				$str = preg_replace("#<(/*)(script|xss)(.*?)\>#si", '[removed]', $str);
 			}
