@@ -1,0 +1,151 @@
+.navbar {
+	padding: 5px;
+}
+
+.navbar-brand {
+    height: 70px;
+}
+
+.navbar-default .navbar-nav>.active>a {
+	border-bottom: 5px solid;
+	background: none;
+	box-shadow: none;
+}
+
+.navbar-default .navbar-nav a:hover {
+	border-bottom: 5px solid;
+	background-color: #e7e7e7;
+}
+
+
+.profile-image {
+    float: none;
+    margin: 0 auto;
+    background-repeat: no-repeat;
+    background-position: 50%;
+    border-radius: 50%;
+    width: 192px;
+    height: 192px;
+}
+
+
+
+h1{
+     font-size: 2.8vw;
+}
+
+
+#home {
+    height: 0;
+    padding: 0; /* remove any pre-existing padding, just in case */
+    padding-bottom: 43%; /* for a 4:3 aspect ratio */
+    background-image: url(../../images/homepage/housekeeper.jpg);
+    background-position: center center;
+    background-size: 100%;
+    background-repeat: no-repeat;
+}
+
+.intro-video {
+    background-image: url(../../images/homepage/introvideo.jpg);
+    background-position: center center;
+    background-size: 100%;
+    background-repeat: no-repeat;
+}
+
+.introduction {
+	margin-top:70px;
+}
+
+.section {
+    padding: 40px;
+}
+
+.thumbnail {
+	margin-bottom:20px;
+    padding: 10px;
+}
+
+.thumbnail img {
+	border-color: rgba(82,168,236,.8);
+    outline: 0;
+    outline: thin dotted \9;
+    -moz-box-shadow: 0 0 10px rgba(82,168,236,.6);
+    box-shadow: 0 0 10px rgba(82,168,236,.6) !important;
+}
+
+/* Testimonial */
+/* Carousel */
+
+#quote-carousel {
+    margin-top: 30px;
+    /* Control buttons  */
+    /* Previous button  */
+    /* Next button  */
+    /* Changes the position of the indicators */
+    /* Changes the color of the indicators */
+}
+#quote-carousel .carousel-control {
+    background: none;
+    color: #CACACA;
+    font-size: 2.3em;
+    text-shadow: none;
+    margin-top: 30px;
+}
+
+#quote-carousel .carousel-indicators {
+    right: 50%;
+    top: auto;
+    bottom: 0px;
+    
+}
+#quote-carousel .carousel-indicators li {
+    width: 50px;
+    height: 50px;
+    margin: 5px;
+    cursor: pointer;
+    border: 4px solid #CCC;
+    border-radius: 50px;
+    opacity: 0.4;
+    overflow: hidden;
+    transition: all 0.4s;
+}
+#quote-carousel .carousel-indicators .active {
+    background: #333333;
+    width: 128px;
+    height: 128px;
+    border-radius: 100px;
+    border-color: #fff;
+    opacity: 1;
+    overflow: hidden;
+}
+.carousel-inner {
+    min-height: 300px;
+}
+.item blockquote {
+    border-left: none;
+    margin: 0;
+}
+.item blockquote p:before {
+    content: "\f10d";
+    font-family: 'Fontawesome';
+    float: left;
+    margin-right: 10px;
+}
+
+/* slider */
+.ui-slider-horizontal {
+	height: 2.1em;
+}
+
+.ui-slider .ui-slider-handle {
+	width: 3.15em;
+	height: 2.5em;
+	padding: 8px;
+	text-align: center;
+}
+
+/* footer */
+#footer {
+    padding: 40px;
+	background-color:#d5d5cb;
+}

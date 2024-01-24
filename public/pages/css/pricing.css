@@ -1,0 +1,62 @@
+body {
+  padding-top: 40px;
+  background-color: #f5f5f5;
+}
+.flat .plan {
+  border-radius: 6px;
+  list-style: none;
+  padding: 0 0 20px;
+  margin: 0 0 15px;
+  background: #fff;
+  border: 1px solid #43B83B;
+  box-shadow: 3px 3px 3px #ccc;
+  text-align: center;
+}
+.flat .plan li {
+  padding: 10px 15px;
+  color: #818181;
+  border-top: 1px solid #f5f5f5;
+  -webkit-transition: 300ms;
+  transition: 300ms;
+}
+.flat .plan li.plan-price {
+  border-top: 0;
+  font-size: 24px;
+}
+
+.minimum-fee {
+  font-size: 12px;
+}
+
+.flat .plan li.plan-name {
+  border-radius: 6px 6px 0 0;
+  padding: 15px;
+  font-size: 24px;
+  line-height: 24px;
+  color: #fff;
+  background: #72D86B;
+  margin-bottom: 30px;
+  border-top: 0;
+}
+
+.flat .plan.featured li.plan-name {
+  background: #43B83B;
+}
+
+.flat .plan li > strong {
+  color: #43B83B;
+}
+.flat .plan li.plan-action {
+  margin-top: 10px;
+  border-top: 0;
+}
+.flat .plan.featured {
+  -webkit-transform: scale(1.1);
+  -ms-transform: scale(1.1);
+  transform: scale(1.1);
+}
+
+#footer {
+  margin-top: 100px;
+  padding-bottom: 30px;
+}

@@ -1,0 +1,119 @@
+body{
+    overflow-x:hidden;
+}
+a.anchor{
+	display: block; 
+	position: relative;
+	visibility: hidden;
+}
+
+h1.title {
+	text-align: center;
+	margin: 50px;
+}
+
+.container-fluid {
+    padding: 0px !important;
+}
+
+@media (max-width: 797px) {
+    body { 
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+}
+
+.section {
+	margin-top: 40px;
+}
+
+.dp-highlight .ui-state-default {
+	background: #484;
+	color: #FFF;
+}
+.ui-datepicker.ui-datepicker-multi  {
+	width: 100% !important;
+}
+.ui-datepicker-multi .ui-datepicker-group {
+	float:none;
+}
+
+.nav-link {
+	color: #777;
+}
+
+#logo {
+	background-color: #fff;
+	box-shadow: 0 1px 3px rgba(0,0,0,.3);
+	-moz-box-shadow: 0 1px 3px rgba(0,0,0,.3);
+	text-align: center;
+	-webkit-box-shadow: 0 1px 3px rgba(0,0,0,.3);
+	float: left;
+	display: inline;
+	margin-left: 10px;
+	margin-right: 10px;
+	padding: 10px;
+}
+
+
+.flexslider {
+	margin-top: 50px;
+    
+}
+
+p.flex-caption {
+  margin-top: 60px;
+  padding:0;
+  position: absolute;
+  top: 30px;
+  left: 30px;
+  padding:20px;
+  font-size:35px;
+  background:#000;
+  background:rgba(0,0,0,0.8);
+  opacity:0.8;
+  color:#fff;
+  font-family: arial;
+  text-transform: uppercase;
+}
+
+/* Overriding bootstrap default */
+.navbar-brand {
+	padding: 5px;
+}
+
+
+#datepicker {
+	height: 300px;
+	overflow-x: scroll;
+}
+.ui-widget { 
+	font-size: 100% 
+}
+
+#gmap {
+	height:275px;
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+.tripadvisor {
+	position: absolute;
+	right: 30px;
+	top: 70px;
+	z-index: 2;
+}
+
+#online-booking-widget {
+	margin-top: 140px;
+}
+
+.thumbnail {
+	border: 1px !important;
+	padding: 2px !important;
+	margin-bottom:0px !important;
+}
+
+.find_rooms{
+	width: 210px;
+}

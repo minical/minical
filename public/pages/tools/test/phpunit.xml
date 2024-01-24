@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<phpunit colors="true" stopOnFailure="false" bootstrap="lib/bootstrap.php">
+	<testsuites>
+		<testsuite name="SparkTests">
+			<directory suffix="_test.php">./</directory>
+		</testsuite>
+	</testsuites>
+</phpunit>
