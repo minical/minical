@@ -1,0 +1,15 @@
+.navbar {
+	margin-bottom: 0px;
+}
+
+.navbar-default {
+	/* make this transparent! */
+	background-image: none;
+}
+
+.alert {
+	margin-top: 100px;
+	z-index: 100;
+	position: absolute;
+	text-align: center;
+}
