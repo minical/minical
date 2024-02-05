@@ -1242,10 +1242,54 @@ class Customer extends MY_Controller {
 
     function create_customer_AJAX()
     {
+         // ============check csrf_token==================
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+
+            $encrypted_customerData = ($this->security->xss_clean($this->input->post('customer_data', TRUE)));
+            $customer_data = json_decode(base64_decode($encrypted_customerData),true);
+            $submittedToken = $customer_data['csrf_token'];
+
+
+            if ($this->validateCSRFToken($submittedToken)) {
+                // unset CSRF token
+                if (isset($customer_data['csrf_token'])) {
+                    $this->create_customer_AJAX_csrf();
+                }
+                // if CSRF token is valid
+                // Process the form submission
+            }
+            else {
+                // CSRF token validation failed
+                echo "CSRF token is failed";
+            }
+        }
+    }
+
+    function generateCSRFToken()
+    {
+        $token = bin2hex(random_bytes(32));
+        return $token;
+    }
+
+    function validateCSRFToken($submittedToken)
+    {
+        if (!isset($_COOKIE['csrf_token'])) {
+            return false;
+        }
+        $storedToken = $_COOKIE['csrf_token'];
+        return hash_equals($storedToken, $submittedToken);
+    }
+
+    function create_customer_AJAX_csrf()
+    {
         $error     = false;
         $error_msg = '';
 
-        $customer_data               = $this->security->xss_clean($this->input->post('customer_data', TRUE));
+        // $customer_data               = $this->security->xss_clean($this->input->post('customer_data', TRUE));
+
+        $encrypted_customerData = ($this->security->xss_clean($this->input->post('customer_data', TRUE)));
+        $customer_data = json_decode(base64_decode($encrypted_customerData), true);
 
         // prx($customer_data);
 
@@ -1276,6 +1320,10 @@ class Customer extends MY_Controller {
         unset($customer_data['kovena_vault_token']);
         unset($customer_data['cardknox_token']);
         unset($customer_data['cardknox_cvv_token']);
+
+        if (isset($customer_data['csrf_token'])) {
+            unset($customer_data['csrf_token']);
+        }
         
         $customer_id = $this->Customer_model->create_customer($customer_data);
         
@@ -1408,13 +1456,42 @@ class Customer extends MY_Controller {
         return $customer_data;
     }
 
-    public function update_customer_AJAX()
+    function update_customer_AJAX()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $encrypted_customerData = ($this->security->xss_clean($this->input->post('customer_data', TRUE)));
+            $customer_data = json_decode(base64_decode($encrypted_customerData),true);
+            $submittedToken = $customer_data['csrf_token'];
+            if ($this->validateCSRFToken($submittedToken)) {
+                // echo "CSRF token check is succeeded"."\n";
+                if (isset($customer_data['csrf_token'])) {
+                    $this->update_customer_AJAX_csrf();
+                }
+                // CSRF token is valid
+                // echo "CSRF token is valid";
+                // Process the form submission
+            }
+            else {
+                // CSRF token validation failed
+                echo "CSRF token check failed";
+            }
+        }
+    }
+
+    public function update_customer_AJAX_csrf()
     {  
         $error     = false;
         $error_msg = '';
 
-        $customer_id   = sqli_clean($this->security->xss_clean($this->input->post('customer_id')));
-        $customer_data = ($this->security->xss_clean($this->input->post('customer_data', TRUE)));
+        // $customer_id   = sqli_clean($this->security->xss_clean($this->input->post('customer_id')));
+        
+        $encoded_customer_id   = sqli_clean($this->security->xss_clean($this->input->post('customer_id')));
+        $customer_id = json_decode(base64_decode($encoded_customer_id), true);
+
+        // $customer_data = ($this->security->xss_clean($this->input->post('customer_data', TRUE)));
+
+        $encrypted_customerData = ($this->security->xss_clean($this->input->post('customer_data', TRUE)));
+        $customer_data = json_decode(base64_decode($encrypted_customerData), true);
         
         // prx($customer_data); die();
 
@@ -1434,6 +1511,10 @@ class Customer extends MY_Controller {
         unset($customer_data['cc_number']);
         unset($customer_data['cardknox_token']);
         unset($customer_data['cardknox_cvv_token']);
+
+        if (isset($customer_data['csrf_token'])) {
+            unset($customer_data['csrf_token']);
+        }
 
         $customer_data['customer_id'] = $customer_id;
 
@@ -1798,6 +1879,14 @@ class Customer extends MY_Controller {
 
     function get_customer_fields()
     {
+        // ============SET csrf_token==================
+            $cookieName = 'csrf_token';
+            $cookieValue = $this->generateCSRFToken();
+            $storedToken = $cookieValue;
+            // Set the cookie
+         setcookie($cookieName, $cookieValue, time() + 3600, '/');
+        // ============SET csrf_token==================
+
         $result = $this->Customer_field_model->get_customer_fields_for_customer_form($this->company_id);
         echo json_encode($result);
     }

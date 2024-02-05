@@ -315,6 +315,32 @@ var customerId;
             );
 
 
+            function getCookie(name) {
+                const encodedName = encodeURIComponent(name) + '=';
+                const cookieList = document.cookie.split(';');
+                for (let i = 0; i < cookieList.length; i++) {
+                    let cookie = cookieList[i];
+                    while (cookie.charAt(0) === ' ') {
+                        cookie = cookie.substring(1);
+                    }
+                    if (cookie.indexOf(encodedName) === 0) {
+                        return decodeURIComponent(cookie.substring(encodedName.length, cookie.length));
+                    }
+                }
+                return '';
+            }
+
+            $customer_form.append(
+                    $("<input/>", {
+                        class: "form-control csrf_token",
+                        name: "csrf_token",
+                        style: "opacity: 0; width: 1px; height: 1px; margin: 0px; padding: 0px;",
+                        type: 'hidden',
+                        value: getCookie('csrf_token'),
+                    })
+            );
+
+
             if (isTokenizationEnabled == true) {
                 console.log('customer-data',customer);
                 console.log('Kovena',innGrid.isKovenaEnabled);
@@ -627,16 +653,21 @@ var customerId;
 
                                 if (customer.customer_id) // new customer
                                 {
+                                    customerData.csrf_token = $('.csrf_token').val();
+                                    var customerData_str = JSON.stringify(customerData);
                                     console.log(customer.customer_id)
                                     // update customer
                                     $.ajax({
                                         type: "POST",
                                         url: getBaseURL() + "customer/update_customer_AJAX",
                                         data: {
-                                            customer_id: customer.customer_id,
-                                            customer_data: customerData,
+                                            // customer_id: customer.customer_id,
+                                            // customer_data: customerData,
                                             cc_tokenex_token: cc_tokenex_token,
-                                            cc_cvc_encrypted: cc_cvc_encrypted
+                                            cc_cvc_encrypted: cc_cvc_encrypted,
+                                            customer_id: btoa(customer.customer_id.toString()),
+                                            // customer_data: btoa(JSON.stringify(customerData))
+                                            customer_data: btoa(unescape(encodeURIComponent(customerData_str)))
                                         },
                                         dataType: "json",
                                         success: function(data) {
@@ -653,11 +684,16 @@ var customerId;
                                     });
                                 } else {
                                     // create new customer
+                                    customerData.csrf_token = $('.csrf_token').val();
+                                    var customerData_str = JSON.stringify(customerData);
+
                                     $.ajax({
                                         type: "POST",
                                         url: getBaseURL() + "customer/create_customer_AJAX",
                                         data: {
-                                            customer_data: customerData,
+                                            // customer_data: customerData,
+                                            // customer_data: btoa(JSON.stringify(customerData)),
+                                            customer_data: btoa(unescape(encodeURIComponent(customerData_str))),
                                             cc_tokenex_token: cc_tokenex_token,
                                             cc_cvc_encrypted: cc_cvc_encrypted
                                         },
