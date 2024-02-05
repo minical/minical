@@ -1838,6 +1838,30 @@ class Customer extends MY_Controller {
             $customer_type_array[$value['id']] = $value['name'];
         }
 
+        // get customer fields
+        $customer_ids_array = array();
+        foreach($csv_array as $key => $value){
+            if($value->customer_id) {
+                $customer_ids_array[] = $value->customer_id;
+            }
+        }
+
+        $customer_fields = $this->Customer_model->get_customer_fields($customer_ids_array, true);
+        $common_customer_fields = json_decode(COMMON_CUSTOMER_FIELDS, true);
+
+        // Extract IDs from the second array
+        $array2_ids = array_column($customer_fields, 'id');
+        // Find unmatched IDs
+        $unmatched_ids = array_diff($customer_ids_array, $array2_ids);
+        // Create arrays for each unmatched ID
+        $new_arrays = array();
+        foreach ($unmatched_ids as $id) {
+            $new_arrays[] = array('id' => $id, 'name' => 'DOB', 'value' => '');
+        }
+        // Merge arrays
+        $customer_fields = array_merge($customer_fields, $new_arrays);
+        // Display the result
+
         $csv_keys = array(
                             'customer_id',
                             'customer_name',
@@ -1854,8 +1878,15 @@ class Customer extends MY_Controller {
                             'customer_type',
                             'charge_total',
                             'payment_total',
-                            'balance',
+                            'balance'
                         );
+
+        $customer_field_names = array();
+        foreach ($customer_fields as $key => $value) {
+            if(!in_array($value['name'], $customer_field_names)){
+                $csv_keys[] = $customer_field_names[] = $value['name'];
+            }
+        }
 
         $customers = array($csv_keys);
         $customer_row = array();
@@ -1879,6 +1910,17 @@ class Customer extends MY_Controller {
             $customer_row[] = $value->payment_total ? number_format($value->payment_total, 2, ".", ",") : 0;
             $customer_row[] = $value->balance ? number_format($value->balance, 2, ".", ",") : 0;
             $customers[] = $customer_row;
+        }
+
+        $customer_field_values = array();
+        foreach ($customer_fields as $key => $value) {
+            $customer_arr = array();
+            if(!in_array($value['id'], $customer_field_values)){
+                echo 'if'.$value['id'].'<br/>';
+                $customer_field_values[] = $value['id'];
+                array_push($customers[$value['id']], $value['value']);
+                
+            }
         }
 
         $this->load->helper('download');

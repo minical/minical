@@ -603,20 +603,38 @@ class Customer_model extends CI_Model {
         $this->db->query($sql);
     }   
 
-    function get_customer_fields($customer_id)
+    function get_customer_fields($customer_id, $is_array = false)
     {
 		$this->db->where('company_id', $this->company_id);
 		$this->db->where('show_on_customer_form', 1);
 		$this->db->where('is_deleted', 0);
     	$this->db->from('customer_field as cf');
+    	if($is_array) {
+    		$this->db->join('customer_x_customer_field as cxcf', "cxcf.customer_field_id = cf.id", 'left');
+    		$this->db->where_in('cxcf.customer_id', $customer_id);
+    	} else {
     	$this->db->join('customer_x_customer_field as cxcf', "cxcf.customer_field_id = cf.id and cxcf.customer_id = '$customer_id'", 'left');
+    	}
         $query = $this->db->get();
         $customer_fields_result = $query->result_array();
 
         $customer_fields = array();
+
+        if($is_array) {
+	        foreach($customer_fields_result as $field)
+	        {
+	        	$customer_fields[] = array(
+                                        'id' => $field['customer_id'],
+                                        'name' => $field['name'],
+                                        'value' => $field['value']
+                                    );
+	        }
+	    }
+        else {
         foreach($customer_fields_result as $field)
         {
         	$customer_fields[$field['id']] = $field['value'];
+        }
         }
 
         return $customer_fields;
