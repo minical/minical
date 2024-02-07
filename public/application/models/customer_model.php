@@ -618,23 +618,14 @@ class Customer_model extends CI_Model {
         $query = $this->db->get();
         $customer_fields_result = $query->result_array();
 
-        $customer_fields = array();
-
         if($is_array) {
-	        foreach($customer_fields_result as $field)
-	        {
-	        	$customer_fields[] = array(
-                                        'id' => $field['customer_id'],
-                                        'name' => $field['name'],
-                                        'value' => $field['value']
-                                    );
+        	return $customer_fields_result;
 	        }
-	    }
-        else {
+        
+        $customer_fields = array();
         foreach($customer_fields_result as $field)
         {
         	$customer_fields[$field['id']] = $field['value'];
-        }
         }
 
         return $customer_fields;

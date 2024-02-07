@@ -315,30 +315,30 @@ var customerId;
             );
 
 
-            function getCookie(name) {
-                const encodedName = encodeURIComponent(name) + '=';
-                const cookieList = document.cookie.split(';');
-                for (let i = 0; i < cookieList.length; i++) {
-                    let cookie = cookieList[i];
-                    while (cookie.charAt(0) === ' ') {
-                        cookie = cookie.substring(1);
-                    }
-                    if (cookie.indexOf(encodedName) === 0) {
-                        return decodeURIComponent(cookie.substring(encodedName.length, cookie.length));
-                    }
-                }
-                return '';
-            }
+            // function getCookie(name) {
+            //     const encodedName = encodeURIComponent(name) + '=';
+            //     const cookieList = document.cookie.split(';');
+            //     for (let i = 0; i < cookieList.length; i++) {
+            //         let cookie = cookieList[i];
+            //         while (cookie.charAt(0) === ' ') {
+            //             cookie = cookie.substring(1);
+            //         }
+            //         if (cookie.indexOf(encodedName) === 0) {
+            //             return decodeURIComponent(cookie.substring(encodedName.length, cookie.length));
+            //         }
+            //     }
+            //     return '';
+            // }
 
-            $customer_form.append(
-                    $("<input/>", {
-                        class: "form-control csrf_token",
-                        name: "csrf_token",
-                        style: "opacity: 0; width: 1px; height: 1px; margin: 0px; padding: 0px;",
-                        type: 'hidden',
-                        value: getCookie('csrf_token'),
-                    })
-            );
+            // $customer_form.append(
+            //         $("<input/>", {
+            //             class: "form-control csrf_token",
+            //             name: "csrf_token",
+            //             style: "opacity: 0; width: 1px; height: 1px; margin: 0px; padding: 0px;",
+            //             type: 'hidden',
+            //             value: getCookie('csrf_token'),
+            //         })
+            // );
 
 
             if (isTokenizationEnabled == true) {
@@ -653,7 +653,7 @@ var customerId;
 
                                 if (customer.customer_id) // new customer
                                 {
-                                    customerData.csrf_token = $('.csrf_token').val();
+                                    // customerData.csrf_token = $('.csrf_token').val();
                                     var customerData_str = JSON.stringify(customerData);
                                     console.log(customer.customer_id)
                                     // update customer
@@ -684,7 +684,7 @@ var customerId;
                                     });
                                 } else {
                                     // create new customer
-                                    customerData.csrf_token = $('.csrf_token').val();
+                                    // customerData.csrf_token = $('.csrf_token').val();
                                     var customerData_str = JSON.stringify(customerData);
 
                                     $.ajax({

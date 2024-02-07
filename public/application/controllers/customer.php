@@ -1240,48 +1240,48 @@ class Customer extends MY_Controller {
         echo json_encode($customer);
     }
 
+    // function create_customer_AJAX()
+    // {
+    //      // ============check csrf_token==================
+    //     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+
+    //         $encrypted_customerData = ($this->security->xss_clean($this->input->post('customer_data', TRUE)));
+    //         $customer_data = json_decode(base64_decode($encrypted_customerData),true);
+    //         $submittedToken = $customer_data['csrf_token'];
+
+
+    //         if ($this->validateCSRFToken($submittedToken)) {
+    //             // unset CSRF token
+    //             if (isset($customer_data['csrf_token'])) {
+    //                 $this->create_customer_AJAX_csrf();
+    //             }
+    //             // if CSRF token is valid
+    //             // Process the form submission
+    //         }
+    //         else {
+    //             // CSRF token validation failed
+    //             echo "CSRF token is failed";
+    //         }
+    //     }
+    // }
+
+    // function generateCSRFToken()
+    // {
+    //     $token = bin2hex(random_bytes(32));
+    //     return $token;
+    // }
+
+    // function validateCSRFToken($submittedToken)
+    // {
+    //     if (!isset($_COOKIE['csrf_token'])) {
+    //         return false;
+    //     }
+    //     $storedToken = $_COOKIE['csrf_token'];
+    //     return hash_equals($storedToken, $submittedToken);
+    // }
+
     function create_customer_AJAX()
-    {
-         // ============check csrf_token==================
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-
-            $encrypted_customerData = ($this->security->xss_clean($this->input->post('customer_data', TRUE)));
-            $customer_data = json_decode(base64_decode($encrypted_customerData),true);
-            $submittedToken = $customer_data['csrf_token'];
-
-
-            if ($this->validateCSRFToken($submittedToken)) {
-                // unset CSRF token
-                if (isset($customer_data['csrf_token'])) {
-                    $this->create_customer_AJAX_csrf();
-                }
-                // if CSRF token is valid
-                // Process the form submission
-            }
-            else {
-                // CSRF token validation failed
-                echo "CSRF token is failed";
-            }
-        }
-    }
-
-    function generateCSRFToken()
-    {
-        $token = bin2hex(random_bytes(32));
-        return $token;
-    }
-
-    function validateCSRFToken($submittedToken)
-    {
-        if (!isset($_COOKIE['csrf_token'])) {
-            return false;
-        }
-        $storedToken = $_COOKIE['csrf_token'];
-        return hash_equals($storedToken, $submittedToken);
-    }
-
-    function create_customer_AJAX_csrf()
     {
         $error     = false;
         $error_msg = '';
@@ -1321,9 +1321,9 @@ class Customer extends MY_Controller {
         unset($customer_data['cardknox_token']);
         unset($customer_data['cardknox_cvv_token']);
 
-        if (isset($customer_data['csrf_token'])) {
-            unset($customer_data['csrf_token']);
-        }
+        // if (isset($customer_data['csrf_token'])) {
+        //     unset($customer_data['csrf_token']);
+        // }
         
         $customer_id = $this->Customer_model->create_customer($customer_data);
         
@@ -1456,29 +1456,29 @@ class Customer extends MY_Controller {
         return $customer_data;
     }
 
-    function update_customer_AJAX()
-    {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $encrypted_customerData = ($this->security->xss_clean($this->input->post('customer_data', TRUE)));
-            $customer_data = json_decode(base64_decode($encrypted_customerData),true);
-            $submittedToken = $customer_data['csrf_token'];
-            if ($this->validateCSRFToken($submittedToken)) {
-                // echo "CSRF token check is succeeded"."\n";
-                if (isset($customer_data['csrf_token'])) {
-                    $this->update_customer_AJAX_csrf();
-                }
-                // CSRF token is valid
-                // echo "CSRF token is valid";
-                // Process the form submission
-            }
-            else {
-                // CSRF token validation failed
-                echo "CSRF token check failed";
-            }
-        }
-    }
+    // function update_customer_AJAX()
+    // {
+    //     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    //         $encrypted_customerData = ($this->security->xss_clean($this->input->post('customer_data', TRUE)));
+    //         $customer_data = json_decode(base64_decode($encrypted_customerData),true);
+    //         $submittedToken = $customer_data['csrf_token'];
+    //         if ($this->validateCSRFToken($submittedToken)) {
+    //             // echo "CSRF token check is succeeded"."\n";
+    //             if (isset($customer_data['csrf_token'])) {
+    //                 $this->update_customer_AJAX_csrf();
+    //             }
+    //             // CSRF token is valid
+    //             // echo "CSRF token is valid";
+    //             // Process the form submission
+    //         }
+    //         else {
+    //             // CSRF token validation failed
+    //             echo "CSRF token check failed";
+    //         }
+    //     }
+    // }
 
-    public function update_customer_AJAX_csrf()
+    public function update_customer_AJAX()
     {  
         $error     = false;
         $error_msg = '';
@@ -1512,9 +1512,9 @@ class Customer extends MY_Controller {
         unset($customer_data['cardknox_token']);
         unset($customer_data['cardknox_cvv_token']);
 
-        if (isset($customer_data['csrf_token'])) {
-            unset($customer_data['csrf_token']);
-        }
+        // if (isset($customer_data['csrf_token'])) {
+        //     unset($customer_data['csrf_token']);
+        // }
 
         $customer_data['customer_id'] = $customer_id;
 
@@ -1880,11 +1880,11 @@ class Customer extends MY_Controller {
     function get_customer_fields()
     {
         // ============SET csrf_token==================
-            $cookieName = 'csrf_token';
-            $cookieValue = $this->generateCSRFToken();
-            $storedToken = $cookieValue;
-            // Set the cookie
-         setcookie($cookieName, $cookieValue, time() + 3600, '/');
+         //    $cookieName = 'csrf_token';
+         //    $cookieValue = $this->generateCSRFToken();
+         //    $storedToken = $cookieValue;
+         //    // Set the cookie
+         // setcookie($cookieName, $cookieValue, time() + 3600, '/');
         // ============SET csrf_token==================
 
         $result = $this->Customer_field_model->get_customer_fields_for_customer_form($this->company_id);
@@ -1936,20 +1936,61 @@ class Customer extends MY_Controller {
         }
 
         $customer_fields = $this->Customer_model->get_customer_fields($customer_ids_array, true);
-        $common_customer_fields = json_decode(COMMON_CUSTOMER_FIELDS, true);
+        $customer_fields_array = $customer_field_values = array();
+        foreach($customer_fields as $key => $field)
+        {
+            if(
+                isset($field['value']) && $field['value']
+            ) {
+                $customer_fields_array[] = array(
+                                    'id' => $field['customer_id'],
+                                    'name' => $field['name'],
+                                    'value' => $field['value'],
+                                    'cf_id' => $field['id']
+                                );
+            } 
 
-        // Extract IDs from the second array
-        $array2_ids = array_column($customer_fields, 'id');
-        // Find unmatched IDs
-        $unmatched_ids = array_diff($customer_ids_array, $array2_ids);
-        // Create arrays for each unmatched ID
-        $new_arrays = array();
-        foreach ($unmatched_ids as $id) {
-            $new_arrays[] = array('id' => $id, 'name' => 'DOB', 'value' => '');
+            $field_names[] = $field['name'];
+            $cf_field_ids[] = $field['id'];
         }
-        // Merge arrays
-        $customer_fields = array_merge($customer_fields, $new_arrays);
-        // Display the result
+
+        $field_names = array_values(array_unique($field_names));
+        $cf_field_ids = array_values(array_unique($cf_field_ids));
+        $matched_ids = array_column($customer_fields_array, 'id');
+        $unmatched_ids = array_diff($customer_ids_array, $matched_ids);
+
+        foreach($unmatched_ids as $key => $field)
+        {
+            foreach ($field_names as $key1 => $value) {
+                $customer_fields_array[] = array(
+                                    'id' => $field,
+                                    'name' => $value,
+                                    'value' => "",
+                                    'cf_id' => $cf_field_ids[$key1]
+                                );
+            }
+        }
+
+        foreach($matched_ids as $key => $field)
+        {
+            foreach ($field_names as $key1 => $value) {
+                if(
+                    !in_array($value, $customer_fields_array[$key])
+                ) {
+
+                    $customer_fields_array[] = array(
+                                        'id' => $field,
+                                        'name' => $value,
+                                        'value' => "",
+                                        'cf_id' => $cf_field_ids[$key1]
+                                    );
+                }
+            }
+        }
+        $id = array_column($customer_fields_array, 'id');
+        $cf_id = array_column($customer_fields_array, 'cf_id');
+
+        array_multisort($id, SORT_ASC, $cf_id, SORT_ASC, $customer_fields_array);
 
         $csv_keys = array(
                             'customer_id',
@@ -1998,20 +2039,34 @@ class Customer extends MY_Controller {
             $customer_row[] = $value->charge_total ? number_format($value->charge_total, 2, ".", ",") : 0;
             $customer_row[] = $value->payment_total ? number_format($value->payment_total, 2, ".", ",") : 0;
             $customer_row[] = $value->balance ? number_format($value->balance, 2, ".", ",") : 0;
-            $customers[] = $customer_row;
+            $customers[$value->customer_id] = $customer_row;
         }
 
-        $customer_field_values = array();
-        foreach ($customer_fields as $key => $value) {
-            $customer_arr = array();
-            if(!in_array($value['id'], $customer_field_values)){
-                echo 'if'.$value['id'].'<br/>';
-                $customer_field_values[] = $value['id'];
-                array_push($customers[$value['id']], $value['value']);
-                
+        $inputArray = $customer_fields_array;
+
+        $outputArray = array();
+
+        foreach ($inputArray as $entry) {
+            $key = $entry['id'] . '_' . $entry['name'];
+
+            if (!isset($outputArray[$key])) {
+                $outputArray[$key] = $entry;
+            } elseif ($entry['value'] !== '') {
+                // Update the entry with non-blank value
+                $outputArray[$key]['value'] = $entry['value'];
             }
         }
 
+        $outputArray = array_values($outputArray); // Re-index the array
+
+        $customer_fields_array = $outputArray;
+
+        $customer_arr = array();
+        foreach ($customer_fields_array as $key => $value) {
+            array_push($customers[$value['id']], $value['value']);
+        }
+
+        $customers = array_values($customers);
         $this->load->helper('download');
         force_download_csv($customers, "customers.csv");
     }
