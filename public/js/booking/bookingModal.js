@@ -4742,7 +4742,7 @@ var bookingModalInvoker = function ($) {
                                     $('#cancel-reservation').modal('hide');
 
                                     var activeTab = $('.left-sidebar').find('li.active').find('a').html();
-                                    if (activeTab == 'Housekeeping') {
+                                    if (activeTab == l('Housekeeping')) {
                                         $.ajax({
                                             type: "POST",
                                             url: getBaseURL() + "booking/update_housekeeping_notes_AJAX",
@@ -4774,7 +4774,7 @@ var bookingModalInvoker = function ($) {
 
                             that._showAlert(l("Saved"));
                             var activeTab = $('.left-sidebar').find('li.active').find('a').html();
-                            if (activeTab == 'Housekeeping') {
+                            if (activeTab == l('Housekeeping')) {
                                 $.ajax({
                                     type: "POST",
                                     url: getBaseURL() + "booking/update_housekeeping_notes_AJAX",
