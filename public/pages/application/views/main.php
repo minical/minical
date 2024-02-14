@@ -1,5 +1,5 @@
 
-	<div class="container-fluid">
+<div class="container-fluid">
 		<a class="anchor" id="home"></a>
 
 		<!--
@@ -80,7 +80,7 @@
 							foreach ($slideshow_images as $key => $imagePath){
 								$class = ($key === 0) ? 'active' : '';
 								echo '<div class="item ' . $class . '">';
-								echo '<img src="http://minical-demo.s3.amazonaws.com/' .$company_data['company_id']."/". $imagePath['filename'] . '" alt="Slide ' . ($key + 1) . '" style="width:100%;">';
+								echo '<img src="http://' . getenv('AWS_S3_BUCKET') . '.s3.amazonaws.com/' .$company_data['company_id']."/". $imagePath['filename'] . '" alt="Slide ' . ($key + 1) . '" style="width:100%;">';
 							    if (isset($slide['caption']))
 					      		echo "<p class='carousel-caption'>".$slide['caption']."</p>";
 								echo '</div>';
@@ -187,13 +187,13 @@
 					<?php
 						if (isset($random_gallery_image['filename'])):
 					?>
-							<a href="http://minical-demo.s3.amazonaws.com/<?php echo $company_data['company_id']."/".$random_gallery_image['filename']; ?>" class="thumbnail"  data-lightbox="gallery-set" data-title="<?php
+							<a href="http://<?php echo getenv('AWS_S3_BUCKET'); ?>.s3.amazonaws.com/<?php echo $company_data['company_id']."/".$random_gallery_image['filename']; ?>" class="thumbnail"  data-lightbox="gallery-set" data-title="<?php
 							    		if (isset($random_gallery_image['caption']))
 						    			{
 						    				echo $random_gallery_image['caption'];
 						    			}
 							    	?>">
-								<img  alt="" class="thumbnail" src="http://minical-demo.s3.amazonaws.com/<?php echo $company_data['company_id']."/".$random_gallery_image['filename']; ?>" >
+								<img  alt="" class="thumbnail" src="http://<?php echo getenv('AWS_S3_BUCKET'); ?>.s3.amazonaws.com/<?php echo $company_data['company_id']."/".$random_gallery_image['filename']; ?>" >
 							</a>
 					<?php
 						endif;

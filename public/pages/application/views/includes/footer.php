@@ -1,5 +1,5 @@
 
-	<div class="container-fluid section bg-image" id="footer" 
+<div class="container-fluid section bg-image" id="footer" 
 		<?php
 			if (isset($company_data['website_theme_color']))
 			{
@@ -51,13 +51,13 @@
 							$gallery_image_index++;
 				?>
 							<div class="col-xs-6 col-md-4">
-							    <a href="https://minical-demo.s3.amazonaws.com/<?php echo $company_data['company_id']."/".$gallery['filename']; ?>" class="thumbnail"  data-lightbox="footer-gallery-set" data-title="<?php
+							    <a href="https://<?php echo getenv('AWS_S3_BUCKET'); ?>.s3.amazonaws.com/<?php echo $company_data['company_id']."/".$gallery['filename']; ?>" class="thumbnail"  data-lightbox="footer-gallery-set" data-title="<?php
 							    		if (isset($gallery['caption']))
 						    			{
 						    				echo $gallery['caption'];
 						    			}
 							    	?>" height="0px">
-							    	<img class="thumbnail" src="https://minical-demo.s3.amazonaws.com/<?php echo $company_data['company_id']."/".$gallery['filename']; ?>" alt="image-<?php echo $gallery_image_index; ?>">
+							    	<img class="thumbnail" src="https://<?php echo getenv('AWS_S3_BUCKET'); ?>.s3.amazonaws.com/<?php echo $company_data['company_id']."/".$gallery['filename']; ?>" alt="image-<?php echo $gallery_image_index; ?>">
 							    	
 							    	<?php
 							    		if (isset($gallery['caption'])):
@@ -116,15 +116,16 @@
 <script type="text/javascript" src="<?php echo getenv('BUILDER_URL');?>pages/js/app.js"></script>
 <script>
 	// Get the current URL
-var currentUrl = window.location.href;
+// var currentUrl = window.location.href;
 
-// Replace the "/pages" segment with an empty string
-var modifiedUrl = currentUrl.replace('/pages', '');
+// // Replace the "/pages" segment with an empty string
+// var modifiedUrl = currentUrl.replace('pages/', '');
 
-// Redirect to the modified URL
-// window.location.href = modifiedUrl;
-history.replaceState(null, '', modifiedUrl);
-
+// // Redirect to the modified URL
+// // window.location.href = modifiedUrl;
+// history.replaceState(null, '', modifiedUrl);
+var modifiedUrl = window.location.href.replace('pages/','');
+history.replaceState(null,'',modifiedUrl);
 </script>
 
 <?php 

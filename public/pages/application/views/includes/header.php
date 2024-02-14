@@ -68,7 +68,7 @@
 							<?php  
 								if (isset($logo_images[0]['filename']))
 								{
-									echo "<image src='http://minical-demo.s3.amazonaws.com/".$company_data['company_id']."/".$logo_images[0]['filename']."'/>";
+									echo '<image src=https://'. getenv('AWS_S3_BUCKET') .'.s3.amazonaws.com/' .$company_data['company_id'].'/'.$logo_images[0]['filename'].">";
 								}
 								else
 								{

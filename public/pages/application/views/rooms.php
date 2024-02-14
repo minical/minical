@@ -21,14 +21,14 @@
 									// foreach ($room_type as $image_index => $image):
 							?>
 										
-										<a href="https://minical-demo.s3.amazonaws.com/<?php echo $company_data['company_id']."/".$room_type['filename']; ?>" 
+										<a href="https://<?php echo getenv('AWS_S3_BUCKET'); ?>.s3.amazonaws.com/<?php echo $company_data['company_id']."/".$room_type['filename']; ?>" 
 										class=" <?php 
 													// if ($image_index === 0) 
 														echo "col-md-12"; 
 													// else 
 														// echo "col-md-4 hidden-xs"; 
 												?> thumbnail"  data-lightbox="<?php echo $room_type['id']; ?>" >
-											<img src="https://minical-demo.s3.amazonaws.com/<?php echo $company_data['company_id']."/".$room_type['filename']; ?>" />
+											<img src="https://<?php echo getenv('AWS_S3_BUCKET'); ?>.s3.amazonaws.com/<?php echo $company_data['company_id']."/".$room_type['filename']; ?>" />
 										</a>
 									
 							<?php
