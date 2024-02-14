@@ -134,6 +134,7 @@ class MY_Controller extends CI_Controller {
         $this->review_management_settings = false;
         $this->is_cardknox_enabled = false;
         $this->is_nestpay_enabled = false;
+        $this->is_oevai_enabled = false;
 
         if($get_active_modules){
             foreach ($get_active_modules as $key => $value) {
@@ -167,6 +168,9 @@ class MY_Controller extends CI_Controller {
                 }
                  if($value['extension_name'] == 'nestpay_integration'){
                      $this->is_nestpay_enabled = true;
+                }
+                if($value['extension_name'] == 'oevai_integration'){
+                    $this->is_oevai_enabled = true;
                 }
 
 
@@ -452,6 +456,27 @@ class MY_Controller extends CI_Controller {
             if ($this->permission->is_route_public($this->uri->segment(1)))
             {
                 return;
+            }
+
+            if (
+                $this->controller_name === "page" &&
+                (
+                    $this->function_name === 'redirectToPages'
+                )
+            ) {
+                $builder_url = getenv('BUILDER_URL');
+                $company = $this->Company_model->get_company($this->company_id);
+                $website_uri = strtolower($this->uri->segment(2));
+                $website_route = strtolower($this->uri->segment(3));
+                if ($website_uri && $website_route =='index' ) {
+                redirect($builder_url."pages/page/".$website_uri.'/'.$website_route, 'location', 301);
+                } elseif ($website_uri && $website_route =='room_types' ) {
+                    redirect($builder_url."pages/page/".$website_uri.'/'.$website_route, 'location', 301);
+                } elseif ($website_uri && $website_route =='gallery' ) {
+                    redirect($builder_url."pages/page/".$website_uri.'/'.$website_route, 'location', 301);
+                } elseif ($website_uri && $website_route =='location' ) {
+                    redirect($builder_url."pages/page/".$website_uri.'/'.$website_route, 'location', 301);
+                }
             }
 
             redirect('/auth/login/');
