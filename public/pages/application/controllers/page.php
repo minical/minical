@@ -31,10 +31,13 @@ class Page extends CI_controller
 			$destination_uri_page = strtolower($this->uri->segment(3));
 		    $company = $this->Company_model->get_company($destination_uri);
 			
-			if ($destination_uri ==='' || $company==='' || empty($company)  ) {
-					header("Location: https://www.minical.io", true, 301);
-					exit;
-			}
+			if (
+				strtolower($this->uri->segment(1))=='send_email'
+			) {
+            } else {
+                header("Location: https://www.minical.io", true, 301);
+                exit;
+            }
 
 			
 		}
