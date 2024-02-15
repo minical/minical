@@ -995,6 +995,13 @@ if(isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true) {
                                                 <button type="button" class="btn btn-success capture-payment-button hidden-print not-allowed" disabled>
                                                     <i class="fa fa-credit-card" aria-hidden="true"></i>
                                                 </button>
+                                            <?php } else if($payment['is_captured'] == 0 && $payment['selected_gateway'] == 'nestpay') { ?> 
+                                                  <button class="btn btn-primary hidden-print delete-payment" data-toggle="tooltip" title="Refund"  title="Created by <?php echo $payment['user_name']; ?>">
+                                                    <i class="fa fa-reply" aria-hidden="true"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-success capture-payment-button hidden-print not-allowed" disabled>
+                                                    <i class="fa fa-credit-card" aria-hidden="true"></i>
+                                                </button>
                                             <?php } else if($menu_on === true && $payment['payment_link_id']) { ?>
                                                 <button type="button" class="btn btn-info hidden-print verify_payment" data-payment_link_id="<?php echo $payment['payment_link_id']; ?>" data-payment_id="<?php echo $payment['payment_id']; ?>">
                                                     Verify
