@@ -55,6 +55,7 @@ class Channel_manager extends MY_Controller
 					);
         
         do_action('update_availability', $data);      
+        do_action('update_siteminder_availability', $data);     
         
         // echo $req; // debugging    
         

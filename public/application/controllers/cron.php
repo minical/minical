@@ -568,4 +568,58 @@ class Cron extends CI_Controller
         echo json_encode(array('resp' => $response));
         
     }
+
+    function siteminder_booking_retrieval($authorization_code = null)
+	{	
+		if (getenv('CRON_AUTH_SECRET')) {
+			if (!$authorization_code || $authorization_code !== getenv('CRON_AUTH_SECRET')) {
+				echo 'Not authorized';
+				return;
+			}
+		}
+    	
+    	$this->get_siteminder_bookings($authorization_code);
+	}
+
+	function get_siteminder_bookings($authorization_code)
+	{
+		if (getenv('CRON_AUTH_SECRET')) {
+			if (!$authorization_code || $authorization_code !== getenv('CRON_AUTH_SECRET')) {
+				echo 'Not authorized';
+				return;
+			}
+		}
+
+		$this->load->model('Company_model');
+		
+		$companies = $this->Company_model->get_all_companies(true, 'siteminder');
+		
+		if($companies) {
+			foreach ($companies as $company)
+			{
+				$company_id = $company['company_id'];
+
+	            $protocol = $this->config->item('server_protocol');
+			    // $url = $protocol . $_SERVER['HTTP_HOST']."/cron/channex_get_bookings/".$company_id;
+
+			    $url = base_url()."cron/siteminder_get_bookings/".$company_id;
+			    
+			    $ch = curl_init();
+			    curl_setopt($ch, CURLOPT_URL, $url);
+			    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			    curl_setopt($ch, CURLOPT_AUTOREFERER, false);
+			    curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+			    curl_setopt($ch, CURLOPT_HEADER, 0);
+			    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+			    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+			    $result = curl_exec($ch);
+			    curl_close($ch);
+
+			    echo $company_id. ' => '; prx($result, 1);
+
+			}
+		}
+	}
+
+	
 }

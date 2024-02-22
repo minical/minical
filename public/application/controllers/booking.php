@@ -2428,6 +2428,7 @@ class Booking extends MY_Controller
                     );
 
         do_action('update_availability', $update_availability_data);
+        do_action('update_siteminder_availability', $update_availability_data);
 
         echo json_encode($response);
     }

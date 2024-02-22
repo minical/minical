@@ -413,7 +413,21 @@ define('THEME_DARK', '1');
 
 
 
+/* 
+    XML REQUEST TYPE
+*/
+define('AVAILABILITY_UPDATE', '0');
+define('RATE_UPDATE', '1');
+define('BOOKING_RETRIEVAL', '2');
+define('GET_ROOM_TYPES_AND_RATES', '3');
+define('BOOKING_CONFIRMATION', '4');
 
+/* 
+    XML RESPONSE TYPE
+*/
+define('SUCCESS', '0');
+define('ERROR', '1');
+define('WARNING', '2');
 
 
 
