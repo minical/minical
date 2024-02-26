@@ -832,7 +832,7 @@
                        placeholder="<?php echo l('Calendar Days', true); ?>" min="10" max="30" />
             </div>
 
-            <div class="form-group features-div-padding  form-inline">
+            <!-- <div class="form-group features-div-padding  form-inline">
                 <label for="ui_theme">
                     <?= l("UI Theme", true); ?>
                 </label>
@@ -846,7 +846,7 @@
                     } ?>><?php echo l('Dark', true); ?>
                     </option>
                 </select>
-            </div>
+            </div> -->
 
 
             <!-- <div class="form-group features-div-padding ">
