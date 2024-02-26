@@ -327,9 +327,11 @@ class Cron extends CI_Controller
 
         // update availabilities
         do_action('update_availability', $data);
+        do_action('update_siteminder_availability', $data);
 
         // update rates
         do_action('update_rates', $data);
+        do_action('update_siteminder_rates', $data);
 		// }
 	}
 
