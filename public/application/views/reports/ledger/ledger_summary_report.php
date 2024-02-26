@@ -84,6 +84,9 @@
 			<tr>
 				<th class="text-left"><?php echo l('selling_date'); ?></th>
 				<th class="text-center"><?php echo l('bookings'); ?><span class="hidden-print"> (<?php echo l('occupancy_rate'); ?>)</span></th>
+				<?php if($this->company_id == 2242) { ?>
+					<th class="text-center"><?php echo l('Billable bookings'); ?></th>
+				<?php } ?>
 				<th class="text-right"><a href="https://en.wikipedia.org/wiki/RevPAR"><?php echo l('revpar'); ?></a></th>
 				<th class="text-right"><a href="https://en.wikipedia.org/wiki/Average_daily_rate"><?php echo l('adr'); ?></a></th>
 				<th class="text-right"><?php echo l($this->default_room_singular).' '.l('Charges Before Taxes',true) ; ?></th>

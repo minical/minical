@@ -104,6 +104,13 @@ innGrid.renderReport = function(dateStart, dateEnd, groupBy, customerTypeId) {
 						var future = "bg-warning futureRow";
 					else
 						var future = "";
+						
+
+					var billable_bookings_col = "";
+
+					if(innGrid.companyID == 2242){
+						billable_bookings_col = '<td class="text-center"><span class="booking-count">'+value.charges_booking_count+'</span></td>';
+					}
                                         
 					var row = $("<tr>", {
 					    "class": "salesRow " + future,   
@@ -120,6 +127,8 @@ innGrid.renderReport = function(dateStart, dateEnd, groupBy, customerTypeId) {
 							"class": "text-center",
 							html: "<span class='booking-count'>"+value.booking_count+"</span> (<span class='occupancy-rate'>"+parseFloat(value.occupancy_rate*100).toFixed(1)+"</span>%)"
 						})
+					).append(
+						billable_bookings_col
 					).append(
 						$("<td>", {
 							"class": "text-right revPAR",

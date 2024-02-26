@@ -208,6 +208,7 @@ class Ledger extends MY_Controller {
 		$include_cancelled_noshow_bookings = (isset($company_data['include_cancelled_noshow_bookings']) && $company_data['include_cancelled_noshow_bookings']) ? true : false ;
 
         $booking_count   = $this->Booking_model->get_booking_count($start_date, $end_date, 'date_wise', $customer_type_id);
+        $charges_booking_count   = $this->Booking_model->get_charges_booking_count($start_date, $end_date, 'date_wise', $customer_type_id);
         $charge_total    = $this->Charge_model->get_all_charges($start_date, $end_date, $this->selling_date, false, true, $customer_type_id, null, $include_cancelled_noshow_bookings);
         $room_charge_total = $this->Charge_model->get_all_charges($start_date, $end_date, $this->selling_date, true, false, $customer_type_id, null, $include_cancelled_noshow_bookings);
         $payment_total   = $this->Payment_model->get_all_payments($start_date, $end_date, $customer_type_id);
@@ -215,6 +216,7 @@ class Ledger extends MY_Controller {
 		
         $last_month                 = date("m", strtotime($start_date));
         $monthly_booking_count      = 0;
+        $monthly_charges_booking_count      = 0;
         $accumulated_occupancy_rate = 0;
         $monthly_revPAR             = 0;
         $monthly_ADR                = 0;
@@ -231,6 +233,7 @@ class Ledger extends MY_Controller {
                 $monthly_index                = date("Y", strtotime($date."-1 day"))."-".$last_month; // only used for array indexing purpose
                 $monthly_data[$monthly_index] = Array(
                     "booking_count"  => $monthly_booking_count,
+                    "charges_booking_count"  => $monthly_charges_booking_count,
                     "occupancy_rate" => $accumulated_occupancy_rate / $date_count,
                     "revPAR" => $monthly_revPAR / $date_count,
                     //"ADR" => $monthly_ADR / $date_count,
@@ -241,6 +244,7 @@ class Ledger extends MY_Controller {
 
                 $last_month                 = $current_month;
                 $monthly_booking_count      = 0;
+                $monthly_charges_booking_count      = 0;
                 $accumulated_occupancy_rate = 0;
                 $monthly_revPAR             = 0;
                 $monthly_ADR                = 0;
@@ -251,6 +255,7 @@ class Ledger extends MY_Controller {
             }
 
             $bc = isset($booking_count[$date]) ? $booking_count[$date] : 0;
+            $cbc = isset($charges_booking_count[$date]) ? $charges_booking_count[$date] : 0;
             $ct = isset($charge_total[$date]) ? $charge_total[$date] : 0;
             $rct = isset($room_charge_total[$date]) ? $room_charge_total[$date] : 0;
             $pt = isset($payment_total[$date]) ? $payment_total[$date] : 0;
@@ -260,6 +265,7 @@ class Ledger extends MY_Controller {
 
             $daily_data[$date] = Array(
                 "booking_count"     => $bc,
+                "charges_booking_count"     => $cbc,
                 "occupancy_rate"    => $or,
                 "revPAR"            => $rp,
                 "ADR"               => $adr,
@@ -269,6 +275,7 @@ class Ledger extends MY_Controller {
             );
 
             $monthly_booking_count += $bc;
+            $monthly_charges_booking_count += $cbc;
             $accumulated_occupancy_rate += $or;
             $date_count++; // for averaging the occupancy rate for monthly data.
             $monthly_revPAR += $rp;
@@ -286,6 +293,7 @@ class Ledger extends MY_Controller {
             $monthly_index                = date("Y", strtotime($date))."-".$current_month; // only used for array indexing purpose
             $monthly_data[$monthly_index] = Array(
                 "booking_count"  => $monthly_booking_count,
+                "charges_booking_count"  => $monthly_charges_booking_count,
                 "occupancy_rate" => $accumulated_occupancy_rate / $date_count,
                 "revPAR" => $monthly_revPAR / $date_count,
                 "ADR" => $monthly_ADR / $date_count,

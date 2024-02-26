@@ -2302,6 +2302,61 @@ class Booking_model extends CI_Model {
 
     }
 
+    function get_charges_booking_count($start_date, $end_date, $type = 'date_wise', $customer_type_id = null)
+    {
+        $select = 'di.date, count(distinct brh.booking_id)  as booking_count';
+        $group = "di.date";
+        $join = $where = $get_nights = $where_state = $where_customer_type = $join_customer_type = '';
+        $key = 'date';
+
+        if($customer_type_id)
+        {
+            $join_customer_type = ', customer as c';
+            $where_customer_type = "b.booking_customer_id = c.customer_id AND c.customer_type_id = '$customer_type_id' AND";
+        }
+        $company_id = $this->session->userdata('current_company_id');
+        $data = null; 
+
+            
+        $sql = "
+            SELECT
+                ch.selling_date as date,
+                count(DISTINCT ch.booking_id) as booking_count
+            FROM
+                charge AS ch,
+                booking AS b
+                $join_customer_type
+            WHERE
+                $where_customer_type ch.is_deleted = '0' AND b.company_id = '$company_id' AND b.booking_id = ch.booking_id AND b.is_deleted = '0' AND b.state < '3' AND ch.selling_date BETWEEN '$start_date' AND '$end_date'
+            GROUP BY
+                ch.selling_date";
+        
+        $query = $this->db->query($sql);
+
+        if ($this->db->_error_message()) // error checking
+            show_error($this->db->_error_message());
+
+        $result = $get_nights ? array('booking_count' => array(), 'cancelled_booking_per' => array(), 'total_nights' => array()) : array();
+        if ($query->num_rows >= 1) 
+        {   
+            if($get_nights){
+                foreach ($query->result_array() as $row)
+                {
+                    $result['booking_count'][$row[$key]] = $row['booking_count'];
+                    $result['cancelled_booking_per'][$row[$key]] = $row['cancelled_booking_per'];
+                    $result['total_nights'][$row[$key]] = $row['total_nights'];
+                }
+            }else{
+                foreach ($query->result_array() as $row)
+                {
+                    $result[$row[$key]] = $row['booking_count'];
+                }
+            }
+        }   
+        return $result; 
+
+    }
+
     function set_guest_review($booking_id, $star_rating)
     {
 
