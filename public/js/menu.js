@@ -190,12 +190,14 @@ function ajax_submit(url,form_id,source){
                     $('.alert-success').html(l('Successfully updated'));
                     $('#update-property-modal').modal('hide');
 
+                    update_closeio(closeiodata);
+
                     // user just updated property after signup, fire Intercom event
 					if (typeof Intercom !== "undefined") {
 						Intercom('trackEvent', 'Signup_step_2');
 					}
 
-                    setTimeout(function (){location.reload();}, 200);
+                    setTimeout(function (){location.reload();}, 2000);
                 }
             }
         });
@@ -214,7 +216,7 @@ function ajax_submit(url,form_id,source){
 function update_closeio(data)
 {
    
-    if (window.location.hostname !=  window.location.host) {
+    //if (window.location.hostname !=  window.location.host) {
         $.ajax({
             type: "POST",
             url: getBaseURL() + "auth/add_to_close_io",
@@ -224,7 +226,7 @@ function update_closeio(data)
 
             }
         });
-    }
+    //}
 }
 
 function open_tos(){

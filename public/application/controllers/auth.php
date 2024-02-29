@@ -964,7 +964,7 @@ class Auth extends MY_Controller
                 'name'=>$data['name'],
                 'number_of_rooms'=>$data['number_of_rooms']
             );
-            //$this->_add_to_close_io($closeiodata);
+            $this->_add_to_close_io($closeiodata);
         }
 
         return $company_id;
