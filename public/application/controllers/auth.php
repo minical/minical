@@ -1184,14 +1184,16 @@ class Auth extends MY_Controller
             'country' => $user['country']
         );
 
-        $whitelabelinfo = $this->session->userdata('white_label_information');
-        if(isset($whitelabelinfo['auto_close_io'])) {
-            if ($whitelabelinfo['auto_close_io']) {
                 $this->_add_to_close_io($closeiodata);
-            }
-        } else {
-            $this->_add_to_close_io($closeiodata);
-        }
+
+        // $whitelabelinfo = $this->session->userdata('white_label_information');
+        // if(isset($whitelabelinfo['auto_close_io'])) {
+        //     if ($whitelabelinfo['auto_close_io']) {
+        //         $this->_add_to_close_io($closeiodata);
+        //     }
+        // } else {
+        //     $this->_add_to_close_io($closeiodata);
+        // }
     }
     
     /**
