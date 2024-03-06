@@ -5189,6 +5189,7 @@ var bookingModalInvoker = function ($) {
         _makeRoomDirty: function (roomID) {
             var that = this;
 
+            if(innGrid.companyID != '2637') {
             $.ajax({
                 type: "POST",
                 url: getBaseURL() + "room/update_room_status",
@@ -5203,6 +5204,7 @@ var bookingModalInvoker = function ($) {
                     }
                 }
             });
+            }
         },
         _updateBooking: function (data, msg, action = null) {
 
