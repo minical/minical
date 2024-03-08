@@ -358,7 +358,7 @@ innGrid.buildCalendar = function (rooms) {
             var groupId = (info.event.extendedProps.data.id_group_booking != 'null') ? "<strong>" + l("group_id") + ":</strong> " + info.event.extendedProps.data.id_group_booking : '';
             var groupName = (info.event.extendedProps.data.group_name != 'null') ? "<strong>" + l("group_name") + ":</strong> " + info.event.extendedProps.data.group_name : '';
            var totalAmount =  parseFloat(info.event.extendedProps.data.balance) + parseFloat(info.event.extendedProps.data.payment_total);
-
+            totalAmount = totalAmount.toFixed(2);
             // get booking sources text
             var sources = [];
             for(var i = 0; i < innGrid.bookingSources.length; i++)
@@ -400,8 +400,8 @@ innGrid.buildCalendar = function (rooms) {
                 '<p><span><strong>' + l("check_in", true) + ':</strong> ' + innGrid._getLocalFormattedDate(checkInDate) + '</span> <span><strong>' + l("check_out", true) + ':</strong> ' + innGrid._getLocalFormattedDate(checkOutDate) + '</span></p>' +
                 '<p><strong>' + l("Number of nights", true) + ':</strong> ' + diffDays + '</p>' +
                 '<p> <span><strong>' + l("Total Amount", true) + ':</strong> ' + parseFloat(totalAmount) + '</span></p>' +
-                '<p> <span><strong>' + l("Balance Due", true) + ':</strong> ' + parseFloat(info.event.extendedProps.data.balance) + '</span></p>' +
-                '<p style="margin-bottom:8px;"> <span><strong>' + l("Paid Amount", true) + ':</strong> ' + parseFloat(info.event.extendedProps.data.payment_total) + '</span></p>' +
+                '<p> <span><strong>' + l("Balance Due", true) + ':</strong> ' + parseFloat(info.event.extendedProps.data.balance).toFixed(2) + '</span></p>' +
+                '<p style="margin-bottom:8px;"> <span><strong>' + l("Paid Amount", true) + ':</strong> ' + parseFloat(info.event.extendedProps.data.payment_total).toFixed(2) + '</span></p>' +
                 '<p><span><strong>' + l("Booking Source", true) + ':</strong> ' + sourceText + '</span></p>' +
                 '<p><div style="max-width: 300px;"><strong>' + l("booking_notes", true) + ':</strong> ' + notes +
                 (warning_message ? ('<p><div style="max-width: 300px;"><strong>' + l("Warning", true) + ':</strong> ' + warning_message) : '') +
