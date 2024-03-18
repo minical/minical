@@ -75,7 +75,8 @@ class Night_audit {
         
         
 		//Set all occupied rooms' status as 'dirty'
-		$this->ci->Room_model->set_occupied_rooms_dirty($company_id);		
+        if($company_id != 2637)
+		  $this->ci->Room_model->set_occupied_rooms_dirty($company_id);		
 		        
         //Increase selling date
         $this->ci->Company_model->increment_selling_date_by_one($company_id);
