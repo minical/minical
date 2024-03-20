@@ -951,11 +951,9 @@ var bookingModalInvoker = function ($) {
                                                     },
                                                     dataType: "json",
                                                     success: function (new_customer_data) {
-                                                        // console.log('new_customer_data', new_customer_data);
                                                         if (new_customer_data != null) {
                                                             // new_customer_data.push( {'booking_id': that.booking.booking_id} );
                                                             $(".is_primary_check").prop('disabled', false);
-                                                            // console.log('new_customer_data1', new_customer_data);
                                                             that._populatePaymentCard(new_customer_data, that.booking.booking_id);
                                                         }
                                                     },
@@ -1506,6 +1504,8 @@ var bookingModalInvoker = function ($) {
             }
             totalPreTaxRate -= totalInclusivePreTaxRate;
 
+            console.log(number_format(number_format(totalRate, 3, ".", ""), 2, ".", ""));
+            totalRate = number_format(number_format(totalRate, 3, ".", ""), 2, ".", "");
 
             if (avgRate >= 0) {
                 if (payPeriod != 3) // one time charge
@@ -2650,8 +2650,6 @@ var bookingModalInvoker = function ($) {
 
                                                         var current_count = $('.extra_len').val();
                                                         var new_count = (parseInt(current_count) + 1);
-                                                        console.log('current_count',current_count);
-                                                        console.log('new_count',new_count);
 
                                                         $('.left-sidebar').find('.extras_count').html(" (" + new_count + ")");
                                                         $('.extra_len').val(new_count);
@@ -3324,7 +3322,6 @@ var bookingModalInvoker = function ($) {
                     }
                 }
             }
-            // console.log('customer_array', customer_array);
             var that = this;
             $("#payment_details").find(".payment-modal").html(
                 $("<div/>", {
@@ -4993,9 +4990,6 @@ var bookingModalInvoker = function ($) {
 
             // var token_label_length = $('.tokenfield').find('.token-label').length;
             
-            // console.log($('.tokenfield').find('.token-label').length);
-            // console.log(parseInt(adult_count)+parseInt(children_count));
-
             // if(token_label_length > total_customer_length){
             //     alert('you are exceeding total customer count limit');
             //     $('.booking-create').prop('disabled', false);
@@ -5190,20 +5184,20 @@ var bookingModalInvoker = function ($) {
             var that = this;
 
             if(innGrid.companyID != '2637') {
-            $.ajax({
-                type: "POST",
-                url: getBaseURL() + "room/update_room_status",
-                data: {
-                    room_id: roomID,
-                    room_status: 'Dirty'
-                },
-                dataType: "json",
-                success: function (data) {
-                    if(!(innGrid.calendar && innGrid.calendar.destroy)) {
-                        innGrid.reloadCalendar();
+                $.ajax({
+                    type: "POST",
+                    url: getBaseURL() + "room/update_room_status",
+                    data: {
+                        room_id: roomID,
+                        room_status: 'Dirty'
+                    },
+                    dataType: "json",
+                    success: function (data) {
+                        if(!(innGrid.calendar && innGrid.calendar.destroy)) {
+                            innGrid.reloadCalendar();
+                        }
                     }
-                }
-            });
+                });
             }
         },
         _updateBooking: function (data, msg, action = null) {
@@ -5232,9 +5226,6 @@ var bookingModalInvoker = function ($) {
 
             // var token_label_length = $('.tokenfield').find('.token-label').length;
             
-            // console.log($('.tokenfield').find('.token-label').length);
-            // console.log(parseInt(adult_count)+parseInt(children_count));
-
             // if(token_label_length > total_customer_length){
             //     alert('you are exceeding total customer count limit');
             //     return false;
@@ -5459,8 +5450,6 @@ var bookingModalInvoker = function ($) {
 
                         var current_count = $('.extra_len').val();
                         var new_count = (parseInt(current_count) - 1);
-                        console.log('current_count',current_count);
-                        console.log('new_count',new_count);
 
                         $('.left-sidebar').find('.extras_count').html(" (" + new_count + ")");
                         $('.extra_len').val(new_count);
@@ -6701,6 +6690,10 @@ var bookingModalInvoker = function ($) {
                         that.rateWithTax = taxedRate;
                         that.rateInclusiveTax = rateInclusiveTax;
 
+                        console.log(number_format(number_format(taxedRate, 3, ".", ""), 2, ".", ""));
+                        taxedRate = number_format(number_format(taxedRate, 3, ".", ""), 2, ".", "");
+                        // taxedRate = parseFloat((Math.round(taxedRate * 1000) / 1000).toFixed(2));
+                        console.log(taxedRate);
                         //taxedRate = Math.round(taxedRate * 100) / 100;
 
                         var rateIncludingTaxDiv = roomTypeDIV.find('.rate-including-tax');
