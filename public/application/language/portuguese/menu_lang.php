@@ -25,9 +25,9 @@ $lang['date_manager'] = 'Gerente de data';
 
 $lang['ledger'] = 'Ledger';
 $lang['market_segment'] = 'Market Segment';
-$lang['room'] = 'Room';
-$lang['employee'] = 'Employee';
-$lang['reservations'] = 'Reservations';
+$lang['room'] = 'Quarto';
+$lang['employee'] = 'Trabalhador';
+$lang['reservations'] = 'Reservas';
 $lang['feature_settings'] = 'Feature Settings';
 $lang['turn_features_on/off'] = 'Turn Features On/Off';
 $lang['room_inventory'] = 'Room Inventory';
@@ -39,7 +39,7 @@ $lang['subscription'] = 'Inscrição';
 
 $lang['company'] = 'Empresa';
 $lang['accounting'] = 'Contabilidade';
-$lang['email'] = 'O email';
+$lang['email'] = 'e-mail';
 $lang['rooms'] = 'quartos';
 $lang['rates'] = 'Taxas';
 $lang['integrations'] = 'Integrações';
@@ -58,10 +58,10 @@ $lang['geographical'] = 'Geográfico';
 $lang['housekeeping'] = 'Serviço de limpeza';
 $lang['room_notes'] = 'Notas do quarto';
 
-$lang['action'] = 'Açao';
+$lang['action'] = 'Ação';
 $lang['in-house'] = 'Em casa';
 $lang['reservations_report'] = 'Relatório de reserva';
-$lang['group_report'] = 'Group Report';
+$lang['group_report'] = 'Relatório de grupo';
 
 $lang['general_information'] = 'Informação geral';
 $lang['employees'] = 'Empregados';
