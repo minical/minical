@@ -228,6 +228,8 @@
 	</div>
 </div>
 
+<input type="hidden" name="default_charge_name" class="default_charge_name" value="<?php echo $company['default_charge_name']; ?>">
+
 <div id='invoice-container' class="">
 	<div id='invoice-container' class="">
     <div class="app-page-title">
