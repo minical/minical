@@ -5409,6 +5409,7 @@ var bookingModalInvoker = function ($) {
 
                             if (isGroupBookingDel == true) {
                                 that._getLinkedGroupBookingRoomList();
+                                that._closeBookingModal();
                             } else {
                                 that._closeBookingModal();
                             }

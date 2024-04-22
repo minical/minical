@@ -69,6 +69,21 @@ class Cron extends CI_Controller
 		$this->load->model('Card_model');
 		$this->load->model('Company_subscription_model');
 
+		// Update company subscription status to "Unpaid"
+		$company_data = $this->Company_model->get_companies_by_state('trialing');
+ 		if(isset($company_data) && $company_data){
+ 			foreach ($company_data as $comp){
+ 				if($comp['subscription_id'] == null && $comp['partner_id'] == 21 && $comp['expiration_date'] < date('Y-m-d') ){
+                   $data = array(
+                                'company_id' => $comp['company_id'],
+                                 'subscription_state' => 'unpaid'
+                            );
+                     
+                     $this->Company_subscription_model->insert_or_update_company_subscription($comp['company_id'],$data);
+ 				}
+ 			}	
+ 		}
+
 		$companies = $this->Company_model->get_all_companies();
 		
 		foreach ($companies as $company)
@@ -136,21 +151,6 @@ class Cron extends CI_Controller
 				}
 			}
 		}
-
-		$company_data = $this->Company_model->get_companies_by_state('trialing');
-		//prx($company_data);
- 		if(isset($company_data) && $company_data){
- 			foreach ($company_data as $comp){
- 				if($comp['subscription_id'] == null && $comp['partner_id'] == 21 && $comp['expiration_date'] < date('Y-m-d') ){
-                   $data = array(
-                                'company_id' => $comp['company_id'],
-                                 'subscription_state' => 'unpaid'
-                            );
-                     
-                     $this->Company_subscription_model->insert_or_update_company_subscription($comp['company_id'],$data);
- 				}
- 			}	
- 		}
 	}
 
 	function call_api($api_url, $data, $headers, $method_type = 'POST'){
