@@ -4551,6 +4551,9 @@ var bookingModalInvoker = function ($) {
                                     document.dispatchEvent(bookingUpdatedEvent);
 
                                     that._updateBooking(bookingData, l("Successfully checked-out"), action);
+                                    if(innGrid.companyID == '2637') {
+                                        that._makeRoomDirty(bookingData['rooms'][0]['room_id']);
+                                    }
                                 }
 
                             }
@@ -5299,6 +5302,10 @@ var bookingModalInvoker = function ($) {
                             setTimeout(function () {
                                 location.reload();
                             }, 500);
+                        }
+
+                        if (data.booking.state == 2 && innGrid.companyID == '2637'){
+                            that._makeRoomDirty(data['rooms'][0]['room_id']);
                         }
                     }
 
