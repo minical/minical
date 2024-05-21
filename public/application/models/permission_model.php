@@ -69,7 +69,15 @@ class Permission_model extends CI_Model {
                 (
                     ($function_name === 'save_customer_cardknox_card' )
                 )
-            ) ||
+            ) 
+            ||
+            (
+                $controller_name === "restaurant_pos" && 
+                (
+                    ($function_name === 'checkin_guest_details_post'  || $function_name === 'room_transfer_push' || $function_name === 'invoice_item_transfer_push')
+                )
+            )
+            ||
             (
                 $controller_name === "nestpay_integration" && 
                 (
