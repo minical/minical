@@ -962,7 +962,8 @@ class Auth extends MY_Controller
                 'email'=>$user['email'],
                 'phone'=>$user['phone'],
                 'name'=>$data['name'],
-                'number_of_rooms'=>$data['number_of_rooms']
+                'number_of_rooms'=>$data['number_of_rooms'],
+                'country' => $user['country']
             );
             $this->_add_to_close_io($closeiodata);
         }
