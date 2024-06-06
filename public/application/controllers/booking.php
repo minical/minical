@@ -2755,6 +2755,56 @@ class Booking extends MY_Controller
         echo json_encode(array('response' => 'success'));
     }
 
+    function checkin_booking_AJAX() {
+
+        $booking_id = $this->input->post('booking_id');
+
+        $booking_details = $this->Booking_model->get_booking($booking_id);
+
+       $check_in_date = date('Y-m-d', strtotime($booking_details['check_in_date']));
+        
+        //prx($booking_details); 
+
+        if ($check_in_date == $this->selling_date) {
+            
+            $booking_unconfirm = array('state' => 1);
+            $this->Booking_model->update_booking($booking_id,$booking_unconfirm);
+
+            $this->_create_booking_log($booking_id, "Booking check-in for entire group booking");
+
+            echo json_encode(array('response' => 'success'));
+        }else{
+
+            echo json_encode(array('response' => 'failure'));
+        }
+        
+    }
+
+    function checkout_booking_AJAX() {
+
+        $booking_id = $this->input->post('booking_id');
+
+        $booking_details = $this->Booking_model->get_booking($booking_id);
+
+        $check_out_date = date('Y-m-d', strtotime($booking_details['check_out_date']));
+        
+        //prx($booking_details); 
+
+        if ($check_out_date == $this->selling_date) {
+            
+            $booking_unconfirm = array('state' => 2);
+            $this->Booking_model->update_booking($booking_id,$booking_unconfirm);
+
+            $this->_create_booking_log($booking_id, "Booking check-out for entire group booking");
+
+            echo json_encode(array('response' => 'success'));
+        }else{
+
+            echo json_encode(array('response' => 'failure'));
+        }
+        
+    }
+
     function create_charges($invoice_array, $booking_id, $customer_id) {
         $total = 0;
         $tax_amount = 0;

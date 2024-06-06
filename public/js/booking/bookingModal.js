@@ -5441,6 +5441,92 @@ var bookingModalInvoker = function ($) {
             }
             return answer;
         },
+        _chekinBooking :function(isGroupBookingDel, groupBookingId, key = 0){
+            var that = this;
+            var answer = key === 0 ? confirm(l("Are you sure you want to checkin this booking?")) : true;
+            if (groupBookingId != null) {
+                var bookingId = groupBookingId;
+            } else {
+                var bookingId = that.booking.booking_id;
+            }
+
+            if (answer == true) {
+                this.button = $(this);
+                this.button.prop('disabled', true);
+
+                $.ajax({
+                    type: "POST",
+                    url: getBaseURL() + "booking/checkin_booking_AJAX",
+                    dataType: "json",
+                    data: {
+                        booking_id: bookingId
+                    },
+                    success: function (data) {
+                        // data = (data == "") ? data : JSON.parse(data);
+                        if (data.response == "success") // if successful, delete_booking_AJAX returns empty page
+                        {
+                            if (isGroupBookingDel == true) {
+                                that._getLinkedGroupBookingRoomList();
+                                that._closeBookingModal();
+                            } else {
+                                that._closeBookingModal();
+                            }
+                        } 
+                         else {
+                            alert(l("Guest cannot be checked in as the arrival is for a date in the future"));
+                        }
+
+                        if (innGrid.reloadBookings) innGrid.reloadBookings();
+                    }
+                });
+
+            }
+            return answer;
+
+        },
+        _chekoutBooking :function(isGroupBookingDel, groupBookingId, key = 0){
+            var that = this;
+            var answer = key === 0 ? confirm(l("Are you sure you want to checkout this booking?")) : true;
+            if (groupBookingId != null) {
+                var bookingId = groupBookingId;
+            } else {
+                var bookingId = that.booking.booking_id;
+            }
+
+            if (answer == true) {
+                this.button = $(this);
+                this.button.prop('disabled', true);
+
+                $.ajax({
+                    type: "POST",
+                    url: getBaseURL() + "booking/checkout_booking_AJAX",
+                    dataType: "json",
+                    data: {
+                        booking_id: bookingId
+                    },
+                    success: function (data) {
+                        // data = (data == "") ? data : JSON.parse(data);
+                        if (data.response == "success") // if successful, delete_booking_AJAX returns empty page
+                        {
+                            if (isGroupBookingDel == true) {
+                                that._getLinkedGroupBookingRoomList();
+                                that._closeBookingModal();
+                            } else {
+                                that._closeBookingModal();
+                            }
+                        } 
+                         else {
+                            alert(l("please confirm with the guest checkout date is not arrival is for a date in the future"));
+                        }
+
+                        if (innGrid.reloadBookings) innGrid.reloadBookings();
+                    }
+                });
+
+            }
+            return answer;
+
+        },
         _deleteExtra: function (bookingExtraID) {
             var that = this;
             var answer = confirm(l("Are you sure you want to delete this prodcut?"));
@@ -7172,6 +7258,16 @@ var bookingModalInvoker = function ($) {
                     var groupBookingId = value;
                     var isGroupBookingDel = true;
                     return that._deleteBooking(isGroupBookingDel, groupBookingId, key);
+                }
+                if (action == 'Checkin') {
+                    var groupBookingId = value;
+                    var isGroupBookingDel = true;
+                    return that._chekinBooking(isGroupBookingDel, groupBookingId, key);
+                }
+                if (action == 'Checkout') {
+                    var groupBookingId = value;
+                    var isGroupBookingDel = true;
+                    return that._chekoutBooking(isGroupBookingDel, groupBookingId, key);
                 }
             });
         }
