@@ -22,6 +22,22 @@ class Option_model extends CI_Model {
         return $result_array;
 
     }
+    
+    function get_option_by_company($option,$company_id){
+
+        $this->db->select('*');
+        $this->db->where('option_name', $option);
+        $this->db->where('company_id', $company_id);
+        $query = $this->db->get('options');
+        if ($this->db->_error_message())
+        {
+            show_error($this->db->_error_message());
+        }
+        $result_array = $query->result_array();
+
+        return $result_array;
+
+    }
 
     function get_options(){
 

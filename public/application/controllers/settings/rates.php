@@ -20,6 +20,7 @@ class Rates extends MY_Controller
 		$this->load->model('Booking_model');
 		$this->load->model('Company_model');
 		$this->load->model('Employee_log_model');
+        $this->load->model('Option_model');
         $this->load->library('ckeditor');
         $this->load->library('ckfinder');
         $this->load->helper('ckeditor_helper');
@@ -183,12 +184,39 @@ class Rates extends MY_Controller
         {   // create new custom rate plan
             $default_currency = $this->Currency_model->get_default_currency($this->company_id);
 
+            if(isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true) {
+
+                $policies = $this->Option_model->get_option_by_company('payment_policy',$this->company_id);
+               
+               if(isset($policies) && $policies !=''){
+
+                    foreach ($policies as $policy) {
+                     
+                        $policy_value = json_decode($policy['option_value'],true);
+                       
+                        if($policy_value['policy_type'] == 1){
+
+                            $policy_code = $policy['option_id'];
+                             break;
+                        }else{
+                        $policy_code = $policy['option_id'];
+                        }
+                    }
+               
+               }else{
+
+                 $policy_code ='';
+               }
+                
+            }
+
             $rate_plan_data = Array(
                 "room_type_id" => $room_type_id,
                 "currency_id" => $default_currency['default_currency_id'],
                 "rate_plan_name" => "Custom Rate Plan",
                 "charge_type_id" => $charge_type_id,
                 "company_id" => $this->company_id,
+                "policy_code" => $policy_code,
                 "is_selectable" => 0
             );
 
