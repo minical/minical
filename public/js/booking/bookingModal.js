@@ -870,6 +870,26 @@ var bookingModalInvoker = function ($) {
                                                         that._cancelDeleteGroupBookingRoom('Delete');
                                                     })
                                                 )
+                                            ).append(
+                                                $("<li/>", {}).append(
+                                                    $("<a/>", {
+                                                        href: '#',
+                                                        text: l("Check-in")
+                                                    }).on("click", function (e) {
+                                                        e.preventDefault();
+                                                        that._cancelDeleteGroupBookingRoom('Checkin');
+                                                    })
+                                                )
+                                            ).append(
+                                                $("<li/>", {}).append(
+                                                    $("<a/>", {
+                                                        href: '#',
+                                                        text: l("Check-out")
+                                                    }).on("click", function (e) {
+                                                        e.preventDefault();
+                                                        that._cancelDeleteGroupBookingRoom('Checkout');
+                                                    })
+                                                )
                                             )
                                     )
                                 )
