@@ -40,6 +40,21 @@
    $whitelabelinfo = $this->session->userdata('white_label_information');
 ?>
 
+<?php 
+    $permissions = $this->session->userdata('permissions');
+    $registration_flag = 1;
+    if(isset($permissions) && $permissions != NULL)
+    {
+        if(
+            !in_array('access_to_extensions', $permissions) &&
+            !in_array('is_owner', $permissions)
+        )
+        {
+            $registration_flag = 0;
+        }
+    }    
+?>
+
 <div class="footer hidden-print col-md-12">
     <?php
    
@@ -106,6 +121,9 @@
     innGrid.isCardknoxEnabled = parseInt('<?=(($this->is_cardknox_enabled) ? 1 : 0)?>');
     innGrid.isPartnerOwner = parseInt('<?=(isset($this->is_partner_admin) && ($this->is_partner_admin == 1) ? 1 : 0)?>');
     innGrid.featureSettings.calendarDays = '<?=(isset($this->calendar_days) ? $this->calendar_days : '')?>';
+
+    var reg_flag = <?php echo $registration_flag; ?>;
+    innGrid.hasExtensionsPermission = <?php echo $registration_flag; ?>;
     
     // subscription plans
     var STARTER = "<?php echo STARTER; ?>";

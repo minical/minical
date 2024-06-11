@@ -13,19 +13,7 @@
     }    
 ?>
 
-<?php 
-    $registration_flag = 1;
-    if(isset($permissions) && $permissions != NULL)
-    {
-        if(
-            !in_array('access_to_extensions', $permissions) &&
-            !in_array('is_owner', $permissions)
-        )
-        {
-            $registration_flag = 0;
-        }
-    }    
-?>
+
 
 <div id="filter-booking" style="padding-top: 0px; padding-bottom:10px;display: none;">
     <div class="pull-left h4">
@@ -579,10 +567,6 @@
         var flag = <?php echo $flag; ?>;
         innGrid.hasBookingPermission = <?php echo $flag; ?>; 
 
-        var reg_flag = <?php echo $registration_flag; ?>;
-        innGrid.hasExtensionsPermission = <?php echo $registration_flag; ?>;     
-        
-        
         <?php 
         if($this->company_name && (strtotime($this->company_creation_date) >= strtotime("2018-06-05")) && (!isset($_COOKIE['is_shown_tutorial_popover']) || !$_COOKIE['is_shown_tutorial_popover'])): ?>
             $('.help-link[data-toggle="popover"]').popover('show');
