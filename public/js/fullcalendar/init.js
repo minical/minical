@@ -129,6 +129,13 @@ innGrid.buildCalendar = function (rooms) {
     var daysBeforeToday = Math.round(width / 400);
     var daysAfterToday = Math.round(width / 60);
 
+    console.log('bdays',sessionStorage.getItem("beforeDays"));
+    console.log('adays',sessionStorage.getItem("afterDays"));
+
+    var today = daysBeforeToday;
+    daysBeforeToday = sessionStorage.getItem("beforeDays") != null ? parseInt(sessionStorage.getItem("beforeDays")) : daysBeforeToday;
+    daysAfterToday = sessionStorage.getItem("afterDays") != null ? parseInt(sessionStorage.getItem("afterDays")) : daysAfterToday;
+
     if(innGrid.featureSettings.calendarDays) {
         var calendarDays = innGrid.featureSettings.calendarDays;
     } else {
