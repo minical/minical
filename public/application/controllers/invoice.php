@@ -558,6 +558,90 @@ class Invoice extends MY_Controller {
                 }
             }
         }
+
+        if ($data['booking_customer']) {
+            $data['booking_customer']['custom_fields'] = $this->Customer_model->get_customer_fields($data['booking_customer']['customer_id']);
+
+            $customer_fields = $this->Customer_field_model->get_customer_fields($this->company_id, false, 'show_on_invoice');
+
+            $customer_fields = $customer_fields ? $customer_fields : [];
+
+            $common_customer_fields = json_decode(COMMON_CUSTOMER_FIELDS, true);
+            $get_common_customer_fields = $this->Customer_field_model->get_common_customer_fields_settings($this->company_id);
+
+            foreach($common_customer_fields as $id => $name)
+            {
+                $value = '';
+                if ($get_common_customer_fields && isset($get_common_customer_fields[$id]) && isset($get_common_customer_fields[$id]['show_on_invoice']) && $get_common_customer_fields[$id]['show_on_invoice']) {
+
+                    $common_name = strtolower($name);
+                    if(isset($data['booking_customer'][$common_name]) && $data['booking_customer'][$common_name] != '')
+                    {
+                        $value = $data['booking_customer'][$common_name];
+                    }
+                    elseif(isset($data['booking_customer']['customer_'.$common_name]) && $data['booking_customer']['customer_'.$common_name] != '')
+                    {
+                        $value = $data['booking_customer']['customer_'.$common_name];
+                    }
+                    else
+                    {
+                        $explode_name = explode(' ',$common_name);
+                        $cn = $explode_name[0].''.(isset($explode_name[1]) && $explode_name[1] ? $explode_name[1] : '');
+                        if(isset($data['booking_customer'][$cn]) && $data['booking_customer'][$cn] != '')
+                        {
+                            $value = $data['booking_customer'][$cn];
+                        }
+                        else
+                        {
+                            $cn = (isset($explode_name[0]) && $explode_name[0] ? $explode_name[0] : '').'_'.(isset($explode_name[1]) && $explode_name[1] ? $explode_name[1] : '');
+                            if(isset($data['booking_customer'][$cn]) && $data['booking_customer'][$cn] != "") {
+                                
+                                if($cn == 'customer_type') {
+                                    $cn = 'customer_type_id';
+                                    $this->load->model('customer_type_model');
+                                    $customer_type = $this->customer_type_model->get_customer_type($data['booking_customer'][$cn]); 
+                                    $value = $customer_type[0]['name'];
+                                }
+                                else {
+                                    $value = $data['booking_customer'][$cn];
+                                }
+                            }
+                        }
+                    }
+
+                    $customer_fields[] = array(
+                        'id' => $id,
+                        'name' => $name,
+                        'value' => $value,
+                    );
+                }
+            }
+
+            $data['booking_customer']['customer_fields'] = [];
+            foreach ($customer_fields as $customer_field) {
+                if(!(
+                    $customer_field['name'] == 'Phone' ||
+                    $customer_field['name'] == 'Fax' ||
+                    $customer_field['name'] == 'Email' ||
+                    $customer_field['name'] == 'Address' ||
+                    $customer_field['name'] == 'Address 2' ||
+                    $customer_field['name'] == 'City' ||
+                    $customer_field['name'] == 'Region' ||
+                    $customer_field['name'] == 'Country' ||
+                    $customer_field['name'] == 'Postal Code' ||
+                    $customer_field['name'] == 'Name'
+                )) {
+                    if (!isset($customer_field['value'])) {
+                        if($data['booking_customer']['custom_fields'] && isset($data['booking_customer']['custom_fields'][$customer_field['id']]) && $data['booking_customer']['custom_fields'][$customer_field['id']] != '')
+                        {
+                            $customer_field['value'] = $data['booking_customer']['custom_fields'][$customer_field['id']];
+                        }
+                    }
+                    $data['booking_customer']['customer_fields'][] = $customer_field;
+                }
+            }
+        }
+
         $data['custom_booking_fields'] = $this->Booking_field_model->get_booking_fields_data($booking_id,'show_on_registration_card');
 
         $data['booking_fields'] = $this->Booking_field_model->get_booking_fields($this->company_id,'show_on_registration_card');
