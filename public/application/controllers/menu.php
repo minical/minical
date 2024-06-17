@@ -149,27 +149,61 @@ class Menu extends MY_Controller
         $xml_log_ids = array();
 
         if($ota_xml_logs){
-            foreach($ota_xml_logs as $log){
+            // foreach($ota_xml_logs as $log){
+
+            //     $timestamp = strtotime($log['datetime']); //1373673600
+
+            //     // getting current date 
+            //     $cDate = strtotime(date('Y-m-d H:i:s'));
+
+            //     // Getting the value of old date + 15 days
+            //     $old_booking_retrieval_log_date = $timestamp + (86400 * 15);
+
+            //     // Getting the value of old date + 3 days
+            //     $old_other_log_date = $timestamp + (86400 * 3); // 86400 seconds in 24 hrs 
+
+            //     // for delete booking retrieval logs
+            //     if($old_booking_retrieval_log_date < $cDate && $log['request_type'] == 2)
+            //     {
+            //         $xml_log_ids[] = $log['xml_log_id'];
+            //     }
+
+            //     // for delete other logs
+            //     if($old_other_log_date < $cDate && $log['request_type'] != 2)
+            //     {
+            //         $xml_log_ids[] = $log['xml_log_id'];
+            //     }
+            // }
+
+            foreach($ota_xml_logs as $log) {
 
                 $timestamp = strtotime($log['datetime']); //1373673600
 
                 // getting current date 
                 $cDate = strtotime(date('Y-m-d H:i:s'));
 
-                // Getting the value of old date + 15 days
-                $old_booking_retrieval_log_date = $timestamp + (86400 * 15);
+                // Getting the value of old date + 7 days
+                $old_blank_response_log_date = $timestamp + (86400 * 7);
 
-                // Getting the value of old date + 3 days
-                $old_other_log_date = $timestamp + (86400 * 3); // 86400 seconds in 24 hrs 
+                // Getting the value of old date + 2 month
+                $old_booking_retrieval_log_date = $timestamp + (86400 * 60); // 86400 seconds in 24 hrs 
 
-                // for delete booking retrieval logs
-                if($old_booking_retrieval_log_date < $cDate && $log['request_type'] == 2)
+                // for delete blank response logs
+                if(
+                	$old_blank_response_log_date < $cDate && 
+                	$log['request_type'] != 2  && 
+                	strpos($log['xml_out'], '"data":[]')
+                )
                 {
                     $xml_log_ids[] = $log['xml_log_id'];
                 }
 
-                // for delete other logs
-                if($old_other_log_date < $cDate && $log['request_type'] != 2)
+                // for delete booking retrieval logs
+                if(
+                	$old_booking_retrieval_log_date < $cDate && 
+                	$log['request_type'] == 2 && 
+                	strpos($log['xml_out'], '"data":[]')
+                )
                 {
                     $xml_log_ids[] = $log['xml_log_id'];
                 }
