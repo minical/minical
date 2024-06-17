@@ -136,7 +136,7 @@
                                                                     <h2 style="margin:0; mso-line-height-rule:exactly; font-size:22px; line-height:175%"><span style="color: #000000;"><strong><?php 
                                                                     if(isset($default_room_singular) && $default_room_singular !='' )
                                                                         {
-                                                                           echo $default_room_singular." ".l('Details');
+                                                                           echo ucfirst($default_room_singular)." ".l('Details');
                                                                         }else{
                                                                             echo l('Room Details', true);
                                                                         }  
