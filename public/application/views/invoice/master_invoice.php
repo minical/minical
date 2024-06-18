@@ -360,6 +360,12 @@
 								echo ($booking_customer['phone']) ? l('Phone', true).": ".$booking_customer['phone']."<br/>":'';
 								echo ($booking_customer['fax']) ? l('Fax', true).": ".$booking_customer['fax']."<br/>":'';
 								echo ($booking_customer['email']) ? l('Email', true).": <span id='customer-email'>".$booking_customer['email']."</span><br/>":'';
+							if (isset($booking_customer['customer_fields']) && count($booking_customer['customer_fields']) > 0) {
+                        		foreach ($booking_customer['customer_fields'] as $customer_field) {
+                           		 echo (isset($customer_field['name']) && $customer_field['name'] && isset($customer_field['value']) && $customer_field['value']) ? $customer_field['name'].": " . $customer_field['value'] . "<br/>" : '';
+                        		}
+                    		}
+
 					endif; 
 					if(isset($company['show_guest_group_invoice']) && $company['show_guest_group_invoice']): ?>
 						<br/>
