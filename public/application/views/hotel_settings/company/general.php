@@ -259,9 +259,9 @@
 		</div>
 
 		<div class="form-row">
-			<div class="col-md-4">
+			<div class="col-md-3">
 				<div class="position-relative form-group">
-					<label for="exampleAddress" class=""><?php echo l('Website/ Bussiness name'); ?></label>
+					<label for="exampleAddress" class=""><?php echo l('Website'); ?></label>
 					<input type="text" name="company_website" class="form-control" value="<?php 
 					if(isset($company)) 
 					echo $company['website']; 
@@ -269,9 +269,9 @@
 					echo set_value('company_website'); ?>" />
 				</div>
 			</div>
-			<div class="col-md-4">
+			<div class="col-md-3">
 				<div class="position-relative form-group">
-					<label for="company_bussiness_name" class=""><?php echo l('Business Number'); ?></label>
+					<label for="company_bussiness_name" class=""><?php echo l('Business Name'); ?></label>
 					<input type="text" name="bussiness_name" id="bussiness_name" class="form-control" value="<?php 
 					if(isset($company)){
 					echo $company['bussiness_name']; 
@@ -279,14 +279,24 @@
 					echo set_value('bussiness_name'); }?>" />
 				</div>
 			</div>
-			<div class="col-md-4">
+			<div class="col-md-3">
 				<div class="position-relative form-group">
-					<label for="company_bussiness_number" class=""><?php echo l('Fiscal Number'); ?></label>
+					<label for="company_bussiness_number" class=""><?php echo l('Business Number'); ?></label>
 					<input type="text" name="bussiness_number" id="bussiness_number" class="form-control" value="<?php 
-					if(isset($company)){ 
+					if(isset($company)){
 					echo $company['bussiness_number']; 
-					}else{
+					} else{
 					echo set_value('bussiness_number'); }?>" />
+				</div>
+			</div>
+			<div class="col-md-3">
+				<div class="position-relative form-group">
+					<label for="company_bussiness_fiscal_number" class=""><?php echo l('Fiscal Number'); ?></label>
+					<input type="text" name="bussiness_fiscal_number" id="bussiness_fiscal_number" class="form-control" value="<?php 
+					if(isset($company)){ 
+					echo $company['bussiness_fiscal_number']; 
+					}else{
+					echo set_value('bussiness_fiscal_number'); }?>" />
 				</div>
 			</div>
 		</div>

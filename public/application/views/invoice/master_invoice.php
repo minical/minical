@@ -327,10 +327,11 @@
 					echo ($company['phone'] != "") ? l('Phone', true).": ".$company['phone']."<br/>":'';
 					echo ($company['fax'] != "") ? l('Fax', true).": ".$company['fax']."<br/>":'';
 					echo ($company['email'] != "") ? l('Email', true).": <span id='company-email'>".$company['email']."</span><br/>":'';
-					echo ($company['website'] != "") ? l('Website/ Bussiness name', true).": ".$company['website']."<br/>":'';
+					echo ($company['website'] != "") ? l('Website', true).": ".$company['website']."<br/>":'';
 					echo $company['GST_number'];
-					echo ($company['bussiness_name'] != "")?"Bussiness number: ".$company['bussiness_name']."<br/>":'';
-                    echo ($company['bussiness_number'] != "")?"Fiscal Number: ".$company['bussiness_number']."<br/>":'';
+					echo ($company['bussiness_name'] != "")?"Bussiness Name: ".$company['bussiness_name']."<br/>":'';
+                    echo ($company['bussiness_number'] != "")?"Bussiness Number: ".$company['bussiness_number']."<br/>":'';
+                    echo ($company['bussiness_fiscal_number'] != "")?"Fiscal Number: ".$company['bussiness_fiscal_number']."<br/>":'';
 				?>
                 <?php echo '<p class="invoice-header">'.$company['invoice_header'].'</p>'; ?>
                 	

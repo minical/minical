@@ -113,6 +113,7 @@ class Company extends MY_Controller
                 'website'             => $this->input->post('company_website'),
                 'bussiness_name'      => $this->input->post('bussiness_name'),
                 'bussiness_number'    => $this->input->post('bussiness_number'),
+                'bussiness_fiscal_number'=> $this->input->post('bussiness_fiscal_number'),
                 'email'               => $this->input->post('company_email'),
                 'fax'                 => $this->input->post('company_fax'),
                 'time_zone'           => $this->input->post('time_zone'),
