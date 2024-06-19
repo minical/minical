@@ -351,10 +351,11 @@ if(isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true) {
                 echo ($company['phone'] != "")?"Phone: ".$company['phone']."<br/>":'';
                 echo ($company['fax'] != "")?"Fax: ".$company['fax']."<br/>":'';
                 echo ($company['email'] != "")?"Email: <span id='company-email'>".$company['email']."</span><br/>":'';
-                echo ($company['website'] != "")?"Website / Bussiness name: ".$company['website']."<br/>":'';
+                echo ($company['website'] != "")?"Website: ".$company['website']."<br/>":'';
                 echo $company['GST_number'];
-                echo ($company['bussiness_name'] != "")?"Bussiness number: ".$company['bussiness_name']."<br/>":'';
-                echo ($company['bussiness_number'] != "")?"Fiscal Number: ".$company['bussiness_number']."<br/>":'';
+                echo ($company['bussiness_name'] != "")?"Bussiness Name: ".$company['bussiness_name']."<br/>":'';
+                echo ($company['bussiness_number'] != "")?"Bussiness Number: ".$company['bussiness_number']."<br/>":'';
+                echo ($company['bussiness_fiscal_number'] != "")?"Fiscal Number: ".$company['bussiness_fiscal_number']."<br/>":'';
                 ?>
                 <!-- <?php echo '<p class="invoice-header">'.$company['invoice_email_header'].'</p>'; ?> -->
                 <?php if($this->vendor_id != 9) { ?>
