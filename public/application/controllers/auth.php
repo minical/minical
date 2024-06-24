@@ -193,9 +193,16 @@ class Auth extends MY_Controller
                 }
                 
                 $employee_permission['permissions'] = $this->Employee_log_model->get_user_permission($this->session->userdata('current_company_id'),$this->session->userdata('user_id'));
-                $this->session->set_userdata($employee_permission);    
-                 
-                 // redirect('/booking');
+                $this->session->set_userdata($employee_permission); 
+
+                $is_db_name = getenv('DATABASE_NAME');
+                
+                if(
+                    $is_db_name != 'minical-prod'
+                ){
+                    redirect('/booking');
+                } 
+
                 $admin_user_ids = $this->Whitelabel_partner_model->get_whitelabel_admin_ids($this->session->userdata('user_id'));
 
                 if (
@@ -1185,7 +1192,7 @@ class Auth extends MY_Controller
             'country' => $user['country']
         );
 
-                $this->_add_to_close_io($closeiodata);
+        $this->_add_to_close_io($closeiodata);
 
         // $whitelabelinfo = $this->session->userdata('white_label_information');
         // if(isset($whitelabelinfo['auto_close_io'])) {
