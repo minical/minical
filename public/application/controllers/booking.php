@@ -806,6 +806,116 @@ class Booking extends MY_Controller
 
     // accessed by jquery calendar.js
     // not the best practice. This function should be in model
+    // function get_bookings_in_JSON()
+    // {
+
+    //     $this->load->helper('date'); // load date helper. Keep in mind that I have also extended my_date_helper.php
+    //     $rows = array();
+
+    //     $start = setDate(sqli_clean($this->security->xss_clean($this->input->post('start'))), 'notime');
+    //     $end = setDate(sqli_clean($this->security->xss_clean($this->input->post('end'))), 'notime');
+    //     $group_id = sqli_clean($this->security->xss_clean($this->input->post('group_id')));
+    //     $floor_id = sqli_clean($this->security->xss_clean($this->input->post('floor_id')));
+    //     $location_id = sqli_clean($this->security->xss_clean($this->input->post('location_id')));
+    //     $room_type_id = sqli_clean($this->security->xss_clean($this->input->post('room_type_id')));
+    //     $reservation_type = sqli_clean($this->security->xss_clean($this->input->post('reservation_type')));
+    //     $booking_source = sqli_clean($this->security->xss_clean($this->input->post('booking_source')));
+
+    //     $this->load->model('Booking_model');
+    //     $this->load->model('Booking_room_history_model');
+    //     $filters = array(
+    //         'start_date' => $start,
+    //         'end_date' => $end,
+    //         'state' => "active",
+    //         //'group_id' => $group_id,
+    //         'location_id' => $location_id,
+    //         'room_type_id' => $room_type_id,
+    //         'floor_id' => $floor_id,
+    //         'reservation_type' => $reservation_type,
+    //         'booking_source' => $booking_source,
+    //         'group_by' => 'booking_room_history_id', // grouping by booking blocks!
+    //         'not_include_charge_payment_total' => true
+    //     );
+    //     $bookings = $this->Booking_model->get_bookings($filters, null, null ,true);
+
+
+    //     $data['rows'] = array();
+
+    //     foreach($bookings as $booking)
+    //     {
+    //         $warning_array = array();
+    //         $warning = "";
+
+    //         if ($booking['check_in_date'] == $booking['check_out_date'])
+    //         {
+    //             // TODO: use language pack (i.e. $this->lang->line('warning_short_stay'))
+    //             $warning_array[] = l("This block's check-in and check-out dates are the same", true);
+    //         }
+    //         if ($booking['state'] == UNCONFIRMED_RESERVATION)
+    //         {
+    //             $warning_array[] = l("This is an unconfirmed reservation. New reservation or new walk-in can be made on top of this block", true);
+    //         }
+    //         if ($this->selling_date >= date('Y-m-d', strtotime($booking['check_out_date'])) &&
+    //             $this->selling_date > date('Y-m-d', strtotime($booking['check_in_date'])) && $booking['state'] == INHOUSE)
+    //         {
+    //             // Make sure we consider this booking's check-out date. NOT this booking BLOCK's check-out date
+    //             $latest_block = $this->Booking_room_history_model->get_latest_booking_room_history($booking['booking_id']);
+    //             if ($latest_block['check_out_date'] == $booking['check_out_date'])
+    //             {
+    //                 $warning_array[] = l("This guest is supposed to check out", true);
+    //             }
+    //         }
+
+    //         if($this->is_total_balance_include_forecast == 1)
+    //         {
+    //             $booking['balance'] = isset($booking['balance']) ? round(floatval($booking['balance']), 2) : 0;
+    //             //$booking['charge_total'] = floatval($booking['balance']) + floatval($booking['payment_total']);
+    //         }
+    //         else
+    //         {
+    //             $booking['balance'] = isset($booking['balance_without_forecast']) ? round(floatval($booking['balance_without_forecast']), 2) : 0;
+    //             //$booking['balance'] = floatval($booking['charge_total']) - floatval($booking['payment_total']);
+    //         }
+
+    //         if ($booking['state'] == CHECKOUT && $booking['balance'] > 0)
+    //         {
+    //             $warning_array[] = l("This guest has an outstanding balance", true);
+    //         }
+
+    //         if (count($warning_array) > 0)
+    //         {
+    //             $warning = implode(", and ", $warning_array);
+    //         }
+    //         $payment_details = $this->Payment_model->get_payments($booking['booking_id']);
+    //         $booking['payment_total'] = 0;
+    //          if (isset($payment_details)){
+    //             foreach($payment_details as $payment)
+    //             {
+    //             $booking['payment_total'] += $payment['amount'];
+    //             }
+    //         }else{
+    //             $booking['payment_total'] = 0;
+    //         }
+    //         // TODO: Check if booking already has custom color assigned. Otherwise, just make them red
+    //         if ($warning != "")
+    //         {
+    //             $booking['border_color'] =  "red";
+    //         }
+    //         else
+    //         {
+    //             $booking['border_color'] =  "black";
+    //         }
+
+    //         $booking['warning_message'] = $warning;
+
+    //         $data['rows'][] = $booking;
+
+    //     }
+
+    //     $rows = json_encode($data['rows']);
+    //     print_r($rows);
+    // }
+
     function get_bookings_in_JSON()
     {
 
@@ -839,12 +949,14 @@ class Booking extends MY_Controller
         $bookings = $this->Booking_model->get_bookings($filters, null, null ,true);
 
 
-        $data['rows'] = array();
+        $data['rows'] = $booking_ids_arr = array();
 
         foreach($bookings as $booking)
         {
             $warning_array = array();
             $warning = "";
+
+            $booking_ids_arr[] = $booking['booking_id'];
 
             if ($booking['check_in_date'] == $booking['check_out_date'])
             {
@@ -886,16 +998,16 @@ class Booking extends MY_Controller
             {
                 $warning = implode(", and ", $warning_array);
             }
-            $payment_details = $this->Payment_model->get_payments($booking['booking_id']);
-            $booking['payment_total'] = 0;
-             if (isset($payment_details)){
-                foreach($payment_details as $payment)
-                {
-                $booking['payment_total'] += $payment['amount'];
-                }
-            }else{
-                $booking['payment_total'] = 0;
-            }
+            // $payment_details = $this->Payment_model->get_payments($booking['booking_id']);
+            // $booking['payment_total'] = 0;
+            //  if (isset($payment_details)){
+            //     foreach($payment_details as $payment)
+            //     {
+            //     $booking['payment_total'] += $payment['amount'];
+            //     }
+            // }else{
+            //     $booking['payment_total'] = 0;
+            // }
             // TODO: Check if booking already has custom color assigned. Otherwise, just make them red
             if ($warning != "")
             {
@@ -906,11 +1018,37 @@ class Booking extends MY_Controller
                 $booking['border_color'] =  "black";
             }
 
+            $booking['payment_total'] = 0;
+
             $booking['warning_message'] = $warning;
 
-            $data['rows'][] = $booking;
+            $data['rows'][$booking['booking_id']] = $booking;
 
         }
+
+        if(!empty($booking_ids_arr)) {
+
+            $booking_ids = implode(',', $booking_ids_arr);
+
+            $payment_details = $this->Payment_model->get_payments($booking_ids);
+            $payment_total = 0;
+
+            foreach ($data['rows'] as $key => $value) {
+            
+                if (isset($payment_details)){
+                    foreach($payment_details as $payment)
+                    {
+                        $payment_total = 0;
+                        $payment_total += $payment['amount'];
+                        if($payment['booking_id'] == $key){
+                            $data['rows'][$key]['payment_total'] = $payment_total;
+                        }
+                    }
+        }
+            }
+        }
+
+        $data['rows'] = array_values($data['rows']);
 
         $rows = json_encode($data['rows']);
         print_r($rows);
