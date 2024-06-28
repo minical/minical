@@ -54,23 +54,18 @@
 								</div>
 							</div>
 
-							<?php foreach ($customers as $key => $customer):
-							if ((isset($customers[$key]['stripe_customer_id']) && $customers[$key]['stripe_customer_id']) || (isset($customers[$key]['cc_tokenex_token']) && $customers[$key]['cc_tokenex_token'])): ?>
-				                <div class="form-group use-payment-gateway-btn <?php echo (
-                                ($this->company_subscription_level == STARTER || $this->company_subscription_level == BASIC) 
-                                && $this->company_feature_limit == 1 && $this->company_subscription_state != 'trialing') ? 'hidden' : '' ?>">
-				                    <label for="payment_amount" class="col-sm-4 control-label">
-				                        <?php echo l('use_payment_gateway'); ?>
-				                    </label>
-				                    <div class="col-sm-8" id="use-gateway-div">
-				                        <div class="col-sm-2">
-				                        	<input type="checkbox" class="form-control use_gateway" data-gateway_name="<?= $selected_payment_gateway; ?>" name="use_gateway">
-				                        </div>
-				                    </div>
-				                </div>
-				                <?php break; endif; endforeach; ?>
-			              
-			                <?php   
+							<?php if(check_active_extensions($this->current_payment_gateway, $this->company_id)){ ?>
+			                    <div style="display:none;" class="form-group use-payment-gateway-btn ">
+			                        <label for="payment_amount" class="col-sm-4 control-label">
+			                            <?php echo l('use_payment_gateway'); ?>
+			                        </label>
+
+			                        <div class="col-sm-8" id="use-gateway-div">
+			                            <div class="col-sm-2"><input type="checkbox" class="form-control use-gateway" id="check-wep" data-gateway_name="<?=$selected_payment_gateway;?>" name="<?=$selected_payment_gateway;?>_use_gateway"></div>
+			                        </div>
+			                    </div>
+			                    
+			                    <?php }  
 			                	if (count(array_filter($customers)) > 0 ): 
 			                ?>
 									<div class="form-group">
@@ -87,10 +82,10 @@
                                                         } else {
                                                             $selected_customer = '';
                                                         }
-                                                        if ($customer['stripe_customer_id'] || $customer['cc_tokenex_token']) {
+                                                        if ($customer['cc_expiry_year'] || $customer['cc_cvc_encrypted']) {
                                                             $is_gateway_available = 'true';
-                                                            if($customer['stripe_customer_id'])
-                                                                $available_gateway = 'stripe';
+                                                            if($customer['cc_cvc_encrypted'])
+                                                                $available_gateway = $selected_payment_gateway;
                                                             else
                                                                 $available_gateway = 'tokenex';
                                                         } else {

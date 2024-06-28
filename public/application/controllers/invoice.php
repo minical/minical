@@ -1110,25 +1110,12 @@ class Invoice extends MY_Controller {
                     "payment_type_id" => $payment_type_id,
                     "description" => $description,
                     "date_time" => gmdate("Y-m-d H:i:s"),
+                    "selected_gateway" => $this->input->post('selected_gateway'),
                 );
                 $card_data = $this->Card_model->get_active_card($customer_id, $this->company_id);
                 $data['credit_card_id'] = "";
                 if(isset($card_data) && $card_data){
                      $data['credit_card_id'] = $card_data['id'];
-                }
-                
-                if(isset($card_data['evc_card_status']) && $card_data['evc_card_status'] && false){
-                    // check folio is exist or not
-                    $evc_folio_id = $this->check_EVC_folio('Expedia EVC', $data['booking_id'], $customer_id, true);
-                    if(isset($evc_folio_id) && $evc_folio_id)
-                    {
-                        $data['folio_id'] = $folio_id = $evc_folio_id;
-                    }
-                    else
-                    {
-                        $folio_id = $this->add_folio_AJAX('Expedia EVC', $data['booking_id'], $customer_id, true);
-                        $data['folio_id'] = $folio_id = $folio_id ? $folio_id : 0;
-                    }
                 }
                 
                 if($data['amount'] > 0)

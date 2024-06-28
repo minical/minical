@@ -5,11 +5,11 @@
             <div class="page-title-icon">
                 <i class="pe-7s-home text-success"></i>
             </div>
-            <?php echo l($this->default_room_singular).' '.l('Location Settings',true); ?>
+            <?php echo l($this->default_room_singular, true).' '.l('Location Settings',true); ?>
         </div>
         <div class="page-title-actions m-010">
           <button id="add-room-location-button" class="btn btn-primary"><?php echo l('Add',true).' '.l($this->default_room_singular).' '.l('Location',true); ?></button>
-          <button id="save-all-rooms-locations-button" class="btn btn-default"><?php echo l('save_all'); ?></button>
+          <button id="save-all-rooms-locations-button" class="btn btn-light"><?php echo l('save_all'); ?></button>
         </div>
     </div>
 </div>

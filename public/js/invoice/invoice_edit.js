@@ -1738,6 +1738,7 @@ $(function() {
                         description: $("textarea[name='description']").val(),
                         cvc: $("input[name='cvc']").val(),
                         folio_id: $('#current_folio_id').val(),
+                        selected_gateway: $('input[name="' + innGrid.featureSettings.selectedPaymentGateway + '_use_gateway"]').data('gateway_name'),
                         capture_payment_type: capture_payment_type
                     }, function(data) {
                         data = JSON.parse(data);

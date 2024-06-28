@@ -950,6 +950,7 @@ class Booking extends MY_Controller
 
 
         $data['rows'] = $booking_ids_arr = array();
+        $i = 0;
 
         foreach($bookings as $booking)
         {
@@ -1022,7 +1023,9 @@ class Booking extends MY_Controller
 
             $booking['warning_message'] = $warning;
 
-            $data['rows'][$booking['booking_id']] = $booking;
+            $data['rows'][$booking['booking_id'].'_'.$i] = $booking;
+
+            $i++;
 
         }
 
@@ -1032,20 +1035,59 @@ class Booking extends MY_Controller
 
             $payment_details = $this->Payment_model->get_payments($booking_ids);
             $payment_total = 0;
+            $payment_book_ids = array();
 
-            foreach ($data['rows'] as $key => $value) {
+            // foreach($payment_details as $payment)
+            // {
+            //     // $payment_total = 0;
+            //     if(!in_array($payment['booking_id'], $payment_book_ids))
+            //         $payment_total += $payment['amount'];
+
+            //     // $key1 = explode('_', $key);
+
+            //     // if($payment['booking_id'] == $key1[0]){
+            //     //     $data['rows'][$key1[0].'_'.$key1[1]]['payment_total'] = $payment_total;
+            //     // }
+            // }
+
+            // prx($payment_details);
+
+            // foreach ($data['rows'] as $key => $value) {
             
-                if (isset($payment_details)){
-                    foreach($payment_details as $payment)
-                    {
-                        $payment_total = 0;
-                        $payment_total += $payment['amount'];
-                        if($payment['booking_id'] == $key){
-                            $data['rows'][$key]['payment_total'] = $payment_total;
-                        }
-                    }
-        }
+            //     if (isset($payment_details)){
+            //         foreach($payment_details as $payment)
+            //         {
+            //             $payment_total = 0;
+            //             $payment_total += $payment['amount'];
+
+            //             $key1 = explode('_', $key);
+
+            //             if($payment['booking_id'] == $key1[0]){
+            //                 $data['rows'][$key1[0].'_'.$key1[1]]['payment_total'] = $payment_total;
+            //             }
+            //         }
+            //     }
+            // }
+
+            // Step 1: Accumulate payments for each booking_id
+            $payment_totals = [];
+            foreach ($payment_details as $payment) {
+                if (!isset($payment_totals[$payment['booking_id']])) {
+                    $payment_totals[$payment['booking_id']] = 0;
+                }
+                $payment_totals[$payment['booking_id']] += $payment['amount'];
             }
+
+            // Step 2: Update $data['rows'] with the accumulated payment totals
+            foreach ($data['rows'] as $key => $value) {
+                $key1 = explode('_', $key);
+                $booking_id = $key1[0];
+                
+                if (isset($payment_totals[$booking_id])) {
+                    $data['rows'][$key1[0].'_'.$key1[1]]['payment_total'] = $payment_totals[$booking_id];
+                }
+            }
+
         }
 
         $data['rows'] = array_values($data['rows']);
@@ -2664,11 +2706,11 @@ class Booking extends MY_Controller
                     }
                 } elseif ($log_type == 6) { // charge_type
                     $charge_types = $this->Charge_type_model->get_charge_types($this->company_id);
-                    foreach ($charge_types as $charge_type) {
-                        if ($charge_type['id'] == $log['log'])
-                            $log['log'] = $charge_type['name'];
+                        foreach ($charge_types as $charge_type) {
+                            if ($charge_type['id'] == $log['log'])
+                                $log['log'] = $charge_type['name'];
+                        }
                     }
-                }
                 elseif ($log_type == 10) { // use_rate_plan
                     switch ($log['log']) {
                         case '0': $log['log'] = 'disabled';
