@@ -4697,3 +4697,6 @@
     min-height: 34px !important;
     padding-bottom: 0 !important;
 }
+.cke_notifications_area{
+   display: none;
+}
