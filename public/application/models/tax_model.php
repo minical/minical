@@ -375,6 +375,12 @@ class Tax_model extends CI_Model {
 
 		$tax_types_str = implode(", ", $str_array);
 
+		if($this->vendor_id == 21){
+			$select_taxes = "SUM(IF(tt.is_percentage = 1, c.amount - (c.amount / (1 + (tt.tax_rate * 0.01))),  tt.tax_rate)) AS taxed_amount";
+		} else {
+			$select_taxes = "sum(IF(tt.is_percentage = 1, CAST((c.amount * IF(tt.is_brackets_active = 1, tpb.tax_rate, tt.tax_rate) * 0.01) as DECIMAL(16, 5)), IF(tt.is_brackets_active = 1, tpb.tax_rate, tt.tax_rate))) as taxed_amount";
+		}
+
 		$company_id = $this->session->userdata('current_company_id');
 		$sql = "		
 			SELECT 
@@ -387,8 +393,7 @@ class Tax_model extends CI_Model {
 					c.selling_date, 
 					tt.tax_type, 
 					tt.tax_type_id, 
-					#sum(IF(tt.is_percentage = 1, CAST((c.amount * IF(tt.is_brackets_active = 1, tpb.tax_rate, tt.tax_rate) * 0.01) as DECIMAL(16, 5)), IF(tt.is_brackets_active = 1, tpb.tax_rate, tt.tax_rate))) as taxed_amount ,
-					SUM(IF(tt.is_percentage = 1, c.amount - (c.amount / (1 + (tt.tax_rate * 0.01))),  tt.tax_rate)) AS taxed_amount,
+					$select_taxes,
                     ct2.is_tax_exempt,
                     IF(tt.is_brackets_active = 1, tpb.tax_rate, tt.tax_rate) as tax_rate
 				FROM 
