@@ -1071,11 +1071,13 @@ class Booking extends MY_Controller
 
             // Step 1: Accumulate payments for each booking_id
             $payment_totals = [];
+            if($payment_details && count($payment_details) > 0){
             foreach ($payment_details as $payment) {
                 if (!isset($payment_totals[$payment['booking_id']])) {
                     $payment_totals[$payment['booking_id']] = 0;
                 }
                 $payment_totals[$payment['booking_id']] += $payment['amount'];
+            }
             }
 
             // Step 2: Update $data['rows'] with the accumulated payment totals
