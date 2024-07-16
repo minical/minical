@@ -1182,6 +1182,64 @@ class Customer extends MY_Controller {
         }
     }
 
+    // function get_customer_AJAX()
+    // {
+    //     $customer_id = sqli_clean($this->security->xss_clean($this->input->post('customer_id')));
+    //     $customer = $this->Customer_model->get_customer($customer_id);
+        
+    //     if($customer['cc_number'])
+    //        $customer['cc_number'] = "";
+    //     if($customer['cc_expiry_month'])
+    //        $customer['cc_expiry_month'] = "";
+    //     if($customer['cc_expiry_year'])
+    //        $customer['cc_expiry_year'] = "";
+    //     if($customer['cc_tokenex_token']) 
+    //        $customer['cc_tokenex_token'] = "";
+    //     if($customer['cc_cvc_encrypted'])
+    //        $customer['cc_cvc_encrypted'] = "";
+        
+       
+    //     $card_details = $this->Card_model->get_customer_primary_card($customer_id);
+        
+    //         if(isset($card_details) && $card_details){
+    //             if(!strrpos($card_details['cc_number'], 'X') && preg_match("/[a-z]/i", $card_details['cc_number'])){
+    //                 $card_details['cc_number_encrypted'] = $card_details['cc_number'];
+    //                 $card_details['cc_number'] = 'XXXX XXXX XXXX '.substr(base64_decode($card_details['cc_number']), -4);
+    //             }
+            
+                
+    //             // $token = isset(json_decode($card_details['customer_meta_data'], true)['token']) && json_decode($card_details['customer_meta_data'], true)['token'] ? json_decode($card_details['customer_meta_data'], true)['token'] : json_decode($card_details['customer_meta_data'], true)['pci_token'];
+
+    //             if (isset(json_decode($card_details['customer_meta_data'], true)['token']) && json_decode($card_details['customer_meta_data'], true)['token']) {
+    //                 $token = json_decode($card_details['customer_meta_data'], true)['token'];
+    //             } elseif(json_decode($card_details['customer_meta_data'], true)['source'] == 'pci_booking') {
+    //                 $token = json_decode($card_details['customer_meta_data'], true)['pci_token'];
+    //             } elseif (json_decode($card_details['customer_meta_data'], true)['source'] == 'cardknox') {
+    //                 $token = json_decode($card_details['customer_meta_data'], true)['cardknox_token'];
+    //             }
+                
+    //             // if (json_decode($card_details['customer_meta_data'], true)['source'] == 'pci_booking') {
+    //             //  $token = json_decode($card_details['customer_meta_data'], true)['pci_token'];
+    //             // } 
+    //             // elseif (json_decode($card_details['customer_meta_data'], true)['source'] == 'cardknox') {
+    //             //  $token = json_decode($card_details['customer_meta_data'], true)['cardknox_token'];
+    //             // } 
+    //             // else {
+    //             //  $token = json_decode($card_details['customer_meta_data'], true)['token'];
+    //             // }
+    //             $customer['cc_number_encrypted'] = isset($card_details['cc_number_encrypted']) && $card_details['cc_number_encrypted'] ? $card_details['cc_number_encrypted'] : null;
+    //             $customer['cc_number'] = $card_details['cc_number'];
+    //             $customer['cc_expiry_month'] = $card_details['cc_expiry_month'];
+    //             $customer['cc_expiry_year'] = $card_details['cc_expiry_year'];
+    //             $customer['cc_tokenex_token'] = $card_details['cc_tokenex_token'];
+    //             $customer['cc_cvc_encrypted'] = $card_details['cc_cvc_encrypted'];
+    //             $customer['customer_pci_token'] = $token ?? null;
+    //             $customer['token_source'] = json_decode($card_details['customer_meta_data'], true)['source'] ?? null;
+    //         }
+
+    //     echo json_encode($customer);
+    // }
+
     function get_customer_AJAX()
     {
         $customer_id = sqli_clean($this->security->xss_clean($this->input->post('customer_id')));
@@ -1209,15 +1267,40 @@ class Customer extends MY_Controller {
             
                 
                 // $token = isset(json_decode($card_details['customer_meta_data'], true)['token']) && json_decode($card_details['customer_meta_data'], true)['token'] ? json_decode($card_details['customer_meta_data'], true)['token'] : json_decode($card_details['customer_meta_data'], true)['pci_token'];
+                // commented
+                // if (isset(json_decode($card_details['customer_meta_data'], true)['token']) && json_decode($card_details['customer_meta_data'], true)['token']) {
+                //     $token = json_decode($card_details['customer_meta_data'], true)['token'];
+                // } elseif(json_decode($card_details['customer_meta_data'], true)['source'] == 'pci_booking') {
+                //     $token = json_decode($card_details['customer_meta_data'], true)['pci_token'];
+                // } elseif (json_decode($card_details['customer_meta_data'], true)['source'] == 'cardknox') {
+                //     $token = json_decode($card_details['customer_meta_data'], true)['cardknox_token'];
+                // }
+                // end               
 
-                if (isset(json_decode($card_details['customer_meta_data'], true)['token']) && json_decode($card_details['customer_meta_data'], true)['token']) {
-                    $token = json_decode($card_details['customer_meta_data'], true)['token'];
-                } elseif(json_decode($card_details['customer_meta_data'], true)['source'] == 'pci_booking') {
-                    $token = json_decode($card_details['customer_meta_data'], true)['pci_token'];
-                } elseif (json_decode($card_details['customer_meta_data'], true)['source'] == 'cardknox') {
-                    $token = json_decode($card_details['customer_meta_data'], true)['cardknox_token'];
+
+                // fix
+                $customer_meta_data = json_decode($card_details['customer_meta_data'], true);
+
+                if ($customer_meta_data !== null) {
+                    if (isset($customer_meta_data['source'])) {
+                        if ($customer_meta_data['source'] == 'pci_booking') {
+                            $token = isset($customer_meta_data['pci_token']) ? $customer_meta_data['pci_token'] : '';
+                        } elseif ($customer_meta_data['source'] == 'cardknox') {
+                            $token = isset($customer_meta_data['cardknox_token']) ? $customer_meta_data['cardknox_token'] : '';
+                        } else {
+                            $token = ''; // Default value for $token when 'source' is set but not 'pci_booking' or 'cardknox'
+                        }
+                    } else {
+                        if (isset($customer_meta_data['token']) && $customer_meta_data['token']) {
+                            $token = $customer_meta_data['token'];
+                        } else {
+                            $token = ''; // Default value for $token when 'source' is not set
+                        }
+                    }
+                } else {
+                    $token = ''; // Default value for $token when $customer_meta_data is not valid JSON or is null.
                 }
-                
+                // end
                 // if (json_decode($card_details['customer_meta_data'], true)['source'] == 'pci_booking') {
                 //  $token = json_decode($card_details['customer_meta_data'], true)['pci_token'];
                 // } 
