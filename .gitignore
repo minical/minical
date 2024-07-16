@@ -9,3 +9,4 @@ composer.phar
 .env
 /nbproject/private/
 /public/application/extensions/
+/public/images/photo_library/

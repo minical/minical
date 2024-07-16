@@ -70,7 +70,7 @@ var customerId;
 
         options = $.extend({}, defaults, options);
 
-        $.when(this.deferredCustomerFields, this.deferredCustomerTypes).done(function() {
+        $.when(this.deferredCustomerFields, this.deferredCustomerTypes, this.deferredphotoLibFields).done(function() {
             that._populateCustomerModal(that.customerData, options);
         });
         //if(!innGrid.ajaxCache.customerTypes)
@@ -157,6 +157,42 @@ var customerId;
             that.customerFields = innGrid.ajaxCache.customerFields;
             that.deferredCustomerFields.resolve();
         }
+
+
+        // photo library
+        that.photoLibInstalled = "0"; 
+        $.ajax({
+            type: "POST",
+            url: getBaseURL() + "extensions/check_photo_library_installed",
+            data:{
+            },
+            dataType: "json",
+            success: function(data) {
+               if( data.exists == true ){
+                    that.photoLibInstalled = "1";  
+                    if(options.customer_id !=''){
+                        $.ajax({
+                            type: "POST",
+                            url: getBaseURL() + "photo-lib/get_photo_library",
+                            data:{
+                                customer_id:options.customer_id,
+                            },
+                            dataType: "json",
+                            success: function(photolibdata) {
+                            if(photolibdata.exists == true){
+                                    that.photoLibFields = photolibdata.photo_lib_data;    
+                            } 
+                            that.deferredphotoLibFields.resolve();       
+                            }
+                        });
+                    }
+               }else{
+                    that.deferredphotoLibFields.resolve(); 
+               }  
+            }
+        });
+        // end
+
         $("#customer-modal").on('hidden.bs.modal', function() {
 
             // remove customer tokens that has not been created
@@ -236,7 +272,472 @@ var customerId;
                     onsubmit: "return false",
 
                 })
-                .append(this._getHorizontalInput(l("Name", true), 'customer_name', customer.customer_name, (commonCustomerFields && commonCustomerFields[0] && commonCustomerFields[0]['show_on_customer_form'] == 0 ? "hidden customer_field_1" : "customer_field_1"), 1))
+                
+            // photo lib
+
+            if (that.photoLibInstalled == 1) {
+                // Add the Custom picture upload field
+
+                var default_custom_picture = getBaseURL() + '/'+'images/photo_library/default_image.png';
+                var custom_picture_meta_key = '';
+                var custom_picture_meta_value = '';
+
+                if (that.photoLibFields != undefined) {
+                    $.each(that.photoLibFields, function (key, value) {
+                        if (value.meta_key == '(custom_picture)') {
+                            default_custom_picture = getBaseURL() + '/'+value.file_path;
+                            custom_picture_meta_key = value.file_type,
+                            custom_picture_meta_value = value.meta_value
+                        }
+                    });
+                }
+
+                // Create the "Take a Picture" button with a tooltip
+                var $takePictureButton = $("<button/>", {
+                    type: "button",
+                    class: "btn btn-primary",
+                    click: function () {
+                        // Open the device's camera 
+                        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                            navigator.mediaDevices
+                                .getUserMedia({ video: true }) 
+                                .then(function (stream) {
+                                    var $cameraPreview = $("<video/>", {
+                                        id: "camera_preview",
+                                        autoplay: true,
+                                        style: "max-width: 100px; max-height: 100px;", 
+                                    });
+
+                                    // Display the camera stream in a video element
+                                    $cameraPreview[0].srcObject = stream;
+
+                                    // Remove previous camera preview
+                                    $("#camera_preview").remove();
+
+                                    // Display the camera preview
+                                    $(this).after($cameraPreview);
+                                })
+                                .catch(function (error) {
+                                    console.error("Error accessing the camera: " + error.message);
+                                });
+                        } else {
+                            console.error("getUserMedia is not supported in this browser.");
+                        }
+                    },
+                    title: "Take a Picture", 
+                }).append(
+                    $("<i/>", {
+                        class: "metismenu-icon pe-7s-camera", 
+                    })
+                );
+
+                // Create a delete icon next to the "Take a Picture" button
+                var $deleteCustomPictureIcon = "";
+                if (custom_picture_meta_key != '') {
+                    $deleteCustomPictureIcon = $("<i/>", {
+                        class: "fa fa-trash delete-photo-icon",
+                        style: "cursor: pointer; margin-left: 10px;",
+                    }).click(function () {
+                        $.ajax({
+                            type: "POST",
+                            url: getBaseURL() + "photo-lib/delete_photo", 
+                            data: {
+                                post_id: customer.customer_id,
+                                meta_key: custom_picture_meta_key,
+                                meta_value: custom_picture_meta_value
+                            },
+                            dataType: "json",
+                            success: function (data) {
+                                default_custom_picture = getBaseURL() + '/'+'images/photo_library/default_image.png';
+                                // Handle success, e.g., set the image back to the default custom picture
+                                $("#custom_picture_preview").attr("src", default_custom_picture + "?" + new Date().getTime());
+                                // Remove the delete icon
+                                $deleteCustomPictureIcon.remove();
+                            },
+                            error: function (xhr, status, error) {
+                                console.error("Error deleting custom picture: " + error);
+                            },
+                        });
+                    });
+                }
+
+
+
+                var $photo_upload_field = $("<div/>", {
+                    class: 'form-group form-group-sm',
+                    style: "display: flex; align-items: center;", 
+                }).append(
+                    $("<label/>", {
+                        class: 'col-sm-3 control-label',
+                        html: "Custom picture",
+                        style: "margin-right: 10px;", 
+                    }),
+                    $("<div/>", {
+                        class: 'col-sm-9',
+                    }).append(
+                        // Display the server photo initially
+                        $("<img/>", {
+                            id: "custom_picture_preview",
+                            alt: "Custom Picture Preview",
+                            style: "max-width: 100px; max-height: 100px;", 
+                            src: default_custom_picture + "?" + new Date().getTime(), 
+                        }),
+                        $("<input/>", {
+                            type: "file",
+                            id: "photo_upload_custom_picture",
+                            name: "photo_upload_custom_picture",
+                            accept: "image/*", 
+                            // Add an event listener to handle file upload and display the uploaded image
+                            change: function () {
+                                var fileInput = this;
+                                var $imagePreview = $("#custom_picture_preview"); 
+
+                                if (fileInput.files && fileInput.files[0]) {
+                                    var reader = new FileReader();
+                                    reader.onload = function (e) {
+                                        $imagePreview.attr("src", e.target.result);
+                                    };
+                                    reader.readAsDataURL(fileInput.files[0]);
+                                } else {
+                                    $imagePreview.attr("src", "");
+                                }
+                            },
+                        }),
+                        $takePictureButton, // Append the "Take a Picture" button to the photo upload field
+                        $deleteCustomPictureIcon // Append the delete icon next to the "Take a Picture" button
+                    )
+                );
+                $customer_form.append($photo_upload_field);
+
+                // Create the "Add New Photo" button
+                var $addNewPhotoButton = $("<input/>", {
+                    class: "btn btn-primary",
+                    id: "add_new_photo_lib_button",
+                    type: "button",
+                    value: "Add New Photo",
+                    'data-label': "Add New Photo",
+                });
+
+                // Create a container for the dynamically added fields
+                var $photoLibContainer = $("<div/>", {
+                    id: "photo_lib_container",
+                    class: ""
+                });
+
+                // Append the "Add New Photo" button to the form
+                $customer_form.append($addNewPhotoButton);
+
+                // Append the container for dynamically added fields
+                $customer_form.append($photoLibContainer);
+                
+                // Click event handler for the "Add New Photo" button
+                $addNewPhotoButton.click(function () {
+                    // Create a new photo library field group
+                    var $photoLibFieldGroup = $("<div/>", {
+                        style: "display: flex; align-items: center;",
+                        class: "photo-lib-main-div",
+                    });
+
+                    // Create a delete icon
+                    var $deleteIcon = $("<i/>", {
+                        class: "fa fa-trash delete-photo-icon",
+                        style: "cursor: pointer; margin-right: 10px;",
+                    });
+
+                    // Create a camera icon
+                    var $cameraIcon = $("<i/>", {
+                        class: "fa fa-camera camera-icon",
+                        style: "cursor: pointer; margin-right: 10px;",
+                    });
+
+                    // Create a text input for "Photo Type"
+                    var $photoTypeInput = $("<input/>", {
+                        class: "col-sm-6 form-control photo-lib-name",
+                        type: "text",
+                        placeholder: "Photo Type",
+                    });
+
+                    // Attach an input event to validate the "Photo Type" input
+                    $photoTypeInput.on("input", function () {
+                        var inputValue = $(this).val();
+                        var validCharactersRegex = /^[a-zA-Z0-9_-]*$/; // Regex for valid characters
+
+                        if (!validCharactersRegex.test(inputValue)) {
+                            // If the input contains invalid characters, remove them
+                            $(this).val(inputValue.replace(/[^a-zA-Z0-9_-]/g, ""));
+                        }
+                    });
+
+                    // Create a file input for uploading
+                    var $photoFileInput = $("<input/>", {
+                        class: "col-sm-6 form-control photo-lib-upload",
+                        type: "file",
+                        accept: "image/*"
+                    });
+
+                    // Create an image element for displaying the uploaded image with a default size
+                    var $newImageElement = $("<img/>", {
+                        alt: "",
+                        style: "max-width: 100px; max-height: 100px; cursor: pointer;", 
+                    });
+
+                    // Attach a change event to the file input for displaying the uploaded image
+                    $photoFileInput.change(function () {
+                        var fileInput = this;
+                        if (fileInput.files && fileInput.files[0]) {
+                            var reader = new FileReader();
+                            reader.onload = function (e) {
+                                $newImageElement.attr("src", e.target.result);
+                            };
+                            reader.readAsDataURL(fileInput.files[0]);
+                        } else {
+                            $newImageElement.attr("src", "");
+                        }
+                    });
+
+                    // Append the delete icon, camera icon, inputs, and image to the photo type container
+                    $photoLibFieldGroup.append(
+                        $deleteIcon,
+                        $cameraIcon,
+                        $photoTypeInput,
+                        $photoFileInput,
+                        $newImageElement
+                    );
+
+                    // Append the field group to the container
+                    $photoLibContainer.append($photoLibFieldGroup);
+
+                    // Delete icon click event handler
+                    $deleteIcon.click(function () {
+                        // Remove the corresponding field
+                        $photoLibFieldGroup.remove();
+                    });
+
+                    // Camera icon click event handler
+                    $cameraIcon.click(function () {
+                        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                            navigator.mediaDevices
+                                .getUserMedia({ video: true }) // Use video to access the camera
+                                .then(function (stream) {
+                                    var $cameraPreview = $("<video/>", {
+                                        id: "camera_preview",
+                                        autoplay: true,
+                                        style: "max-width: 100px; max-height: 100px;", 
+                                    });
+
+                                    // Display the camera stream in a video element
+                                    $cameraPreview[0].srcObject = stream;
+
+                                    // Remove previous camera preview
+                                    $("#camera_preview").remove();
+
+                                    // Display the camera preview
+                                    $newImageElement.replaceWith($cameraPreview);
+
+                                    // Capture photo when clicking the camera icon again
+                                    $cameraIcon.off("click").click(function () {
+                                        // Capture the current frame from the video stream
+                                        var canvas = document.createElement("canvas");
+                                        var context = canvas.getContext("2d");
+                                        canvas.width = $cameraPreview[0].videoWidth;
+                                        canvas.height = $cameraPreview[0].videoHeight;
+                                        context.drawImage($cameraPreview[0], 0, 0, canvas.width, canvas.height);
+
+                                        // Convert the canvas to a data URL representing the captured image
+                                        var imageDataURL = canvas.toDataURL("image/png");
+
+                                        // Set the captured image as the source of the image element
+                                        $newImageElement.attr("src", imageDataURL);
+
+                                        // Stop the camera stream and remove the camera preview
+                                        stream.getTracks().forEach(function (track) {
+                                            track.stop();
+                                        });
+                                        $cameraPreview.remove();
+                                    });
+                                })
+                                .catch(function (error) {
+                                    console.error("Error accessing the camera: " + error.message);
+                                });
+                        } else {
+                            console.error("getUserMedia is not supported in this browser.");
+                        }
+                    });
+                });
+
+                if (that.photoLibFields != undefined) {
+                    // Loop through existing photo library fields
+                    $.each(that.photoLibFields, function (key, value) {
+                        if (value.meta_key != '(custom_picture)') {
+                            // Create a container for each existing photo library field
+                            var $existingPhotoLibContainer = $("<div/>", {
+                                class: "photo-lib-main-div",
+                            });
+                
+                            // Create a delete icon
+                            var $deleteIcon = $("<i/>", {
+                                class: "fa fa-trash delete-photo-icon",
+                                style: "cursor: pointer; margin-right: 10px;",
+                            });
+                
+                            // Create a camera icon
+                            var $cameraIcon = $("<i/>", {
+                                class: "fa fa-camera camera-icon",
+                                style: "cursor: pointer; margin-right: 10px;",
+                            });
+                
+                            // Create a container to hold the photo type input, upload option, and image
+                            var $photoTypeContainer = $("<div/>", {
+                                style: "display: flex; align-items: center;",
+                            });
+                
+                            // Create a text input for "Photo Type"
+                            var $existingPhotoTypeInput = $("<input/>", {
+                                class: "col-sm-6 form-control photo-lib-name",
+                                type: "text",
+                                value: value.file_type,
+                                readonly: true,
+                            });
+                
+                            // Create a file input for uploading
+                            var $existingPhotoFileInput = $("<input/>", {
+                                class: "col-sm-6 form-control photo-lib-upload",
+                                type: "file",
+                                accept: "image/*"
+                            });
+                
+                            // Create an image container with fixed dimensions
+                            var $imageContainer = $("<div/>", {
+                                style: "width: 100px; height: 100px; overflow: hidden;", // Fixed size and hidden overflow
+                            });
+                
+                            // Create an image element for displaying the image with consistent size
+                            var $imageElement = $("<img/>", {
+                                src: getBaseURL() + '/'+value.file_path + "?" + new Date().getTime(), 
+                                alt: value.file_type, 
+                                style: "width: 100%; height: 100%; object-fit: cover; cursor: pointer;", 
+                            });
+                
+                            // Append the image to the container
+                            $imageContainer.append($imageElement);
+                
+                            // Attach a click event to the image for downloading
+                            $imageElement.click(function () {
+                                // Create a temporary anchor element for downloading
+                                var $tempLink = $("<a/>", {
+                                    href: value.file_path,
+                                    download: value.file_type,
+                                })[0];
+                
+                                // Trigger a click event on the anchor element to start the download
+                                if (document.createEvent) {
+                                    var event = document.createEvent("MouseEvents");
+                                    event.initEvent("click", true, true);
+                                    $tempLink.dispatchEvent(event);
+                                } else {
+                                    $tempLink.click();
+                                }
+                            });
+                
+                            // Append the delete icon, camera icon, inputs, and image container to the photo type container
+                            $photoTypeContainer.append(
+                                $deleteIcon,
+                                $cameraIcon,
+                                $existingPhotoTypeInput,
+                                $existingPhotoFileInput,
+                                $imageContainer // Append the container with fixed dimensions
+                            );
+                
+                            // Append the photo type container to the container for each field
+                            $existingPhotoLibContainer.append($photoTypeContainer);
+                
+                            // Append the container to the form
+                            $photoLibContainer.append($existingPhotoLibContainer);
+                
+                            // Delete icon click event handler
+                            $deleteIcon.click(function () {
+                                // Remove the corresponding field
+                                $existingPhotoLibContainer.remove();
+                
+                                $.ajax({
+                                    type: "POST",
+                                    url: getBaseURL() + "photo-lib/delete_photo",
+                                    data: {
+                                        post_id: options.customer_id,
+                                        meta_key: value.file_type,
+                                        meta_value: value.meta_value,
+                                    },
+                                    dataType: "json",
+                                    success: function (data) {
+                                    },
+                                    error: function (xhr, status, error) {
+                                        console.error("Error deleting photo: " + error);
+                                    },
+                                });
+                            });
+                
+                            // Camera icon click event handler
+                            $cameraIcon.click(function () {
+                                // Open the device's camera (only works on mobile devices)
+                                if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                                    navigator.mediaDevices
+                                        .getUserMedia({ video: true }) // Use video to access the camera
+                                        .then(function (stream) {
+                                            var $cameraPreview = $("<video/>", {
+                                                id: "camera_preview",
+                                                autoplay: true,
+                                                style: "max-width: 100px; max-height: 100px;", // Adjust the size as needed
+                                            });
+                
+                                            // Display the camera stream in a video element
+                                            $cameraPreview[0].srcObject = stream;
+                
+                                            // Remove previous camera preview
+                                            $("#camera_preview").remove();
+                
+                                            // Display the camera preview
+                                            $imageContainer.append($cameraPreview);
+                
+                                            // Capture photo when clicking the camera icon again
+                                            $cameraIcon.off("click").click(function () {
+                                                // Capture the current frame from the video stream
+                                                var canvas = document.createElement("canvas");
+                                                var context = canvas.getContext("2d");
+                                                canvas.width = $cameraPreview[0].videoWidth;
+                                                canvas.height = $cameraPreview[0].videoHeight;
+                                                context.drawImage($cameraPreview[0], 0, 0, canvas.width, canvas.height);
+                
+                                                // Convert the canvas to a data URL representing the captured image
+                                                var imageDataURL = canvas.toDataURL("image/png");
+                
+                                                // Set the captured image as the source of the image element
+                                                $imageElement.attr("src", imageDataURL);
+                
+                                                // Stop the camera stream and remove the camera preview
+                                                stream.getTracks().forEach(function (track) {
+                                                    track.stop();
+                                                });
+                                                $cameraPreview.remove();
+                                            });
+                                        })
+                                        .catch(function (error) {
+                                            console.error("Error accessing the camera: " + error.message);
+                                        });
+                                } else {
+                                    console.error("getUserMedia is not supported in this browser.");
+                                }
+                            });
+                        }
+                    });
+                }
+                
+                
+            }
+
+            //photo lib end
+
+                $customer_form.append(this._getHorizontalInput(l("Name", true), 'customer_name', customer.customer_name, (commonCustomerFields && commonCustomerFields[0] && commonCustomerFields[0]['show_on_customer_form'] == 0 ? "hidden customer_field_1" : "customer_field_1"), 1))
+
                 .append(
                     $('<div/>', {
                         class: 'form-group form-group-sm ' + (commonCustomerFields && commonCustomerFields[1] && commonCustomerFields[1]['show_on_customer_form'] == 0 ? "hidden" : ""),
@@ -677,6 +1178,13 @@ var customerId;
                                             } else {
                                                 // update customer token's name
                                                 $(document).find("#" + customer.customer_id + ".token").find(".token-label").text(customerData.customer_name);
+                                                
+                                                //photo library extension
+                                                if (that.photoLibInstalled == 1) {
+                                                    savePhotoLibararyFiles(customer.customer_id)
+                                                }
+                                                //photo library extension end
+
                                                 $("#customer-modal").modal('hide');
                                             }
                                             $('#button-update-customer').attr('disabled', false);
@@ -715,12 +1223,110 @@ var customerId;
                                                 // document.dispatchEvent(event);
 
                                                 // a token that doesn't have id assigned yet
+
+                                                // photo library
+                                                if (that.photoLibInstalled == 1) {
+                                                    savePhotoLibararyFiles(data.customer_id)
+                                                }
+                                                // //photo library extension end
+
                                                 $("#customer-modal").modal('hide');
                                             }
                                             $('#button-update-customer').attr('disabled', false);
                                         }
                                     });
                                 }
+
+
+                                //photo library extension
+
+                                function savePhotoLibararyFiles(param_customer_id) {
+                                    if (param_customer_id) {
+                                        var $uploadInput = $("#photo_upload_custom_picture")[0];
+                                
+                                        if ($uploadInput.files.length > 0) {
+                                            var uploadValue = $uploadInput.files[0];
+                                
+                                            var formDataPhotoLib = new FormData();
+                                            formDataPhotoLib.append("document_type", '(custom_picture)');
+                                            formDataPhotoLib.append("photo-lib-upload", uploadValue);
+                                            formDataPhotoLib.append("customer_id", param_customer_id);
+                                
+                                            var promise1 = $.ajax({
+                                                url: getBaseURL() + "photo-lib/save_photo_library",
+                                                type: "POST",
+                                                data: formDataPhotoLib,
+                                                contentType: false,
+                                                processData: false
+                                            });
+                                
+                                            $.when(promise1).then(function (response) {
+                                                console.log("Server response:", response);
+                                                // Proceed with other photos upload
+                                                processOtherPhotos(param_customer_id);
+                                            }).fail(function (xhr, status, error) {
+                                                console.error("Error:", error);
+                                            });
+                                        } else {
+                                            // No custom picture selected, proceed with other photos upload directly
+                                            processOtherPhotos(param_customer_id);
+                                        }
+                                    }
+                                }
+                                
+                                function processOtherPhotos(param_customer_id) {
+                                    var dataToSend = [];
+                                    var $mainDivs = $(".photo-lib-main-div");
+                                    
+                                    function processNext(index) {
+                                        if (index < $mainDivs.length) {
+                                            var $mainDiv = $($mainDivs[index]);
+                                            var $nameInput = $mainDiv.find(".photo-lib-name");
+                                            var $uploadInput = $mainDiv.find(".photo-lib-upload");
+                                            console.log("Processing element " + index);
+                                            console.log("$nameInput length:", $nameInput.length);
+                                            console.log("$uploadInput length:", $uploadInput.length);
+                                            var nameValue = $nameInput.val();
+                                            var uploadValue = $uploadInput[0].files[0];
+                                
+                                            console.log("$nameInput nameValuenameValuenameValue:", nameValue);
+                                            console.log("$uploadInput uploadValueuploadValueuploadValue:", uploadValue);
+                                
+                                            if (nameValue !== '') {
+                                                var formDataPhotoLib = new FormData();
+                                                formDataPhotoLib.append("document_type", nameValue);
+                                                formDataPhotoLib.append("photo-lib-upload", uploadValue);
+                                                formDataPhotoLib.append("customer_id", param_customer_id);
+                                
+                                                dataToSend.push(formDataPhotoLib);
+                                
+                                                var promise = $.ajax({
+                                                    url: getBaseURL() + "photo-lib/save_photo_library",
+                                                    type: "POST",
+                                                    data: formDataPhotoLib,
+                                                    contentType: false,
+                                                    processData: false
+                                                });
+                                
+                                                $.when(promise).then(function (response) {
+                                                    console.log("Server response:", response);
+                                                    processNext(index + 1); // Process the next iteration
+                                                }).fail(function (xhr, status, error) {
+                                                    console.error("Error:", error);
+                                                });
+                                            } else {
+                                                // If no nameValue, move on to the next iteration
+                                                processNext(index + 1);
+                                            }
+                                        }
+                                    }
+                                
+                                    // Start processing from the first element
+                                    processNext(0);
+                                }
+                                
+                                //photo library extension end
+
                             };
 
                             innGrid.deferredCreditCardValidation = $.Deferred();

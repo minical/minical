@@ -706,4 +706,16 @@ class Extensions extends MY_Controller
         $data['main_content'] = 'hotel_settings/extension_settings/show_vendors_extensions';
         $this->load->view('includes/bootstrapped_template', $data);
     }
+    function check_photo_library_installed(){
+        $photo_library_installed = array('exists'=>false);
+        $company_id = $this->company_id;
+        $extensions = $this->Extension_model->get_extensions('', $company_id);
+        foreach ($extensions as $key => $extensions) {
+                if( $extensions['extension_name'] == "minical-extension-photo-library" &&  $extensions['is_active'] == 1){
+                    $photo_library_installed = array('exists'=>true);
+                    break;
+                }
+            }
+        print_r(json_encode($photo_library_installed));
+    }
 }
