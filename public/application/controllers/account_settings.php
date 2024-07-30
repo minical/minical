@@ -53,6 +53,9 @@ class Account_settings extends MY_Controller {
 		if ($this->form_validation->run()) // validation ok
 		{
 			echo "<script>alert('successfully updated password!');</script>";
+			
+			$userdata = $this->User_model->get_user_profile($this->user_id);
+            $this->User_model->delete_all_user_sessions($userdata['email']);
 		}
 
 		$data['selected_submenu'] = 'password';
