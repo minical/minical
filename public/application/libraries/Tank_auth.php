@@ -63,8 +63,12 @@ class Tank_auth
 
 			if (!is_null($user = $this->ci->users->$get_user_func($login))) {	// login ok
 				
-				$profile = $this->ci->users->get_profile($user->id); //load profile TO DO: add error checking / verification
-				$company_id = $profile->current_company_id;
+				// $profile = $this->ci->users->get_profile($user->id); //load profile TO DO: add error checking / verification
+				// $company_id = $profile->current_company_id;
+
+				$get_latest_company = $this->ci->User_model->get_latest_company_id($user->id);
+
+				$company_id = $get_latest_company->company_id;
 				
 
 				// Does password match hash in database?

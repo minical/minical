@@ -125,6 +125,11 @@ class User_model extends CI_Model {
         return $this->db->get()->row();
     }
 
+    function get_latest_company_id($user_id){
+        $this->db->select()->from('user_permissions')->where('user_id',$user_id)->order_by('company_id', 'desc');
+        return $this->db->get()->row();
+    }
+
     function remove_user_permission($company_id, $user_id, $permission)
     {
         $this->db->where('user_id', $user_id);
