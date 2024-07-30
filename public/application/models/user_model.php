@@ -125,9 +125,23 @@ class User_model extends CI_Model {
         return $this->db->get()->row();
     }
 
+    // function get_latest_company_id($user_id){
+    //     $this->db->select()->from('user_permissions')->where('user_id',$user_id)->order_by('company_id', 'desc');
+    //     return $this->db->get()->row();
+    // }
+
     function get_latest_company_id($user_id){
-        $this->db->select()->from('user_permissions')->where('user_id',$user_id)->order_by('company_id', 'desc');
-        return $this->db->get()->row();
+
+        $this->db->select('user_permissions.*');
+        $this->db->from('user_permissions');
+        $this->db->join('company', 'user_permissions.company_id = company.company_id', 'left');
+        $this->db->where('user_permissions.user_id', $user_id);
+        $this->db->where('company.is_deleted', 0);
+        $this->db->order_by('user_permissions.company_id', 'desc');
+        $query = $this->db->get();
+
+        // $this->db->select()->from('user_permissions')->where('user_id',$user_id)->order_by('company_id', 'desc');
+        return $query->row();
     }
 
     function remove_user_permission($company_id, $user_id, $permission)
