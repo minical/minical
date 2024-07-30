@@ -363,7 +363,30 @@ class User_model extends CI_Model {
             return $results;
         }
     }
+    /**
+     * deleted all login session for a user with email
+     * @param $email
+     * @return bool
+     */
+    function delete_all_user_sessions($email){
 
+        $sql ="DELETE FROM sessions where user_data like '%".$email."%'";
+    
+        $query = $this->db->query($sql);
+
+        if ($this->db->_error_message())
+        {
+            show_error($this->db->_error_message());
+        }else{
+            if ($this->db->affected_rows() > 0){
+                return TRUE;
+            }else{
+                return FALSE;
+            }
+        }
+
+    }
+    
     /**
      * Checks if user is admin
      * @param $user_id
