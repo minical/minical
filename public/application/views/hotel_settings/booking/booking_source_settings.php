@@ -38,7 +38,7 @@
                     <td class="glyphicon_icon"><span class="grippy"></span>
 						<input name="booking-source-name" class="form-control" type="text"
                                <?php echo isset($booking_source['is_common_source']) && $booking_source['is_common_source'] ? 'disabled' : ''; ?>
-                               value="<?php echo $booking_source['name']; ?>" maxlength="45" style="width:250px"/>
+                               value="<?php echo $booking_source['name']; ?>" maxlength="150" style="width:250px"/>
 					</td>
 <!--					<td>
 						<div class="delete-booking-source-button btn btn-default">X</div>
