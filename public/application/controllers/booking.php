@@ -3425,6 +3425,7 @@ class Booking extends MY_Controller
                                         $status == "Booking cancelled",
                                         SYSTEM_LOG
                                     );
+            $this->send_booking_cancellation_email($booking_id);
 
             echo json_encode(array('success' => true, 'message' => $status == l('Booking cancelled', true)));
         } else {
