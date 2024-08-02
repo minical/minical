@@ -1,7 +1,7 @@
 <tr class="booking-source-tr" id="<?php echo $id; ?>">
 	<td class="glyphicon_icon">
         <span class="grippy"></span>
-        <input name="booking-source-name" class="form-control" type="text" value="<?php echo $name; ?>" maxlength="45" style="width:250px"/>
+        <input name="booking-source-name" class="form-control" type="text" value="<?php echo $name; ?>" maxlength="150" style="width:250px"/>
     </td>
     <td>
         <input name = "commission_rate" class="form-control" type="text" value="" maxlength="45" style="width:200px"/>

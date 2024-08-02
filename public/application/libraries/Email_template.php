@@ -1438,8 +1438,17 @@ class Email_template {
 
         $from_email = isset($whitelabelinfo['do_not_reply_email']) && $whitelabelinfo['do_not_reply_email'] ? $whitelabelinfo['do_not_reply_email'] : (isset($company['email']) && $company['email'] ? $company['email'] : 'donotreply@minical.io');
 
+        $email_list = $customer_email;
+        if(
+            isset($company['email']) && 
+            $company['email']
+        )
+        {
+            $email_list .= ",".$company['email'];
+        }
+
         $this->ci->email->from($from_email, $company['name']);
-        $this->ci->email->to($customer_email);
+        $this->ci->email->to($email_list);
         $this->ci->email->reply_to($email_data['company_email']);
 
         $this->ci->email->subject($email_data['company_name'] . ' - Booking Cancellation: ' . $email_data['booking_id']);
