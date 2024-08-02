@@ -125,6 +125,25 @@ class User_model extends CI_Model {
         return $this->db->get()->row();
     }
 
+    // function get_latest_company_id($user_id){
+    //     $this->db->select()->from('user_permissions')->where('user_id',$user_id)->order_by('company_id', 'desc');
+    //     return $this->db->get()->row();
+    // }
+
+    function get_latest_company_id($user_id){
+
+        $this->db->select('user_permissions.*');
+        $this->db->from('user_permissions');
+        $this->db->join('company', 'user_permissions.company_id = company.company_id', 'left');
+        $this->db->where('user_permissions.user_id', $user_id);
+        $this->db->where('company.is_deleted', 0);
+        $this->db->order_by('user_permissions.company_id', 'desc');
+        $query = $this->db->get();
+
+        // $this->db->select()->from('user_permissions')->where('user_id',$user_id)->order_by('company_id', 'desc');
+        return $query->row();
+    }
+
     function remove_user_permission($company_id, $user_id, $permission)
     {
         $this->db->where('user_id', $user_id);
@@ -363,7 +382,30 @@ class User_model extends CI_Model {
             return $results;
         }
     }
+    /**
+     * deleted all login session for a user with email
+     * @param $email
+     * @return bool
+     */
+    function delete_all_user_sessions($email){
 
+        $sql ="DELETE FROM sessions where user_data like '%".$email."%'";
+    
+        $query = $this->db->query($sql);
+
+        if ($this->db->_error_message())
+        {
+            show_error($this->db->_error_message());
+        }else{
+            if ($this->db->affected_rows() > 0){
+                return TRUE;
+            }else{
+                return FALSE;
+            }
+        }
+
+    }
+    
     /**
      * Checks if user is admin
      * @param $user_id
