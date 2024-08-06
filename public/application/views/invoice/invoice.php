@@ -355,7 +355,7 @@ if(isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true) {
                 echo $company['GST_number'];
                 echo ($company['bussiness_name'] != "")?"Bussiness Name: ".$company['bussiness_name']."<br/>":'';
                 echo ($company['bussiness_number'] != "")?"Bussiness Number: ".$company['bussiness_number']."<br/>":'';
-                echo ($company['bussiness_fiscal_number'] != "")?"Fiscal Number: ".$company['bussiness_fiscal_number']."<br/>":'';
+                echo ($company['phone'] != "")?"Fiscal Number: ".$company['phone']."<br/>":'';
                 ?>
                 <!-- <?php echo '<p class="invoice-header">'.$company['invoice_email_header'].'</p>'; ?> -->
                 <?php if($this->vendor_id != 9) { ?>
