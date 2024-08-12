@@ -340,6 +340,7 @@ class Auth extends MY_Controller
         //$this->ci->output->enable_profiler(TRUE);
 		
         $lead_source = $this->input->post('source');
+        $password = $this->input->post('password');
         
         if ($this->tank_auth->is_logged_in()) {
             // logged in
@@ -354,8 +355,14 @@ class Auth extends MY_Controller
             if(isset($lead_source_slug) && $lead_source_slug != NULL)
             {
                 $this->session->set_userdata('lead_source_slug', $lead_source_slug);
-            }                
-            
+            } 
+
+            if(!(preg_match('/^[a-zA-Z0-9_-]+$/', $password) === 1) && (strlen($password) < 4) || (strlen($password) > 20) ){
+
+                echo l("The password must be 4-20 characters long and contain only letters, numbers, dashes, and underscores.",true);
+               return;
+            }
+
             $this->_set_register_form_validation_rules();
 
             $captcha_registration = $this->config->item('captcha_registration', 'tank_auth');

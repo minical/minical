@@ -179,11 +179,22 @@
         
         var email = $("input[name=email]").val();
         var password = $("input[name=password]").val();
+        var paswordLength = $("input[name=password]").val().length;
         var accept_tnc = $("input[name=accept_tnc]:checked").val();
         var url= '<?php  echo 'https://'. $_SERVER['HTTP_HOST'];?>';
 
         if(email == ''){
             alert('The Email field is required.');
+            $('.register_submit_form').attr('disabled', false).val('Next Step');
+            return false;
+        }
+        if(password == ''){
+            alert('The Password field is required.');
+            $('.register_submit_form').attr('disabled', false).val('Next Step');
+            return false;
+        }
+        if(paswordLength > 20 || paswordLength < 4){
+            alert('The password must be 4-20 characters long and contain only letters, numbers, dashes, and underscores.');
             $('.register_submit_form').attr('disabled', false).val('Next Step');
             return false;
         }
