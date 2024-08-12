@@ -357,10 +357,9 @@ class Auth extends MY_Controller
                 $this->session->set_userdata('lead_source_slug', $lead_source_slug);
             } 
 
-            if(!(preg_match('/^[a-zA-Z0-9_-]+$/', $password) === 1) && (strlen($password) < 4) || (strlen($password) > 20) ){
-
-                echo l("The password must be 4-20 characters long and contain only letters, numbers, dashes, and underscores.",true);
-               return;
+            if(!(preg_match("/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[-_]).{6,}$/", $password) === 1) || ((strlen($password) < 6) || (strlen($password) > 20))){
+                echo l("The password must be 6-20 characters long and contain only letters, numbers, dashes, and underscores.",true);
+               return false;
             }
 
             $this->_set_register_form_validation_rules();
