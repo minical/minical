@@ -1167,7 +1167,7 @@ function get_total_companies($extension_name = null, $is_extension_active = fals
     }
 
     function get_companies_by_state($state){
-    	$sql = "SELECT c.* ,cs.* FROM company AS c 
+    	$sql = "SELECT c.company_id, c.partner_id, cs.subscription_id, cs.expiration_date FROM company AS c 
     	INNER JOIN company_subscription AS cs ON c.company_id = cs.company_id 
     	WHERE c.is_deleted = 0 AND c.partner_id = 21 AND cs.subscription_state = '$state'";
 		$q = $this->db->query($sql);
