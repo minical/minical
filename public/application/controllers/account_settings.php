@@ -44,24 +44,44 @@ class Account_settings extends MY_Controller {
 		
 		// updating the password happens here while checking for _incorrect_old_password
 		$this->form_validation->set_rules('old_password', 'Old Password', 'trim|xss_clean');
-		$this->form_validation->set_rules('new_password', 'New Password', 'required|trim|xss_clean');
+		// $this->form_validation->set_rules('new_password', 'New Password', 'required|trim|xss_clean');
+
+
+		$this->form_validation->set_rules('new_password', 'New Password', 'trim|required|min_length[6]|max_length[20]|callback_password_check');
+
+
+
 		$this->form_validation->set_rules('confirm_new_password', 'Confirm new Password', 'required|trim|xss_clean|matches[new_password]');
 
-		// this validation actually changes password
-		$this->form_validation->set_rules('old_password', 'Old Password', 'callback__incorrect_old_password['.$new_password.']');
+		
 
 		if ($this->form_validation->run()) // validation ok
 		{
+			// this validation actually changes password
+			$this->form_validation->set_rules('old_password', 'Old Password', 'callback__incorrect_old_password['.$new_password.']');
+
+			if ($this->form_validation->run()){
 			echo "<script>alert('successfully updated password!');</script>";
 			
 			$userdata = $this->User_model->get_user_profile($this->user_id);
             $this->User_model->delete_all_user_sessions($userdata['email']);
+		}
 		}
 
 		$data['selected_submenu'] = 'password';
 		$data['main_content'] = 'account_settings/password';
 		
 		$this->load->view('includes/bootstrapped_template',$data);
+	}
+
+	public function password_check($password)
+	{
+	    if (preg_match('/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{6,20}$/', $password)) {
+	        return TRUE;
+	    } else {
+	        $this->form_validation->set_message('password_check', 'The new password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.');
+	        return FALSE;
+	    }
 	}
 
 	/**
