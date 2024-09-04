@@ -596,7 +596,7 @@ class Rates extends MY_Controller
 		$date_start = $this->input->post("date_start");
 		$date_end = $this->input->post("date_end");
         // Update the end date if it's empty
-		$date_end = trim($date_end) != '' ? $date_end : date('Y-m-d', strtotime('+10 years'));
+		$date_end = trim($date_end) != '' ? $date_end : date('Y-m-d', strtotime('+1 year'));
 		// Fetch rate POST variables
 		$rate_data_variables = array(
 									"rate_plan_id",
