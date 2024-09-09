@@ -18,12 +18,19 @@ class Account_settings extends MY_Controller {
 		$this->load->model('Company_model');
 		$this->load->model('Company_subscription_model');
 		$this->load->model('User_model');
+		$this->load->model('Option_model');
+        $this->load->model('Company_security_model');
                 // Load Translation Model for Language Translation
 		$this->load->model('translation_model');
                 
 		$this->load->library('form_validation');
                 // Load language Translation Helper
-                $this->load->helper('language_translation');
+        $this->load->helper('language_translation');
+
+
+        $this->load->library('google_security');
+
+
 		
 		$view_data['menu_on'] = true;
 		$view_data['selected_menu'] = 'my account';		
@@ -73,11 +80,11 @@ class Account_settings extends MY_Controller {
 			$this->form_validation->set_rules('old_password', 'Old Password', 'callback__incorrect_old_password['.$new_password.']');
 
 			if ($this->form_validation->run()){
-			echo "<script>alert('successfully updated password!');</script>";
-			
-			$userdata = $this->User_model->get_user_profile($this->user_id);
-            $this->User_model->delete_all_user_sessions($userdata['email']);
-		}
+				echo "<script>alert('successfully updated password!');</script>";
+				
+				$userdata = $this->User_model->get_user_profile($this->user_id);
+	            $this->User_model->delete_all_user_sessions($userdata['email']);
+			}
 		}
 
 		$data['selected_submenu'] = 'password';
@@ -202,5 +209,26 @@ class Account_settings extends MY_Controller {
         load_translations($language_id);
         echo l('success',true);
 	}
+
+	function company_security()
+    {
+        $security_data =  $this->Option_model->get_option_by_company('company_security',$this->company_id);
+        
+        $data['company_security'] = isset($security_data[0]['option_value']) ? json_decode($security_data[0]['option_value'],true) :"";
+
+        $data['security_data'] = $this->Company_security_model->get_deatils_by_company_user(null, $this->user_id);
+
+        $email = $this->user_email;
+        $security_name = 'security';
+
+        $data['secure_data'] = $this->google_security->create_secret($email, $security_name);
+        $data['security_name'] = $security_name;
+
+        $company_id = $this->company_id;
+
+		$data['main_content'] = 'account_settings/company_security';		
+        $this->load->view('includes/bootstrapped_template', $data);
+
+    }
 }
 

@@ -22,7 +22,6 @@ class Option_model extends CI_Model {
         return $result_array;
 
     }
-    
     function get_option_by_company($option,$company_id){
 
         $this->db->select('*');
@@ -38,7 +37,6 @@ class Option_model extends CI_Model {
         return $result_array;
 
     }
-
     function get_options(){
 
         $this->db->select('*');
@@ -70,6 +68,27 @@ class Option_model extends CI_Model {
         }
     }
 
+    function update_option_company($option, $value, $company_id)
+    {
+        $data = array(
+            "option_name" => $option,
+            "option_value" => $value,
+            "autoload" => 0
+        );
+        $this->db->where('company_id', $company_id);
+        $this->db->where('option_name', $option);
+        $this->db->update('options', $data);
+        if ($this->db->_error_message())
+        {
+            show_error($this->db->_error_message());
+        }else{
+            if ($this->db->affected_rows() > 0){
+                return TRUE;
+            }else{
+                return FALSE;
+            }
+        }
+    }
 
     function delete_option($option)
     {

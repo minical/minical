@@ -1,4 +1,13 @@
 <div class="app-page-title">
+
+	<div class="topnav mb-3">
+        <ul>
+            <li><a href="<?php echo base_url().'account_settings'?>" class="active"><?php echo l('Password'); ?></a></li>
+            <li><a href="<?php echo base_url().'account_settings/company_security'?>"><?php echo l('Security'); ?></a></li>
+        </ul>
+    </div>
+
+
 	<div class="page-title-wrapper">
 		<div class="page-title-heading">
 			<div class="page-title-icon">

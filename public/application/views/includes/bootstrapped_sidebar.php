@@ -402,7 +402,22 @@
                                                    </li>
 
                                                  <?php }
-                                                }else{ ?>
+                                                }
+
+                                                elseif(isset($m_menu_one['name']) && $m_menu_one['name'] == "Security"){
+                                                    if($this->is_property_owner == 1){ ?>
+
+                                                        <li class="<?php if ($first_segment.'/'.$second_segment == $m_menu_one['link']) echo 'mm-active'; ?>">
+                                                            <a class="<?php if ($first_segment.'/'.$second_segment ==  $m_menu_one['link']) echo 'mm-active'; ?>" href="<?php echo base_url().$m_menu_one['link']; ?>">
+                                                                <i class="<?php echo $m_menu_one['icon']; ?>"></i>    
+                                                                <?php echo ucwords(l($m_menu_one['name'])); ?>
+                                                            </a>
+                                                        </li>
+
+                                                 <?php }
+                                                }
+
+                                                else{ ?>
                                                 <li class="<?php if ($first_segment.'/'.$second_segment == $m_menu_one['link']) echo 'mm-active'; ?>">
                                                 <a class="<?php if ($first_segment.'/'.$second_segment ==  $m_menu_one['link']) echo 'mm-active'; ?>" href="<?php echo base_url().$m_menu_one['link']; ?>">
                                                 <i class="<?php echo $m_menu_one['icon']; ?>"></i> 

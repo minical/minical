@@ -222,6 +222,15 @@ class Permission_model extends CI_Model {
                 )
                 || 
                 (
+                    $permission == 'is_employee' &&
+                    (
+                        (
+                            $controller_name == 'company_security'
+                        )
+                    )
+                )
+                || 
+                (
                     $permission == 'bookings_view_only' &&
                     (
                         (
