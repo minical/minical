@@ -61,6 +61,24 @@ class Company_security_model extends CI_Model {
         return $result;
       
     }
+
+    function get_vendor_companies($vendor_id){
+        $sql = "SELECT
+                    GROUP_CONCAT(c.company_id) as comp_ids
+                FROM
+                    `company` AS c
+                LEFT JOIN company_subscription AS cs
+                ON
+                    cs.company_id = c.company_id
+                WHERE
+                    c.is_deleted = 0 AND cs.subscription_state IN('trialing', 'active') AND c.partner_id = $vendor_id";
+
+        $query = $this->db->query($sql);
+
+        $result =  $query->row_array();
+    
+        return $result;
+    }
 }
 
 ?>

@@ -207,10 +207,27 @@ class Auth extends MY_Controller
                 // } 
 
                 // $this->verify_otp($email, $host_name);
-                
-                $security_data = $this->Option_model->get_option_by_company('company_security',$this->session->userdata('current_company_id')); 
+
+
+                $admin_data = $this->Whitelabel_partner_model->get_whitelabel_partner_id($this->session->userdata('user_id'));
+
+                if($admin_data){
+
+                    $vendor_companies = $this->Company_security_model->get_vendor_companies($admin_data['partner_id']);
+                    // lq();
+                    // $vendor_company_ids = $vendor_compnies;
+                    $vendor_company_ids = explode(',', $vendor_companies['comp_ids']);
+
+                    $mathced_vendor_company_ids = $this->Option_model->get_option_by_company('company_security',$vendor_company_ids);
+
+                    $vendor_comp_id = $mathced_vendor_company_ids[0]['company_id'];
+
+                    $security_data = $this->Option_model->get_option_by_company('company_security',$vendor_comp_id);
+                } else {
+                    $security_data = $this->Option_model->get_option_by_company('company_security',$this->session->userdata('current_company_id')); 
+                }
+
                 $security = json_decode($security_data[0]['option_value'], true);
-                // $security_status = 0;
 
                 if($security['security_status'] && $email != SUPER_ADMIN){
                     $encode_email = base64_encode($email);

@@ -40,7 +40,9 @@
                         } else {
                             $lock_timer = " minutes";
                         }
-                    } ?>
+                    }  else {
+                            $lock_timer = " minutes";
+                        }?>
 
 
                     <label for="lock_timer"><b><?= l($lock_timer, true); ?></b></label>
@@ -87,7 +89,7 @@
             
             <div class="show_qr_code_form"></div>
         <?php elseif(
-            $this->is_super_admin != 1 && 
+            SUPER_ADMIN != $this->user_email && 
             !$security_data && 
             isset($company_security['security_status']) &&
             $company_security['security_status'] == 1
