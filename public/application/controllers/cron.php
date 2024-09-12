@@ -411,44 +411,44 @@ class Cron extends CI_Controller
 		$this->load->model('Company_model');
 
 		
-        $all_active_modules = array();
-        $module_name ='';
-        $modules_path = $this->config->item('module_location');
-        $modules = scandir($modules_path);
-        // $extensions = $this->session->userdata('all_active_modules');
-        foreach($modules as $module)
-        {
-            if($module === '.' || $module === '..') continue;
-            if(is_dir($modules_path) . '/' . $module)
-            {
-                $config = array();
-                $module_config = $modules_path . $module . '/config/config.php';
-                if(file_exists($module_config))
-                {
-                    require($module_config);
-                    $config['extension_folder_name'] = $module;
-                    $all_active_modules[$module] = $config;
+        // $all_active_modules = array();
+        // $module_name ='';
+        // $modules_path = $this->config->item('module_location');
+        // $modules = scandir($modules_path);
+        // // $extensions = $this->session->userdata('all_active_modules');
+        // foreach($modules as $module)
+        // {
+        //     if($module === '.' || $module === '..') continue;
+        //     if(is_dir($modules_path) . '/' . $module)
+        //     {
+        //         $config = array();
+        //         $module_config = $modules_path . $module . '/config/config.php';
+        //         if(file_exists($module_config))
+        //         {
+        //             require($module_config);
+        //             $config['extension_folder_name'] = $module;
+        //             $all_active_modules[$module] = $config;
                   
-                }
-            }
-        }
-        if($all_active_modules){
-            foreach($all_active_modules as $key => $mod)
-            {
-                $name = strtolower($mod['extension_folder_name']);
-                $all_active_modules[$key]['extension_folder_name'] = str_replace(" ","_",$name);
-            }
-        }
-        //prx($all_active_modules);
-        foreach ($all_active_modules as $key => $value) {
-                if($value['name'] == 'Payment reminder'){
-                    $module_name = $key;
-                    break;
-                }
-            }
+        //         }
+        //     }
+        // }
+        // if($all_active_modules){
+        //     foreach($all_active_modules as $key => $mod)
+        //     {
+        //         $name = strtolower($mod['extension_folder_name']);
+        //         $all_active_modules[$key]['extension_folder_name'] = str_replace(" ","_",$name);
+        //     }
+        // }
+        // //prx($all_active_modules);
+        // foreach ($all_active_modules as $key => $value) {
+        //         if($value['name'] == 'Payment reminder'){
+        //             $module_name = $key;
+        //             break;
+        //         }
+        //     }
         //echo $module_name; die('module_name');
 		//$companies = $this->Company_model->get_all_companies(false);
-		$companies = $this->Company_model->get_total_companies($module_name , true);
+		$companies = $this->Company_model->get_total_companies('payment_reminder' , true);
 		
 		foreach ($companies as $company)
 		{
