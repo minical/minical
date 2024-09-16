@@ -299,19 +299,62 @@ class Auth extends MY_Controller
     }
 
     function show_qr_code(){
+
+        $company_id = $this->company_id;
+
+        // if($this->is_partner_owner){
+        //     $partner_data = $this->Company_security_model->get_first_property_partner($this->vendor_id);
+        //     $company_id = $partner_data['company_id'];
+        // }
+
+        $user_id = $this->user_id;
+
+        $admin_data = $this->Whitelabel_partner_model->get_whitelabel_partner_id($user_id);
+
+        if($admin_data){
+
+            $vendor_companies = $this->Company_security_model->get_vendor_companies($admin_data['partner_id']);
+            // lq();
+            // $vendor_company_ids = $vendor_compnies;
+            $vendor_company_ids = explode(',', $vendor_companies['comp_ids']);
+
+            $mathced_vendor_company_ids = $this->Option_model->get_option_by_company('company_security',$vendor_company_ids);
+
+            $company_id = $mathced_vendor_company_ids[0]['company_id'];
+
+        }
+
+        $user_restriction = $this->Option_model->get_option_by_user('login_security', $this->user_id);
+
+        if(empty($user_restriction)) {
+
+            $protocol = empty($_SERVER['HTTPS']) ? 'http' : 'https';
+
+            $login_security_url = $protocol . "://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+
+            $login_security_data = array(
+                            'company_id' => $company_id,
+                            'option_name ' => 'login_security',
+                            'option_value ' => json_encode(
+                                                array(
+                                                    'user_id' => $this->user_id,
+                                                    'login_security_url' => $login_security_url,
+                                                    'login_security_otp_verified' => 0
+                                                    )
+                                                ),
+                            'autoload' => 0
+                        );
+            $this->Option_model->add_option($login_security_data);
+        }
+
+        
+        
         $email = $this->input->get('email');
         $from = $this->input->get('from');
 
         $decode_email = base64_decode($email);
         $decode_from = base64_decode($from);
         $data['secure_data'] = $this->google_security->create_secret($decode_email, $decode_from);
-
-        $company_id = $this->company_id;
-
-        if($this->is_partner_owner){
-            $partner_data = $this->Company_security_model->get_first_property_partner($this->vendor_id);
-            $company_id = $partner_data['company_id'];
-        }
 
         $security_data = $this->Company_security_model->get_deatils_by_company_user($company_id, $this->user_id);
 
@@ -337,12 +380,27 @@ class Auth extends MY_Controller
 
         $company_id = $this->company_id;
 
-        if($this->is_partner_owner){
-            $partner_data = $this->Company_security_model->get_first_property_partner($this->vendor_id);
-            $company_id = $partner_data['company_id'];
-        }
-        
+        // if($this->is_partner_owner){
+        //     $partner_data = $this->Company_security_model->get_first_property_partner($this->vendor_id);
+        //     $company_id = $partner_data['company_id'];
+        // }
+
         $user_id = $this->user_id;
+
+        $admin_data = $this->Whitelabel_partner_model->get_whitelabel_partner_id($user_id);
+
+        if($admin_data){
+
+            $vendor_companies = $this->Company_security_model->get_vendor_companies($admin_data['partner_id']);
+            // lq();
+            // $vendor_company_ids = $vendor_compnies;
+            $vendor_company_ids = explode(',', $vendor_companies['comp_ids']);
+
+            $mathced_vendor_company_ids = $this->Option_model->get_option_by_company('company_security',$vendor_company_ids);
+
+            $company_id = $mathced_vendor_company_ids[0]['company_id'];
+
+        }
 
         $secret_data = $this->Company_security_model->get_deatils_by_company_user($company_id, $user_id);
 
@@ -362,6 +420,9 @@ class Auth extends MY_Controller
         if($check){
 
             if($via == 'login') {
+
+                $this->Option_model->delete_option('login_security', $user_id);
+
                 $company_security_data = array();
                 $company_security_data['company_id'] = $company_id;
                 $company_security_data['user_id'] = $user_id;

@@ -22,6 +22,7 @@ class Option_model extends CI_Model {
         return $result_array;
 
     }
+    
     function get_option_by_company($option, $company_id){
 
         $this->db->select('*');
@@ -40,8 +41,23 @@ class Option_model extends CI_Model {
         $result_array = $query->result_array();
 
         return $result_array;
-
     }
+
+    function get_option_by_user($option, $user_id){
+
+        $this->db->select('*');
+        $this->db->where('option_name', $option);
+        $this->db->like('option_value', $user_id, 'both');
+        $query = $this->db->get('options');
+        if ($this->db->_error_message())
+        {
+            show_error($this->db->_error_message());
+        }
+        $result_array = $query->result_array();
+
+        return $result_array;
+    }
+
     function get_options(){
 
         $this->db->select('*');
@@ -95,9 +111,13 @@ class Option_model extends CI_Model {
         }
     }
 
-    function delete_option($option)
+    function delete_option($option, $user_id = null)
     {
         $this->db->where('option_name', $option);
+
+        if($user_id){
+            $this->db->like('option_value', $user_id, 'both');
+        }
         $this->db->delete('options');
         if ($this->db->affected_rows() > 0){
             return TRUE;

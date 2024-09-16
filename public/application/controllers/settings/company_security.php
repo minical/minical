@@ -220,9 +220,26 @@ class Company_security extends MY_Controller
 
         $company_id = $this->company_id;
 
-        if($this->is_partner_owner){
-            $partner_data = $this->Company_security_model->get_first_property_partner($this->vendor_id);
-            $company_id = $partner_data['company_id'];
+        // if($this->is_partner_owner){
+        //     $partner_data = $this->Company_security_model->get_first_property_partner($this->vendor_id);
+        //     $company_id = $partner_data['company_id'];
+        // }
+
+        $user_id = $this->user_id;
+
+        $admin_data = $this->Whitelabel_partner_model->get_whitelabel_partner_id($user_id);
+
+        if($admin_data){
+
+            $vendor_companies = $this->Company_security_model->get_vendor_companies($admin_data['partner_id']);
+            // lq();
+            // $vendor_company_ids = $vendor_compnies;
+            $vendor_company_ids = explode(',', $vendor_companies['comp_ids']);
+
+            $mathced_vendor_company_ids = $this->Option_model->get_option_by_company('company_security',$vendor_company_ids);
+
+            $company_id = $mathced_vendor_company_ids[0]['company_id'];
+
         }
 
         $secret_data = $this->Company_security_model->get_deatils_by_company_user($company_id, $this->user_id);
@@ -249,6 +266,47 @@ class Company_security extends MY_Controller
                     $this->Option_model->update_option_company('company_security', json_encode($company_data), $this->company_id);
                 }
             }
+            echo json_encode(array('success' => true));
+    
+        } else {
+            echo json_encode(array('success' => false, 'error_msg' => 'Invalid code. Please try again.'));
+        }
+    }
+
+    function show_cc_verify_otp(){
+        $otp = $this->input->post('otp');
+        $company_id = $this->company_id;
+
+        // if($this->is_partner_owner){
+        //     $partner_data = $this->Company_security_model->get_first_property_partner($this->vendor_id);
+        //     $company_id = $partner_data['company_id'];
+        // }
+
+        $user_id = $this->user_id;
+
+        $admin_data = $this->Whitelabel_partner_model->get_whitelabel_partner_id($user_id);
+
+        if($admin_data){
+
+            $vendor_companies = $this->Company_security_model->get_vendor_companies($admin_data['partner_id']);
+            // lq();
+            // $vendor_company_ids = $vendor_compnies;
+            $vendor_company_ids = explode(',', $vendor_companies['comp_ids']);
+
+            $mathced_vendor_company_ids = $this->Option_model->get_option_by_company('company_security',$vendor_company_ids);
+
+            $company_id = $mathced_vendor_company_ids[0]['company_id'];
+
+        }
+
+        $secret_data = $this->Company_security_model->get_deatils_by_company_user($company_id, $this->user_id);
+
+        $secret = $secret_data['secret_code'];
+
+        $check = $this->google_security->check_secret_with_otp($secret, $otp);
+
+        if($check){
+                
             echo json_encode(array('success' => true));
     
         } else {
