@@ -295,4 +295,84 @@ data-keyboard="false" style="z-index: 9999;"
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+
+<?php if(isset($this->company_security_status) && $this->company_security_status == 1): ?>
+
+<div class="modal fade" id="dialog-timeout" data-backdrop="static"  data-keyboard="false" >
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content" style="width: 135%;">
+      <div class="modal-header">
+
+      	<?php 
+      	if(isset($this->company_lock_time)){
+      		if($this->company_lock_time == 1){
+      			$lock_timer = $this->company_lock_time . " minute";
+      		} else {
+      			$lock_timer = $this->company_lock_time . " minutes";
+      		}
+      	} else {
+      		$lock_timer = "10 minutes";
+      	}
+      	?>
+        <p><?php echo l("You've been locked out for being inactive for over ".$lock_timer.".", true); ?></p>
+      </div>
+
+
+
+
+    <div class="modal-body">
+      	<style type="text/css">
+        	.otp-input {
+			    display: flex;
+			    justify-content: space-between;
+			}
+			.otp-input input {
+			    width: 50px;
+			    height: 50px;
+			    text-align: center;
+			    font-size: 24px;
+			    margin: 0 5px;
+			    border: 1px solid #ccc;
+			    border-radius: 5px;
+			}
+
+        </style>
+
+        <?php if($this->company_security_status == 1 && !empty($this->security_data)): ?>
+        
+	        <label for="otp" style="text-align: center;">Please enter your 2-factor code from your Google Authenticator app to continue using Minical
+	        </label>
+	        <div class="otp-input">
+	            <input type="text" maxlength="1" required>
+	            <input type="text" maxlength="1" required>
+	            <input type="text" maxlength="1" required>
+	            <input type="text" maxlength="1" required>
+	            <input type="text" maxlength="1" required>
+	            <input type="text" maxlength="1" required>
+	        </div>
+
+	    <?php endif; if($this->company_security_status == 1 && empty($this->security_data)): ?>
+
+	    	<label for="otp" style="text-align: center;">2-Factor Authentication setup is required. Please visit this link and scan QR code for security
+	    		<a href="<?php echo base_url(); ?>account_settings/company_security">Click Here</a>
+	    	</label>
+
+	    	<!-- <a href="<?php echo base_url(); ?>auth/logout" class="logout_btn btn btn-warning" style="float: right;">Logout</a> -->
+	    <?php endif; ?>
+      	
+      </div>
+      <div class="modal-footer" style="text-align: center;">
+
+        <?php if($this->company_security_status == 1 && !empty($this->security_data)): ?>
+	        <a href="javascript:" class="verify_otp btn btn-primary" style="margin: 14px 120px;">Verify</a>
+	   <?php endif; ?>
+
+
+	    
+
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<?php endif; ?>
 </html>

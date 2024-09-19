@@ -25,6 +25,7 @@ class Auth extends MY_Controller
         $this->load->library('form_validation');
         $this->load->library('security');
         $this->load->library('tank_auth');
+        $this->load->library('google_security');
 
         $this->lang->load('tank_auth');
 
@@ -41,6 +42,8 @@ class Auth extends MY_Controller
         $this->load->model('Employee_log_model');
         $this->load->model('Whitelabel_partner_model');
         $this->load->model('Extension_model');
+        $this->load->model('Option_model');
+        $this->load->model('Company_security_model');
         $this->test_email = 'test@minical.io';
     }
 
@@ -191,17 +194,46 @@ class Auth extends MY_Controller
                     $employee_log_data['date_time'] = gmdate('Y-m-d H:i:s');
                     $this->Employee_log_model->insert_log($employee_log_data);
                 }
-                
-                $employee_permission['permissions'] = $this->Employee_log_model->get_user_permission($this->session->userdata('current_company_id'),$this->session->userdata('user_id'));
-                $this->session->set_userdata($employee_permission); 
 
+                $employee_permission['permissions'] = $this->Employee_log_model->get_user_permission($this->session->userdata('current_company_id'),$this->session->userdata('user_id'));
+                $this->session->set_userdata($employee_permission);
+                
                 $is_db_name = getenv('DATABASE_NAME');
                 
-                if(
-                    $is_db_name != 'minical-prod'
-                ){
-                    redirect('/booking');
-                } 
+                // if(
+                //     $is_db_name != 'minical-prod'
+                // ){
+                //     redirect('/booking');
+                // } 
+
+                // $this->verify_otp($email, $host_name);
+
+
+                $admin_data = $this->Whitelabel_partner_model->get_whitelabel_partner_id($this->session->userdata('user_id'));
+
+                if($admin_data){
+
+                    $vendor_companies = $this->Company_security_model->get_vendor_companies($admin_data['partner_id']);
+                    // lq();
+                    // $vendor_company_ids = $vendor_compnies;
+                    $vendor_company_ids = explode(',', $vendor_companies['comp_ids']);
+
+                    $mathced_vendor_company_ids = $this->Option_model->get_option_by_company('company_security',$vendor_company_ids);
+
+                    $vendor_comp_id = $mathced_vendor_company_ids[0]['company_id'];
+
+                    $security_data = $this->Option_model->get_option_by_company('company_security',$vendor_comp_id);
+                } else {
+                    $security_data = $this->Option_model->get_option_by_company('company_security',$this->session->userdata('current_company_id')); 
+                }
+
+                $security = json_decode($security_data[0]['option_value'], true);
+
+                if($security['security_status'] && $email != SUPER_ADMIN){
+                    $encode_email = base64_encode($email);
+                    $encode_from = base64_encode('security');
+                    redirect('auth/show_qr_code?email='.$encode_email.'&from='.$encode_from);
+                }
 
                 $admin_user_ids = $this->Whitelabel_partner_model->get_whitelabel_admin_ids($this->session->userdata('user_id'));
 
@@ -216,11 +248,11 @@ class Auth extends MY_Controller
                 }               
                 elseif($this->session->userdata('user_role') == "is_housekeeping" || in_array("is_housekeeping", $employee_permission['permissions']))
                 {
-					redirect('/room');
+                    redirect('/room');
                 }
                 else
                 {
-					redirect('/menu/select_hotel/'.$this->company_id);
+                    redirect('/menu/select_hotel/'.$this->company_id);
                 }
             } else { 
                 $errors = $this->tank_auth->get_error_message();
@@ -263,6 +295,198 @@ class Auth extends MY_Controller
 
             $this->load->view('includes/bootstrapped_template', $data);
 
+        }
+    }
+
+    function show_qr_code(){
+
+        $company_id = $this->company_id;
+
+        // if($this->is_partner_owner){
+        //     $partner_data = $this->Company_security_model->get_first_property_partner($this->vendor_id);
+        //     $company_id = $partner_data['company_id'];
+        // }
+
+        $user_id = $this->user_id;
+
+        $admin_data = $this->Whitelabel_partner_model->get_whitelabel_partner_id($user_id);
+
+        if($admin_data){
+
+            $vendor_companies = $this->Company_security_model->get_vendor_companies($admin_data['partner_id']);
+            // lq();
+            // $vendor_company_ids = $vendor_compnies;
+            $vendor_company_ids = explode(',', $vendor_companies['comp_ids']);
+
+            $mathced_vendor_company_ids = $this->Option_model->get_option_by_company('company_security',$vendor_company_ids);
+
+            $company_id = $mathced_vendor_company_ids[0]['company_id'];
+
+        }
+
+        $user_restriction = $this->Option_model->get_option_by_user('login_security', $this->user_id);
+
+        if(empty($user_restriction)) {
+
+            $protocol = empty($_SERVER['HTTPS']) ? 'http' : 'https';
+
+            $login_security_url = $protocol . "://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+
+            $login_security_data = array(
+                            'company_id' => $company_id,
+                            'option_name ' => 'login_security',
+                            'option_value ' => json_encode(
+                                                array(
+                                                    'user_id' => $this->user_id,
+                                                    'login_security_url' => $login_security_url,
+                                                    'login_security_otp_verified' => 0
+                                                    )
+                                                ),
+                            'autoload' => 0
+                        );
+            $this->Option_model->add_option($login_security_data);
+        }
+
+        
+        
+        $email = $this->input->get('email');
+        $from = $this->input->get('from');
+
+        $decode_email = base64_decode($email);
+        $decode_from = base64_decode($from);
+        $data['secure_data'] = $this->google_security->create_secret($decode_email, $decode_from);
+
+        $security_data = $this->Company_security_model->get_deatils_by_company_user($company_id, $this->user_id);
+
+        if($security_data && count($security_data) > 0) {
+
+            $data['secure_data']['enabled'] = true; 
+            // $this->Company_security_model->update($company_id, $this->user_id, $company_security_data);
+        } 
+        else {
+            $data['secure_data']['enabled'] = false; 
+            // $this->Company_security_model->insert($company_security_data);
+        }
+
+        $this->load->view('auth/show_qr_code', $data);
+    }
+
+    function verify_otp(){
+        $otp = $this->input->post('otp');
+        $secret_code = $this->input->post('secret_code');
+        $qr_code_url = $this->input->post('qr_code_url');
+        $via = $this->input->post('via');
+        $otp_verification = $this->input->post('otp_verification');
+
+        $company_id = $this->company_id;
+
+        // if($this->is_partner_owner){
+        //     $partner_data = $this->Company_security_model->get_first_property_partner($this->vendor_id);
+        //     $company_id = $partner_data['company_id'];
+        // }
+
+        $user_id = $this->user_id;
+
+        $admin_data = $this->Whitelabel_partner_model->get_whitelabel_partner_id($user_id);
+
+        if($admin_data){
+
+            $vendor_companies = $this->Company_security_model->get_vendor_companies($admin_data['partner_id']);
+            // lq();
+            // $vendor_company_ids = $vendor_compnies;
+            $vendor_company_ids = explode(',', $vendor_companies['comp_ids']);
+
+            $mathced_vendor_company_ids = $this->Option_model->get_option_by_company('company_security',$vendor_company_ids);
+
+            $company_id = $mathced_vendor_company_ids[0]['company_id'];
+
+        }
+
+        $secret_data = $this->Company_security_model->get_deatils_by_company_user($company_id, $user_id);
+
+        $secret = "";
+
+        if(
+            isset($secret_data['secret_code']) && 
+            $secret_data['secret_code']
+        ){
+            $secret = $secret_data['secret_code'];
+        } else {
+            $secret = $secret_code;
+        }
+
+        $check = $this->google_security->check_secret_with_otp($secret, $otp);
+
+        if($check){
+
+            if($via == 'login') {
+
+                $this->Option_model->delete_option('login_security', $user_id);
+
+                $company_security_data = array();
+                $company_security_data['company_id'] = $company_id;
+                $company_security_data['user_id'] = $user_id;
+                $company_security_data['secret_code'] = $secret;
+                $company_security_data['qr_code_url'] = $qr_code_url;
+                $company_security_data['security_name'] = 'security';
+                $company_security_data['created_at'] = gmdate('Y-m-d H:i:s');
+
+                $security_data = $this->Company_security_model->get_deatils_by_company_user($company_id, $user_id);
+
+                if($security_data && count($security_data) > 0) {
+
+                    $data['secure_data']['enabled'] = true; 
+                    // $this->Company_security_model->update($company_id, $this->user_id, $company_security_data);
+                } 
+                else {
+                    $data['secure_data']['enabled'] = false; 
+                    $this->Company_security_model->insert($company_security_data);
+                }
+            }
+
+            if($otp_verification){
+                $security_data =  $this->Option_model->get_option_by_company('company_security',$this->company_id);
+        
+                if($security_data){
+
+                    $secure = json_decode($security_data[0]['option_value'], true);
+
+                    $company_data = array(
+                        'security_status' => $secure['security_status'],
+                        'lock_timer' => $secure['lock_timer'],
+                        'otp_verified' => 1
+                    );
+                   
+                    $this->Option_model->update_option_company('company_security', json_encode($company_data), $this->company_id);
+                }
+            }
+
+            $employee_permission = $this->session->all_userdata('permissions');
+
+            $admin_user_ids = $this->Whitelabel_partner_model->get_whitelabel_admin_ids($this->session->userdata('user_id'));
+
+            if (
+                (
+                    $this->session->userdata('user_role') == "is_admin" || 
+                    in_array("is_salesperson", $employee_permission['permissions'])
+                ) && $admin_user_ids[0] == $this->session->userdata('user_id')
+            )
+            {
+                // redirect('/admin');
+                echo json_encode(array('success' => true, 'redirect' => 'admin'));
+            }               
+            elseif($this->session->userdata('user_role') == "is_housekeeping" || in_array("is_housekeeping", $employee_permission['permissions']))
+            {
+                // redirect('/room');
+                echo json_encode(array('success' => true, 'redirect' => 'room'));
+            }
+            else
+            {
+                // redirect('/menu/select_hotel/'.$this->company_id);
+                echo json_encode(array('success' => true, 'redirect' => 'booking', 'company_id'=> $this->company_id));
+            }
+        } else {
+            echo json_encode(array('success' => false, 'error_msg' => 'Invalid code. Please try again.'));
         }
     }
 
@@ -351,8 +575,9 @@ class Auth extends MY_Controller
     function new_register_AJAX($subscription_type = "", $region = "")
     {
         //$this->ci->output->enable_profiler(TRUE);
-		
+        
         $lead_source = $this->input->post('source');
+        $password = $this->input->post('password');
         
         if ($this->tank_auth->is_logged_in()) {
             // logged in
@@ -367,7 +592,12 @@ class Auth extends MY_Controller
             if(isset($lead_source_slug) && $lead_source_slug != NULL)
             {
                 $this->session->set_userdata('lead_source_slug', $lead_source_slug);
-            }                
+            }   
+
+            if(!(preg_match("/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[-_]).{6,}$/", $password) === 1) || ((strlen($password) < 6) || (strlen($password) > 20))){
+                echo l("The password must be 6-20 characters long and contain only letters, numbers, dashes, and underscores.",true);
+               return false;
+            }             
             
             $this->_set_register_form_validation_rules();
 
@@ -659,7 +889,7 @@ class Auth extends MY_Controller
             base_url() . auto_version('js/calendar/common/common.css'),
             base_url() . auto_version('js/calendar/basic/basic.css'),
             base_url() . auto_version('js/calendar/custom.css'),
-			
+            
         );
 
         
@@ -904,7 +1134,7 @@ class Auth extends MY_Controller
         //         $this->User_model->add_user_permission($company_id, $admin_user_id , 'is_admin');
         //     }
         // }
-        	
+            
         if (isset($data['user_id']))
         {
             $this->User_model->add_user_permission($company_id, $data['user_id'], 'is_owner');
@@ -1703,19 +1933,19 @@ class Auth extends MY_Controller
     /*
     // Deprecated
 
-	// delete all bookings & clean all rooms for the existing test company.
-	function reset_test_company() {
-		$this->load->model('Test_model');
-		$this->Test_model->reset_test_company();
-		//$this->logout();
+    // delete all bookings & clean all rooms for the existing test company.
+    function reset_test_company() {
+        $this->load->model('Test_model');
+        $this->Test_model->reset_test_company();
+        //$this->logout();
     }
 
 
-	// delete all charges, payments and clean all rooms for the existing test company.
-	function reset_bookings() {
-		$this->load->model('Test_model');
-		$this->Test_model->reset_bookings();
-		$this->logout();
+    // delete all charges, payments and clean all rooms for the existing test company.
+    function reset_bookings() {
+        $this->load->model('Test_model');
+        $this->Test_model->reset_bookings();
+        $this->logout();
     }
     */
 
@@ -1769,7 +1999,7 @@ class Auth extends MY_Controller
             $this->form_validation->set_message(
                 '_check_max_rooms',
                 'Your property is larger than what we typically see.<br />
-					To sign up, please contact us at '.$reply_to_email,
+                    To sign up, please contact us at '.$reply_to_email,
             );
 
             return false;
@@ -1931,18 +2161,18 @@ class Auth extends MY_Controller
             'lang_id' => $this->input->post('lang_id'),
             'phone' => $phone_number
         );
-		$white_label_data = $this->Whitelabel_partner_model->get_whitelabel_partners();
-		$white_label_partner_id = 0;
+        $white_label_data = $this->Whitelabel_partner_model->get_whitelabel_partners();
+        $white_label_partner_id = 0;
         if($white_label_data && count($white_label_data) > 0 ){
-    		foreach($white_label_data as $white_label)
-    		{
-    			$location = json_decode($white_label['location']);
-    			if(isset($location) && $location && in_array($data['country'], $location))
-    			{
-    				$white_label_partner_id = $white_label['id'];
-    				break;
-    			}
-    		}
+            foreach($white_label_data as $white_label)
+            {
+                $location = json_decode($white_label['location']);
+                if(isset($location) && $location && in_array($data['country'], $location))
+                {
+                    $white_label_partner_id = $white_label['id'];
+                    break;
+                }
+            }
         }
 
         $Rdata = $this->_update_company($data);
@@ -2006,7 +2236,7 @@ class Auth extends MY_Controller
 
         $user_id =  $this->session->userdata('user_id');
 
-		$this->User_model->update_user($user_id, array('partner_id' => $white_label_partner_id));
+        $this->User_model->update_user($user_id, array('partner_id' => $white_label_partner_id));
         $response = array(
             'success'=> 'true'
         );

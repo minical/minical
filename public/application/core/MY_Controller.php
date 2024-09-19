@@ -36,7 +36,7 @@ class MY_Controller extends CI_Controller {
         $this->load->library('tank_auth');
         $this->load->library('permission');
         $this->load->library('Template');
-        $this->load->model(array('Booking_model','Menu_model','User_model','Whitelabel_partner_model','Company_model','Extension_model','Booking_source_model'));
+        $this->load->model(array('Booking_model','Menu_model','User_model','Whitelabel_partner_model','Company_model','Extension_model','Booking_source_model', 'Option_model', 'Company_security_model'));
 
         $this->load->helper('language');
         $this->load->helper('my_assets_helper');
@@ -285,10 +285,39 @@ class MY_Controller extends CI_Controller {
     {
         if ($this->tank_auth->is_logged_in()) 
         {
+            $user_restriction = $this->Option_model->get_option_by_user('login_security', $this->ci->session->userdata('user_id'));
+// prx($this->uri->segment(1));
+// prx($user_restriction);
+            if($user_restriction){
+                $minical_access = json_decode($user_restriction[0]['option_value'], true);
+
+                if($minical_access['login_security_otp_verified'] == 0) {
+
+                    $email = $this->ci->session->userdata('email');
+
+                    $encode_email = base64_encode($email);
+                    $encode_from = base64_encode('security');
+
+                    if( 
+                        $this->uri->segment(1) != 'auth' &&
+                        $this->uri->segment(2) != 'show_qr_code'
+                    ) {
+
+                        redirect('auth/show_qr_code?email='.$encode_email.'&from='.$encode_from, 'refresh');
+                        // return false;
+                    }
+                }
+            }
+
             $this->company_id = $this->ci->session->userdata('current_company_id');
 
             $company = $this->ci->Company_model->get_company($this->company_id);
             $company_key_data = $this->ci->Company_model->get_company_api_permission($this->company_id);
+            $company_security_data = $this->ci->Option_model->get_option_by_company('company_security', $this->company_id);
+
+            $company_security = array();
+            if($company_security_data)
+                $company_security = json_decode($company_security_data[0]['option_value'], true);
 
             if(!$this->input->is_ajax_request() && !($company && isset($company['company_id']) && $company['company_id'])){
                 $controller_name = $this->ci->uri->rsegment(1);
@@ -313,6 +342,11 @@ class MY_Controller extends CI_Controller {
             $this->company_feature_limit = $company['limit_feature'];
             $this->company_creation_date = $company['creation_date'];
             
+            if($company_security){
+                $this->company_lock_time = $company_security['lock_timer'];
+                $this->company_security_status = $company_security['security_status'];
+            }
+
             $this->company_partner_id = $company['partner_id'];
             $this->company_force_room_selection = $company['force_room_selection'];
 
@@ -344,6 +378,10 @@ class MY_Controller extends CI_Controller {
             $this->restrict_edit_after_checkout = $company['restrict_edit_after_checkout'];
             $this->restrict_checkout_with_balance = $company['restrict_checkout_with_balance'];
             $this->calendar_days = $company['calendar_days'];
+
+            $this->security_data =  $this->Company_security_model->get_deatils_by_company_user(null, $this->user_id);
+
+            $this->security_data_length = count($this->security_data);
             
             $user = $this->User_model->get_user_by_id($this->user_id);
             $this->user_email = $user['email'];
@@ -358,7 +396,7 @@ class MY_Controller extends CI_Controller {
 
             $whitelabelinfo = $this->ci->session->userdata('white_label_information');
 
-            $this->vendor_currency_id = $whitelabelinfo['currency_id'];
+            $this->vendor_currency_id = isset($whitelabelinfo['currency_id']) && $whitelabelinfo['currency_id'] ? $whitelabelinfo['currency_id'] : 'USD';
             $admin_user_ids = $this->Whitelabel_partner_model->get_partner_detail();
             $this->is_super_admin = (($user && isset($user['email']) && $user['email'] == SUPER_ADMIN) || ($admin_user_ids && isset($admin_user_ids['admin_user_id']) && $this->user_id == $admin_user_ids['admin_user_id']));
 
@@ -368,6 +406,9 @@ class MY_Controller extends CI_Controller {
             $this->is_partner_owner = ($admin_user_ids && isset($admin_user_ids['admin_user_id']) && $this->user_id == $admin_user_ids['admin_user_id']);
             $this->is_partner_admin = (isset($admin_user_ids['admin_user_id']) && $this->user_id == $admin_user_ids['admin_user_id'] ) ? 1 :0;
             
+            // Will be used for support, vendor, and property owner
+            $this->is_property_owner = (($user && isset($user['email']) && $user['email'] == SUPER_ADMIN) || ($admin_user_ids && isset($admin_user_ids['admin_user_id']) && $this->user_id == $admin_user_ids['admin_user_id']) || $this->user_permission == 'is_owner');
+
             $common_booking_sources = json_decode(COMMON_BOOKING_SOURCES, true);
             $i = 0;
             $booking_sources = $this->Booking_source_model->get_common_booking_sources_settings($this->company_id);

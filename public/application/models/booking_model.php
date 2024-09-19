@@ -2849,6 +2849,7 @@ class Booking_model extends CI_Model {
         $this->db->where('b.is_ota_booking','1');
         $this->db->where($where);
         $this->db->where('b.company_id',$company_id);
+        $this->db->where('UNIX_TIMESTAMP(bb.check_out_date) + (86400 * 7) < UNIX_TIMESTAMP(NOW())');
 
         $query = $this->db->get();
 

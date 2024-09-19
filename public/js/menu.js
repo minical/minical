@@ -1,26 +1,184 @@
 $(function () {
 
-    var baseURL = getBaseURL();
-    var sec = 30 * 60; // 30 minutes remaining until timeout
+    $('.otp-input input').val('');
+    const inputs = document.querySelectorAll('.otp-input input');
+    inputs.forEach((input, index) => {
+        input.addEventListener('input', (e) => {
+            if (e.target.value.length === 1 && index < inputs.length - 1) {
+                inputs[index + 1].focus();
+            }
+        });
 
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Backspace' && index > 0 && !e.target.value) {
+                inputs[index - 1].focus();
+            }
+        });
+    });
+
+    var baseURL = getBaseURL();
+    var companyLockTime = innGrid.featureSettings.companyLockTime ? innGrid.featureSettings.companyLockTime : 10;
+    var sec = companyLockTime * 60; // 30 minutes remaining until timeout
     //30 minutes connection timeout.
     var timer = setInterval(function () {
-        $('#hideMsg span').text(sec--);
-        if (sec < 0) {
-            $("#dialog-timeout").modal("show");
-            $.post(getBaseURL() + 'auth/check_for_employee_auto_logout',
-                {}, function (str) {
-                }, "json"
-            );
-            clearInterval(timer);
+        if(!is_current_user_superadmin){
+            $('#hideMsg span').text(sec--);
+            if (sec < 0) {
+                $("#dialog-timeout").modal("show");
+
+                $.post(getBaseURL() + 'settings/company_security/enable_otp_verification',
+                    {}, function (str) {
+                        if(!str.otp_verified){ // link to page
+                            $("#dialog-timeout").modal("show");
+                        }
+                    }, "json"
+                );
+
+                $.post(getBaseURL() + 'auth/check_for_employee_auto_logout',
+                    {}, function (str) {
+                    }, "json"
+                );
+                clearInterval(timer);
+            }
         }
     }, 1000);
 
 
+    $.post(getBaseURL() + 'settings/company_security/get_otp_verification',
+        {}, function (str) {
+            console.log('str',str);
+            if(!str.otp_verified && !is_current_user_superadmin){ // link to page
+                $("#dialog-timeout").modal("show");
+            }
+        }, "json"
+    );
+
+    $('body').on('click','.verify_otp',function(){
+
+        // var otp = $('#otp_value').val();
+
+        let otp = '';
+        inputs.forEach(input => {
+            otp += input.value;
+        });
+
+        console.log('inputs',otp);
+
+        $.ajax({
+            type: "POST",
+            url: getBaseURL() + 'settings/company_security/afk_verify_otp',
+            dataType: 'json',
+            data: {
+                    otp: otp,
+                    otp_verification: 1
+                },
+            success: function(resp){
+                console.log('resp',resp);
+                if(resp.success){
+                    location.reload();
+                } else {
+                    alert(resp.error_msg);
+                }
+            }
+        });
+    });
+
+    // change QR Code
+
+    $('body').on('click','#change_qr_code',function(){
+        // var qr_change = $('input[name="change_qr_code"]').prop('checked') ? 1 : 0;
+        
+        $.post(getBaseURL() + 'settings/company_security/change_new_qr_code',
+            {}, function (str) {
+                // console.log('str',str);
+                //if(qr_change == 1){
+                    // $('.company_security_settings').hide();
+                    $('.show_qr_code_form').html(str);
+                    $('.company_security_settings').hide();
+                // } else {
+                //     // $('.company_security_settings').show();
+                //     $('.show_qr_code_form').html('');
+                // }
+                
+            }
+        );
+    });
+
+    $('body').on('click','.back_to_security',function(){
+        $('.show_qr_code_form').html('');
+        $('.company_security_settings').show();
+    });
+
+    // $('body').on('change','#lock_timer_setting',function(){
+    //     var lock_timer = $('input[name="lock_timer_setting"]').prop('checked') ? 1 : 0;
+        
+    //     if(lock_timer == 1){
+    //         $('.lock_timer_div').show();
+    //     } else {
+    //         $('.lock_timer_div').hide();
+    //     }
+    // });
+
+    $('body').on('click','#disable_security',function(){
+        
+        $.post(getBaseURL() + 'settings/company_security/disable_security',
+            {}, function (str) {
+                $('.show_qr_code_form').html(str);
+                $('.company_security_settings').hide();
+            }
+        );
+    });
+
+    // Verify new OTP
+
+    $('body').on('click','.verify_new_otp',function(){
+
+        // var otp = $('#new_otp').val();
+
+        let otp = '';
+        inputs.forEach(input => {
+            otp += input.value;
+        });
+
+        console.log('inputs',otp);
+
+        var secret = $('#secret_code').val();
+        var qr_code_url = $('#qr_code_url').val();
+        var security_name = $('#security_name').val();
+
+        $.ajax({
+            type: "POST",
+            url: getBaseURL() + 'settings/company_security/verify_new_otp',
+            dataType: 'json',
+            data: {
+                    otp: otp,
+                    secret: secret,
+                    qr_code_url: qr_code_url,
+                    security_name: security_name,
+                    via: 'company_security_first_time'
+                },
+            success: function(resp){
+                console.log('resp',resp);
+                if(resp.success){
+                    location.reload();
+                } else {
+                    alert(resp.error_msg);
+                }
+            }
+        });
+    });
+
+
     // if user isn't active for 30 minutes, show time out screen
     $("body").on('click', function () {
-        sec = 30 * 60; // reset timer to 30 minutes
+        sec = companyLockTime * 60; // reset timer to 30 minutes
     });
+
+    if(window.location.href.substr(-33) == 'account_settings/company_security'){ // subscription
+        setTimeout(function () {
+            $("#dialog-timeout").modal("hide");
+        },2000);
+    }
 
     if(window.location.href.substr(-12) != 'subscription'){ // subscription
         setTimeout(function () {

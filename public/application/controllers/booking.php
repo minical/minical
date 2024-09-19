@@ -1748,6 +1748,106 @@ class Booking extends MY_Controller
         $post_booking_batch_data['booking_ids'] = $booking_ids;
         $post_booking_batch_data['company_id'] = $this->company_id;
 
+
+
+        for ($i = 0; $i < $room['room_count']; $i++) {
+            if(isset($booking_data['use_rate_plan']) && $booking_data['use_rate_plan'])
+            {
+                $end_date = date('Y-m-d', strtotime($room['check_out_date']));
+                $start_date = date('Y-m-d', strtotime($room['check_in_date']));
+                $datetime1 = date_create($start_date);
+                $datetime2 = date_create($end_date);
+                $interval = date_diff($datetime1, $datetime2);
+                $days = $interval->format('%a');
+
+                $this->load->library('rate');
+                $raw_rate_array = $this->rate->get_rate_array($booking_data['rate_plan_id'], $start_date, $end_date, $booking_data['adult_count'], $booking_data['children_count']);
+
+                $rate_array = array();
+                foreach ($raw_rate_array as $rate)
+                {
+
+                    $rate_array[] = array(
+                        'date' => $rate['date'],
+                        'base_rate' => $rate['base_rate'],
+                        'adult_1_rate' => $rate['adult_1_rate'],
+                        'adult_2_rate' => $rate['adult_2_rate'],
+                        'adult_3_rate' => $rate['adult_3_rate'],
+                        'adult_4_rate' => $rate['adult_4_rate'],
+                        'additional_adult_rate' => $rate['additional_adult_rate'],
+                        'additional_child_rate' => $rate['additional_child_rate'],
+                        'minimum_length_of_stay' => $rate['minimum_length_of_stay'],
+                        'maximum_length_of_stay' => $rate['maximum_length_of_stay'],
+                        'minimum_length_of_stay_arrival' => $rate['minimum_length_of_stay_arrival'],
+                        'maximum_length_of_stay_arrival' => $rate['maximum_length_of_stay_arrival']
+
+                    );
+                }
+
+                $curreny_data = $this->Currency_model->get_default_currency($this->company_id);
+                $rate_plan_data = $this->Rate_plan_model->get_rate_plan($booking_data['rate_plan_id']);
+                $rate_plan = array(
+                    "rate_plan_name" => $rate_plan_data['rate_plan_name']." #".$booking_ids[$i],
+                    "number_of_adults_included_for_base_rate" => $booking_data['adult_count'],
+                    "rates" => get_array_with_range_of_dates($rate_array),
+                    "currency_id" => $curreny_data['currency_id'],
+                    "charge_type_id" => $rate_plan_data['charge_type_id'],
+                    "company_id" => $this->company_id,
+                    "is_selectable" => '0',
+                    "room_type_id" => $room['room_type_id'],
+                    "parent_rate_plan_id" => $booking_data['rate_plan_id'],
+                    "policy_code"=> $rate_plan_data['policy_code']
+                );
+
+                // create rates
+                $rates = $rate_plan['rates'];
+                unset($rate_plan['rates']);
+
+                // create rate plan
+                $rate_plan_id = $this->Rate_plan_model->create_rate_plan($rate_plan);
+                $this->Booking_model->update_booking($booking_ids[$i], array('rate_plan_id' => $rate_plan_id));
+
+                foreach ($rates as $rate)
+                {
+                    $rate_id = $this->Rate_model->create_rate(
+                        Array(
+                            'rate_plan_id' => $rate_plan_id,
+                            'base_rate' => $rate['base_rate'],
+                            'adult_1_rate' => $rate['adult_1_rate'],
+                            'adult_2_rate' => $rate['adult_2_rate'],
+                            'adult_3_rate' => $rate['adult_3_rate'],
+                            'adult_4_rate' => $rate['adult_4_rate'],
+                            'additional_adult_rate' => $rate['additional_adult_rate'],
+                            'additional_child_rate' => $rate['additional_child_rate'],
+                            'minimum_length_of_stay' => $rate['minimum_length_of_stay'],
+                            'maximum_length_of_stay' => $rate['maximum_length_of_stay'],
+                            'minimum_length_of_stay_arrival' => $rate['minimum_length_of_stay_arrival'],
+                            'maximum_length_of_stay_arrival' => $rate['maximum_length_of_stay_arrival']
+                        )
+                    );
+
+                    $date_range_id = $this->Date_range_model->create_date_range(
+                        Array(
+                            'date_start' => $rate['date_start'],
+                            'date_end' => $rate['date_end']
+                        )
+                    );
+
+                    $this->Date_range_model->create_date_range_x_rate(
+                        Array(
+                            'rate_id' => $rate_id,
+                            'date_range_id' => $date_range_id
+                        )
+                    );
+                }
+            }
+        }
+
+
+
+
+
+
         $booking_history_batch = array();
 
         for ($i = 0; $i < $room['room_count']; $i++) {

@@ -470,6 +470,11 @@ if(isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true) {
 
                 </span><br/>
 
+                <?php echo l('Adult'); ?>: <span id="adult_count"><?php echo $booking_detail['adult_count']; ?>,
+                <?php echo l('Children'); ?>: <span id="child_count"><?php echo $booking_detail['children_count']; ?>
+                
+                </span><br/>
+
                 <?php echo l('Booking Source', true); ?>: <?php echo get_booking_source($booking_detail['source']); ?>
 
                <span id="booking-field">
