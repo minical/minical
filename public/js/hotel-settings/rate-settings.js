@@ -286,7 +286,7 @@ innGrid.createRate = function() {
 	if (end_date != '') {
 		confirmbox = true;
 	} else {
-		confirmbox = confirm(l("Are you sure you don't want to set the end date? The default value of the end date will be set to FOREVER (10 years from now) and will update Rates for all future dates."));
+		confirmbox = confirm(l("Are you sure you don't want to set the end date? The default value of the end date will be set to FOREVER (1 year from now) and will update Rates for all future dates."));
 	}
 
 	if (confirmbox) {
@@ -306,7 +306,7 @@ innGrid.createRate = function() {
 
 	if(rateArray.date_end == ''){
 		var myDate = new Date(rateArray.date_start);
-		myDate.setFullYear(myDate.getFullYear() + 10);
+		myDate.setFullYear(myDate.getFullYear() + 1);
 		myDate.setDate(myDate.getDate() - 1);
 
 		rateArray.date_end = moment(myDate).format('YYYY-MM-DD');

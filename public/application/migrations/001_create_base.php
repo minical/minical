@@ -2132,6 +2132,51 @@ class Migration_create_base extends CI_Migration {
 		$this->dbforge->create_table("company_subscription", TRUE);
 		$this->db->query('ALTER TABLE  `company_subscription` ENGINE = InnoDB');
 
+		## Create Table company_security
+		$this->dbforge->add_field(array(
+		    'id' => array(
+		        'type' => 'INT',
+		        'constraint' => 11,
+		        'unsigned' => TRUE,
+		        'auto_increment' => TRUE,
+		        'null' => FALSE,
+		    ),
+		    'company_id' => array(
+		        'type' => 'INT',
+		        'constraint' => 11,
+		        'unsigned' => TRUE,
+		        'null' => FALSE,
+		    ),
+		    'user_id' => array(
+		        'type' => 'INT',
+		        'constraint' => 11,
+		        'null' => TRUE,
+		    ),
+		    'secret_code' => array(
+		        'type' => 'VARCHAR',
+		        'constraint' => 255,
+		        'null' => TRUE,
+		    ),
+		    'qr_code_url' => array(
+		        'type' => 'TINYTEXT',
+		        'null' => TRUE,
+		    ),
+		    'security_name' => array(
+		        'type' => 'VARCHAR',
+		        'constraint' => 255,
+		        'null' => TRUE,
+		    ),
+		    'created_at' => array(
+		        'type' => 'TIMESTAMP',
+		        'default' => 'CURRENT_TIMESTAMP',
+		        'null' => FALSE,
+		    ),
+		));
+
+		$this->dbforge->add_key('id', TRUE);
+		$this->dbforge->create_table('company_security');
+		$this->db->query('ALTER TABLE  `company_security` ENGINE = InnoDB');
+
 		## Create Table company_x_currency
 		$this->dbforge->add_field(array(
 			'company_id' => array(
