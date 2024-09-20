@@ -1,3 +1,4 @@
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 <style type="text/css">
 	/* styles.css */
 
@@ -63,6 +64,11 @@ button {
     cursor: pointer;
 }
 
+.forget_ga_app{
+    background-color: #ffc107;
+    font-size: small;
+}
+
 a {
     padding: 10px 20px;
     font-size: 16px;
@@ -82,19 +88,6 @@ button:hover {
     font-weight: bold;
     color: #333;
 }
-
-/*#otp {
-  padding-left: 15px;
-  letter-spacing: 42px;
-  border: 0;
-  background-image: linear-gradient(to left, black 70%, rgba(255, 255, 255, 0) 0%);
-  background-position: bottom;
-  background-size: 50px 1px;
-  background-repeat: repeat-x;
-  background-position-x: 35px;
-  width: 300px;
-  outline : none;
-}*/
 
 .otp-input {
     display: flex;
@@ -125,7 +118,7 @@ button:hover {
 	    <p>If you can't scan the QR code, use this code: <span id="secret"><?php echo $secure_data['secret_code']; ?></span></p>
 	<?php endif; ?>
 
-    <form action="" method="post">
+    <form action="" method="post" class="otp_verify_form">
 
 
         <label for="otp">Enter the code from your Google Authenticator app:</label>
@@ -145,8 +138,14 @@ button:hover {
         
         <!-- <input id="otp" name="otp" type="text" maxlength="6" /> -->
         <a href="javascript:" class="verify_otp">Verify</a>
+        <hr>
+        
     </form>
 
+<?php if(isset($secure_data['enabled']) && $secure_data['enabled']): ?>
+<button type="button" class="btn btn-warning btn-sm forget_ga_app" style="float: right;display: none;">Lost GA App Code</button>
+<button type="button" class="btn reload_page" style="float: right; display: none;"></button>
+<?php endif; ?>
 </div>
 
 <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
