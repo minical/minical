@@ -1074,7 +1074,7 @@ var customer_pci_token = '';
 
             if(
                 innGrid.featureSettings.companySecurityStatus == 1 &&
-                innGrid.featureSettings.SecurityData.length > 0
+                innGrid.featureSettings.SecurityData > 0
             ) {
                 // Inject the content into the modal body first
                 var twoFaContent = '<label for="otp" style="text-align: center;">Please enter the 2-factor authentication code from your Google Authenticator app to view credit card details</label>'+
@@ -1102,133 +1102,162 @@ var customer_pci_token = '';
 
                 focusOnNextInput();
 
-
-
-                
+                $('#display-cc-details').modal('show');
             }
 
             if(
                 innGrid.featureSettings.companySecurityStatus == 1 &&
-                innGrid.featureSettings.SecurityData.length == 0
+                innGrid.featureSettings.SecurityData == 0
             ) {
-                var twoFaContent = '<label for="otp" style="text-align: center;">2-Factor Authentication setup is required. Please visit this link and scan QR code for security'+
-                        '<a href="<?php echo base_url(); ?>account_settings/company_security">Click Here</a>'+
+                var twoFaContent = '<label for="otp" style="text-align: center;">2-Factor Authentication setup is required. Please visit this link and scan QR code for security '+
+                        '<a href="' + getBaseURL() + 'account_settings/company_security">Click Here</a>'+
                     '</label>';
 
+                $('#display-cc-details').find('.modal-content').css({"width":"70%","margin":"0px 100px"});
                 $('#display-cc-details').find('.modal-body').html(twoFaContent);
+                $('#display-cc-details').modal('show');
             }
 
             
+            if(
+                innGrid.featureSettings.companySecurityStatus == 0
+            ) {
+                var iframe = document.createElement('iframe');
+                iframe.src = getBaseURL() + "customer/get_credit_card_number?customer_pci_token=" + customer_pci_token;
+                iframe.height = '300px';
+                iframe.width = '100%';
+                iframe.style = 'border-style: none';
 
+                console.log('iframe', iframe);
 
-            $('#display-cc-details').modal('show');
+                $('#display-cc-details').find('.modal-body').html(iframe);
+
+                setTimeout(function(){
+
+                    console.log($('#display-cc-details').find('.modal-body').find('iframe').contents().find("body").html().trim());
+                    var responseBody = $('#display-cc-details').find('.modal-body').find('iframe').contents().find("body").html().trim();
+                    console.log('responseBody',responseBody);
+                    if (responseBody == undefined || responseBody == 'card not found\n' || responseBody == 'card not found' || responseBody == null) {
+                        console.log('in');
+                        $("#display-cc-details").find('iframe').contents().find("body").html("Card details are no longer viewable");
+                        $('#display-cc-details').modal('show');
+                        $('.loader-img').hide();
+                    } else {
+                        $('#display-cc-details').modal('show');
+                        $('.loader-img').hide();
+                    }
+
+                },3000);
+            }
+
+            
 
             
         }
     });
 
 
-$(document).ready(function() {
+    $(document).ready(function() {
 
-    $('body').on('click','.verify_cc_otp',function(){
+        $('body').on('click','.verify_cc_otp',function(){
 
-                let otp = '';
-                let inputs = document.querySelectorAll('.otp-input input'); // Query inputs again
-                inputs.forEach(input => {
-                    otp += input.value;
+                    let otp = '';
+                    let inputs = document.querySelectorAll('.otp-input input'); // Query inputs again
+                    inputs.forEach(input => {
+                        otp += input.value;
+                    });
+
+                    console.log('inputs',otp);
+
+                    $.ajax({
+                        type: "POST",
+                        url: getBaseURL() + 'settings/company_security/show_cc_verify_otp',
+                        dataType: 'json',
+                        data: {
+                                otp: otp
+                            },
+                        success: function(resp){
+                            console.log('resp',resp);
+                            if(resp.success){
+                                
+
+                                var iframe = document.createElement('iframe');
+                                iframe.src = getBaseURL() + "customer/get_credit_card_number?customer_pci_token=" + customer_pci_token;
+                                iframe.height = '300px';
+                                iframe.width = '100%';
+                                iframe.style = 'border-style: none';
+
+                                console.log('iframe', iframe);
+
+                                $('#display-cc-details').find('.modal-content').removeAttr('style');
+                                $('#display-cc-details').find('.modal-body').html(iframe);
+                                $('#display-cc-details').find('.modal-footer').html('');
+
+                                setTimeout(function(){
+
+                                    console.log($('#display-cc-details').find('.modal-body').find('iframe').contents().find("body").html().trim());
+                                    var responseBody = $('#display-cc-details').find('.modal-body').find('iframe').contents().find("body").html().trim();
+                                    console.log('responseBody',responseBody);
+                                    if (responseBody == undefined || responseBody == 'card not found\n' || responseBody == 'card not found' || responseBody == null) {
+                                        console.log('in');
+                                        $("#display-cc-details").find('iframe').contents().find("body").html("Card details are no longer viewable");
+                                        $('#display-cc-details').modal('show');
+                                        $('.loader-img').hide();
+                                    } else {
+                                        $('#display-cc-details').modal('show');
+                                        $('.loader-img').hide();
+                                    }
+
+                                },3000);
+
+
+
+                            } else {
+                                alert(resp.error_msg);
+                            }
+                        }
+                    });
                 });
 
-                console.log('inputs',otp);
+    });
 
-                $.ajax({
-                    type: "POST",
-                    url: getBaseURL() + 'settings/company_security/show_cc_verify_otp',
-                    dataType: 'json',
-                    data: {
-                            otp: otp
-                        },
-                    success: function(resp){
-                        console.log('resp',resp);
-                        if(resp.success){
-                            
+    function focusOnNextInput(){
+        const inputs = document.querySelectorAll('.otp-input input');
 
-                            var iframe = document.createElement('iframe');
-                            iframe.src = getBaseURL() + "customer/get_credit_card_number?customer_pci_token=" + customer_pci_token;
-                            iframe.height = '300px';
-                            iframe.width = '100%';
-                            iframe.style = 'border-style: none';
+        inputs.forEach((input, index) => {
+            // Handle input event
+            input.addEventListener('input', (e) => {
+                if (e.target.value.length === 1) {
+                    // Only move to the next input if the current one has exactly 1 character
+                    if (index < inputs.length - 1) {
+                        inputs[index + 1].focus();
+                    } else {
+                        input.blur(); // Remove focus if it's the last input
+                    }
+                }
+            });
 
-                            console.log('iframe', iframe);
+            // Handle backspace event
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && e.target.value === '' && index > 0) {
+                    inputs[index - 1].focus(); // Move to the previous input if backspace is pressed
+                }
+            });
 
-                            $('#display-cc-details').find('.modal-content').removeAttr('style');
-                            $('#display-cc-details').find('.modal-body').html(iframe);
-                            $('#display-cc-details').find('.modal-footer').html('');
-
-                            setTimeout(function(){
-
-                                console.log($('#display-cc-details').find('.modal-body').find('iframe').contents().find("body").html().trim());
-                                var responseBody = $('#display-cc-details').find('.modal-body').find('iframe').contents().find("body").html().trim();
-                                console.log('responseBody',responseBody);
-                                if (responseBody == undefined || responseBody == 'card not found\n' || responseBody == 'card not found' || responseBody == null) {
-                                    console.log('in');
-                                    $("#display-cc-details").find('iframe').contents().find("body").html("Card details are no longer viewable");
-                                    $('#display-cc-details').modal('show');
-                                    $('.loader-img').hide();
-                                } else {
-                                    $('#display-cc-details').modal('show');
-                                    $('.loader-img').hide();
-                                }
-
-                            },3000);
-
-
-
-                        } else {
-                            alert(resp.error_msg);
+            // Handle paste event to allow pasting into the inputs
+            input.addEventListener('paste', (e) => {
+                const paste = e.clipboardData.getData('text').slice(0, inputs.length); // Limit paste length to number of inputs
+                paste.split('').forEach((char, i) => {
+                    if (inputs[index + i]) {
+                        inputs[index + i].value = char;
+                        if (index + i + 1 < inputs.length) {
+                            inputs[index + i + 1].focus(); // Move focus while pasting
                         }
                     }
                 });
+                e.preventDefault(); // Prevent default paste behavior
             });
-
-});
-
-function focusOnNextInput(){
-    const inputs = document.querySelectorAll('.otp-input input');
-
-    inputs.forEach((input, index) => {
-        // Handle input event
-        input.addEventListener('input', (e) => {
-            if (e.target.value.length === 1) {
-                // Only move to the next input if the current one has exactly 1 character
-                if (index < inputs.length - 1) {
-                    inputs[index + 1].focus();
-                } else {
-                    input.blur(); // Remove focus if it's the last input
-                }
-            }
         });
-
-        // Handle backspace event
-        input.addEventListener('keydown', (e) => {
-            if (e.key === 'Backspace' && e.target.value === '' && index > 0) {
-                inputs[index - 1].focus(); // Move to the previous input if backspace is pressed
-            }
-        });
-
-        // Handle paste event to allow pasting into the inputs
-        input.addEventListener('paste', (e) => {
-            const paste = e.clipboardData.getData('text').slice(0, inputs.length); // Limit paste length to number of inputs
-            paste.split('').forEach((char, i) => {
-                if (inputs[index + i]) {
-                    inputs[index + i].value = char;
-                    if (index + i + 1 < inputs.length) {
-                        inputs[index + i + 1].focus(); // Move focus while pasting
-                    }
-                }
-            });
-            e.preventDefault(); // Prevent default paste behavior
-        });
-    });
-}
+    }
 
 })(jQuery, window, document);
