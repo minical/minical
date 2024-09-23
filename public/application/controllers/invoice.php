@@ -37,7 +37,8 @@ class Invoice extends MY_Controller {
         $this->load->library('Forecast_charges');
         $this->load->library('Tokenex');
         $global_data['menu_on'] = true;
-        $this->load->vars($global_data);        
+        $this->load->vars($global_data);    
+     
         
         $language = $this->session->userdata('language');
         $this->lang->load('booking', $language);
@@ -1510,8 +1511,82 @@ class Invoice extends MY_Controller {
         echo json_encode($void);   
     
     }
+
+    public function authenticate() {
+        try {
+            $companyId = $this->company_id; // Assuming this is set
+            
+            // Fetch credentials directly from the database
+            $this->db->where('companies_id', $companyId);
+            $query = $this->db->get('invoice_extension'); // Replace with your actual table name
+    
+            if ($query->num_rows() > 0) {
+                $credentials = $query->row_array(); // Get the row as an associative array
+            } else {
+                return $this->output
+                            ->set_content_type('application/json')
+                            ->set_output(json_encode(['error' => 'Credentials not found for the current company.']));
+            }
+    
+            // Prepare query parameters
+            $queryParams = [
+                'email' => 'deepak@mycloudhospitality.com',
+            ];
+            $url = 'https://api.mastergst.com/einvoice/authenticate?' . http_build_query($queryParams);
+            
+            // Set headers
+            $headers = [
+                'accept: */*',
+                'username: ' . $credentials['MASTERGST_USERNAME'],
+                'password: ' . $credentials['MASTERGST_PASSWORD'],
+                'ip_address: ' . $this->input->ip_address(),
+                'client_id: ' . $credentials['MASTERGST_CLIENT_ID'],
+                'client_secret: ' . $credentials['MASTERGST_CLIENT_SECRET'],
+                'gstin: ' . $credentials['MASTERGST_GSTN'],
+            ];
+    
+            // Initialize cURL request
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            $response = curl_exec($ch);
+            curl_close($ch);
+    
+            $responseData = json_decode($response, true);
+    
+            // Check if AuthToken exists in the response
+            if (isset($responseData['data']['AuthToken'])) {
+                $accessToken = $responseData['data']['AuthToken'];
+    
+                // Store the access_token in the database
+                $this->db->where('companies_id', $companyId);
+                $this->db->update('invoice_extension', ['access_token' => $accessToken]);
+    
+                return $this->output
+                            ->set_content_type('application/json')
+                            ->set_output(json_encode(['access_token' => $accessToken]));
+            } else {
+                return $this->output
+                            ->set_content_type('application/json')
+                            ->set_output(json_encode(['error' => 'AuthToken missing in response']));
+            }
+        } catch (Exception $e) {
+            return $this->output
+                        ->set_content_type('application/json')
+                        ->set_output(json_encode(['error' => 'An error occurred during authentication', 'details' => $e->getMessage()]));
+        }
+    }
+    
+
+
+    public function getIRN() {
+       
+    }
+    
+
+
+}
    
 
-    
-}
-
+ 

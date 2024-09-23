@@ -443,5 +443,30 @@ $(function() {
 		
 		$('#folios').css('margin-left', foliosLeftScroll);
 	});
+
+	// Mastergpt
+
+	$('#print-Einvoice-button').click(function() {
+		var dataUrl = $(this).data('url');
+		$.ajax({
+			url: dataUrl,
+			type: 'GET',
+			dataType: 'json',
+			success: function(response) {
+				if (response.access_token) {
+					alert('Authentication successful. Access Token: ' + response.access_token);
+					// Handle the access token as needed
+				} else if (response.error) {
+					alert('Error: ' + response.error);
+				}
+			},
+			error: function(xhr, status, error) {
+				alert('An error occurred: ' + error);
+			}
+		});
+	});
+	
+	
+	
 	
 });
