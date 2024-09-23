@@ -23,7 +23,7 @@ class Option_model extends CI_Model {
 
     }
     
-    function get_option_by_company($option, $company_id){
+    function get_option_by_company($option, $company_id, $is_require = false){
 
         $this->db->select('*');
         $this->db->where('option_name', $option);
@@ -32,6 +32,11 @@ class Option_model extends CI_Model {
             $this->db->where_in('company_id', $company_id);
         } else {
             $this->db->where('company_id', $company_id);
+        }
+
+        if($is_require){
+            $where = "(JSON_EXTRACT(option_value, '$.security_status') = 1)";
+            $this->db->where($where);
         }
         $query = $this->db->get('options');
         if ($this->db->_error_message())

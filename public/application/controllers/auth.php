@@ -218,11 +218,14 @@ class Auth extends MY_Controller
                     // $vendor_company_ids = $vendor_compnies;
                     $vendor_company_ids = explode(',', $vendor_companies['comp_ids']);
 
-                    $mathced_vendor_company_ids = $this->Option_model->get_option_by_company('company_security',$vendor_company_ids);
+                    $security_data = $this->Option_model->get_option_by_company('company_security',$vendor_company_ids, true);
 
-                    $vendor_comp_id = $mathced_vendor_company_ids[0]['company_id'];
 
-                    $security_data = $this->Option_model->get_option_by_company('company_security',$vendor_comp_id);
+                    // $mathced_vendor_company_ids = $this->Option_model->get_option_by_company('company_security',$vendor_company_ids, true);
+
+                    // $vendor_comp_id = $mathced_vendor_company_ids[0]['company_id'];
+
+                    // $security_data = $this->Option_model->get_option_by_company('company_security',$vendor_comp_id);
                 } else {
                     $security_data = $this->Option_model->get_option_by_company('company_security',$this->session->userdata('current_company_id')); 
                 }
@@ -314,11 +317,9 @@ class Auth extends MY_Controller
         if($admin_data){
 
             $vendor_companies = $this->Company_security_model->get_vendor_companies($admin_data['partner_id']);
-            // lq();
-            // $vendor_company_ids = $vendor_compnies;
             $vendor_company_ids = explode(',', $vendor_companies['comp_ids']);
 
-            $mathced_vendor_company_ids = $this->Option_model->get_option_by_company('company_security',$vendor_company_ids);
+            $mathced_vendor_company_ids = $this->Option_model->get_option_by_company('company_security',$vendor_company_ids, true);
 
             $company_id = $mathced_vendor_company_ids[0]['company_id'];
 
@@ -356,7 +357,7 @@ class Auth extends MY_Controller
         $decode_from = base64_decode($from);
         $data['secure_data'] = $this->google_security->create_secret($decode_email, $decode_from);
 
-        $security_data = $this->Company_security_model->get_deatils_by_company_user($company_id, $this->user_id);
+        $security_data = $this->Company_security_model->get_deatils_by_company_user(null, $this->user_id);
 
         if($security_data && count($security_data) > 0) {
 
@@ -396,13 +397,13 @@ class Auth extends MY_Controller
             // $vendor_company_ids = $vendor_compnies;
             $vendor_company_ids = explode(',', $vendor_companies['comp_ids']);
 
-            $mathced_vendor_company_ids = $this->Option_model->get_option_by_company('company_security',$vendor_company_ids);
+            $mathced_vendor_company_ids = $this->Option_model->get_option_by_company('company_security',$vendor_company_ids, true);
 
             $company_id = $mathced_vendor_company_ids[0]['company_id'];
 
         }
 
-        $secret_data = $this->Company_security_model->get_deatils_by_company_user($company_id, $user_id);
+        $secret_data = $this->Company_security_model->get_deatils_by_company_user(null, $user_id);
 
         $secret = "";
 
@@ -431,7 +432,7 @@ class Auth extends MY_Controller
                 $company_security_data['security_name'] = 'security';
                 $company_security_data['created_at'] = gmdate('Y-m-d H:i:s');
 
-                $security_data = $this->Company_security_model->get_deatils_by_company_user($company_id, $user_id);
+                $security_data = $this->Company_security_model->get_deatils_by_company_user(null, $user_id);
 
                 if($security_data && count($security_data) > 0) {
 
@@ -445,7 +446,7 @@ class Auth extends MY_Controller
             }
 
             if($otp_verification){
-                $security_data =  $this->Option_model->get_option_by_company('company_security',$this->company_id);
+                $security_data =  $this->Option_model->get_option_by_company('company_security',$company_id);
         
                 if($security_data){
 
@@ -457,7 +458,7 @@ class Auth extends MY_Controller
                         'otp_verified' => 1
                     );
                    
-                    $this->Option_model->update_option_company('company_security', json_encode($company_data), $this->company_id);
+                    $this->Option_model->update_option_company('company_security', json_encode($company_data), $company_id);
                 }
             }
 
