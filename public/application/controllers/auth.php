@@ -229,7 +229,7 @@ class Auth extends MY_Controller
 
                 $security = json_decode($security_data[0]['option_value'], true);
 
-                if($security['security_status'] && $email != SUPER_ADMIN){
+                if($security['security_status'] == 1 && $email != SUPER_ADMIN && $email != 'support@roomsy.com'){
                     $encode_email = base64_encode($email);
                     $encode_from = base64_encode('security');
                     redirect('auth/show_qr_code?email='.$encode_email.'&from='.$encode_from);
@@ -490,6 +490,51 @@ class Auth extends MY_Controller
         }
     }
 
+    function send_secret_qr_to_customer(){
+        $email = $this->input->post('email');
+
+        $decode_email = base64_decode($email);
+
+        $user_data = $this->User_model->get_user_by_email($decode_email);
+        $security_data = $this->Company_security_model->get_deatils_by_company_user(null, $user_data['id']);
+        // prx($security_data);
+        $response = $this->_send_secret_qr_to_customer_email($user_data, $security_data);
+
+        echo json_encode($response);
+    }
+
+    function _send_secret_qr_to_customer_email($user_data, $security_data)
+    {
+
+        $whitelabelinfo = $this->session->userdata('white_label_information');
+
+        $email_from = $whitelabelinfo && isset($whitelabelinfo['do_not_reply_email']) && $whitelabelinfo['do_not_reply_email'] ? $whitelabelinfo['do_not_reply_email'] : 'donotreply@minical.io';
+
+        $qr_code_url = '<img src="' . $security_data["qr_code_url"] . '" alt="QR Code">';
+
+        // alert support@minical.io about this new user that registered
+        $this->load->library('email');
+        $this->email->from($email_from);
+        $this->email->to($user_data['email']);
+        $this->email->subject("Secret QR Code");
+        // $this->email->message("Secret QR Code: ".$qr_code_url
+        //     ." \n<br/>email: ".$user_data['email']."\n");
+
+        $data['secure_data'] = $security_data;
+
+        $data['secure_data']['enabled'] = false;
+
+        $this->ci->email->message($this->load->view('email/show_qr_code-html', $data, true));
+
+        if($this->email->send()){
+            return array(
+                "success" => true,
+                "message" => "The QR code has been sent to your email. Please check your inbox."
+            );
+        }
+
+    }
+
     // validation for login credentials
     function _incorrect_login($login, $password)
     {
@@ -594,8 +639,8 @@ class Auth extends MY_Controller
                 $this->session->set_userdata('lead_source_slug', $lead_source_slug);
             }   
 
-            if(!(preg_match("/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[-_]).{6,}$/", $password) === 1) || ((strlen($password) < 6) || (strlen($password) > 20))){
-                echo l("The password must be 6-20 characters long and contain only letters, numbers, dashes, and underscores.",true);
+            if(!(preg_match('/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{6,20}$/', $password))){
+                echo l("The password must contain at least one uppercase letter, one lowercase letter, one number, one special character, and be between 6 and 20 characters long.",true);
                return false;
             }             
             

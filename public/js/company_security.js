@@ -58,4 +58,47 @@ $( document ).ready(function() {
             }
         });
     });
+
+    $('body').on('click','.forget_ga_app',function(){
+
+        var imageUrl = getBaseURL() + 'images/loading.gif'
+        $('<img class="loader-img" src="'+imageUrl+'" style="width: 7%;margin: 2px 10px;float: right;"/>').insertAfter(this);
+
+        // Get the full URL
+        var url = window.location.href;
+
+        // Create a URL object and get query params
+        var params = new URLSearchParams(window.location.search);
+
+        // Example: Get a specific query param
+        var email = params.get('email'); 
+
+        // Log the value
+        console.log(email);
+
+        $.ajax({
+            type: "POST",
+            url: getBaseURL() + 'auth/send_secret_qr_to_customer',
+            dataType: 'json',
+            data: {
+                    email: email
+                },
+            success: function(resp){
+                console.log('resp',resp);
+                if(resp.success){
+                    console.log('done na');
+                    $('.reload_page').html('<i class="fa fa-refresh" aria-hidden="true"></i>');
+                    $('.loader-img').hide();
+                    $('.forget_ga_app').hide();
+                    $('.reload_page').show();
+                    $('.otp_verify_form').html(resp.message);
+                }
+            }
+        });
+
+    });
+
+    $('body').on('click','.reload_page',function(){
+        window.location.reload();
+    });
 });

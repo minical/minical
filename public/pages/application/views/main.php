@@ -109,7 +109,7 @@
 						<div class="container-fluid" id="online-booking-widget">
 							<div id="online-booking" style="visibility: hidden; position:absolute; top:400px;"></div>
 						
-							<form action="https://demo.minical.io/online_reservation/select_dates_and_rooms/<?php echo $company_data['company_id']; ?>" method="post" target="_blank" id="booking-form"  role="form" class="form-horizontal">
+							<form action="https://app.minical.io/online_reservation/select_dates_and_rooms/<?php echo $company_data['company_id']; ?>" method="post" target="_blank" id="booking-form"  role="form" class="form-horizontal">
 								<div class="form-group">
 									<div class="col-md-10">
 										<div class="form-group col-md-3">

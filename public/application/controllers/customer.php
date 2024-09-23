@@ -462,7 +462,8 @@ class Customer extends MY_Controller {
         $data['region']          = sqli_clean($this->security->xss_clean($this->input->post('region')));
         $data['country']         = sqli_clean($this->security->xss_clean($this->input->post('country')));
         $data['postal_code']     = sqli_clean($this->security->xss_clean($this->input->post('postal-code')));
-        $data['customer_notes']  = sqli_clean($this->security->xss_clean($this->input->post('customer-notes')));
+        $data['company_name']     = sqli_clean($this->security->xss_clean($this->input->post('company_name')));
+        $data['tax_id']           = sqli_clean($this->security->xss_clean($this->input->post('tax_id')));
         $cc_number               = sqli_clean($this->security->xss_clean($this->input->post('cc-number')));
         $encrypted_cc_number     = $this->encrypt->encode($cc_number);
         $data['cc_number']       = $encrypted_cc_number;
@@ -1369,8 +1370,8 @@ class Customer extends MY_Controller {
         $error     = false;
         $error_msg = '';
 
-        // $customer_data               = $this->security->xss_clean($this->input->post('customer_data', TRUE));
-
+        // $customer_data              
+        print_r(($this->input->post('customer_data')));
         $encrypted_customerData = ($this->security->xss_clean($this->input->post('customer_data', TRUE)));
         $customer_data = json_decode(base64_decode($encrypted_customerData), true);
 

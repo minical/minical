@@ -21,7 +21,7 @@
 											echo $image['caption'];
 										}
 									?>">
-									<img class="thumbnail" src="https://<?php echo getenv('AWS_S3_BUCKET'); ?>.s3.amazonaws.com/<?php echo $company_data['company_id']."/".$image['filename']; ?>" alt="image-<?php echo $gallery_image_index; ?>">
+									<img class="thumbnail" src="https://<?php echo getenv('AWS_S3_BUCKET'); ?>.s3.amazonaws.com/<?php echo $company_data['']."/".$image['filename']; ?>" alt="image-<?php echo $gallery_image_index; ?>">
 									
 									<?php
 										if (isset($image['caption'])):
