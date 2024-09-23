@@ -792,7 +792,16 @@ var customer_pci_token = '';
                     (commonCustomerFields && commonCustomerFields[10] && commonCustomerFields[10]['is_required'])))
                 .append(this._getHorizontalInput(l("Postal Code"), 'postal_code', customer.postal_code,
                     (commonCustomerFields && commonCustomerFields[11] && commonCustomerFields[11]['show_on_customer_form'] == 0 ? "hidden customer_field_12" : "customer_field_12"),
+                    (commonCustomerFields && commonCustomerFields[11] && commonCustomerFields[11]['is_required'])))
+
+                 .append(this._getHorizontalInput(l("company_name"), 'company_name', customer.company_name,
+                    (commonCustomerFields && commonCustomerFields[12] && commonCustomerFields[12]['show_on_customer_form'] == 0 ? "hidden customer_field_12" : "customer_field_12"),
+                    (commonCustomerFields && commonCustomerFields[13] && commonCustomerFields[11]['is_required'])))
+
+                    .append(this._getHorizontalInput(l("tax_id"), 'tax_id', customer.tax_id,
+                    (commonCustomerFields && commonCustomerFields[11] && commonCustomerFields[11]['show_on_customer_form'] == 0 ? "hidden customer_field_12" : "customer_field_12"),
                     (commonCustomerFields && commonCustomerFields[11] && commonCustomerFields[11]['is_required'])));
+                    
          
 
             if (that.customerFields != undefined) {
@@ -965,6 +974,7 @@ var customer_pci_token = '';
                     // )
                 );
             }
+           
             $customer_form.append(
                 $("<div/>", {
                     class: "form-group " + ((commonCustomerFields && commonCustomerFields[12] && commonCustomerFields[12]['show_on_customer_form'] == '0') ? "hidden" : ""),
@@ -1517,6 +1527,8 @@ var customer_pci_token = '';
                 region: $.trim($customerModal.find("[name='region']").val()),
                 country: $.trim($customerModal.find("[name='country']").val()),
                 postal_code: $.trim($customerModal.find("[name='postal_code']").val()),
+                company_name: $.trim($customerModal.find("[name='company_name']").val()),
+                tax_id: $.trim($customerModal.find("[name='tax_id']").val()),
                 customer_notes: $.trim($customerModal.find("[name='customer_notes']").val()),
                 cc_number: $.trim($customerModal.find("[name='cc_number']").val()),
                 cvc: $.trim($customerModal.find("[name='cvc']").val())
