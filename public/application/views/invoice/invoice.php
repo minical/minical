@@ -258,7 +258,7 @@
             </div>
             <div class="page-title-actions m-025">
                 <div>
-                <button class="btn btn-primary m-1" id="print-Einvoice-button" data-url="<?php echo site_url('invoice/authenticate'); ?>">
+                <button class="btn btn-primary m-1" id="print-Einvoice-button" data-url="<?php echo site_url('invoice/send_einvoice_request'); ?>">
                 <?php echo l('print').' '.l('Einvoice'); ?>
             </button>
 

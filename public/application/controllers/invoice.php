@@ -1580,9 +1580,181 @@ class Invoice extends MY_Controller {
     
 
 
-    public function getIRN() {
-       
+    public function send_einvoice_request()
+    {
+        // The API URL with your query parameters
+        $url = 'https://api.mastergst.com/einvoice/type/GENERATE/version/V1_03?email=deepak%40mycloudhospitality.com';
+    
+        // JSON payload you want to send
+        $payload = [
+            "Version" => "1.1",
+            "TranDtls" => [
+                "TaxSch" => "GST",
+                "SupTyp" => "B2B",
+                "RegRev" => "N",
+                "EcmGstin" => null,
+                "IgstOnIntra" => "N"
+            ],
+            "DocDtls" => [
+                "Typ" => "INV",
+                "No" => "POS/02",
+                "Dt" => "23/09/2024"
+            ],
+            "SellerDtls" => [
+                "Gstin" => "29AABCT1332L000",
+                "LglNm" => "ABC company pvt ltd",
+                "TrdNm" => "NIC Industries",
+                "Addr1" => "5th block, kuvempu layout",
+                "Addr2" => "kuvempu layout",
+                "Loc" => "GANDHINAGAR",
+                "Pin" => 560001,
+                "Stcd" => "29",
+                "Ph" => "9000000000",
+                "Em" => "abc@gmail.com"
+            ],
+            "BuyerDtls" => [
+                "Gstin" => "29AWGPV7107B1Z1",
+                "LglNm" => "XYZ company pvt ltd",
+                "TrdNm" => "XYZ Industries",
+                "Pos" => "37",
+                "Addr1" => "7th block, kuvempu layout",
+                "Addr2" => "kuvempu layout",
+                "Loc" => "GANDHINAGAR",
+                "Pin" => 560004,
+                "Stcd" => "29",
+                "Ph" => "9000000000",
+                "Em" => "abc@gmail.com"
+            ],
+            "DispDtls" => [
+                "Nm" => "ABC company pvt ltd",
+                "Addr1" => "7th block, kuvempu layout",
+                "Addr2" => "kuvempu layout",
+                "Loc" => "Banagalore",
+                "Pin" => 518360,
+                "Stcd" => "37"
+            ],
+            "ShipDtls" => [
+                "Gstin" => "29AWGPV7107B1Z1",
+                "LglNm" => "CBE company pvt ltd",
+                "TrdNm" => "kuvempu layout",
+                "Addr1" => "7th block, kuvempu layout",
+                "Addr2" => "kuvempu layout",
+                "Loc" => "Banagalore",
+                "Pin" => 518360,
+                "Stcd" => "37"
+            ],
+            "ItemList" => [
+                [
+                    "SlNo" => "1",
+                    "IsServc" => "N",
+                    "PrdDesc" => "Rice",
+                    "HsnCd" => "1001",
+                    "Barcde" => "123456",
+                    "BchDtls" => [
+                        "Nm" => "123456",
+                        "Expdt" => "01/08/2020",
+                        "wrDt" => "01/09/2020"
+                    ],
+                    "Qty" => 100.345,
+                    "FreeQty" => 10,
+                    "Unit" => "NOS",
+                    "UnitPrice" => 99.545,
+                    "TotAmt" => 9988.84,
+                    "Discount" => 10,
+                    "PreTaxVal" => 1,
+                    "AssAmt" => 9978.84,
+                    "GstRt" => 12,
+                    "SgstAmt" => 0,
+                    "IgstAmt" => 1197.46,
+                    "CgstAmt" => 0,
+                    "CesRt" => 5,
+                    "CesAmt" => 498.94,
+                    "CesNonAdvlAmt" => 10,
+                    "StateCesRt" => 12,
+                    "StateCesAmt" => 1197.46,
+                    "StateCesNonAdvlAmt" => 5,
+                    "OthChrg" => 10,
+                    "TotItemVal" => 12897.7,
+                    "OrdLineRef" => "3256",
+                    "OrgCntry" => "AG",
+                    "PrdSlNo" => "12345",
+                    "AttribDtls" => [
+                        [
+                            "Nm" => "Rice",
+                            "Val" => "10000"
+                        ]
+                    ]
+                ]
+            ],
+            "ValDtls" => [
+                "AssVal" => 9978.84,
+                "CgstVal" => 0,
+                "SgstVal" => 0,
+                "IgstVal" => 1197.46,
+                "CesVal" => 508.94,
+                "StCesVal" => 1202.46,
+                "Discount" => 10,
+                "OthChrg" => 20,
+                "RndOffAmt" => 0.3,
+                "TotInvVal" => 12908,
+                "TotInvValFc" => 12897.7
+            ],
+            "PayDtls" => [
+                "Nm" => "ABCDE",
+                "Accdet" => "5697389713210",
+                "Mode" => "Cash",
+                "Fininsbr" => "SBIN11000",
+                "Payterm" => "100",
+                "Payinstr" => "Gift",
+                "Crtrn" => "test",
+                "Dirdr" => "test",
+                "Crday" => 100,
+                "Paidamt" => 10000,
+                "Paymtdue" => 5000
+            ]
+            // Additional fields can be added here
+        ];
+    
+        $payload_json = json_encode($payload); // Convert payload to JSON format
+    
+        // Set up cURL
+        $ch = curl_init($url);
+    
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            'accept: */*',
+            'ip_address: 27.4.244.189',
+            'client_id: e0ace29e-b361-4f2e-8149-63e88da9bfca',
+            'client_secret: 2213dcd6-d156-48e3-9037-92716f0b80ef',
+            'username: mastergst',
+            'auth-token: clHPHDbQJaBnbhbUCbsexVRZX',
+            'gstin: 29AABCT1332L000'
+        ]);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $payload_json);
+    
+        // Execute the cURL request and get the response
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE); // Get HTTP status code
+    
+        if (curl_errno($ch)) {
+            // Handle cURL error
+            $error_msg = curl_error($ch);
+            curl_close($ch);
+            return $this->output
+                        ->set_content_type('application/json')
+                        ->set_output(json_encode(['error' => $error_msg]));
+        }
+    
+        curl_close($ch); // Close the cURL session
+    
+        // Handle the API response
+        return $this->output
+                    ->set_content_type('application/json')
+                    ->set_output($response);
     }
+    
     
 
 
