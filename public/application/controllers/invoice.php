@@ -1511,6 +1511,7 @@ class Invoice extends MY_Controller {
         echo json_encode($void);   
     
     }
+    
 
     public function authenticate() {
         try {
@@ -1754,6 +1755,8 @@ class Invoice extends MY_Controller {
                     ->set_content_type('application/json')
                     ->set_output($response);
     }
+
+    
     
     
 

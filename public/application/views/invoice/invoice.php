@@ -258,8 +258,9 @@
             </div>
             <div class="page-title-actions m-025">
                 <div>
+                <!-- This is your button with the correct data-url -->
                 <button class="btn btn-primary m-1" id="print-Einvoice-button" data-url="<?php echo site_url('invoice/send_einvoice_request'); ?>">
-                <?php echo l('print').' '.l('Einvoice'); ?>
+                <?php echo l('Generate').' '.l('Einvoice'); ?>
             </button>
 
 
@@ -420,7 +421,7 @@ if(isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true) {
                     echo (array_search('Fax', array_column($customer_fields, 'name')) !== FALSE && $booking_customer['fax']) ? l('Fax', true).": ".$booking_customer['fax']."<br/>":'';
                     echo (array_search('Email', array_column($customer_fields, 'name')) !== FALSE && $booking_customer['email']) ? l('Email', true).": <span id='customer-email'>".$booking_customer['email']."</span><br/>":'';
                     foreach ($customers as $customer):
-                    echo 'company name:   '.$customer['company_name']."</span><br/>";
+                    echo 'Company name:   '.$customer['company_name']."</span><br/>";
                     echo 'Tax Id:  '.$customer['tax_id']."</span><br/>";
                    endforeach;
                 
