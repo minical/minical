@@ -52,7 +52,11 @@ class Option_model extends CI_Model {
 
         $this->db->select('*');
         $this->db->where('option_name', $option);
-        $this->db->like('option_value', $user_id, 'both');
+        // $this->db->like('option_value', $user_id, 'both');
+
+        $where = "(JSON_EXTRACT(option_value, '$.user_id') = $user_id)";
+        $this->db->where($where);
+        
         $query = $this->db->get('options');
         if ($this->db->_error_message())
         {
