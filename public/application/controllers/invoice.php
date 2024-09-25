@@ -4,7 +4,8 @@ class Invoice extends MY_Controller {
 
     function __construct()
     {
-        parent::__construct();      
+        parent::__construct();   
+        $this->load->library('session');   
         $this->load->model('Invoice_model');
         $this->load->model('Invoice_log_model');
         $this->load->model('Company_model');                
@@ -49,6 +50,7 @@ class Invoice extends MY_Controller {
         if(is_numeric($invoice_number)) {
             $booking_id = $this->Invoice_model->get_booking_id_by_invoice_number($invoice_number, $this->company_id);
             $this->show_invoice($booking_id);
+           
         }
     }
 
@@ -68,6 +70,9 @@ class Invoice extends MY_Controller {
 
         // used for mouse-hover delete buttons
         $this->show_invoice($booking_id, false, false, true);
+        
+       
+      
     }
 
     function show_master_invoice_read_only($hash = "")
@@ -129,6 +134,9 @@ class Invoice extends MY_Controller {
 
     function show_invoice($booking_id, $folio_id = false, $customer_id = false, $read_only = false)
     {
+        $this->session->set_userdata('booking_id', $booking_id);
+       
+     
         // if user is viewing the invoice through Hash,
         // then don't check if the booking belongs to the company
         if (isset($this->user_id))
@@ -139,11 +147,19 @@ class Invoice extends MY_Controller {
 
         $data['company']        = ($company_id == $this->company_id && $this->company_data) ? $this->company_data : $this->Company_model->get_company($company_id);
 
+
+
         $this->company_date_format = $data['company']['date_format'];
+        // $this->send_einvoice_request($booking_id);
 
         $booking_room_history   = $this->Booking_room_history_model->get_booking_detail($booking_id);
         $data['room_detail']    = $this->Room_model->get_room($booking_room_history['room_id'], $booking_room_history['room_type_id']);
         $data['customer_id']    = $customer_id;
+
+        if ($customer_id) {
+            $this->session->set_userdata('customer_id', $customer_id);
+        }
+       
 
         //$data['currency_symbol'] = $this->session->userdata('currency_symbol');
         //if (!$data['currency_symbol']) {
@@ -173,6 +189,7 @@ class Invoice extends MY_Controller {
                 $data['booking_customer']['customer_name'] = $booking_customer['customer_name'].", ".implode(", ", $staying_customer_names);
             }
 
+         
             // $customer_id = $data['booking_detail']['booking_customer_id'];
         }
         /*Get data from card table*/
@@ -275,6 +292,8 @@ class Invoice extends MY_Controller {
         
         $data['charges']  = $charges;
         $payments = $this->Payment_model->get_payments($booking_id, $customer_id, $folio_id, $is_first_folio);
+        $payments = $this->Payment_model->get_payments($booking_id, $customer_id, $folio_id, $is_first_folio);
+     
         if($payments){
             $total_amount = 0;
             foreach($payments as $index => $payment){
@@ -408,8 +427,11 @@ class Invoice extends MY_Controller {
             $this->load->library('PaymentGateway');
         }
         $data['selected_customer_id'] = $customer_id;
+       
         $data['main_content'] = 'invoice/invoice';
+       
         $this->load->view('includes/bootstrapped_template', $data);
+      
     }
 
     function show_master_invoice($group_id, $booking_id = false, $customer_id = false, $read_only = false)
@@ -454,6 +476,8 @@ class Invoice extends MY_Controller {
             $customer_data = $this->Booking_model->get_all_group_booking_customers($group_id);
         }
 
+    
+
         $staying_customers = $this->Customer_model->get_staying_customers($all_booking_ids);
         if($customer_data)
             $data['customers'] = array_merge($customer_data, $staying_customers);
@@ -483,6 +507,9 @@ class Invoice extends MY_Controller {
             $booking_customer = $this->Customer_model->get_customer_info($data['booking_detail']['booking_customer_id']);
             $data['booking_customer'] = $booking_customer;
         }
+        $this->f($booking_customer);
+      
+
         /*Get data from card table*/
         if(isset($data['customers']) && $data['customers'])
         {
@@ -670,6 +697,7 @@ class Invoice extends MY_Controller {
         }
         $data['selected_customer_id'] = $customer_id;
         $data['main_content'] = 'invoice/master_invoice';
+      
         $this->load->view('includes/bootstrapped_template', $data);
     }
     
@@ -1507,7 +1535,7 @@ class Invoice extends MY_Controller {
         $invoice_log_data['new_amount'] =  -$payment['amount'];
         $invoice_log_data['log'] = 'Payment voided';
         $this->Invoice_log_model->insert_log($invoice_log_data);
-        
+      
         echo json_encode($void);   
     
     }
@@ -1529,10 +1557,10 @@ class Invoice extends MY_Controller {
                             ->set_output(json_encode(['error' => 'Credentials not found for the current company.']));
             }
     
+            $email = $credentials['email'];
+            $url = $credentials['MASTERGST_SANDBOX_URL'];
             // Prepare query parameters
-            $queryParams = [
-                'email' => 'deepak@mycloudhospitality.com',
-            ];
+            $queryParams = ['email' => $email];
             $url = 'https://api.mastergst.com/einvoice/authenticate?' . http_build_query($queryParams);
             
             // Set headers
@@ -1560,6 +1588,9 @@ class Invoice extends MY_Controller {
             if (isset($responseData['data']['AuthToken'])) {
                 $accessToken = $responseData['data']['AuthToken'];
     
+                // Store the access_token in the session or class property
+                $this->session->set_userdata('access_token', $accessToken);
+    
                 // Store the access_token in the database
                 $this->db->where('companies_id', $companyId);
                 $this->db->update('invoice_extension', ['access_token' => $accessToken]);
@@ -1579,13 +1610,54 @@ class Invoice extends MY_Controller {
         }
     }
     
-
-
-    public function send_einvoice_request()
-    {
-        // The API URL with your query parameters
-        $url = 'https://api.mastergst.com/einvoice/type/GENERATE/version/V1_03?email=deepak%40mycloudhospitality.com';
     
+
+
+     function send_einvoice_request()
+    {
+
+        $booking_id = $this->session->userdata('booking_id');
+        $customer_id = $this->session->userdata('customer_id');
+        
+        $invoice_number =  $this->Invoice_model->get_invoice_number($booking_id);
+        
+            return $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode($customer_id)); // Properly encode as JSON
+        
+
+        // Fetch the access token from the database
+        $companyId = $this->company_id; // Assuming this is set
+        $this->db->where('companies_id', $companyId);
+        $query = $this->db->get('invoice_extension'); // Replace with your actual table name
+    
+        if ($query->num_rows() > 0) {
+            $credentials = $query->row_array();
+            $accessToken = $credentials['access_token']; // Assuming you stored the access token
+            $email = $credentials['email'];
+            $seller_gstn = $credentials['MASTERGST_GSTN'];
+        } else {
+            return $this->output
+                        ->set_content_type('application/json')
+                        ->set_output(json_encode(['error' => 'Credentials not found for the current company.']));
+        }
+    
+        // The API URL with your query parameters
+        $url = 'https://api.mastergst.com/einvoice/type/GENERATE/version/V1_03?email=' . urlencode($email);
+        $invoice_number =  $this->Invoice_model->get_invoice_number($booking_id);
+
+        $company =  $this->Company_model->get_company($this->company_id);
+       
+
+          // Seller Details
+        $seller_name = $company['name'];
+        $seller_phone = $company['phone'];
+        $seller_address = $company['address'];
+        $seller_city = $company['city'];
+        $seller_region = $company['region'];
+        $seller_pin = $company['postal_code'];
+        $seller_email = $company['email'];
+
         // JSON payload you want to send
         $payload = [
             "Version" => "1.1",
@@ -1598,20 +1670,21 @@ class Invoice extends MY_Controller {
             ],
             "DocDtls" => [
                 "Typ" => "INV",
-                "No" => "POS/02",
-                "Dt" => "23/09/2024"
-            ],
+                "No" => $invoice_number, // Add a comma here
+                "Dt" => date('d/m/Y')    // Replace semicolon with a comma or nothing if it's the last element
+           ],
+
             "SellerDtls" => [
-                "Gstin" => "29AABCT1332L000",
-                "LglNm" => "ABC company pvt ltd",
-                "TrdNm" => "NIC Industries",
-                "Addr1" => "5th block, kuvempu layout",
-                "Addr2" => "kuvempu layout",
-                "Loc" => "GANDHINAGAR",
-                "Pin" => 560001,
+                "Gstin" =>  $seller_gstn,
+                "LglNm" =>  $seller_name,
+                "TrdNm" =>  $seller_name,
+                "Addr1" => $seller_address,
+                "Addr2" => $seller_address,
+                "Loc" => $seller_city,
+                "Pin" => $seller_pin,
                 "Stcd" => "29",
-                "Ph" => "9000000000",
-                "Em" => "abc@gmail.com"
+                "Ph" =>  $seller_phone,
+                "Em" => $seller_email,
             ],
             "BuyerDtls" => [
                 "Gstin" => "29AWGPV7107B1Z1",
@@ -1627,12 +1700,12 @@ class Invoice extends MY_Controller {
                 "Em" => "abc@gmail.com"
             ],
             "DispDtls" => [
-                "Nm" => "ABC company pvt ltd",
-                "Addr1" => "7th block, kuvempu layout",
-                "Addr2" => "kuvempu layout",
-                "Loc" => "Banagalore",
-                "Pin" => 518360,
-                "Stcd" => "37"
+                "Nm" => $seller_name,
+                "Addr1" => $seller_address,
+                "Addr2"=>$seller_address,
+                "Loc" => $seller_city,
+                "Pin" =>  $seller_pin,
+                "Stcd" => "29"
             ],
             "ShipDtls" => [
                 "Gstin" => "29AWGPV7107B1Z1",
@@ -1712,8 +1785,58 @@ class Invoice extends MY_Controller {
                 "Crday" => 100,
                 "Paidamt" => 10000,
                 "Paymtdue" => 5000
+            ],
+            "RefDtls" => [
+                "InvRm" => "TEST",
+                "DocPerdDtls" => [
+                    "InvStDt" => "01/08/2020",
+                    "InvEndDt" => "01/09/2020"
+                ],
+                "PrecDocDtls" => [
+                    [
+                        "InvNo" => "DOC/002",
+                        "InvDt" => "01/08/2020",
+                        "OthRefNo" => "123456"
+                    ]
+                ],
+                "ContrDtls" => [
+                    [
+                        "RecAdvRefr" => "DOC/002",
+                        "RecAdvDt" => "01/08/2020",
+                        "Tendrefr" => "Abc001",
+                        "Contrrefr" => "Co123",
+                        "Extrefr" => "Yo456",
+                        "Projrefr" => "Doc-456",
+                        "Porefr" => "Doc-789",
+                        "PoRefDt" => "01/08/2020"
+                    ]
+                ]
+            ],
+            "AddlDocDtls" => [
+                [
+                    "Url" => "https://einv-apisandbox.nic.in",
+                    "Docs" => "Test Doc",
+                    "Info" => "Document Test"
+                ]
+            ],
+            "ExpDtls" => [
+                "ShipBNo" => "A-248",
+                "ShipBDt" => "01/08/2020",
+                "Port" => "INABG1",
+                "RefClm" => "N",
+                "ForCur" => "AED",
+                "CntCode" => "AE"
+            ],
+            "EwbDtls" => [
+                "Transid" => "12AWGPV7107B1Z1",
+                "Transname" => "XYZ EXPORTS",
+                "Distance" => 100,
+                "Transdocno" => "DOC01",
+                "TransdocDt" => "01/08/2020",
+                "Vehno" => "ka123456",
+                "Vehtype" => "R",
+                "TransMode" => "1"
             ]
-            // Additional fields can be added here
         ];
     
         $payload_json = json_encode($payload); // Convert payload to JSON format
@@ -1725,37 +1848,45 @@ class Invoice extends MY_Controller {
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             'Content-Type: application/json',
             'accept: */*',
-            'ip_address: 27.4.244.189',
-            'client_id: e0ace29e-b361-4f2e-8149-63e88da9bfca',
-            'client_secret: 2213dcd6-d156-48e3-9037-92716f0b80ef',
-            'username: mastergst',
-            'auth-token: clHPHDbQJaBnbhbUCbsexVRZX',
-            'gstin: 29AABCT1332L000'
+            'ip_address: ' . $_SERVER['REMOTE_ADDR'], // You can customize this
+            'client_id: e0ace29e-b361-4f2e-8149-63e88da9bfca', // Ensure this is secure
+            'client_secret: 2213dcd6-d156-48e3-9037-92716f0b80ef', // Ensure this is secure
+            'username: mastergst', // Ensure this is secure
+            'auth-token: ' .'jdmu21BtDUfriiQNEssw2Mztn', // Use the access token from your database
+            'gstin: 29AABCT1332L000' // Use dynamic values as necessary
         ]);
         curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $payload_json);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $payload_json); // Set the JSON payload
     
-        // Execute the cURL request and get the response
+        // Execute the request
         $response = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE); // Get HTTP status code
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
     
-        if (curl_errno($ch)) {
-            // Handle cURL error
-            $error_msg = curl_error($ch);
-            curl_close($ch);
+        // Handle response
+        if ($httpCode == 200) {
             return $this->output
                         ->set_content_type('application/json')
-                        ->set_output(json_encode(['error' => $error_msg]));
+                        ->set_output($response);
+        } else {
+            return $this->output
+                        ->set_content_type('application/json')
+                        ->set_output(json_encode(['error' => 'Failed to send e-invoice', 'http_code' => $httpCode, 'response' => $response]));
         }
-    
-        curl_close($ch); // Close the cURL session
-    
-        // Handle the API response
-        return $this->output
-                    ->set_content_type('application/json')
-                    ->set_output($response);
     }
 
+  
+
+    
+    
+    // Function to check if the token is invalid
+    private function isTokenInvalid($token)
+    {
+        // Implement your own logic here to determine if the token is invalid or expired
+        // For example, you might check the token against your service or use a timestamp
+        return false; // Change this to your actual validation logic
+    }
+    
     
     
     
