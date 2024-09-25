@@ -798,7 +798,7 @@ var customer_pci_token = '';
                     (commonCustomerFields && commonCustomerFields[12] && commonCustomerFields[12]['show_on_customer_form'] == 0 ? "hidden customer_field_12" : "customer_field_12"),
                     (commonCustomerFields && commonCustomerFields[13] && commonCustomerFields[11]['is_required'])))
 
-                    .append(this._getHorizontalInput(l("tax_id"), 'tax_id', customer.tax_id,
+                    .append(this._getHorizontalInput(l("Tax id"), 'tax_id', customer.tax_id,
                     (commonCustomerFields && commonCustomerFields[11] && commonCustomerFields[11]['show_on_customer_form'] == 0 ? "hidden customer_field_12" : "customer_field_12"),
                     (commonCustomerFields && commonCustomerFields[11] && commonCustomerFields[11]['is_required'])));
                     
