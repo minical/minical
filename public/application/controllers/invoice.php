@@ -155,11 +155,7 @@ class Invoice extends MY_Controller {
         $booking_room_history   = $this->Booking_room_history_model->get_booking_detail($booking_id);
         $data['room_detail']    = $this->Room_model->get_room($booking_room_history['room_id'], $booking_room_history['room_type_id']);
         $data['customer_id']    = $customer_id;
-
-        if ($customer_id) {
-            $this->session->set_userdata('customer_id', $customer_id);
-        }
-       
+     
 
         //$data['currency_symbol'] = $this->session->userdata('currency_symbol');
         //if (!$data['currency_symbol']) {
@@ -175,9 +171,17 @@ class Invoice extends MY_Controller {
         }
         $booking_customer_id_info = $this->Customer_model->get_customer_info($data['booking_detail']['booking_customer_id']);
         $data['customers'] = array_merge(array($booking_customer_id_info), $staying_customers);
+      
+       $this->session->set_userdata('customersinvoice', $data['customers']);
+      
+        // echo"<pre>";
+        // print_r($data['customers']);
+        // echo"</pre>";
+        
 
         if ($customer_id) // if invoice is billed to everyone
         {
+           
             $data['booking_customer'] = $this->Customer_model->get_customer_info($customer_id);
         }
         else
@@ -241,6 +245,8 @@ class Invoice extends MY_Controller {
         //Get charges and payments sorted based on its selling dates
         $data['charge_types']  = $this->Charge_type_model->get_charge_types($this->company_id);
         $data['payment_types'] = $this->Payment_model->get_payment_types($this->company_id);
+
+        
         
         $payment_gateway_credentials = $this->paymentgateway->getGatewayCredentials();
         $data['selected_payment_gateway'] = null;
@@ -259,6 +265,10 @@ class Invoice extends MY_Controller {
         $data['current_folio_id'] = $folio_id;
         
         $charges  = $this->Charge_model->get_charges($booking_id, $customer_id, $folio_id, $is_first_folio);
+
+        // echo '<pre>';
+        // print_r($charges);
+        // echo '</pre>';
 
         // and invoice currently viewing transactions for 'booking customer'
         if(!$data['company']['hide_forecast_charges'])
@@ -293,6 +303,12 @@ class Invoice extends MY_Controller {
         $data['charges']  = $charges;
         $payments = $this->Payment_model->get_payments($booking_id, $customer_id, $folio_id, $is_first_folio);
         $payments = $this->Payment_model->get_payments($booking_id, $customer_id, $folio_id, $is_first_folio);
+
+        // echo '<pre>';
+        // print_r($data['charges']);
+        // echo '</pre>';
+
+        $this->session->set_userdata('items', $data['charges']);
      
         if($payments){
             $total_amount = 0;
@@ -427,6 +443,8 @@ class Invoice extends MY_Controller {
             $this->load->library('PaymentGateway');
         }
         $data['selected_customer_id'] = $customer_id;
+
+      
        
         $data['main_content'] = 'invoice/invoice';
        
@@ -1615,15 +1633,90 @@ class Invoice extends MY_Controller {
 
      function send_einvoice_request()
     {
+       
 
         $booking_id = $this->session->userdata('booking_id');
-        $customer_id = $this->session->userdata('customer_id');
+        $customer = $this->session->userdata('customersinvoice');
+        $items = $this->session->userdata('items');
+        $items_list = [];
+
+        if (!empty($items)) {
+            foreach ($items as $index => $item) { // Use $index for serial number
+                // Debugging: Check what $item contains
+                // echo '<pre>';
+                // print_r($item);  // Print the current item
+                // echo '</pre>';
         
+                // Ensure keys exist before accessing them
+                $item_name = isset($item['name']) ? $item['name'] : 'Unknown';
+                $item_rate = isset($item['rate']) ? $item['rate'] : 0;
+                $item_amount = isset($item['amount']) ? $item['amount'] : 0;
+        
+                // Create item data array
+                $item_data = [
+                    "SlNo" => (string)($index + 1),  // Serial number (1-based index)
+                    "IsServc" => "N",  // Assuming the item is not a service; change if necessary
+                    "PrdDesc" => $item_name,  // Product/Service description
+                    "HsnCd" => "1001",  // HSN code; update based on your data
+                    "Barcde" => "123456",  // Barcode, if available
+                    "Qty" => 1,  // Quantity; set dynamically based on your data
+                    "Unit" => "NOS",  // Unit of measurement (e.g., NOS, KG, etc.)
+                    "UnitPrice" => $item_rate,  // Price per unit
+                    "TotAmt" => $item_amount,  // Total amount (rate * quantity)
+                    "Discount" => 0,  // Discount if any, set dynamically
+                    "PreTaxVal" => $item_amount,  // Pretax value (same as total amount if no discount)
+                    "AssAmt" => $item_amount,  // Assessable value
+                    "GstRt" => 18,  // GST rate; set as per your requirements
+                    "SgstAmt" => 0,  // SGST amount (for interstate transaction, set to 0)
+                    "IgstAmt" => $item_amount * 0.18,  // IGST amount (for interstate transaction)
+                    "CgstAmt" => 0,  // CGST amount (set to 0 for interstate)
+                    "TotItemVal" => $item_amount + ($item_amount * 0.18),  // Total item value (including tax)
+                    "AttribDtls" => [
+                        [
+                            "Nm" => $item_name,  // Attribute name (same as product name in this case)
+                            "Val" => (string)$item_amount  // Attribute value
+                        ]
+                    ]
+                ];
+        
+                // Add the item data to the items list
+                $items_list[] = $item_data;
+            }
+        } else {
+            echo "No items found in the session.";
+        }
+    
+
+        // Buyer Details
+
+        if (!empty($customer) && isset($customer[0])) {
+            $customer = $customer[0]; // Access the first customer
+        
+            // Now you can access the customer details
+            $customer_name = $customer['customer_name']; // Get the customer name
+            $customer_id = $customer['customer_id']; // Get the customer ID
+            $customer_company_name = $customer['company_name']; // Get the customer ID
+            $customer_address1 = $customer['address']; // Get the customer ID
+            $customer_address2 = $customer['address2']; // Get the customer ID
+            $customer_city = $customer['city']; // Get the customer ID
+            $customer_phone = $customer['phone']; // Get the customer ID
+            $customer_fax = $customer['fax']; // Get the customer ID
+            $customer_email = $customer['email']; // Get the customer ID
+            $customer_pin = $customer['postal_code']; // Get the customer ID
+         
+        } else {
+            // Handle the case where no customers are found
+            $customer_name = ''; // Default value if no customer is found
+            $customer_id = null; // Default value for ID
+        }
         $invoice_number =  $this->Invoice_model->get_invoice_number($booking_id);
+
+        // print_r( $invoice_number);
+        // exit;
         
-            return $this->output
-                ->set_content_type('application/json')
-                ->set_output(json_encode($customer_id)); // Properly encode as JSON
+            // return $this->output
+            //     ->set_content_type('application/json')
+            //     ->set_output(json_encode($customer_id)); // Properly encode as JSON
         
 
         // Fetch the access token from the database
@@ -1657,7 +1750,8 @@ class Invoice extends MY_Controller {
         $seller_region = $company['region'];
         $seller_pin = $company['postal_code'];
         $seller_email = $company['email'];
-
+        // print_r($invoice_number);
+        // exit;
         // JSON payload you want to send
         $payload = [
             "Version" => "1.1",
@@ -1670,9 +1764,11 @@ class Invoice extends MY_Controller {
             ],
             "DocDtls" => [
                 "Typ" => "INV",
-                "No" => $invoice_number, // Add a comma here
+                "No" => 'minical'.$invoice_number, // Add a comma here
                 "Dt" => date('d/m/Y')    // Replace semicolon with a comma or nothing if it's the last element
            ],
+
+        
 
             "SellerDtls" => [
                 "Gstin" =>  $seller_gstn,
@@ -1688,156 +1784,53 @@ class Invoice extends MY_Controller {
             ],
             "BuyerDtls" => [
                 "Gstin" => "29AWGPV7107B1Z1",
-                "LglNm" => "XYZ company pvt ltd",
-                "TrdNm" => "XYZ Industries",
-                "Pos" => "37",
-                "Addr1" => "7th block, kuvempu layout",
-                "Addr2" => "kuvempu layout",
-                "Loc" => "GANDHINAGAR",
-                "Pin" => 560004,
+                "LglNm" => $customer_company_name,
+                "TrdNm" => $customer_company_name,
+                "Pos" => "27",
+                "Addr1" =>  $customer_address1,
+                "Addr2" =>  $customer_address2,
+                "Loc" =>  $customer_city,
+                "Pin" => $customer_pin,
                 "Stcd" => "29",
-                "Ph" => "9000000000",
-                "Em" => "abc@gmail.com"
+                "Ph" =>  $customer_phone,
+                "Em" => $customer_email
             ],
             "DispDtls" => [
                 "Nm" => $seller_name,
                 "Addr1" => $seller_address,
                 "Addr2"=>$seller_address,
                 "Loc" => $seller_city,
-                "Pin" =>  $seller_pin,
-                "Stcd" => "29"
+                "Pin" =>  '518360',
+                "Stcd" => "37"
             ],
             "ShipDtls" => [
                 "Gstin" => "29AWGPV7107B1Z1",
-                "LglNm" => "CBE company pvt ltd",
-                "TrdNm" => "kuvempu layout",
-                "Addr1" => "7th block, kuvempu layout",
-                "Addr2" => "kuvempu layout",
-                "Loc" => "Banagalore",
-                "Pin" => 518360,
+                "LglNm" => $customer_company_name,
+                "TrdNm" => $customer_company_name,
+                "Addr1" => $customer_address1,
+                "Addr2" => $customer_address2,
+                "Loc" =>  $customer_city,
+                "Pin" =>  '518360',
                 "Stcd" => "37"
             ],
-            "ItemList" => [
-                [
-                    "SlNo" => "1",
-                    "IsServc" => "N",
-                    "PrdDesc" => "Rice",
-                    "HsnCd" => "1001",
-                    "Barcde" => "123456",
-                    "BchDtls" => [
-                        "Nm" => "123456",
-                        "Expdt" => "01/08/2020",
-                        "wrDt" => "01/09/2020"
-                    ],
-                    "Qty" => 100.345,
-                    "FreeQty" => 10,
-                    "Unit" => "NOS",
-                    "UnitPrice" => 99.545,
-                    "TotAmt" => 9988.84,
-                    "Discount" => 10,
-                    "PreTaxVal" => 1,
-                    "AssAmt" => 9978.84,
-                    "GstRt" => 12,
-                    "SgstAmt" => 0,
-                    "IgstAmt" => 1197.46,
-                    "CgstAmt" => 0,
-                    "CesRt" => 5,
-                    "CesAmt" => 498.94,
-                    "CesNonAdvlAmt" => 10,
-                    "StateCesRt" => 12,
-                    "StateCesAmt" => 1197.46,
-                    "StateCesNonAdvlAmt" => 5,
-                    "OthChrg" => 10,
-                    "TotItemVal" => 12897.7,
-                    "OrdLineRef" => "3256",
-                    "OrgCntry" => "AG",
-                    "PrdSlNo" => "12345",
-                    "AttribDtls" => [
-                        [
-                            "Nm" => "Rice",
-                            "Val" => "10000"
-                        ]
-                    ]
-                ]
-            ],
+          
+            "ItemList" => $items_list,  // The dynamically populated items list
+
             "ValDtls" => [
-                "AssVal" => 9978.84,
-                "CgstVal" => 0,
-                "SgstVal" => 0,
-                "IgstVal" => 1197.46,
-                "CesVal" => 508.94,
-                "StCesVal" => 1202.46,
-                "Discount" => 10,
-                "OthChrg" => 20,
-                "RndOffAmt" => 0.3,
-                "TotInvVal" => 12908,
-                "TotInvValFc" => 12897.7
+                "AssVal" => array_sum(array_column($items_list, 'AssAmt')),  // Total assessable value
+                "CgstVal" => 0,  // Total CGST (for interstate)
+                "SgstVal" => 0,  // Total SGST (for interstate)
+                "IgstVal" => array_sum(array_column($items_list, 'IgstAmt')),  // Total IGST
+                "Discount" => 0,  // Total discount
+                "OthChrg" => 0,  // Any other charges
+                "RndOffAmt" => 0,  // Rounding off
+                "TotInvVal" => array_sum(array_column($items_list, 'TotItemVal')),  // Total invoice value
+                "TotInvValFc" => array_sum(array_column($items_list, 'TotItemVal'))  // Total invoice value (foreign currency)
             ],
-            "PayDtls" => [
-                "Nm" => "ABCDE",
-                "Accdet" => "5697389713210",
-                "Mode" => "Cash",
-                "Fininsbr" => "SBIN11000",
-                "Payterm" => "100",
-                "Payinstr" => "Gift",
-                "Crtrn" => "test",
-                "Dirdr" => "test",
-                "Crday" => 100,
-                "Paidamt" => 10000,
-                "Paymtdue" => 5000
-            ],
-            "RefDtls" => [
-                "InvRm" => "TEST",
-                "DocPerdDtls" => [
-                    "InvStDt" => "01/08/2020",
-                    "InvEndDt" => "01/09/2020"
-                ],
-                "PrecDocDtls" => [
-                    [
-                        "InvNo" => "DOC/002",
-                        "InvDt" => "01/08/2020",
-                        "OthRefNo" => "123456"
-                    ]
-                ],
-                "ContrDtls" => [
-                    [
-                        "RecAdvRefr" => "DOC/002",
-                        "RecAdvDt" => "01/08/2020",
-                        "Tendrefr" => "Abc001",
-                        "Contrrefr" => "Co123",
-                        "Extrefr" => "Yo456",
-                        "Projrefr" => "Doc-456",
-                        "Porefr" => "Doc-789",
-                        "PoRefDt" => "01/08/2020"
-                    ]
-                ]
-            ],
-            "AddlDocDtls" => [
-                [
-                    "Url" => "https://einv-apisandbox.nic.in",
-                    "Docs" => "Test Doc",
-                    "Info" => "Document Test"
-                ]
-            ],
-            "ExpDtls" => [
-                "ShipBNo" => "A-248",
-                "ShipBDt" => "01/08/2020",
-                "Port" => "INABG1",
-                "RefClm" => "N",
-                "ForCur" => "AED",
-                "CntCode" => "AE"
-            ],
-            "EwbDtls" => [
-                "Transid" => "12AWGPV7107B1Z1",
-                "Transname" => "XYZ EXPORTS",
-                "Distance" => 100,
-                "Transdocno" => "DOC01",
-                "TransdocDt" => "01/08/2020",
-                "Vehno" => "ka123456",
-                "Vehtype" => "R",
-                "TransMode" => "1"
-            ]
-        ];
+
+
+            ];
+            
     
         $payload_json = json_encode($payload); // Convert payload to JSON format
     
@@ -1849,30 +1842,77 @@ class Invoice extends MY_Controller {
             'Content-Type: application/json',
             'accept: */*',
             'ip_address: ' . $_SERVER['REMOTE_ADDR'], // You can customize this
-            'client_id: e0ace29e-b361-4f2e-8149-63e88da9bfca', // Ensure this is secure
-            'client_secret: 2213dcd6-d156-48e3-9037-92716f0b80ef', // Ensure this is secure
-            'username: mastergst', // Ensure this is secure
-            'auth-token: ' .'jdmu21BtDUfriiQNEssw2Mztn', // Use the access token from your database
-            'gstin: 29AABCT1332L000' // Use dynamic values as necessary
+            'client_id: ' . $credentials['MASTERGST_CLIENT_ID'], // Ensure this is secure
+            'client_secret: ' . $credentials['MASTERGST_CLIENT_SECRET'], // Ensure this is secure
+            'username: ' . $credentials['MASTERGST_USERNAME'], // Ensure this is secure
+            'auth-token:'. $accessToken, // Use the access token from your database
+            'gstin: ' . $credentials['MASTERGST_GSTN'] // Use dynamic values as necessary
         ]);
+        
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $payload_json); // Set the JSON payload
     
-        // Execute the request
-        $response = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-    
-        // Handle response
-        if ($httpCode == 200) {
-            return $this->output
-                        ->set_content_type('application/json')
-                        ->set_output($response);
-        } else {
-            return $this->output
-                        ->set_content_type('application/json')
-                        ->set_output(json_encode(['error' => 'Failed to send e-invoice', 'http_code' => $httpCode, 'response' => $response]));
+        // // Execute the request
+        // $response = curl_exec($ch);
+        // $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        // curl_close($ch);
+
+         // Execute the request
+    $response = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    // Handle response
+    if ($httpCode == 200) {
+        return $this->output
+                    ->set_content_type('application/json')
+                    ->set_output($response);
+    } elseif ($httpCode != 200) {
+        // Check for token expiry and regenerate if necessary
+        $errorResponse = json_decode($response, true);
+        if (isset($errorResponse['status_desc'])) {
+            $statusDesc = json_decode($errorResponse['status_desc'], true);
+            if (isset($statusDesc[0]['ErrorCode']) && $statusDesc[0]['ErrorCode'] == "1005") {
+                // Token is invalid, regenerate it
+                $authResponse = $this->authenticate(); // Call your authenticate method
+                
+                // Check if authentication was successful and get new access token
+                $authData = json_decode($authResponse->get_output(), true);
+                if (isset($authData['access_token'])) {
+                    $accessToken = $authData['access_token'];
+
+                    // Now, retry the send_einvoice_request with the new token
+                    // Set up cURL again with the new access token
+                    $ch = curl_init($url);
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                        'Content-Type: application/json',
+                        'accept: */*',
+                        'ip_address: ' . $_SERVER['REMOTE_ADDR'],
+                        'client_id: ' . $credentials['MASTERGST_CLIENT_ID'],
+                        'client_secret: ' . $credentials['MASTERGST_CLIENT_SECRET'],
+                        'username: ' . $credentials['MASTERGST_USERNAME'],
+                        'auth-token:' . $accessToken, // Use the new access token
+                        'gstin: ' . $seller_gstn
+                    ]);
+                    curl_setopt($ch, CURLOPT_POST, true);
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, $payload_json);
+
+                    // Execute the request again
+                    $response = curl_exec($ch);
+                    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                    curl_close($ch);
+
+                    // Return the response
+                    return $this->output
+                                ->set_content_type('application/json')
+                                ->set_output($response);
+                }
+            }
         }
+    }
+    
+      
     }
 
   
