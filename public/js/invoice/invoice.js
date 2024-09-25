@@ -447,10 +447,10 @@ $(function() {
 	// Mastergpt
 
 	$('#print-Einvoice-button').click(function() {
-		var dataUrl = $(this).data('url');
+		var dataUrl = $(this).data('url'); // This should be the URL for send_einvoice_request
 		$.ajax({
 			url: dataUrl,
-			type: 'GET',
+			type: 'POST', // Change to 'POST' if send_einvoice_request expects a POST request
 			dataType: 'json',
 			success: function(response) {
 				if (response.access_token) {
@@ -458,6 +458,9 @@ $(function() {
 					// Handle the access token as needed
 				} else if (response.error) {
 					alert('Error: ' + response.error);
+				} else {
+					// Handle successful response from send_einvoice_request
+					alert('Invoice request sent successfully: ' + JSON.stringify(response));
 				}
 			},
 			error: function(xhr, status, error) {
@@ -465,6 +468,7 @@ $(function() {
 			}
 		});
 	});
+	
 	
 	
 	

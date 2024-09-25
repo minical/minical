@@ -258,8 +258,9 @@
             </div>
             <div class="page-title-actions m-025">
                 <div>
+                <!-- This is your button with the correct data-url -->
                 <button class="btn btn-primary m-1" id="print-Einvoice-button" data-url="<?php echo site_url('invoice/send_einvoice_request'); ?>">
-                <?php echo l('print').' '.l('Einvoice'); ?>
+                <?php echo l('Generate').' '.l('Einvoice'); ?>
             </button>
 
 
@@ -385,6 +386,7 @@ if(isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true) {
                                 <option value="<?php echo base_url()."invoice/show_invoice/".$booking_detail['booking_id']."/0/".$customer['customer_id']; ?>"
                                     <?php if ($customer_id == $customer['customer_id']) echo "SELECTED"; ?>>
                                     <?php echo $customer['customer_name']; ?>
+                                    <?php echo $customer['company_name']; ?>
                                 </option>
                             <?php
                             endforeach;
@@ -418,6 +420,13 @@ if(isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true) {
                     echo (array_search('Phone', array_column($customer_fields, 'name')) !== FALSE && $booking_customer['phone']) ? l('Phone', true).": ".$booking_customer['phone']."<br/>":'';
                     echo (array_search('Fax', array_column($customer_fields, 'name')) !== FALSE && $booking_customer['fax']) ? l('Fax', true).": ".$booking_customer['fax']."<br/>":'';
                     echo (array_search('Email', array_column($customer_fields, 'name')) !== FALSE && $booking_customer['email']) ? l('Email', true).": <span id='customer-email'>".$booking_customer['email']."</span><br/>":'';
+                    foreach ($customers as $customer):
+                    echo 'Company name:   '.$customer['company_name']."</span><br/>";
+                    echo 'Tax Id:  '.$customer['tax_id']."</span><br/>";
+                   endforeach;
+                
+                
+                   
 
                     if (isset($booking_customer['customer_fields']) && count($booking_customer['customer_fields']) > 0) {
                         foreach ($booking_customer['customer_fields'] as $customer_field) {
