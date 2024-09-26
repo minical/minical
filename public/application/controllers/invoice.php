@@ -36,26 +36,15 @@ class Invoice extends MY_Controller {
         
         $this->load->library('PaymentGateway');
         $this->load->library('Forecast_charges');
-        // $this->load->library('phpqrcode/qrlib');
-        include_once APPPATH . 'libraries/phpqrcode/qrlib.php';
         $this->load->library('Tokenex');
+          // $this->load->library('phpqrcode/qrlib');
+        include_once APPPATH . 'libraries/phpqrcode/qrlib.php';
         $global_data['menu_on'] = true;
         $this->load->vars($global_data);    
      
         
         $language = $this->session->userdata('language');
         $this->lang->load('booking', $language);
-    }
-
-     function generate_qr() {
-        $token = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjE1MTNCODIxRUU0NkM3NDlBNjNCODZFMzE4QkY3MTEwOTkyODdEMUYiLCJ4NXQiOiJGUk80SWU1R3gwbW1PNGJqR0w5eEVKa29mUjgiLCJ0eXAiOiJKV1QifQ.eyJkYXRhIjoie1wiU2VsbGVyR3N0aW5cIjpcIjI5QUFCQ1QxMzMyTDAwMFwiLFwiQnV5ZXJHc3RpblwiOlwiMjlBV0dQVjcxMDdCMVoxXCIsXCJEb2NOb1wiOlwiUE9TLzAxXCIsXCJEb2NUeXBcIjpcIklOVlwiLFwiRG9jRHRcIjpcIjIzLzA5LzIwMjRcIixcIlRvdEludlZhbFwiOjEyOTA4LFwiSXRlbUNudFwiOjEsXCJNYWluSHNuQ29kZVwiOlwiMTAwMVwiLFwiSXJuXCI6XCIxYzVmNGNhMDY0MmY4ZjE4MjRkYmVjM2M5ZDE0ZTViYmFkNDE5ZTM3M2ZmMzUzMjNiNjQzMmI1YWRmNzVlYzJmXCIsXCJJcm5EdFwiOlwiMjAyNC0wOS0yMyAyMDoyMDowMFwifSIsImlzcyI6Ik5JQyBTYW5kYm94In0.GpecmchM-cxuRusACplTjDVnRJ-gkyBPmtNsJ-2Sa1CEUBSws14aS6oOnoW5bkfDDZp7nnZ0QAS6GMUk4f35f1k-nQZP-0TC2nYm9xyOjt8Jv7l9mt_tXK9p072l4k3lvAXH1bVNFjiceeNgllEChtbHm7udL2lWtKQo_mtBeCqfD67qecHq3dyI4kxTuzWE88Sn5fMDLxbvKXhqaCo3ZxLr5J63rcV97EADSlyXk8uGacYqy50BnJ8qTVkonoy2Y1Y4J8T3RxE0SL6WNdQ4SY7CkGiAwrSh8G8fSjvt9IsRD2XAiXczJjPzFIvf0x08fkjpJdRXKwR5Fe99MRYw4g";  // Replace with your actual token
-        $filePath = FCPATH . "images/qrcodes/qrcode_qr.png";  // Define where to save the QR code image
-
-        // Generate QR code image
-        QRcode::png($token, $filePath);
-
-        // Display the QR code image 
-        echo "<img src='".base_url("images/qrcodes/qrcode_qr.png")."' />";
     }
 
     function index($invoice_number = "")
@@ -148,6 +137,16 @@ class Invoice extends MY_Controller {
     function show_invoice($booking_id, $folio_id = false, $customer_id = false, $read_only = false)
     {
         $this->session->set_userdata('booking_id', $booking_id);
+
+        $irn = $this->get_irn();
+        $qr_image_url = $this->generate_qr();
+
+
+        // Create an array to pass data to the view
+        $data = array(
+            'irn' => $irn,
+            'qr_image_url' => $qr_image_url 
+        );
        
      
         // if user is viewing the invoice through Hash,
@@ -456,8 +455,10 @@ class Invoice extends MY_Controller {
             $this->load->library('PaymentGateway');
         }
         $data['selected_customer_id'] = $customer_id;
-
-      
+        // $irn = $this->get_irn();
+        // $data = array(
+        //     'irn' => $irn
+        // );
        
         $data['main_content'] = 'invoice/invoice';
        
@@ -1924,18 +1925,77 @@ class Invoice extends MY_Controller {
     }
 
     
-
-    
       
     }
 
+ function generate_qr() {
+        $booking_id = $this->session->userdata('booking_id');
+        $invoice_number = $this->Invoice_model->get_invoice_number($booking_id);
+        
+        // Load the database
+        $CI =& get_instance();
+        $CI->load->database();
+    
+        // Fetch the QR code token from the database using the invoice_id
+        $CI->db->select('qrcode');
+        $CI->db->from('einvoice_irndetails');
+        $CI->db->where('invoice_id', $invoice_number);
+        
+        $query = $CI->db->get();
+    
+        if ($query->num_rows() > 0) {
+            $result = $query->row(); // Fetch the first result row as an object
+            $token = $result->qrcode; // Access the qrcode field
+            
+            // Define the file path where to save the QR code image
+            $filePath = FCPATH . "images/qrcodes/qrcode_" . $invoice_number . ".png";
+            
+            // Generate QR code image
+            QRcode::png($token, $filePath);
+
+            // Return the relative URL to the QR code image
+            $qr_image_url =  base_url()."images/qrcodes/qrcode_". $invoice_number . ".png";
+
+            // echo  $qr_image_url;
+          
+            return $qr_image_url;
+        } else {
+            return null; // Return null if no QR code is found
+        }
+    }
+    
+    
+    function get_irn() {
+    
+    $booking_id = $this->session->userdata('booking_id');
+    $invoice_number =  $this->Invoice_model->get_invoice_number($booking_id);
+   
+    // Load the database
+    $CI =& get_instance();
+    $CI->load->database();
+
+    // Fetch the qrcode token from the database using the invoice_id
+    $CI->db->select('irn_number');
+    $CI->db->from('einvoice_irndetails');
+  
+    $CI->db->where('invoice_id', $invoice_number);
+   
+    
+    $query = $CI->db->get();
+
+    if ($query->num_rows() > 0) {
+        $result = $query->row(); // Fetch the first result row as an object
+        $irn = $result->irn_number; // Access the irn_number field
+        return $irn; // Return the IRN number
+    } else {
+        return null; // Return null if no IRN number is found
+    }
+   
+}
+    
+
   
     
-    
-    
-    
-
-
 }
    
 
