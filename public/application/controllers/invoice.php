@@ -1633,12 +1633,27 @@ class Invoice extends MY_Controller {
 
      function send_einvoice_request()
     {
-       
+    //    $this->authenticate();
+
+        $authResponse = $this->authenticate();
+        $authData = json_decode($authResponse->get_output(), true);
+        $accessToken;
+
+        if (isset($authData['access_token'])) {
+            $accessToken = $authData['access_token'];
+        } else {
+            return $this->output
+                        ->set_content_type('application/json')
+                        ->set_output(json_encode(['error' => 'Failed to obtain access token']));
+        }
 
         $booking_id = $this->session->userdata('booking_id');
+       
         $customer = $this->session->userdata('customersinvoice');
         $items = $this->session->userdata('items');
         $items_list = [];
+
+
 
         if (!empty($items)) {
             foreach ($items as $index => $item) { // Use $index for serial number
@@ -1711,14 +1726,6 @@ class Invoice extends MY_Controller {
         }
         $invoice_number =  $this->Invoice_model->get_invoice_number($booking_id);
 
-        // print_r( $invoice_number);
-        // exit;
-        
-            // return $this->output
-            //     ->set_content_type('application/json')
-            //     ->set_output(json_encode($customer_id)); // Properly encode as JSON
-        
-
         // Fetch the access token from the database
         $companyId = $this->company_id; // Assuming this is set
         $this->db->where('companies_id', $companyId);
@@ -1726,7 +1733,9 @@ class Invoice extends MY_Controller {
     
         if ($query->num_rows() > 0) {
             $credentials = $query->row_array();
-            $accessToken = $credentials['access_token']; // Assuming you stored the access token
+            // $accessToken = $credentials['access_token'];
+            $accessToken = $credentials['access_token'];
+             // Assuming you stored the access token
             $email = $credentials['email'];
             $seller_gstn = $credentials['MASTERGST_GSTN'];
         } else {
@@ -1736,8 +1745,12 @@ class Invoice extends MY_Controller {
         }
     
         // The API URL with your query parameters
-        $url = 'https://api.mastergst.com/einvoice/type/GENERATE/version/V1_03?email=' . urlencode($email);
+        // $url = 'https://api.mastergst.com/einvoice/type/GENERATE/version/V1_03?email=' . urlencode($email);
+        $url = 'https://api.mastergst.com/einvoice/type/GENERATE/version/V1_03?email=deepak@mycloudhospitality.com';
         $invoice_number =  $this->Invoice_model->get_invoice_number($booking_id);
+
+        // print_r($url);
+        // exit;
 
         $company =  $this->Company_model->get_company($this->company_id);
        
@@ -1833,12 +1846,15 @@ class Invoice extends MY_Controller {
             
     
         $payload_json = json_encode($payload); // Convert payload to JSON format
-    
+
+       
         // Set up cURL
         $ch = curl_init($url);
+
     
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        $sample =
+        [
             'Content-Type: application/json',
             'accept: */*',
             'ip_address: ' . $_SERVER['REMOTE_ADDR'], // You can customize this
@@ -1847,85 +1863,63 @@ class Invoice extends MY_Controller {
             'username: ' . $credentials['MASTERGST_USERNAME'], // Ensure this is secure
             'auth-token:'. $accessToken, // Use the access token from your database
             'gstin: ' . $credentials['MASTERGST_GSTN'] // Use dynamic values as necessary
-        ]);
+        ];
+     
+        curl_setopt($ch, CURLOPT_HTTPHEADER, 
+            $sample // Use dynamic values as necessary
+        );
         
         curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $payload_json); // Set the JSON payload
-    
-        // // Execute the request
-        // $response = curl_exec($ch);
-        // $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        // curl_close($ch);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $payload_json); 
+        curl_getinfo($ch); // Set the JSON payload
 
          // Execute the request
-    $response = curl_exec($ch);
-    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
+        $response = curl_exec($ch);
 
-    // Handle response
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        $responseData =  json_decode($response, true);
+       
+      
     if ($httpCode == 200) {
+        //   print_r('test');
+        if (isset($responseData['data']['Irn']) && isset($responseData['data']['SignedQRCode'])) {
+           
+    
+            $irn = $responseData['data']['Irn'];
+            $qrCode = $responseData['data']['SignedQRCode'];
+            $AckNo = $responseData['data']['AckNo'];
+            $AckDt = $responseData['data']['AckDt'];
+    
+            // Save the IRN and QR code to the database
+            $data = [
+                'invoice_id' => $invoice_number,
+                'irn_number' => $irn,
+                'qrcode' => $qrCode,
+                'ack_no' => $AckNo,
+                'ack_date' => $AckDt,
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            ];
+    
+            $this->db->insert('einvoice_irndetails', $data);
+    
+        }
+        
         return $this->output
                     ->set_content_type('application/json')
                     ->set_output($response);
-    } elseif ($httpCode != 200) {
-        // Check for token expiry and regenerate if necessary
-        $errorResponse = json_decode($response, true);
-        if (isset($errorResponse['status_desc'])) {
-            $statusDesc = json_decode($errorResponse['status_desc'], true);
-            if (isset($statusDesc[0]['ErrorCode']) && $statusDesc[0]['ErrorCode'] == "1005") {
-                // Token is invalid, regenerate it
-                $authResponse = $this->authenticate(); // Call your authenticate method
-                
-                // Check if authentication was successful and get new access token
-                $authData = json_decode($authResponse->get_output(), true);
-                if (isset($authData['access_token'])) {
-                    $accessToken = $authData['access_token'];
-
-                    // Now, retry the send_einvoice_request with the new token
-                    // Set up cURL again with the new access token
-                    $ch = curl_init($url);
-                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                    curl_setopt($ch, CURLOPT_HTTPHEADER, [
-                        'Content-Type: application/json',
-                        'accept: */*',
-                        'ip_address: ' . $_SERVER['REMOTE_ADDR'],
-                        'client_id: ' . $credentials['MASTERGST_CLIENT_ID'],
-                        'client_secret: ' . $credentials['MASTERGST_CLIENT_SECRET'],
-                        'username: ' . $credentials['MASTERGST_USERNAME'],
-                        'auth-token:' . $accessToken, // Use the new access token
-                        'gstin: ' . $seller_gstn
-                    ]);
-                    curl_setopt($ch, CURLOPT_POST, true);
-                    curl_setopt($ch, CURLOPT_POSTFIELDS, $payload_json);
-
-                    // Execute the request again
-                    $response = curl_exec($ch);
-                    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-                    curl_close($ch);
-
-                    // Return the response
-                    return $this->output
-                                ->set_content_type('application/json')
-                                ->set_output($response);
-                }
-            }
-        }
+      
+            
     }
+    
+
     
       
     }
 
   
-
-    
-    
-    // Function to check if the token is invalid
-    private function isTokenInvalid($token)
-    {
-        // Implement your own logic here to determine if the token is invalid or expired
-        // For example, you might check the token against your service or use a timestamp
-        return false; // Change this to your actual validation logic
-    }
     
     
     
