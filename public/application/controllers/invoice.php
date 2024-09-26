@@ -1583,10 +1583,13 @@ class Invoice extends MY_Controller {
             if ($query->num_rows() > 0) {
                 $credentials = $query->row_array(); // Get the row as an associative array
             } else {
-                return $this->output
-                            ->set_content_type('application/json')
-                            ->set_output(json_encode(['error' => 'Credentials not found for the current company.']));
+                return ['error' => 'Credentials not found for the current company.'];
             }
+    
+            // // Check if token exists and is not expired
+            // if (!empty($credentials['access_token'])) {
+            //     return $credentials['access_token'];
+            // }
     
             $email = $credentials['email'];
             $url = $credentials['MASTERGST_SANDBOX_URL'];
@@ -1619,45 +1622,35 @@ class Invoice extends MY_Controller {
             if (isset($responseData['data']['AuthToken'])) {
                 $accessToken = $responseData['data']['AuthToken'];
     
-                // Store the access_token in the session or class property
-                $this->session->set_userdata('access_token', $accessToken);
-    
                 // Store the access_token in the database
                 $this->db->where('companies_id', $companyId);
                 $this->db->update('invoice_extension', ['access_token' => $accessToken]);
     
-                return $this->output
-                            ->set_content_type('application/json')
-                            ->set_output(json_encode(['access_token' => $accessToken]));
+                return $accessToken;
             } else {
-                return $this->output
-                            ->set_content_type('application/json')
-                            ->set_output(json_encode(['error' => 'AuthToken missing in response']));
+                return ['error' => 'AuthToken missing in response'];
             }
         } catch (Exception $e) {
-            return $this->output
-                        ->set_content_type('application/json')
-                        ->set_output(json_encode(['error' => 'An error occurred during authentication', 'details' => $e->getMessage()]));
+            return ['error' => 'An error occurred during authentication', 'details' => $e->getMessage()];
         }
     }
     
     
+    
 
 
-     function send_einvoice_request()
+    public function send_einvoice_request()
     {
     //    $this->authenticate();
 
-        $authResponse = $this->authenticate();
-        $authData = json_decode($authResponse->get_output(), true);
-        $accessToken;
+        $accessToken = $this->authenticate();
 
-        if (isset($authData['access_token'])) {
-            $accessToken = $authData['access_token'];
-        } else {
+        // print_r( $accessToken);
+
+        if (isset($accessToken['error'])) {
             return $this->output
                         ->set_content_type('application/json')
-                        ->set_output(json_encode(['error' => 'Failed to obtain access token']));
+                        ->set_output(json_encode($accessToken)); // Return the error from authenticate
         }
 
         $booking_id = $this->session->userdata('booking_id');
@@ -1864,7 +1857,6 @@ class Invoice extends MY_Controller {
         // Set up cURL
         $ch = curl_init($url);
 
-    
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $sample =
         [
@@ -1877,9 +1869,11 @@ class Invoice extends MY_Controller {
             'auth-token:'. $accessToken, // Use the access token from your database
             'gstin: ' . $credentials['MASTERGST_GSTN'] // Use dynamic values as necessary
         ];
+
+      
      
         curl_setopt($ch, CURLOPT_HTTPHEADER, 
-            $sample // Use dynamic values as necessary
+               $sample // Use dynamic values as necessary
         );
         
         curl_setopt($ch, CURLOPT_POST, true);
@@ -1896,9 +1890,9 @@ class Invoice extends MY_Controller {
        
       
     if ($httpCode == 200) {
-        //   print_r('test');
+         
         if (isset($responseData['data']['Irn']) && isset($responseData['data']['SignedQRCode'])) {
-           
+            
     
             $irn = $responseData['data']['Irn'];
             $qrCode = $responseData['data']['SignedQRCode'];
@@ -1921,11 +1915,14 @@ class Invoice extends MY_Controller {
         }
         
         return $this->output
-                    ->set_content_type('application/json')
-                    ->set_output($response);
-      
-            
+        ->set_content_type('application/json')
+        ->set_output($response);
+    }else{
+        return $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode(['error' => 'JSON encoding error', 'details' => json_last_error_msg()]));
     }
+
     
 
     
