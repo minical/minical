@@ -470,7 +470,7 @@ if(isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true) {
 
                 </span><br/>
 
-                <?php echo l('Adult'); ?>: <span id="adult_count"><?php echo $booking_detail['adult_count']; ?>,
+                <?php echo l('Adult'); ?>: <span id="adult_count"><?php echo $booking_detail['adult_count']; ?></span>,
                 <?php echo l('Children'); ?>: <span id="child_count"><?php echo $booking_detail['children_count']; ?>
                 
                 </span><br/>
@@ -574,7 +574,7 @@ if(isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true) {
                     <th class="text-left"><?php echo l('paying').' '.l('customer'); ?></th>
                     <th class="text-left"><?php echo l('charge_type'); ?></th>
                     <th class="text-right"><?php echo l('amount'); ?></th>
-                    <th class="text-right"><?php echo l('tax'); ?></th>
+                    <th class="text-right tax_column"><?php echo l('tax'); ?></th>
                     <th class="text-right"><?php echo l('total'); ?></th>
                     <th class="delete-td"></th> <!-- for x button -->
                 </tr>
@@ -671,14 +671,20 @@ if(isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true) {
                                                     }
                                                     else
                                                     {
-                                                        $tax_amount = (float)$tax['tax_rate'];
-                                                        $combined_tax = $combined_tax + $tax_amount;
+                                                        if($tax['is_tax_inclusive'] == 1)
+                                                        {
+                                                            $tax_amount = (float)$tax['tax_rate'];
+                                                            $combined_tax = $combined_tax;
+                                                        } else {
+                                                            $tax_amount = (float)$tax['tax_rate'];
+                                                            $combined_tax = $combined_tax + $tax_amount;
+                                                        }
                                                     }
 
                                                     echo '<div class="tax">'
                                                         . '<span id="'.$tax['tax_type_id'].'"'
                                                         .'class="'.($tax['is_tax_inclusive'] == 1 ? "hidden" : "").' tax-type">'.$tax['tax_type'].' </span>'
-                                                        . '<span data-real-taxes="'.$tax_amount.'"class="'.($tax['is_tax_inclusive'] == 1 ? "hidden" : "").' tax-amount">'. number_format($tax_amount, 2, ".", ",") . '</span>'
+                                                        . '<span data-tax-rate="'.$tax['tax_rate'].'" data-tax-unit="'.$tax['is_percentage'].'" data-real-taxes="'.$tax_amount.'"class="'.($tax['is_tax_inclusive'] == 1 ? "hidden" : "").' tax-amount">'. number_format($tax_amount, 2, ".", ",") . '</span>'
                                                         . '</div>';
                                                 }
                                             }

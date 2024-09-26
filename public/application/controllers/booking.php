@@ -180,6 +180,7 @@ class Booking extends MY_Controller
         }
 
         $data['room_types'] =  $this->Room_type_model->get_room_types($this->company_id);
+        $data['rate_plans'] =  $this->Rate_plan_model->get_rate_plans($this->company_id);
 
         $data['room_floor'] =  $this->Floor_model->get_floor($this->company_id);
 

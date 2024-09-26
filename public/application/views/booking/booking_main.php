@@ -161,6 +161,39 @@
 	</div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
+<div class="modal fade"  id="csv-export-rate-plan-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><?php echo l('export_bookings_csv'); ?></h4>
+            </div>
+            <div class="modal-body form-horizontal">
+                <div class="form-group" id="option-to-add-multiple-payments">
+                    <label for="pay_for" class="col-sm-4 control-label"><?php echo l('Rate plan Type', true); ?></label>
+                    <div class="col-sm-8">
+                        <select class="form-control" name="select-rate-plan-export">
+                            <option>-- <?php echo l('Select rate plan'); ?> --</option>
+                            <option value="ota_rate_plan">OTA rate plan</option>
+                            <?php foreach ($rate_plans as $key => $value) { ?>
+                                <option value="<?php echo $value['rate_plan_id']; ?>"><?php echo $value['rate_plan_name']; ?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" id="export_bookings_by_rate_plan">
+                    <?php echo l('download'); ?>
+                </button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    <?php echo l('close'); ?>
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
 <div class="modal fade"  id="add-daily-charges-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index:11111;">
 	<div class="modal-dialog">
 		<div class="modal-content">
