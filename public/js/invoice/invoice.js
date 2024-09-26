@@ -445,12 +445,13 @@ $(function() {
 	});
 
 	// Mastergpt
-
 	$('#print-Einvoice-button').click(function() {
 		var dataUrl = $(this).data('url'); // This should be the URL for send_einvoice_request
+		var button = $(this);
+	
 		$.ajax({
 			url: dataUrl,
-			type: 'POST', // Change to 'POST' if send_einvoice_request expects a POST request
+			type: 'POST', // Ensure this matches your server method
 			dataType: 'json',
 			success: function(response) {
 				if (response.access_token) {
@@ -461,6 +462,15 @@ $(function() {
 				} else {
 					// Handle successful response from send_einvoice_request
 					alert('Invoice request sent successfully: ' + JSON.stringify(response));
+	
+					// Change the button text to "Print E-Invoice"
+					button.text('Print E-Invoice');
+	
+					// Add a click event listener for the Print E-Invoice button
+					button.off('click').on('click', function() {
+						// Call a function to generate the PDF
+						// generatePDF(response); // Assuming `response` contains necessary data for PDF
+					});
 				}
 			},
 			error: function(xhr, status, error) {
@@ -468,6 +478,25 @@ $(function() {
 			}
 		});
 	});
+	
+	// Function to handle PDF generation
+	function generatePDF(invoiceData) {
+		// Implement your PDF generation logic here
+		// You can use libraries like jsPDF or any server-side method
+		// For example, if you're using jsPDF:
+		
+		var doc = new jsPDF();
+		
+		// Sample content
+		doc.text('Invoice Details:', 10, 10);
+		doc.text('Invoice Number: ' + invoiceData.invoice_number, 10, 20);
+		// Add other details based on invoiceData...
+	
+		// Save the PDF
+		doc.save('invoice.pdf');
+	}
+	
+	
 	
 	
 	
