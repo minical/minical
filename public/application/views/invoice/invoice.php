@@ -267,6 +267,9 @@
                     <button class="btn btn-primary m-1" id="print-invoice-button">
                         <?php echo l('print').' '.l('invoice'); ?>
                     </button>
+                    <button class="btn btn-primary m-1" id="print-invoice-button-qrcode">
+                        <?php echo l('print').' '.l('invoice').'Qrcode'; ?>
+                    </button>
 
                     <?php
                     if ($menu_on === true):
@@ -509,6 +512,15 @@ if(isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true) {
 
         </div>
     </div> <!-- /.container -->
+
+    <div class="col-md-12 row invoice-header">
+        <div class="col-xs-12 padding-left-zero padding-left-zero-wep">
+            <address class="text-gapp">
+            <strong>IRN Number: </strong>
+            <span>1c5f4ca0642f8f1824dbec3c9d14e5bbad419e373ff35323b6432b5adf75ec2f</span>
+            </address>
+         </div>
+    </div>
 
     <?php if($this->vendor_id == 9) { ?>
         <div class="col-sm-12">
@@ -1129,6 +1141,10 @@ if(isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true) {
                 <div class="text-right paid_in_full" id="paid_in_full">
                 </div>
             </div>
+        </div>
+
+        <div class="row" style="float:right;">
+            <img src="<?= base_url('images/qrcodes/qrcode_qr.png'); ?>"  alt="QRcode"/>
         </div>
 
     </div> <!-- /. container -->

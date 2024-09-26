@@ -368,6 +368,9 @@ $(function() {
 	$("#print-invoice-button").on('click', function (){
 		 window.print();
 	});
+	$("#print-invoice-button-qrcode").on('click', function (){
+		 window.print();
+	});
 	
 	$(".charge_row").popover();
 	

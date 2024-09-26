@@ -36,6 +36,8 @@ class Invoice extends MY_Controller {
         
         $this->load->library('PaymentGateway');
         $this->load->library('Forecast_charges');
+        // $this->load->library('phpqrcode/qrlib');
+        include_once APPPATH . 'libraries/phpqrcode/qrlib.php';
         $this->load->library('Tokenex');
         $global_data['menu_on'] = true;
         $this->load->vars($global_data);    
@@ -43,6 +45,17 @@ class Invoice extends MY_Controller {
         
         $language = $this->session->userdata('language');
         $this->lang->load('booking', $language);
+    }
+
+     function generate_qr() {
+        $token = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjE1MTNCODIxRUU0NkM3NDlBNjNCODZFMzE4QkY3MTEwOTkyODdEMUYiLCJ4NXQiOiJGUk80SWU1R3gwbW1PNGJqR0w5eEVKa29mUjgiLCJ0eXAiOiJKV1QifQ.eyJkYXRhIjoie1wiU2VsbGVyR3N0aW5cIjpcIjI5QUFCQ1QxMzMyTDAwMFwiLFwiQnV5ZXJHc3RpblwiOlwiMjlBV0dQVjcxMDdCMVoxXCIsXCJEb2NOb1wiOlwiUE9TLzAxXCIsXCJEb2NUeXBcIjpcIklOVlwiLFwiRG9jRHRcIjpcIjIzLzA5LzIwMjRcIixcIlRvdEludlZhbFwiOjEyOTA4LFwiSXRlbUNudFwiOjEsXCJNYWluSHNuQ29kZVwiOlwiMTAwMVwiLFwiSXJuXCI6XCIxYzVmNGNhMDY0MmY4ZjE4MjRkYmVjM2M5ZDE0ZTViYmFkNDE5ZTM3M2ZmMzUzMjNiNjQzMmI1YWRmNzVlYzJmXCIsXCJJcm5EdFwiOlwiMjAyNC0wOS0yMyAyMDoyMDowMFwifSIsImlzcyI6Ik5JQyBTYW5kYm94In0.GpecmchM-cxuRusACplTjDVnRJ-gkyBPmtNsJ-2Sa1CEUBSws14aS6oOnoW5bkfDDZp7nnZ0QAS6GMUk4f35f1k-nQZP-0TC2nYm9xyOjt8Jv7l9mt_tXK9p072l4k3lvAXH1bVNFjiceeNgllEChtbHm7udL2lWtKQo_mtBeCqfD67qecHq3dyI4kxTuzWE88Sn5fMDLxbvKXhqaCo3ZxLr5J63rcV97EADSlyXk8uGacYqy50BnJ8qTVkonoy2Y1Y4J8T3RxE0SL6WNdQ4SY7CkGiAwrSh8G8fSjvt9IsRD2XAiXczJjPzFIvf0x08fkjpJdRXKwR5Fe99MRYw4g";  // Replace with your actual token
+        $filePath = FCPATH . "images/qrcodes/qrcode_qr.png";  // Define where to save the QR code image
+
+        // Generate QR code image
+        QRcode::png($token, $filePath);
+
+        // Display the QR code image 
+        echo "<img src='".base_url("images/qrcodes/qrcode_qr.png")."' />";
     }
 
     function index($invoice_number = "")
