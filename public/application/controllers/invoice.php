@@ -1951,7 +1951,7 @@ class Invoice extends MY_Controller {
             $filePath = FCPATH . "images/qrcodes/qrcode_" . $invoice_number . ".png";
             
             // Generate QR code image
-            QRcode::png($token, $filePath);
+            QRcode::png($token, $filePath, QR_ECLEVEL_L, 10); 
 
             // Return the relative URL to the QR code image
             $qr_image_url =  base_url()."images/qrcodes/qrcode_". $invoice_number . ".png";
