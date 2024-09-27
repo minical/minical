@@ -1,4 +1,8 @@
 <?php if (!$read_only): ?>
+    <?php 
+    // Retrieve the 'einvoice' session value
+    $einvoice_enabled = $this->session->userdata('einvoice') === 'true'; 
+    ?>
     <!-- -->
     <div class="modal fade"  id="add-payment-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -261,10 +265,8 @@
                 <!-- This is your button with the correct data-url -->
                 <button class="btn btn-primary m-1" id="print-Einvoice-button" data-url="<?php echo site_url('invoice/send_einvoice_request'); ?>">
                 <?php echo l('Generate').' '.l('Einvoice'); ?>
+
             </button>
-            <button class="btn btn-primary m-1" id="print-Einvoice-pdf">
-                        <?php echo l('print').' '.l('Einvoice'); ?>
-                    </button>
 
 
                     <button class="btn btn-primary m-1" id="print-invoice-button">
@@ -518,7 +520,11 @@ if(isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true) {
     <div class="col-xs-12 padding-left-zero padding-left-zero-wep">
         <address class="text-gapp">
             <strong>IRN Number: </strong>
-            <span><?= isset($irn) ? $irn : 'No IRN number found for this invoice.'; ?></span>
+            <?php
+            // Ensure $irn is defined and holds the correct value before rendering the HTML
+            $irn = isset($irn) ? $irn : null;
+            ?>
+        <span><?= !empty($irn) ? $irn : 'No IRN number found for this invoice.'; ?></span>
         </address>
     </div>
 

@@ -139,6 +139,7 @@ class Invoice extends MY_Controller {
         $this->session->set_userdata('booking_id', $booking_id);
 
         $irn = $this->get_irn();
+     
         $qr_image_url = $this->generate_qr();
 
 
@@ -1893,7 +1894,7 @@ class Invoice extends MY_Controller {
     if ($httpCode == 200) {
          
         if (isset($responseData['data']['Irn']) && isset($responseData['data']['SignedQRCode'])) {
-            
+            $this->session->set_userdata('einvoice', 'true');
     
             $irn = $responseData['data']['Irn'];
             $qrCode = $responseData['data']['SignedQRCode'];
@@ -1966,9 +1967,11 @@ class Invoice extends MY_Controller {
     
     
     function get_irn() {
-    
+        
     $booking_id = $this->session->userdata('booking_id');
     $invoice_number =  $this->Invoice_model->get_invoice_number($booking_id);
+
+    // print_r($invoice_number);
    
     // Load the database
     $CI =& get_instance();
