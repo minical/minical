@@ -1052,6 +1052,7 @@ var customer_pci_token = '';
                                 errorMsg += "\nInvalid Email Address";
                             }
                             var customer_phone = $.trim($("input[name='phone']").val());
+                           
 
                             if (customer_phone != '' && customer_phone.match(/^[\(\)\s\-\+\d]{10,17}$/) == null) {
                                 errorMsg += "\nInvalid Phone Number";

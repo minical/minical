@@ -524,15 +524,16 @@ if(isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true) {
 
     <div class="col-md-12 row invoice-header">
     <div class="col-xs-12 padding-left-zero padding-left-zero-wep">
-        <address class="text-gapp">
-            <strong>IRN Number: </strong>
-            <?php
-            // Ensure $irn is defined and holds the correct value before rendering the HTML
-            $irn = isset($irn) ? $irn : null;
-            ?>
-        <span><?= !empty($irn) ? $irn : 'No IRN number found for this invoice.'; ?></span>
-        </address>
-    </div>
+    <address class="text-gapp">
+        <strong class= "irn-print">IRN Number: </strong>
+        <?php
+        // Ensure $irn is defined and holds the correct value before rendering the HTML
+        $irn = isset($irn) ? $irn : null;
+        ?>
+        <span class="irn-print"><?= !empty($irn) ? $irn : 'No IRN number found for this invoice.'; ?></span>
+    </address>
+</div>
+
 
    
 </div>
@@ -1162,15 +1163,16 @@ if(isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true) {
         
            
         <div class="row" style="float:right;">
-                                        <address class="text-gapp">
-                                            <strong>QR Code: </strong>
-                                            <?php if (isset($qr_image_url) && $qr_image_url): ?>
-                                                <img src="<?= $qr_image_url ?>" alt="QR Code" />
-                                            <?php else: ?>
-                                                <span>No QR code found for this invoice.</span>
-                                            <?php endif; ?>
-                                        </address>
-                                    </div>
+    <address class="text-gapp">
+        <strong class="qr-print">QR Code: </strong>
+        <?php if (isset($qr_image_url) && $qr_image_url): ?>
+            <img class="qr-print" src="<?= $qr_image_url ?>" alt="QR Code" />
+        <?php else: ?>
+            <span class="qr-print">No QR code found for this invoice.</span>
+        <?php endif; ?>
+    </address>
+</div>
+
                                     </div>
 
     </div> <!-- /. container -->
@@ -1215,3 +1217,29 @@ if(isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true) {
     endif;
     ?>
 </div></div>
+<style>
+    /* Hide the IRN number in normal view */
+.irn-print {
+    display: none;
+}
+
+/* Show the IRN number only when printing */
+@media print {
+    .irn-print {
+        display: inline;
+    }
+}
+
+/* Hide the QR code in normal view */
+.qr-print {
+    display: none;
+}
+
+/* Show the QR code only when printing */
+@media print {
+    .qr-print {
+        display: inline;
+    }
+}
+
+</style>
