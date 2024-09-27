@@ -364,13 +364,15 @@ innGrid.getNumberOfDays = function() {
 */
 
 $(function() {
+	
 
 	$("#print-invoice-button").on('click', function (){
 		 window.print();
 	});
-	$("#print-invoice-button-qrcode").on('click', function (){
-		 window.print();
-	});
+
+	$("#print-Einvoice-pdf").on('click', function (){
+		window.print();
+   });
 	
 	$(".charge_row").popover();
 	
@@ -467,13 +469,7 @@ $(function() {
 					alert('Invoice request sent successfully: ' + JSON.stringify(response));
 	
 					// Change the button text to "Print E-Invoice"
-					button.text('Print E-Invoice');
-	
-					// Add a click event listener for the Print E-Invoice button
-					button.off('click').on('click', function() {
-						// Call a function to generate the PDF
-						// generatePDF(response); // Assuming `response` contains necessary data for PDF
-					});
+					
 				}
 			},
 			error: function(xhr, status, error) {

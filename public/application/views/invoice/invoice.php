@@ -262,14 +262,15 @@
                 <button class="btn btn-primary m-1" id="print-Einvoice-button" data-url="<?php echo site_url('invoice/send_einvoice_request'); ?>">
                 <?php echo l('Generate').' '.l('Einvoice'); ?>
             </button>
+            <button class="btn btn-primary m-1" id="print-Einvoice-pdf">
+                        <?php echo l('print').' '.l('Einvoice'); ?>
+                    </button>
 
 
                     <button class="btn btn-primary m-1" id="print-invoice-button">
                         <?php echo l('print').' '.l('invoice'); ?>
                     </button>
-                    <button class="btn btn-primary m-1" id="print-invoice-button-qrcode">
-                        <?php echo l('print').' '.l('invoice').'Qrcode'; ?>
-                    </button>
+                    
 
                     <?php
                     if ($menu_on === true):
@@ -514,13 +515,16 @@ if(isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true) {
     </div> <!-- /.container -->
 
     <div class="col-md-12 row invoice-header">
-        <div class="col-xs-12 padding-left-zero padding-left-zero-wep">
-            <address class="text-gapp">
+    <div class="col-xs-12 padding-left-zero padding-left-zero-wep">
+        <address class="text-gapp">
             <strong>IRN Number: </strong>
-            <span>1c5f4ca0642f8f1824dbec3c9d14e5bbad419e373ff35323b6432b5adf75ec2f</span>
-            </address>
-         </div>
+            <span><?= isset($irn) ? $irn : 'No IRN number found for this invoice.'; ?></span>
+        </address>
     </div>
+
+   
+</div>
+
 
     <?php if($this->vendor_id == 9) { ?>
         <div class="col-sm-12">
@@ -740,7 +744,7 @@ if(isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true) {
                                                 <a class="folios_modal" href="#" data-toggle="modal" data-target="#move-charge-modal" class="update-charge-folio"><?php echo l('Move to another Folio', true); ?></a>
                                             </li>
                                         </ul>
-                                    </div>
+                                        
                                 <?php
                                 endif;
                                 ?>
@@ -1143,9 +1147,19 @@ if(isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true) {
             </div>
         </div>
 
+        
+           
         <div class="row" style="float:right;">
-            <img src="<?= base_url('images/qrcodes/qrcode_qr.png'); ?>"  alt="QRcode"/>
-        </div>
+                                        <address class="text-gapp">
+                                            <strong>QR Code: </strong>
+                                            <?php if (isset($qr_image_url) && $qr_image_url): ?>
+                                                <img src="<?= $qr_image_url ?>" alt="QR Code" />
+                                            <?php else: ?>
+                                                <span>No QR code found for this invoice.</span>
+                                            <?php endif; ?>
+                                        </address>
+                                    </div>
+                                    </div>
 
     </div> <!-- /. container -->
     <?php
