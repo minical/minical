@@ -142,11 +142,22 @@ class Invoice extends MY_Controller {
      
         $qr_image_url = $this->generate_qr();
 
+         // Check if booking_id exists in einvoice_irndetails table
+         $this->db->where('invoice_id', $booking_id);
+         $query = $this->db->get('einvoice_irndetails');
+
+         if ($query->num_rows() > 0) {
+           $generate_invoice_check = 1;
+        } else {
+            $generate_invoice_check = 0;
+        }
+
 
         // Create an array to pass data to the view
         $data = array(
             'irn' => $irn,
-            'qr_image_url' => $qr_image_url 
+            'qr_image_url' => $qr_image_url ,
+            'generate_invoice_check' => $generate_invoice_check
         );
        
      
