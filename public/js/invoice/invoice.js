@@ -453,6 +453,7 @@ $(function() {
 	$('#print-Einvoice-button').click(function() {
 		var dataUrl = $(this).data('url'); // This should be the URL for send_einvoice_request
 		var button = $(this);
+		
 	
 		$.ajax({
 			url: dataUrl,
@@ -466,7 +467,8 @@ $(function() {
 					alert('Error: ' + response.error);
 				} else {
 					// Handle successful response from send_einvoice_request
-					alert('Invoice request sent successfully: ' + JSON.stringify(response));
+					alert('E-invoice generated successsfully');
+					location.reload();
 	
 					// Change the button text to "Print E-Invoice"
 					

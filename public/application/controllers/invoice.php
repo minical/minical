@@ -1575,6 +1575,7 @@ class Invoice extends MY_Controller {
     
 
     public function authenticate() {
+       
         try {
             $companyId = $this->company_id; // Assuming this is set
             
@@ -1643,9 +1644,11 @@ class Invoice extends MY_Controller {
 
     public function send_einvoice_request()
     {
-    //    $this->authenticate();
+
 
         $accessToken = $this->authenticate();
+
+       
 
         // print_r( $accessToken);
 
@@ -1914,6 +1917,16 @@ class Invoice extends MY_Controller {
     
             $this->db->insert('einvoice_irndetails', $data);
     
+        }elseif (isset($responseData['status_cd']) && $responseData['status_cd'] === "0") {
+            if (isset($responseData['status_desc'])) {
+                $statusDesc = json_decode($responseData['status_desc'], true);
+                foreach ($statusDesc as $error) {
+                    if (isset($error['ErrorCode']) && $error['ErrorCode'] === '2150') {
+                        $this->session->set_userdata('einvoice_error', 'Invoice already generated');
+                        break;
+                    }
+                }
+            }
         }
         
         return $this->output
