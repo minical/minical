@@ -142,11 +142,21 @@ class Invoice extends MY_Controller {
      
         $qr_image_url = $this->generate_qr();
 
+         // Check if booking_id exists in einvoice_irndetails table
+         $this->db->where('invoice_id', $booking_id);
+         $query = $this->db->get('einvoice_irndetails');
+         if ($query->num_rows() > 0) {
+           $generate_invoice_check = 1;
+        } else {
+            $generate_invoice_check = 0;
+        }
+
 
         // Create an array to pass data to the view
         $data = array(
             'irn' => $irn,
-            'qr_image_url' => $qr_image_url 
+            'qr_image_url' => $qr_image_url ,
+            'generate_invoice_check' => $generate_invoice_check
         );
        
      
@@ -1650,7 +1660,7 @@ class Invoice extends MY_Controller {
 
        
 
-        // print_r( $accessToken);
+      
 
         if (isset($accessToken['error'])) {
             return $this->output
@@ -1788,7 +1798,7 @@ class Invoice extends MY_Controller {
             ],
             "DocDtls" => [
                 "Typ" => "INV",
-                "No" => 'minical'.$invoice_number, // Add a comma here
+                "No" => 'minical2'.$invoice_number, // Add a comma here
                 "Dt" => date('d/m/Y')    // Replace semicolon with a comma or nothing if it's the last element
            ],
 
@@ -1892,11 +1902,14 @@ class Invoice extends MY_Controller {
         curl_close($ch);
 
         $responseData =  json_decode($response, true);
+
+       
        
       
     if ($httpCode == 200) {
          
         if (isset($responseData['data']['Irn']) && isset($responseData['data']['SignedQRCode'])) {
+          
             $this->session->set_userdata('einvoice', 'true');
     
             $irn = $responseData['data']['Irn'];
@@ -1914,8 +1927,10 @@ class Invoice extends MY_Controller {
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ];
+
     
             $this->db->insert('einvoice_irndetails', $data);
+            
     
         }elseif (isset($responseData['status_cd']) && $responseData['status_cd'] === "0") {
             if (isset($responseData['status_desc'])) {

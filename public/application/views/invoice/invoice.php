@@ -264,15 +264,15 @@
                 <div>
                 <!-- This is your button with the correct data-url -->
           <button 
-                class="btn btn-primary m-1" 
+          class="btn btn-primary m-1 <?php if ($generate_invoice_check == 1) echo 'hidden'; ?>" 
                 id="print-Einvoice-button" 
                 data-url="<?php echo site_url('invoice/send_einvoice_request'); ?>" 
                 <?php echo $einvoice_enabled ? 'disabled' : ''; ?>>
                 <?php echo l('Generate') . ' ' . l('Einvoice'); ?>
          </button>
-            <button class="btn btn-primary m-1" id="print-Einvoice-pdf">
-                        <?php echo l('print').' '.l('Einvoice'); ?>
-                    </button>
+         <button class="btn btn-primary m-1 <?php if ($generate_invoice_check == 0) echo 'hidden'; ?>" id="print-Einvoice-pdf">
+                <?php echo l('print').' '.l('Einvoice'); ?>
+            </button>
 
 
                     <button class="btn btn-primary m-1" id="print-invoice-button">
@@ -350,6 +350,7 @@ if(isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true) {
         echo "<img src='" . $this->image_url . $company['company_id'] . "/" . $company_logos[0]['filename'] . "' id='company-logo-image'/><br/>";
     }
     ?>
+      
 
     <div class="col-md-12 row invoice-header">
         <div class="col-xs-4 padding-left-zero padding-left-zero-wep">
