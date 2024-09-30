@@ -141,9 +141,10 @@ class Invoice extends MY_Controller {
         $irn = $this->get_irn();
      
         $qr_image_url = $this->generate_qr();
+        $invoice_number =  $this->Invoice_model->get_invoice_number($booking_id);
 
          // Check if booking_id exists in einvoice_irndetails table
-         $this->db->where('invoice_id', $booking_id);
+         $this->db->where('invoice_id', $invoice_number);
          $query = $this->db->get('einvoice_irndetails');
          if ($query->num_rows() > 0) {
            $generate_invoice_check = 1;
@@ -1798,7 +1799,7 @@ class Invoice extends MY_Controller {
             ],
             "DocDtls" => [
                 "Typ" => "INV",
-                "No" => 'minical2'.$invoice_number, // Add a comma here
+                "No" => 'minical3'.$invoice_number, // Add a comma here
                 "Dt" => date('d/m/Y')    // Replace semicolon with a comma or nothing if it's the last element
            ],
 

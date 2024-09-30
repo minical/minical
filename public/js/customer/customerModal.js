@@ -796,11 +796,11 @@ var customer_pci_token = '';
 
                  .append(this._getHorizontalInput(l("company_name"), 'company_name', customer.company_name,
                     (commonCustomerFields && commonCustomerFields[12] && commonCustomerFields[12]['show_on_customer_form'] == 0 ? "hidden customer_field_12" : "customer_field_12"),
-                    (commonCustomerFields && commonCustomerFields[13] && commonCustomerFields[11]['is_required'])))
+                    (commonCustomerFields && commonCustomerFields[12] && commonCustomerFields[12]['is_required'])))
 
                     .append(this._getHorizontalInput(l("Tax id"), 'tax_id', customer.tax_id,
-                    (commonCustomerFields && commonCustomerFields[11] && commonCustomerFields[11]['show_on_customer_form'] == 0 ? "hidden customer_field_12" : "customer_field_12"),
-                    (commonCustomerFields && commonCustomerFields[11] && commonCustomerFields[11]['is_required'])));
+                    (commonCustomerFields && commonCustomerFields[13] && commonCustomerFields[13]['show_on_customer_form'] == 0 ? "hidden customer_field_12" : "customer_field_12"),
+                    (commonCustomerFields && commonCustomerFields[13] && commonCustomerFields[13]['is_required'])));
                     
          
 
@@ -1184,8 +1184,10 @@ var customer_pci_token = '';
                                             // customer_data: btoa(JSON.stringify(customerData))
                                             customer_data: btoa(unescape(encodeURIComponent(customerData_str)))
                                         },
+                                      
                                         dataType: "json",
                                         success: function(data) {
+                                           alert('update');
                                             if (data.error && data.error_msg) {
                                                 console.log(data)
                                                 alert(data.error_msg);
@@ -1210,6 +1212,7 @@ var customer_pci_token = '';
                                     var customerData_str = JSON.stringify(customerData);
 
                                     $.ajax({
+                                      
                                         type: "POST",
                                         url: getBaseURL() + "customer/create_customer_AJAX",
                                         data: {
@@ -1221,6 +1224,7 @@ var customer_pci_token = '';
                                         },
                                         dataType: "json",
                                         success: function(data) {
+                                            alert('success');
                                             if (data.error && data.error_msg) {
                                                 alert(data.error_msg);
                                             } else {
@@ -1247,7 +1251,13 @@ var customer_pci_token = '';
                                                 $("#customer-modal").modal('hide');
                                             }
                                             $('#button-update-customer').attr('disabled', false);
-                                        }
+                                            
+                                        },
+                                        error: function(xhr, status, error) {
+                                            commonCustomerFields.log(data);
+                                            console.error("AJAX Error: ", status, error);
+                                            alert("An error occurred: " + error);  // Show error alert
+                                          }
                                     });
                                 }
 
