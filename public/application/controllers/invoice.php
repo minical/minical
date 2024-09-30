@@ -145,6 +145,7 @@ class Invoice extends MY_Controller {
          // Check if booking_id exists in einvoice_irndetails table
          $this->db->where('invoice_id', $booking_id);
          $query = $this->db->get('einvoice_irndetails');
+
          if ($query->num_rows() > 0) {
            $generate_invoice_check = 1;
         } else {
