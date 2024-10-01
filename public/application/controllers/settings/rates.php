@@ -140,6 +140,7 @@ class Rates extends MY_Controller
         $rates_arr = $this->input->post("rates");
         //print_r($rates_arr);
         $rate_plan = null;
+        $policy_code = 0;
         
 		if (!$charge_type_id && $rate_plan_id) {
 			$rate_plan = $this->Rate_plan_model->get_rate_plan($rate_plan_id);
@@ -184,7 +185,8 @@ class Rates extends MY_Controller
         {   // create new custom rate plan
             $default_currency = $this->Currency_model->get_default_currency($this->company_id);
 
-            if(isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true) {
+            if((isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true) || 
+                   (isset($this->is_nestpaymkd_enabled) && $this->is_nestpaymkd_enabled == true)) {
 
                 $policies = $this->Option_model->get_option_by_company('payment_policy',$this->company_id);
                
@@ -210,7 +212,20 @@ class Rates extends MY_Controller
                 
             }
 
-            $rate_plan_data = Array(
+            if(isset($this->is_nestpaymkd_enabled) && $this->is_nestpaymkd_enabled == true){
+               
+                
+                $rate_plan_data = Array(
+                "room_type_id" => $room_type_id,
+                "currency_id" => $default_currency['default_currency_id'],
+                "rate_plan_name" => $rate_plan['rate_plan_name']."#".$booking_id,
+                "charge_type_id" => $charge_type_id,
+                "company_id" => $this->company_id,
+                "policy_code" => $policy_code,
+                "is_selectable" => 0
+                );
+            }else{
+                $rate_plan_data = Array(
                 "room_type_id" => $room_type_id,
                 "currency_id" => $default_currency['default_currency_id'],
                 "rate_plan_name" => "Custom Rate Plan",
@@ -218,7 +233,8 @@ class Rates extends MY_Controller
                 "company_id" => $this->company_id,
                 "policy_code" => $policy_code,
                 "is_selectable" => 0
-            );
+                );
+            }
 
             $new_rate_plan_id = $this->Rate_plan_model->create_rate_plan($rate_plan_data); // create new rate plan
 

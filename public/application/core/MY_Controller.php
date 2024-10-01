@@ -134,6 +134,7 @@ class MY_Controller extends CI_Controller {
         $this->review_management_settings = false;
         $this->is_cardknox_enabled = false;
         $this->is_nestpay_enabled = false;
+        $this->is_nestpaymkd_enabled = false;
         $this->is_oevai_enabled = false;
 
         if($get_active_modules){
@@ -168,6 +169,9 @@ class MY_Controller extends CI_Controller {
                 }
                  if($value['extension_name'] == 'nestpay_integration'){
                      $this->is_nestpay_enabled = true;
+                }
+                if($value['extension_name'] == 'nestpaymkd_integration'){
+                     $this->is_nestpaymkd_enabled = true;
                 }
                 if($value['extension_name'] == 'oevai_integration'){
                     $this->is_oevai_enabled = true;

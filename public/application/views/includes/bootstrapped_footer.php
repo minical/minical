@@ -117,6 +117,7 @@
     innGrid.featureSettings.defaultRoomPlural = '<?=(isset($this->default_room_plural) ? $this->default_room_plural : '')?>';
     innGrid.featureSettings.defaultRoomType = '<?=(isset($this->default_room_type) ? $this->default_room_type : '')?>';
     innGrid.isNestPayEnabled = parseInt('<?=(($this->is_nestpay_enabled) ? 1 : 0)?>');
+    innGrid.isNestPaymkdEnabled = parseInt('<?=(($this->is_nestpaymkd_enabled) ? 1 : 0)?>');
     innGrid.isKovenaEnabled = parseInt('<?=(($this->is_kovena_enabled) ? 1 : 0)?>');
     innGrid.isCardknoxEnabled = parseInt('<?=(($this->is_cardknox_enabled) ? 1 : 0)?>');
     innGrid.isPartnerOwner = parseInt('<?=(isset($this->is_partner_admin) && ($this->is_partner_admin == 1) ? 1 : 0)?>');

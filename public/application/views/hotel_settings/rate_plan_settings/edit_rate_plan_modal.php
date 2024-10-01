@@ -104,7 +104,7 @@
                         </select>
 					</div>
 				</div>
-				<?php if($this->is_nestpay_enabled){ ?>
+				<?php if($this->is_nestpay_enabled || $this->is_nestpaymkd_enabled){ ?>
 				<div class="form-group">
 					<label class="col-sm-3 control-label">
 						<?php echo l('Select Policy', true); ?><span style="color:red;">*</span>
