@@ -1258,7 +1258,7 @@ if(isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true) {
         display: inline;
     }
     /* Example conflicting style */
-    .qr-container {
+.qr-container {
     overflow: auto; /* To clear the float properly */
     width: 100%; /* Ensure it takes full width */
 }

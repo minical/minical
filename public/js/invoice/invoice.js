@@ -460,6 +460,7 @@ $(function() {
 			type: 'POST', // Ensure this matches your server method
 			dataType: 'json',
 			success: function(response) {
+				const responseString = JSON.stringify(response, null, 2);
 				if (response.access_token) {
 					alert('Authentication successful. Access Token: ' + response.access_token);
 					// Handle the access token as needed
@@ -467,7 +468,7 @@ $(function() {
 					alert('Error: ' + response.error);
 				} else {
 					// Handle successful response from send_einvoice_request
-					alert('E-invoice generated successsfully');
+					alert('E-invoice generated successfully.\n\nFull Response:\n' + responseString);
 					location.reload();
 	
 					// Change the button text to "Print E-Invoice"

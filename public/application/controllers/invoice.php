@@ -1622,6 +1622,8 @@ class Invoice extends MY_Controller {
                 'client_secret: ' . $credentials['MASTERGST_CLIENT_SECRET'],
                 'gstin: ' . $credentials['MASTERGST_GSTN'],
             ];
+
+          
     
             // Initialize cURL request
             $ch = curl_init();
@@ -1632,14 +1634,16 @@ class Invoice extends MY_Controller {
             curl_close($ch);
     
             $responseData = json_decode($response, true);
+            // print_r($responseData);
+            // exit;
     
             // Check if AuthToken exists in the response
             if (isset($responseData['data']['AuthToken'])) {
                 $accessToken = $responseData['data']['AuthToken'];
     
                 // Store the access_token in the database
-                $this->db->where('companies_id', $companyId);
-                $this->db->update('invoice_extension', ['access_token' => $accessToken]);
+                // $this->db->where('companies_id', $companyId);
+                // $this->db->insert('invoice_extension', ['access_token' => $accessToken]);
     
                 return $accessToken;
             } else {
@@ -1660,8 +1664,8 @@ class Invoice extends MY_Controller {
 
         $accessToken = $this->authenticate();
 
-       
-
+    //    print_r($accessToken);
+    //    exit;
       
 
         if (isset($accessToken['error'])) {
@@ -1741,6 +1745,8 @@ class Invoice extends MY_Controller {
             $customer_fax = $customer['fax']; // Get the customer ID
             $customer_email = $customer['email']; // Get the customer ID
             $customer_pin = $customer['postal_code']; // Get the customer ID
+            $customer_tax_id = $customer['tax_id']; // Get the customer ID
+            $state_code_customer = substr($customer_tax_id, 0, 2);
          
         } else {
             // Handle the case where no customers are found
@@ -1757,10 +1763,11 @@ class Invoice extends MY_Controller {
         if ($query->num_rows() > 0) {
             $credentials = $query->row_array();
             // $accessToken = $credentials['access_token'];
-            $accessToken = $credentials['access_token'];
+            // $accessToken = $credentials['access_token'];
              // Assuming you stored the access token
             $email = $credentials['email'];
             $seller_gstn = $credentials['MASTERGST_GSTN'];
+            $state_code_seller = substr($seller_gstn, 0, 2);
         } else {
             return $this->output
                         ->set_content_type('application/json')
@@ -1785,6 +1792,8 @@ class Invoice extends MY_Controller {
         $seller_city = $company['city'];
         $seller_region = $company['region'];
         $seller_pin = $company['postal_code'];
+        // $state_code_seller = substr($seller_pin, 0, 2);
+
         $seller_email = $company['email'];
         // print_r($invoice_number);
         // exit;
@@ -1800,7 +1809,7 @@ class Invoice extends MY_Controller {
             ],
             "DocDtls" => [
                 "Typ" => "INV",
-                "No" => 'minical3'.$invoice_number, // Add a comma here
+                "No" => 'minical7'.$invoice_number, // Add a comma here
                 "Dt" => date('d/m/Y')    // Replace semicolon with a comma or nothing if it's the last element
            ],
 
@@ -1814,20 +1823,20 @@ class Invoice extends MY_Controller {
                 "Addr2" => $seller_address,
                 "Loc" => $seller_city,
                 "Pin" => $seller_pin,
-                "Stcd" => "29",
+                "Stcd" => $state_code_seller,
                 "Ph" =>  $seller_phone,
                 "Em" => $seller_email,
             ],
             "BuyerDtls" => [
-                "Gstin" => "29AWGPV7107B1Z1",
+                "Gstin" => $customer_tax_id,
                 "LglNm" => $customer_company_name,
                 "TrdNm" => $customer_company_name,
-                "Pos" => "27",
+                "Pos" => $state_code_customer,
                 "Addr1" =>  $customer_address1,
                 "Addr2" =>  $customer_address2,
                 "Loc" =>  $customer_city,
                 "Pin" => $customer_pin,
-                "Stcd" => "29",
+                "Stcd" => $state_code_customer,
                 "Ph" =>  $customer_phone,
                 "Em" => $customer_email
             ],
@@ -1836,8 +1845,8 @@ class Invoice extends MY_Controller {
                 "Addr1" => $seller_address,
                 "Addr2"=>$seller_address,
                 "Loc" => $seller_city,
-                "Pin" =>  '518360',
-                "Stcd" => "37"
+                "Pin" =>  $seller_pin,
+                "Stcd" => $state_code_seller
             ],
             "ShipDtls" => [
                 "Gstin" => "29AWGPV7107B1Z1",
@@ -1846,8 +1855,8 @@ class Invoice extends MY_Controller {
                 "Addr1" => $customer_address1,
                 "Addr2" => $customer_address2,
                 "Loc" =>  $customer_city,
-                "Pin" =>  '518360',
-                "Stcd" => "37"
+                "Pin" =>  $customer_pin,
+                "Stcd" =>  $state_code_customer
             ],
           
             "ItemList" => $items_list,  // The dynamically populated items list
@@ -1905,8 +1914,9 @@ class Invoice extends MY_Controller {
 
         $responseData =  json_decode($response, true);
 
-       
-       
+        // print_r($responseData);
+        // exit;
+
       
     if ($httpCode == 200) {
          
@@ -1930,8 +1940,22 @@ class Invoice extends MY_Controller {
                 'updated_at' => date('Y-m-d H:i:s'),
             ];
 
+            // print_r($data);
+            // exit;
+
     
-            $this->db->insert('einvoice_irndetails', $data);
+             $this->db->insert('einvoice_irndetails', $data);
+
+            // if (!$insert) {
+            //     // If the insert fails, output the last query to check for errors
+            //     echo $this->db->last_query();
+            //     // Optionally, you can also manually check for any database errors using MySQL's error functions
+            //     echo $this->db->_error_message();  // For older CodeIgniter versions
+            //     echo $this->db->_error_number();
+            // } else {
+            //     echo "Data inserted successfully!";
+            // }
+            
             
     
         }elseif (isset($responseData['status_cd']) && $responseData['status_cd'] === "0") {
@@ -1977,15 +2001,19 @@ class Invoice extends MY_Controller {
         if ($query->num_rows() > 0) {
             $result = $query->row(); // Fetch the first result row as an object
             $token = $result->qrcode; // Access the qrcode field
-            
+            //  print_r($token);
             // Define the file path where to save the QR code image
             $filePath = FCPATH . "images/qrcodes/qrcode_" . $invoice_number . ".png";
+
+            // print_r($qr_image_url);
             
             // Generate QR code image
             QRcode::png($token, $filePath, QR_ECLEVEL_L, 10); 
 
             // Return the relative URL to the QR code image
             $qr_image_url =  base_url()."images/qrcodes/qrcode_". $invoice_number . ".png";
+
+            // print_r($qr_image_url);
 
             // echo  $qr_image_url;
           
