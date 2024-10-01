@@ -115,7 +115,7 @@ innGrid.updateRatePlan = function(ratePlan) {
 	var extraIds = ratePlan.find('[name="extra[]"]').val();
 	var policy_id = ratePlan.find('[name="policy_name"]').val();
     
-	if(innGrid.isNestPayEnabled == 1){
+	if(innGrid.isNestPayEnabled == 1 || innGrid.isNestPaymkdEnabled == 1){
 		if(policy_id == 0){
 			alert('Please Select any cancellation policy for ratePlan');
 			return false;
@@ -158,7 +158,7 @@ innGrid.addRatePlan = function(ratePlan) {
 	var extraIds = ratePlan.find('[name="extra[]"]').val();
 	var policy_id = ratePlan.find('[name="policy_name"]').val();
     
-	if(innGrid.isNestPayEnabled == 1){
+	if(innGrid.isNestPayEnabled == 1 || innGrid.isNestPaymkdEnabled == 1){
 		if(policy_id == 0){
 			alert('Please Select any cancellation policy for ratePlan');
 			return false;

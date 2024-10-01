@@ -83,6 +83,12 @@ class Permission_model extends CI_Model {
                 (
                     $function_name === 'nestpay_response_ok_url' || $function_name === 'nestpay_response_fail_url' || $function_name === 'get_nestpay_post_bookingengine' || $function_name ===  'nestpay_bookingengine_ok_fail_url' || $function_name ==='nestpay_group_response_ok_url' || $function_name ==='nestpay_group_response_fail_url'
                 )
+            )||
+            (
+                $controller_name === "nestpaymkd_integration" && 
+                (
+                    $function_name === 'nestpaymkd_response_ok_url' || $function_name === 'nestpaymkd_response_fail_url' || $function_name === 'get_nestpaymkd_post_bookingengine' || $function_name ===  'nestpaymkd_bookingengine_ok_fail_url' || $function_name ==='nestpaymkd_group_response_ok_url' || $function_name ==='nestpaymkd_group_response_fail_url'
+                )
             )
 
              ||

@@ -82,7 +82,7 @@
                                                         } else {
                                                             $selected_customer = '';
                                                         }
-                                                        if ($customer['cc_expiry_year'] || $customer['cc_cvc_encrypted']) {
+                                                        if ($customer['cc_expiry_year'] || $customer['cc_cvc_encrypted'] || $customer['customer_meta_token']) {
                                                             $is_gateway_available = 'true';
                                                             if($customer['cc_cvc_encrypted'])
                                                                 $available_gateway = $selected_payment_gateway;

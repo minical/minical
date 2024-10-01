@@ -3237,7 +3237,7 @@ var bookingModalInvoker = function ($) {
 
                         chargeDropdown.find("option.custom-rate-plan").remove() // remove previous custom rate plan
 
-                        if (data[0].rate_plan_name == "Custom Rate Plan")
+                        //if (data[0].rate_plan_name == "Custom Rate Plan") // remove for nestpay custom same rate name
                             chargeDropdown.find("optgroup[label='Rate Plans (Pre-set)']").append('<option selected class="rate-plan custom-rate-plan" value="' + data[0].rate_plan_id + '">' + data[0].rate_plan_name + '</option>');
                         $("body #booking-modal .modal-body").find("input[name='rate']").val(data[0].base_rate);
                     }
