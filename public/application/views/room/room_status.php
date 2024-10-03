@@ -117,6 +117,7 @@
 					<td class="text-center">
 						<select autocomplete="off" class="room_status form-control">
 							<option <?php if ($r->status == 'Clean') {echo 'selected="selected"';}?>><?php echo l('Clean', true); ?></option>
+							<option <?php if ($r->status == 'General Cleaning') {echo 'selected="selected"';}?>><?php echo l('General Cleaning', true); ?></option>
 							<option <?php if ($r->status == 'Dirty') {echo 'selected="selected"';}?>><?php echo l('Dirty', true); ?></option>					
 							<option <?php if ($r->status == 'Inspected') {echo 'selected="selected"';}?>><?php echo l('Inspected', true); ?></option>					
 						</select>

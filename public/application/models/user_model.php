@@ -601,6 +601,26 @@ class User_model extends CI_Model {
         }
         return null;
     }
+
+    function get_company_mambers($company_id, $permission)
+    {
+        $this->db->select('users.id,users.email, user_profiles.first_name, user_profiles.last_name,user_permissions.permission');
+        $this->db->from('users');
+        $this->db->join('user_permissions','user_permissions.user_id=users.id');
+        $this->db->join('user_profiles','user_profiles.user_id=users.id');
+        $this->db->where('user_permissions.permission', $permission);
+        $this->db->where('user_permissions.company_id', $company_id);
+        $query = $this->db->get();
+
+        //echo $this->db->last_query();
+
+        if ($query->num_rows >= 1)
+        {
+            $results = $query->result_array();
+            return $results; //roles are stored in the same column as permission
+        }
+        return false;
+    }
 }
 
 /* End of file user_model.php */

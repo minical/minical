@@ -42,7 +42,7 @@ class Room extends MY_Controller
 
 		$room_ratings = $this->Room_model->get_room_rating($this->company_id);
 		$data['date'] = $this->selling_date;
-		$data['rows'] = $this->Room_model->get_room_inventory($data['date'], false);
+		$data['rows'] = $this->Room_model->get_room_inventory($data['date'], true);
 
 		for($i = 0; $i < count($data['rows']); $i++)
 		{
