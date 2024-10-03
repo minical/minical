@@ -12,6 +12,7 @@ class Invoice_model extends CI_Model {
 		
 	function create_invoice($booking_id)
 	{
+		
 		// get the max invoice number
 		$this->db->select("max(invoice_number) + 1 as number");
 		$this->db->from("booking as b1, booking as b2, booking_x_invoice as bxi, invoice as i");
