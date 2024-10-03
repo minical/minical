@@ -73,7 +73,10 @@ class Room_inventory extends MY_Controller {
         $view_data['js_files'] = array(
             base_url() . auto_version('js/hotel-settings/room-settings.js')
         );
-
+        if( isset($this->is_housekeeper_manage_enabled) && $this->is_housekeeper_manage_enabled == 1){
+            $view_data['housekeeper_list'] = $this->User_model->get_company_mambers($this->company_id,'is_housekeeping');
+            //prx($view_data['housekeeper_list']);
+        }
         $view_data['selected_sidebar_link'] = 'Rooms';
 
         $view_data['main_content'] = 'hotel_settings/room_inventory_settings/room_settings';

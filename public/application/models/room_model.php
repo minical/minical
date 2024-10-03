@@ -103,10 +103,22 @@ class Room_model extends CI_Model {
 
     function _get_filtered_query($date, $include_checkedout_state = true)
     {
-        $where_state = "";
+        $where_state = ""; $user_wise ='';
         if($include_checkedout_state){
             $where_state = " OR b.state = '".CHECKOUT."'";
         }
+        
+        if($this->is_housekeeper_manage_enabled == 1){
+        	 $order = "ORDER BY room_info.state DESC";
+
+          if($this->user_permission == 'is_housekeeping'){
+              $user_wise =' AND r.group_id ='.$this->user_id;
+          }
+
+        }else {
+        	 $order = "ORDER BY room_name ASC";
+        }
+        
         $company_id = $this->session->userdata('current_company_id');
         $sql        = "
 			SELECT
@@ -161,8 +173,9 @@ class Room_model extends CI_Model {
 				r.company_id = '$company_id' AND
 				r.is_deleted = '0' AND
 				r.room_type_id = rt.id
+				$user_wise
 			GROUP BY room_id
-			ORDER BY room_name ASC
+			$order
 		";
         
         return $sql;

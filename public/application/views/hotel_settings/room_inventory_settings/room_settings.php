@@ -95,7 +95,18 @@
                     ?>
                 </td>
              <td>
+                 <?php if( isset($this->is_housekeeper_manage_enabled) && $this->is_housekeeper_manage_enabled == true){?>
                 <select name="room-group-id" class="form-control">
+                    <?php foreach ($housekeeper_list as $housekeeper){ ?>
+                        <option
+                            value="<?php echo $housekeeper['id'] ?>"
+                            <?php if ($room['group_id'] == $housekeeper['id']): ?>selected="selected" <?php endif ?>
+                            >
+                            <?php echo $housekeeper['first_name']." ".$housekeeper['last_name'] ?>
+                        </option>
+                    <?php } ?>
+                <?php }else{ ?>
+                        <select name="room-group-id" class="form-control">
                     <?php for ($i = 0; $i < 15; $i++): ?>
                         <option
                             value="<?php echo $i ?>"
@@ -104,6 +115,7 @@
                             <?php echo $i ?>
                         </option>
                     <?php endfor; ?>
+                    <?php } ?>
                 </select>
             </td>
             <td>

@@ -136,6 +136,7 @@ class MY_Controller extends CI_Controller {
         $this->is_nestpay_enabled = false;
         $this->is_nestpaymkd_enabled = false;
         $this->is_oevai_enabled = false;
+        $this->is_housekeeper_manage_enabled = false;
 
         if($get_active_modules){
             foreach ($get_active_modules as $key => $value) {
@@ -175,6 +176,9 @@ class MY_Controller extends CI_Controller {
                 }
                 if($value['extension_name'] == 'oevai_integration'){
                     $this->is_oevai_enabled = true;
+                }
+                if($value['extension_name'] == 'housekeeper_management'){
+                    $this->is_housekeeper_manage_enabled = true;
                 }
 
 
