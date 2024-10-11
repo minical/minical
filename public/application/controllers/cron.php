@@ -84,7 +84,8 @@ class Cron extends CI_Controller
  			}	
  		}
 
-		$companies = $this->Company_model->get_all_companies(true, 'channex');
+		// $companies = $this->Company_model->get_all_companies(true, 'channex');
+		$companies = $this->Company_model->get_all_companies();
 		
 		foreach ($companies as $company)
 		{

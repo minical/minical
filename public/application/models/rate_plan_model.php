@@ -44,13 +44,16 @@ class Rate_plan_model extends CI_Model {
 		return NULL;
 	}
 		
-	function get_rate_plan($rate_plan_id)
+	function get_rate_plan($rate_plan_id, $company_id = null)
 	{
         $this->db->select("rp.*, r.*");
 		$this->db->from("rate_plan as rp");
 		$this->db->join("rate as r","rp.base_rate_id = r.rate_id", "left");
 		$this->db->where("rp.is_deleted != '1'");
 		$this->db->where("rp.rate_plan_id", $rate_plan_id);
+
+		if($company_id)
+			$this->db->where("rp.company_id", $company_id);
 		
 		$query = $this->db->get();
 		//echo $this->db->last_query();

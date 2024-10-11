@@ -115,8 +115,8 @@ class Rates extends MY_Controller
         $end_date = $this->input->post('end_date');
         $rate_plan_name = $this->input->post('rate_plan_name');
         
-        $previous_rates = $this->Rate_plan_model->get_rate_plan($rate_plan_id);
-        
+        $previous_rates = $this->Rate_plan_model->get_rate_plan($rate_plan_id, $this->company_id);
+
         if($rate_plan_name != "Custom Rate Plan" && empty($previous_rates))
         {
             $rate_array = $this->Rate_model->get_date_range($start_date, $end_date);
