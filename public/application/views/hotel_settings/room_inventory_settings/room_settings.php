@@ -46,7 +46,11 @@
                         <?php echo l($this->default_room_singular).' '.l('Type',true); ?>
                     </th>
             <th>
-                <?php echo l('housekeeping_group'); ?>
+                <?php  if( isset($this->is_housekeeper_manage_enabled) && $this->is_housekeeper_manage_enabled == true){
+                            echo l('Housekeeper Name');
+                    }else{ echo l('housekeeping_group'); }
+
+                     ?>
             </th>
             <th>
                 <?php echo l('locations'); ?>

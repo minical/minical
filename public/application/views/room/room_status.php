@@ -113,7 +113,18 @@
 				<tr class='room_tr' name='<?php echo $r->room_id; ?>' onclick="">
 					<td class="text-center"><?php echo $r->room_name; ?></td>
 					<td class="text-center"><?php echo $r->acronym; ?></td>
-					<td class="td-customer-name text-left" ><div class="booking_tr" name="<?php echo $r->booking_id; ?>"><?php echo $r->customer_name; ?></div></td>
+					<td class="td-customer-name text-left" ><div class="booking_tr" name="<?php echo $r->booking_id; ?>"><?php echo $r->customer_name; 
+						if( isset($this->is_housekeeper_manage_enabled) && $this->is_housekeeper_manage_enabled == 1){
+
+                        	if($r->booking_status == 2) {
+								echo " (Check-out)";
+							}else if($r->booking_status == 1){
+								echo " (Stay)";
+							}else{
+								echo "";
+							}
+                           }
+				     ?></div></td>
 					<td class="text-center">
 						<select autocomplete="off" class="room_status form-control">
 							<option <?php if ($r->status == 'Clean') {echo 'selected="selected"';}?>><?php echo l('Clean', true); ?></option>
