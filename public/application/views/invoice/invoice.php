@@ -1115,7 +1115,10 @@ if((isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true ) ||
                     <?php echo l('amount', true).' '.l('due', true); ?>:
                     &nbsp;&nbsp;&nbsp;&nbsp;
                     <span class="text-right smaller_fonts" id="amount_due">
-                    </span>  <?php echo $currency_symbol;?>
+                    </span>  
+                   <span class="text-right smaller_fonts currency_symbol" id="currency_symbol">
+                    <?php echo $currency_symbol;?>
+                    </span>
                 </div>
             </div>
             <div>
