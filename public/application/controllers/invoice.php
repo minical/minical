@@ -146,7 +146,7 @@ class Invoice extends MY_Controller {
 
         //$data['currency_symbol'] = $this->session->userdata('currency_symbol');
         //if (!$data['currency_symbol']) {
-            $default_currency       = $this->Currency_model->get_default_currency($this->company_id);
+            $default_currency       = $this->Currency_model->get_default_currency($company_id);
             $data['currency_symbol'] = isset($default_currency['currency_code']) ? $default_currency['currency_code'] : null;
             $this->session->set_userdata(array('currency_symbol' => $data['currency_symbol']));
         //}
