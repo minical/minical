@@ -3,6 +3,8 @@
  */
 var _createBookingLock = false;
 var bookingDetails = [];
+var bookingCustomerTypeID = '';
+
 
 var width = $("body").width();
 setCookie('width',width);
@@ -1338,7 +1340,7 @@ var bookingModalInvoker = function ($) {
                         })
                             .append(
                                 $("<label/>", {
-                                    class: "btn btn-light active",
+                                    class: "btn btn-light active booking_form_type",
                                     text: l("Single")
                                 })
                                     .append(
@@ -1404,7 +1406,7 @@ var bookingModalInvoker = function ($) {
                             //                                            )
                             .append(
                                 $("<label/>", {
-                                    class: "btn btn-light",
+                                    class: "btn btn-light booking_form_type",
                                     text: l("Group")
                                 })
                                     .append(
@@ -5007,20 +5009,6 @@ var bookingModalInvoker = function ($) {
                 existGroupId = that.groupInfo.group_id
 
 
-            // var adult_count = $("select[name=adult_count]").children("option:selected").val();
-            // var children_count = $("select[name=children_count]").children("option:selected").val();
-            // var total_customer_length = parseInt(adult_count)+parseInt(children_count);
-
-            // var token_label_length = $('.tokenfield').find('.token-label').length;
-            
-            // if(token_label_length > total_customer_length){
-            //     alert('you are exceeding total customer count limit');
-            //     $('.booking-create').prop('disabled', false);
-
-            //     return false;
-            // }
-
-
             if (typeof _createBookingLock !== "undefined" && _createBookingLock) {
                 // booking creation already in progress
                 return;
@@ -5239,20 +5227,6 @@ var bookingModalInvoker = function ($) {
             $.each(data.booking, function (key, value) {
                 that.booking[key] = data.booking[key];
             });
-
-            // update availabilities of the dates prior to update
-            // why do we need it?
-
-            // var adult_count = $("select[name=adult_count]").children("option:selected").val();
-            // var children_count = $("select[name=children_count]").children("option:selected").val();
-            // var total_customer_length = parseInt(adult_count)+parseInt(children_count);
-
-            // var token_label_length = $('.tokenfield').find('.token-label').length;
-            
-            // if(token_label_length > total_customer_length){
-            //     alert('you are exceeding total customer count limit');
-            //     return false;
-            // }
 
             data.number_of_days = $("[name='number_of_days']").val();
 
@@ -5933,6 +5907,12 @@ var bookingModalInvoker = function ($) {
                                                 that.$modalBody.find("[name='check_in_date'], [name='check_out_date']").datepicker("hide");
                                                 $("select").blur();
                                                 tokenField.tokenfield("disable");
+
+                                                setTimeout(function(){
+                                                    bookingCustomerTypeID = $('select[name="customer_type_id"]').val();
+                                                    console.log('bookingCustomerTypeID',bookingCustomerTypeID);
+                                                    handleCustomerTypeChange(bookingCustomerTypeID);
+                                                }, 1500);
                                             },
                                             onclose: function (e) {
                                                 if (typeof token.attr("id") !== "undefined") {
@@ -7725,3 +7705,43 @@ $(document).on('blur', '.restrict-cc-data', function() {
         });
     }
 });
+function handleCustomerTypeChange(bookingCustomerTypeID) {
+
+    var type = $('.booking_form_type.active').text();
+    console.log('type', type);
+
+    if(type == 'Single'){
+        $.ajax({
+            url: getBaseURL() + 'get_select_rate_plan',
+            type: "POST",
+            dataType: "json",
+            data: {
+                customer_type_id: bookingCustomerTypeID
+            },
+            dataType: "json",
+            success: function(resp) {
+                if(resp.success){
+                    var room_type_id = resp.room_type_id;
+                    $("select[name='room_type_id']").val(room_type_id);
+                    $("select[name='room_type_id']").trigger('change');
+                    $("select[name='room_type_id']").prop('disabled', true);
+
+                    var rate_plan_id = resp.rate_plan_id;
+                    setTimeout(function() {
+                        $('select.charge-with').val(rate_plan_id);
+                        $('select.charge-with').prop('disabled', true);
+                    }, 1000);
+
+                    setTimeout(function() {
+                        $("select.charge-with").trigger('change');
+                    }, 1000);
+
+                } else {
+                    $("select[name='room_type_id']").prop('disabled', false);
+                    $('select.charge-with').prop('disabled', false);
+
+                }
+            }
+        });
+    }
+}

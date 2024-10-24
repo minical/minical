@@ -18,6 +18,7 @@ class Rate_plan_model extends CI_Model {
 						rp.charge_type_id,
 						cu.currency_id, 
 						rt.id as room_type_id, 
+						rt.name as room_type_name, 
 						rp.image_group_id');
 		$this->db->from('rate_plan as rp, room_type as rt, currency as cu');		
 		$this->db->join('rate as r', 'r.rate_id = rp.base_rate_id', 'left');

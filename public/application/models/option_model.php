@@ -134,6 +134,23 @@ class Option_model extends CI_Model {
             return FALSE;
         }   
     }
+
+    function get_data_by_json($option_name, $company_id)
+    {
+        $sql = "SELECT * FROM `options`
+                WHERE 
+                    option_name = 'loyalty_customer' AND
+                    company_id = '$company_id';
+                ";
+        
+        $query = $this->db->query($sql);
+        if($query->num_rows() >= 1)
+        {
+            return $query->result_array();
+        }
+        
+        return NULL;
+    }
 }
 
 ?>
