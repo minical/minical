@@ -484,6 +484,7 @@ var bookingModalInvoker = function ($) {
                 divider: $("<li/>", {
                     class: "divider"
                 }),
+                
                 editFixRatePlan: $("<li/>").append(
                     $("<a/>", {
                         href: "#",
@@ -595,7 +596,7 @@ var bookingModalInvoker = function ($) {
                                 )
                         )
                         .append(
-                            this._getSelect('adult_count', this.adultsCount)
+                            this._getSelect('adult_count', this.adultsCount, 'adult_count')
                         )
                 )
                 .append(
@@ -4064,8 +4065,9 @@ var bookingModalInvoker = function ($) {
                             function (roomType) {
                                 if (roomType.availability > 0) {
                                     var numberOfRoomsSelect = $("<select/>", {
-                                        class: 'form-control',
-                                        name: 'room_count'
+                                        class: 'form-control room_count',
+                                        name: 'room_count',
+                                        id: roomType.id
 
                                     });
 
@@ -4103,7 +4105,7 @@ var bookingModalInvoker = function ($) {
                                                                 .append(
                                                                     $('<select/>', {
                                                                         name: 'room_type_id',
-                                                                        class: 'form-control',
+                                                                        class: 'form-control room_type_id',
                                                                         disabled: true,
                                                                         style: 'display: none;'
                                                                     })
@@ -7849,3 +7851,44 @@ $(document).on('blur', '.adult_count', function() {
 
     console.log('RoomTypeID:', roomTypeID, 'New Adult Count:', newAdultCount);
 });
+
+function handleCustomerTypeChange(bookingCustomerTypeID) {
+
+    var type = $('.booking_form_type.active').text();
+    console.log('type', type);
+
+    if(type == 'Single'){
+        $.ajax({
+            url: getBaseURL() + 'get_select_rate_plan',
+            type: "POST",
+            dataType: "json",
+            data: {
+                customer_type_id: bookingCustomerTypeID
+            },
+            dataType: "json",
+            success: function(resp) {
+                if(resp.success){
+                    var room_type_id = resp.room_type_id;
+                    $("select[name='room_type_id']").val(room_type_id);
+                    $("select[name='room_type_id']").trigger('change');
+                    $("select[name='room_type_id']").prop('disabled', true);
+
+                    var rate_plan_id = resp.rate_plan_id;
+                    setTimeout(function() {
+                        $('select.charge-with').val(rate_plan_id);
+                        $('select.charge-with').prop('disabled', true);
+                    }, 1000);
+
+                    setTimeout(function() {
+                        $("select.charge-with").trigger('change');
+                    }, 1000);
+
+                } else {
+                    $("select[name='room_type_id']").prop('disabled', false);
+                    $('select.charge-with').prop('disabled', false);
+
+                }
+            }
+        });
+    }
+}
