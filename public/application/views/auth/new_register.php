@@ -194,7 +194,7 @@
             return false;
         }
         if(paswordLength > 20 || paswordLength < 6){
-            alert('The password must be 6-20 characters long and contain only letters, numbers, dashes, and underscores.');
+            alert('The password must contain at least one uppercase letter, one lowercase letter, one number, one special character, and be between 6 and 20 characters long.');
             $('.register_submit_form').attr('disabled', false).val('Next Step');
             return false;
         }

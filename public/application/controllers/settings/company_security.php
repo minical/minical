@@ -45,7 +45,7 @@ class Company_security extends MY_Controller
         
         $data['company_security'] = isset($security_data[0]['option_value']) ? json_decode($security_data[0]['option_value'],true) :"";
 
-        $data['security_data'] = $this->Company_security_model->get_deatils_by_company_user($this->company_id, $this->user_id);
+        $data['security_data'] = $this->Company_security_model->get_deatils_by_company_user(null, $this->user_id);
 
         $email = $this->user_email;
         $security_name = 'security';
@@ -220,12 +220,29 @@ class Company_security extends MY_Controller
 
         $company_id = $this->company_id;
 
-        if($this->is_partner_owner){
-            $partner_data = $this->Company_security_model->get_first_property_partner($this->vendor_id);
-            $company_id = $partner_data['company_id'];
+        // if($this->is_partner_owner){
+        //     $partner_data = $this->Company_security_model->get_first_property_partner($this->vendor_id);
+        //     $company_id = $partner_data['company_id'];
+        // }
+
+        $user_id = $this->user_id;
+
+        $admin_data = $this->Whitelabel_partner_model->get_whitelabel_partner_id($user_id);
+
+        if($admin_data){
+
+            $vendor_companies = $this->Company_security_model->get_vendor_companies($admin_data['partner_id']);
+            // lq();
+            // $vendor_company_ids = $vendor_compnies;
+            $vendor_company_ids = explode(',', $vendor_companies['comp_ids']);
+
+            $mathced_vendor_company_ids = $this->Option_model->get_option_by_company('company_security',$vendor_company_ids, true);
+
+            $company_id = $mathced_vendor_company_ids[0]['company_id'];
+
         }
 
-        $secret_data = $this->Company_security_model->get_deatils_by_company_user($company_id, $this->user_id);
+        $secret_data = $this->Company_security_model->get_deatils_by_company_user(null, $this->user_id);
 
         $secret = $secret_data['secret_code'];
 
@@ -234,7 +251,7 @@ class Company_security extends MY_Controller
         if($check){
 
             if($otp_verification){
-                $security_data =  $this->Option_model->get_option_by_company('company_security',$this->company_id);
+                $security_data =  $this->Option_model->get_option_by_company('company_security',$company_id);
         
                 if($security_data){
 
@@ -246,9 +263,27 @@ class Company_security extends MY_Controller
                         'otp_verified' => 1
                     );
                    
-                    $this->Option_model->update_option_company('company_security', json_encode($company_data), $this->company_id);
+                    $this->Option_model->update_option_company('company_security', json_encode($company_data), $company_id);
                 }
             }
+            echo json_encode(array('success' => true));
+    
+        } else {
+            echo json_encode(array('success' => false, 'error_msg' => 'Invalid code. Please try again.'));
+        }
+    }
+
+    function show_cc_verify_otp(){
+        $otp = $this->input->post('otp');
+
+        $secret_data = $this->Company_security_model->get_deatils_by_company_user(null, $this->user_id);
+
+        $secret = $secret_data['secret_code'];
+
+        $check = $this->google_security->check_secret_with_otp($secret, $otp);
+
+        if($check){
+                
             echo json_encode(array('success' => true));
     
         } else {

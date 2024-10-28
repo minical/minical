@@ -124,6 +124,8 @@
     innGrid.isPartnerOwner = parseInt('<?=(isset($this->is_partner_admin) && ($this->is_partner_admin == 1) ? 1 : 0)?>');
     innGrid.featureSettings.calendarDays = '<?=(isset($this->calendar_days) ? $this->calendar_days : '')?>';
     innGrid.featureSettings.companyLockTime = '<?=(isset($this->company_lock_time) ? $this->company_lock_time : '')?>';
+    innGrid.featureSettings.companySecurityStatus = '<?=(isset($this->company_security_status) ? $this->company_security_status : '')?>';
+    innGrid.featureSettings.SecurityData = '<?=(isset($this->security_data_length) ? $this->security_data_length : '')?>';
 
     var reg_flag = <?php echo $registration_flag; ?>;
     innGrid.hasExtensionsPermission = <?php echo $registration_flag; ?>;

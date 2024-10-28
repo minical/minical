@@ -14,6 +14,9 @@ class Reservations extends MY_Controller
         $this->load->model('Booking_source_model');
         $this->load->model('Customer_field_model');
         $this->load->model('Customer_type_model');
+        $this->load->model('Room_type_model');
+        $this->load->model('Rate_plan_model');
+        $this->load->model('Option_model');
 
         $global_data['menu_on'] = true;
         $view_data['selected_menu'] = 'Settings';
@@ -419,6 +422,13 @@ class Reservations extends MY_Controller
         
         $data['customer_types'] = $common_types + $customer_types;
         ksort($data['customer_types']);
+
+        if($this->is_loyalty_program){
+            $data['room_types'] = $this->Room_type_model->get_room_types($this->company_id);
+            $data['rate_plans'] = $this->Rate_plan_model->get_rate_plans($this->company_id);
+            
+            $data['room_rates'] = $this->Option_model->get_data_by_json('loyalty_customer', $this->company_id);
+        }
         
         $data['js_files'] = array(
                 base_url() . auto_version('js/hotel-settings/customer-types.js')

@@ -8,7 +8,7 @@
                     <h4 class="modal-title"><?php echo l('add').' '.l('payment'); ?></h4>
                 </div>
                 <div class="modal-body form-horizontal">
-                    <div class="form-group">
+                    <div class="form-group" id="payment_date">
                         <label for="payment_date" class="col-sm-4 control-label"><?php echo l('payment').' '.l('date'); ?></label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" name="payment_date" placeholder="Payment Date" value="<?php echo get_local_formatted_date($company['selling_date']); ?>">
@@ -139,6 +139,131 @@
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
 
+    <div class="modal fade"  id="add-invoice-transfer-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title"><?php echo l('Invoice Transfer Payment'); ?></h4>
+                </div>
+                <div class="modal-body form-horizontal">
+                    <div class="form-group" id="add_bookings">
+                        <label for="pay_for" class="col-sm-4 control-label">Add Booking ID</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control invoice_booking_id" name="invoice_booking_id" />
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="payment_date">
+                        <label for="payment_date" class="col-sm-4 control-label"><?php echo l('payment').' '.l('date'); ?></label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="payment_date" placeholder="Payment Date" value="<?php echo get_local_formatted_date($company['selling_date']); ?>">
+                            
+                        </div>
+                    </div>
+
+                    <!-- Amount is manually entered only when user is paying for 1 booking -->
+                    <div class="form-group">
+                        <label for="payment_amount" class="col-sm-4 control-label">
+                            <?php echo l('amount'); ?>
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="invoice_pay_amount">
+                        </div>
+                    </div>
+
+                    <div class="form-group payment_type_div">
+                        <label for="pay_for" class="col-sm-4 control-label"><?php echo l('method'); ?></label>
+                        <div class="col-sm-8">
+                            <select name="inv_payment_type_id" class="input-field form-control">
+                                <?php
+                                foreach ($payment_types as $payment_type):
+                                    ?>
+                                    <option value="<?php echo $payment_type->payment_type_id;?>">
+                                        <?php echo $payment_type->payment_type; ?>
+                                    </option>
+                                <?php
+                                endforeach;
+                                ?>
+                            </select>
+                            <input type="hidden" name="current_payment_gateway" value="<?php echo $this->current_payment_gateway; ?>">
+                        </div>
+                    </div>
+
+                    <?php if(check_active_extensions($this->current_payment_gateway, $this->company_id)){ ?>
+                    <div style="display:none;" class="form-group use-payment-gateway-btn ">
+                        <label for="payment_amount" class="col-sm-4 control-label">
+                            <?php echo l('use_payment_gateway'); ?>
+                        </label>
+
+                        <div class="col-sm-8" id="use-gateway-div">
+                            <div class="col-sm-2"><input type="checkbox" class="form-control use-gateway" id="check-wep" data-gateway_name="<?=$selected_payment_gateway;?>" name="<?=$selected_payment_gateway;?>_use_gateway"></div>
+                        </div>
+                    </div>
+                    
+                    <?php }
+                    if (count(array_filter($customers)) > 0):
+                        ?>
+                        <div class="form-group">
+                            <label for="pay_for" class="col-sm-4 control-label"><?php echo l('paid_by'); ?> <small class="text-muted">(<?php echo l('optional'); ?>)</small></label>
+                            <div class="col-sm-8">
+                                <select name="customer_id" class="input-field form-control paid-by-customers">
+                                    <?php
+                                    $available_gateway = '';
+                                    foreach ($customers as $customer):
+                                        if ($customer['customer_id'] == $selected_customer_id) {
+                                            $selected_customer = 'selected';
+                                        } else {
+                                            $selected_customer = '';
+                                        }
+                                        if ($customer['stripe_customer_id'] || $customer['cc_tokenex_token'] || $customer['customer_meta_token']) {
+                                            $is_gateway_available = 'true';
+                                            if($customer['stripe_customer_id'])
+                                                $available_gateway = 'stripe';
+                                            else
+                                                $available_gateway = 'tokenex';
+                                        } else {
+                                            $is_gateway_available = 'false';
+                                        }
+                                        ?>
+                                        <option data-available-gateway="<?=$available_gateway;?>" is-gateway-available="<?=$is_gateway_available;?>" <?php echo $selected_customer; ?> value="<?php echo $customer['customer_id']; ?>">
+                                            <?php echo $customer['customer_name']; ?>
+                                        </option>
+                                    <?php
+                                    endforeach;
+                                    ?>
+                                </select>
+
+                            </div>
+                        </div>
+                    <?php
+                    endif;
+                    ?>
+
+                    <div class="form-group" id="description-form-group">
+                        <label for="amount" class="col-sm-4 control-label">
+                            <?php echo l('description'); ?> <small class="text-muted">(<?php echo l('optional'); ?>)</small>
+                        </label>
+                        <div class="col-sm-8">
+                            <textarea class="form-control invoice_description" name="invoice_description" row=2></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <!-- <input type="hidden"  id="manual_payment_capture" value="<?=$company['manual_payment_capture'];?>"> -->
+                    <button type="button" class="btn btn-success add_inv_pay_button" id="add_inv_pay_button">
+                        <?php echo l('add').' '.l('payment'); ?>
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        <?php echo l('close'); ?>
+                    </button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+
+
 <?php endif; ?>
 <!--move charge or payment modal-->
 <div class="modal fade"  id="move-charge-payment-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -239,11 +364,11 @@
         <input type="text" placeholder="Edit name" class="form-control updated-folio-name">
         <input type="hidden" class="update-folio-id" value="">
         <span class="input-group-btn">
-			<button type="button" class="btn btn-primary btn-update-folio-name">
-				<i class="fa fa-check" aria-hidden="true"></i>
-			</button>
-			<i class="fa fa-close"></i>
-		</span>
+            <button type="button" class="btn btn-primary btn-update-folio-name">
+                <i class="fa fa-check" aria-hidden="true"></i>
+            </button>
+            <i class="fa fa-close"></i>
+        </span>
     </div>
 </div>
 
@@ -397,6 +522,7 @@ if((isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true ) ||
                             ?>
 
                         </a></strong>
+                    <input type="hidden" name="customer_name" class="customer_name" value="<?php echo $booking_customer['customer_name']; ?>">
                     <input type="hidden" class="text-right" id="customer_id"  disabled value="<?= !empty($booking_customer['customer_id']) ? $booking_customer['customer_id'] : "";?>"/>
                     <input type="hidden" class="text-right" id="evc_card_status"  value="<?= (isset($customer['evc_card_status']) && $customer['evc_card_status']) ? $customer['evc_card_status'] : ''; ?>"/>
                     <br/>
@@ -471,7 +597,7 @@ if((isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true ) ||
 
                 </span><br/>
 
-                <?php echo l('Adult'); ?>: <span id="adult_count"><?php echo $booking_detail['adult_count']; ?>,
+                <?php echo l('Adult'); ?>: <span id="adult_count"><?php echo $booking_detail['adult_count']; ?></span>,
                 <?php echo l('Children'); ?>: <span id="child_count"><?php echo $booking_detail['children_count']; ?>
                 
                 </span><br/>
@@ -521,8 +647,8 @@ if((isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true ) ||
                                         </a>
                                     </div>
                                     <span class="remove-folio">
-									<i class="fa fa-close"></i>
-								</span>
+                                    <i class="fa fa-close"></i>
+                                </span>
                                 </li>
                             <?php }
                         } else { ?>
@@ -575,7 +701,7 @@ if((isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true ) ||
                     <th class="text-left"><?php echo l('paying').' '.l('customer'); ?></th>
                     <th class="text-left"><?php echo l('charge_type'); ?></th>
                     <th class="text-right"><?php echo l('amount'); ?></th>
-                    <th class="text-right"><?php echo l('tax'); ?></th>
+                    <th class="text-right tax_column"><?php echo l('tax'); ?></th>
                     <th class="text-right"><?php echo l('total'); ?></th>
                     <th class="delete-td"></th> <!-- for x button -->
                 </tr>
@@ -605,17 +731,17 @@ if((isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true ) ||
                         }
                         ?> >
                             <td class="<?php echo (isset($charge["charge_id"]))?"editable_td":""; ?>" onclick="">
-									<span name="selling-date">
-										<?php echo get_local_formatted_date($charge['selling_date']); ?>
-									</span>
+                                    <span name="selling-date">
+                                        <?php echo get_local_formatted_date($charge['selling_date']); ?>
+                                    </span>
                             </td>
                             <td class="<?php echo (isset($charge["charge_id"]))?"editable_td":""; ?>" onclick="">
-									<span name="description">
-										<?php
+                                    <span name="description">
+                                        <?php
                                         // description
                                         echo $charge['description'];
                                         ?>
-									</span>
+                                    </span>
                             </td>
                             <td class="<?php echo (isset($charge['charge_id']))?"editable_td":""; ?>" onclick="">
                                 <?php
@@ -625,32 +751,32 @@ if((isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true ) ||
                                 if (isset($charge['charge_id']))
                                     echo $charge['customer_id'];
                                 ?>" name="customer">
-											<?php
+                                            <?php
                                             if (isset($charge['charge_id']))
                                                 echo $charge['customer_name'];
                                             ?>
-										</span>
+                                        </span>
                                 <?php
 
                                 ?>
                             </td>
                             <td class='<?php echo (isset($charge["charge_id"])) ? "editable_td" : ""; ?>' onclick="">
-									<span id="<?php echo $charge['charge_type_id']; ?>" name="charge-type">
-										<?php echo $charge['charge_type_name']; ?>
-									</span>
+                                    <span id="<?php echo $charge['charge_type_id']; ?>" name="charge-type">
+                                        <?php echo $charge['charge_type_name']; ?>
+                                    </span>
                             </td>
                             <td class='<?php echo (isset($charge["charge_id"]))?"editable_td":""; ?> text-right' onclick="">
-									<span name='amount'>
-										<?php
+                                    <span name='amount'>
+                                        <?php
                                         $rate = (float)$charge['amount'];
                                         echo number_format($rate, 2, ".", ",");
                                         ?>
-									</span>
+                                    </span>
                             </td>
                             <td class='text-right h5'>
                                 <small>
-										<span class='td-tax'>
-											<?php
+                                        <span class='td-tax'>
+                                            <?php
                                             // calculation is done in invoice temporarily
                                             // eventually migrate it to controller
                                             $combined_tax = 0;
@@ -672,29 +798,35 @@ if((isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true ) ||
                                                     }
                                                     else
                                                     {
-                                                        $tax_amount = (float)$tax['tax_rate'];
-                                                        $combined_tax = $combined_tax + $tax_amount;
+                                                        if($tax['is_tax_inclusive'] == 1)
+                                                        {
+                                                            $tax_amount = (float)$tax['tax_rate'];
+                                                            $combined_tax = $combined_tax;
+                                                        } else {
+                                                            $tax_amount = (float)$tax['tax_rate'];
+                                                            $combined_tax = $combined_tax + $tax_amount;
+                                                        }
                                                     }
 
                                                     echo '<div class="tax">'
                                                         . '<span id="'.$tax['tax_type_id'].'"'
                                                         .'class="'.($tax['is_tax_inclusive'] == 1 ? "hidden" : "").' tax-type">'.$tax['tax_type'].' </span>'
-                                                        . '<span data-real-taxes="'.$tax_amount.'"class="'.($tax['is_tax_inclusive'] == 1 ? "hidden" : "").' tax-amount">'. number_format($tax_amount, 2, ".", ",") . '</span>'
+                                                        . '<span data-tax-rate="'.$tax['tax_rate'].'" data-tax-unit="'.$tax['is_percentage'].'" data-real-taxes="'.$tax_amount.'"class="'.($tax['is_tax_inclusive'] == 1 ? "hidden" : "").' tax-amount">'. number_format($tax_amount, 2, ".", ",") . '</span>'
                                                         . '</div>';
                                                 }
                                             }
                                             ?>
-										</span>
+                                        </span>
                                 </small>
                             </td>
                             <td class='text-right'>
-											<span data-real-total-charge="<?php echo ($rate + $combined_tax); ?>" class='charge'>
-											    <?php
+                                            <span data-real-total-charge="<?php echo ($rate + $combined_tax); ?>" class='charge'>
+                                                <?php
                                                 // as stated above, combinedTax is to be migrated to controller
                                                 if (isset($charge['charge_type_id']))
                                                     echo number_format($rate + $combined_tax, 2, ".", ","); // charge
                                                 ?>
-											</span>
+                                            </span>
                             </td>
 
                             <td class="delete-td" width=30>
@@ -705,9 +837,9 @@ if((isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true ) ||
                                     <!-- <i class="x-button hidden-print" title="Created by <?php echo $charge['user_name']; ?>"></i> -->
                                     <!--<i class="fa fa-caret-down hidden-print " title="Created by <?php echo $charge['user_name']; ?>"></i>-->
                                     <div class="dropdown hidden-print">
-												<span class="dropdown-toggle" type="button" data-toggle="dropdown">
-												<!-- 	<span class="caret"></span> -->
-												</span>
+                                                <span class="dropdown-toggle" type="button" data-toggle="dropdown">
+                                                <!--    <span class="caret"></span> -->
+                                                </span>
                                         <ul class="dropdown-menu dropdown-menu-right">
                                             <li><a class="x-button delete_charge" title="Created by <?php echo $charge['user_name']; ?>"><?php echo l('Delete', true); ?></a>
                                             </li>
@@ -858,7 +990,7 @@ if((isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true ) ||
 
 
                 if (isset($payments)):
-
+                    
                     foreach ($payments as $key => $payment):
 
                         ?>
@@ -1069,7 +1201,7 @@ if((isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true ) ||
                 if ($menu_on === true):
                     ?>
                     <tr class="hidden-print">
-                        <td colspan="6" class="text-right">
+                        <td colspan="6" class="text-right add_pay_btn">
                             <button
                                     class="btn btn-success form-control payment-modal-button"
                                     data-toggle="modal"

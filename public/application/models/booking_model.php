@@ -2846,7 +2846,7 @@ class Booking_model extends CI_Model {
         $this->db->join('customer_card_detail as ccd', 'ccd.customer_id = c.customer_id');
         $this->db->where('c.is_deleted','0');
         $this->db->where('b.is_deleted','0');
-        $this->db->where('b.is_ota_booking','1');
+        // $this->db->where('b.is_ota_booking','1');
         $this->db->where($where);
         $this->db->where('b.company_id',$company_id);
         $this->db->where('UNIX_TIMESTAMP(bb.check_out_date) + (86400 * 7) < UNIX_TIMESTAMP(NOW())');

@@ -218,18 +218,21 @@ class Auth extends MY_Controller
                     // $vendor_company_ids = $vendor_compnies;
                     $vendor_company_ids = explode(',', $vendor_companies['comp_ids']);
 
-                    $mathced_vendor_company_ids = $this->Option_model->get_option_by_company('company_security',$vendor_company_ids);
+                    $security_data = $this->Option_model->get_option_by_company('company_security',$vendor_company_ids, true);
 
-                    $vendor_comp_id = $mathced_vendor_company_ids[0]['company_id'];
 
-                    $security_data = $this->Option_model->get_option_by_company('company_security',$vendor_comp_id);
+                    // $mathced_vendor_company_ids = $this->Option_model->get_option_by_company('company_security',$vendor_company_ids, true);
+
+                    // $vendor_comp_id = $mathced_vendor_company_ids[0]['company_id'];
+
+                    // $security_data = $this->Option_model->get_option_by_company('company_security',$vendor_comp_id);
                 } else {
                     $security_data = $this->Option_model->get_option_by_company('company_security',$this->session->userdata('current_company_id')); 
                 }
 
                 $security = json_decode($security_data[0]['option_value'], true);
 
-                if($security['security_status'] && $email != SUPER_ADMIN){
+                if($security['security_status'] == 1 && $email != SUPER_ADMIN && $email != 'support@roomsy.com'){
                     $encode_email = base64_encode($email);
                     $encode_from = base64_encode('security');
                     redirect('auth/show_qr_code?email='.$encode_email.'&from='.$encode_from);
@@ -299,6 +302,54 @@ class Auth extends MY_Controller
     }
 
     function show_qr_code(){
+
+        $company_id = $this->company_id;
+
+        // if($this->is_partner_owner){
+        //     $partner_data = $this->Company_security_model->get_first_property_partner($this->vendor_id);
+        //     $company_id = $partner_data['company_id'];
+        // }
+
+        $user_id = $this->user_id;
+
+        $admin_data = $this->Whitelabel_partner_model->get_whitelabel_partner_id($user_id);
+
+        if($admin_data){
+
+            $vendor_companies = $this->Company_security_model->get_vendor_companies($admin_data['partner_id']);
+            $vendor_company_ids = explode(',', $vendor_companies['comp_ids']);
+
+            $mathced_vendor_company_ids = $this->Option_model->get_option_by_company('company_security',$vendor_company_ids, true);
+
+            $company_id = $mathced_vendor_company_ids[0]['company_id'];
+
+        }
+
+        $user_restriction = $this->Option_model->get_option_by_user('login_security', $this->user_id);
+
+        if(empty($user_restriction)) {
+
+            $protocol = empty($_SERVER['HTTPS']) ? 'http' : 'https';
+
+            $login_security_url = $protocol . "://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+
+            $login_security_data = array(
+                            'company_id' => $company_id,
+                            'option_name ' => 'login_security',
+                            'option_value ' => json_encode(
+                                                array(
+                                                    'user_id' => $this->user_id,
+                                                    'login_security_url' => $login_security_url,
+                                                    'login_security_otp_verified' => 0
+                                                    )
+                                                ),
+                            'autoload' => 0
+                        );
+            $this->Option_model->add_option($login_security_data);
+        }
+
+        
+        
         $email = $this->input->get('email');
         $from = $this->input->get('from');
 
@@ -306,14 +357,7 @@ class Auth extends MY_Controller
         $decode_from = base64_decode($from);
         $data['secure_data'] = $this->google_security->create_secret($decode_email, $decode_from);
 
-        $company_id = $this->company_id;
-
-        if($this->is_partner_owner){
-            $partner_data = $this->Company_security_model->get_first_property_partner($this->vendor_id);
-            $company_id = $partner_data['company_id'];
-        }
-
-        $security_data = $this->Company_security_model->get_deatils_by_company_user($company_id, $this->user_id);
+        $security_data = $this->Company_security_model->get_deatils_by_company_user(null, $this->user_id);
 
         if($security_data && count($security_data) > 0) {
 
@@ -337,14 +381,29 @@ class Auth extends MY_Controller
 
         $company_id = $this->company_id;
 
-        if($this->is_partner_owner){
-            $partner_data = $this->Company_security_model->get_first_property_partner($this->vendor_id);
-            $company_id = $partner_data['company_id'];
-        }
-        
+        // if($this->is_partner_owner){
+        //     $partner_data = $this->Company_security_model->get_first_property_partner($this->vendor_id);
+        //     $company_id = $partner_data['company_id'];
+        // }
+
         $user_id = $this->user_id;
 
-        $secret_data = $this->Company_security_model->get_deatils_by_company_user($company_id, $user_id);
+        $admin_data = $this->Whitelabel_partner_model->get_whitelabel_partner_id($user_id);
+
+        if($admin_data){
+
+            $vendor_companies = $this->Company_security_model->get_vendor_companies($admin_data['partner_id']);
+            // lq();
+            // $vendor_company_ids = $vendor_compnies;
+            $vendor_company_ids = explode(',', $vendor_companies['comp_ids']);
+
+            $mathced_vendor_company_ids = $this->Option_model->get_option_by_company('company_security',$vendor_company_ids, true);
+
+            $company_id = $mathced_vendor_company_ids[0]['company_id'];
+
+        }
+
+        $secret_data = $this->Company_security_model->get_deatils_by_company_user(null, $user_id);
 
         $secret = "";
 
@@ -362,6 +421,9 @@ class Auth extends MY_Controller
         if($check){
 
             if($via == 'login') {
+
+                $this->Option_model->delete_option('login_security', $user_id);
+
                 $company_security_data = array();
                 $company_security_data['company_id'] = $company_id;
                 $company_security_data['user_id'] = $user_id;
@@ -370,7 +432,7 @@ class Auth extends MY_Controller
                 $company_security_data['security_name'] = 'security';
                 $company_security_data['created_at'] = gmdate('Y-m-d H:i:s');
 
-                $security_data = $this->Company_security_model->get_deatils_by_company_user($company_id, $user_id);
+                $security_data = $this->Company_security_model->get_deatils_by_company_user(null, $user_id);
 
                 if($security_data && count($security_data) > 0) {
 
@@ -384,7 +446,7 @@ class Auth extends MY_Controller
             }
 
             if($otp_verification){
-                $security_data =  $this->Option_model->get_option_by_company('company_security',$this->company_id);
+                $security_data =  $this->Option_model->get_option_by_company('company_security',$company_id);
         
                 if($security_data){
 
@@ -396,7 +458,7 @@ class Auth extends MY_Controller
                         'otp_verified' => 1
                     );
                    
-                    $this->Option_model->update_option_company('company_security', json_encode($company_data), $this->company_id);
+                    $this->Option_model->update_option_company('company_security', json_encode($company_data), $company_id);
                 }
             }
 
@@ -427,6 +489,51 @@ class Auth extends MY_Controller
         } else {
             echo json_encode(array('success' => false, 'error_msg' => 'Invalid code. Please try again.'));
         }
+    }
+
+    function send_secret_qr_to_customer(){
+        $email = $this->input->post('email');
+
+        $decode_email = base64_decode($email);
+
+        $user_data = $this->User_model->get_user_by_email($decode_email);
+        $security_data = $this->Company_security_model->get_deatils_by_company_user(null, $user_data['id']);
+        // prx($security_data);
+        $response = $this->_send_secret_qr_to_customer_email($user_data, $security_data);
+
+        echo json_encode($response);
+    }
+
+    function _send_secret_qr_to_customer_email($user_data, $security_data)
+    {
+
+        $whitelabelinfo = $this->session->userdata('white_label_information');
+
+        $email_from = $whitelabelinfo && isset($whitelabelinfo['do_not_reply_email']) && $whitelabelinfo['do_not_reply_email'] ? $whitelabelinfo['do_not_reply_email'] : 'donotreply@minical.io';
+
+        $qr_code_url = '<img src="' . $security_data["qr_code_url"] . '" alt="QR Code">';
+
+        // alert support@minical.io about this new user that registered
+        $this->load->library('email');
+        $this->email->from($email_from);
+        $this->email->to($user_data['email']);
+        $this->email->subject("Secret QR Code");
+        // $this->email->message("Secret QR Code: ".$qr_code_url
+        //     ." \n<br/>email: ".$user_data['email']."\n");
+
+        $data['secure_data'] = $security_data;
+
+        $data['secure_data']['enabled'] = false;
+
+        $this->ci->email->message($this->load->view('email/show_qr_code-html', $data, true));
+
+        if($this->email->send()){
+            return array(
+                "success" => true,
+                "message" => "The QR code has been sent to your email. Please check your inbox."
+            );
+        }
+
     }
 
     // validation for login credentials
@@ -533,8 +640,8 @@ class Auth extends MY_Controller
                 $this->session->set_userdata('lead_source_slug', $lead_source_slug);
             }   
 
-            if(!(preg_match("/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[-_]).{6,}$/", $password) === 1) || ((strlen($password) < 6) || (strlen($password) > 20))){
-                echo l("The password must be 6-20 characters long and contain only letters, numbers, dashes, and underscores.",true);
+            if(!(preg_match('/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{6,20}$/', $password))){
+                echo l("The password must contain at least one uppercase letter, one lowercase letter, one number, one special character, and be between 6 and 20 characters long.",true);
                return false;
             }             
             

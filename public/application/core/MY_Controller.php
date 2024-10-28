@@ -137,6 +137,8 @@ class MY_Controller extends CI_Controller {
         $this->is_nestpaymkd_enabled = false;
         $this->is_oevai_enabled = false;
         $this->is_housekeeper_manage_enabled = false;
+        $this->is_invoice_transfer_enabled = false;
+        $this->is_loyalty_program = false;
 
         if($get_active_modules){
             foreach ($get_active_modules as $key => $value) {
@@ -180,7 +182,12 @@ class MY_Controller extends CI_Controller {
                 if($value['extension_name'] == 'housekeeper_management'){
                     $this->is_housekeeper_manage_enabled = true;
                 }
-
+                if($value['extension_name'] == 'invoice_transfer'){
+                    $this->is_invoice_transfer_enabled = true;
+                }
+                if($value['extension_name'] == 'loyalty_program'){
+                    $this->is_loyalty_program = true;
+                }
 
                 $config = array();
                 $files_path = $modules_path . $value['extension_name'] . '/config/autoload.php';
@@ -293,6 +300,29 @@ class MY_Controller extends CI_Controller {
     {
         if ($this->tank_auth->is_logged_in()) 
         {
+            $user_restriction = $this->Option_model->get_option_by_user('login_security', $this->ci->session->userdata('user_id'));
+
+            if($user_restriction){
+                $minical_access = json_decode($user_restriction[0]['option_value'], true);
+
+                if($minical_access['login_security_otp_verified'] == 0) {
+
+                    $email = $this->ci->session->userdata('email');
+
+                    $encode_email = base64_encode($email);
+                    $encode_from = base64_encode('security');
+
+                    if( 
+                        $this->uri->segment(1) != 'auth' &&
+                        $this->uri->segment(2) != 'show_qr_code'
+                    ) {
+
+                        redirect('auth/show_qr_code?email='.$encode_email.'&from='.$encode_from, 'refresh');
+                        // return false;
+                    }
+                }
+            }
+
             $this->company_id = $this->ci->session->userdata('current_company_id');
 
             $company = $this->ci->Company_model->get_company($this->company_id);
@@ -364,6 +394,8 @@ class MY_Controller extends CI_Controller {
             $this->calendar_days = $company['calendar_days'];
 
             $this->security_data =  $this->Company_security_model->get_deatils_by_company_user(null, $this->user_id);
+
+            $this->security_data_length = count($this->security_data);
             
             $user = $this->User_model->get_user_by_id($this->user_id);
             $this->user_email = $user['email'];
@@ -378,7 +410,7 @@ class MY_Controller extends CI_Controller {
 
             $whitelabelinfo = $this->ci->session->userdata('white_label_information');
 
-            $this->vendor_currency_id = $whitelabelinfo['currency_id'];
+            $this->vendor_currency_id = isset($whitelabelinfo['currency_id']) && $whitelabelinfo['currency_id'] ? $whitelabelinfo['currency_id'] : 'USD';
             $admin_user_ids = $this->Whitelabel_partner_model->get_partner_detail();
             $this->is_super_admin = (($user && isset($user['email']) && $user['email'] == SUPER_ADMIN) || ($admin_user_ids && isset($admin_user_ids['admin_user_id']) && $this->user_id == $admin_user_ids['admin_user_id']));
 
