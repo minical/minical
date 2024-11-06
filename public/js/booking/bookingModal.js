@@ -3312,7 +3312,7 @@ var bookingModalInvoker = function ($) {
                         else if (value.base_rate != null) // set custom rate value
                             rateValue = value.base_rate;
                         else
-                            rateValue = 0;
+                            rateValue = $("body #booking-modal .modal-body").find('input[name="rate"]').val();
 
                         editRateRowTh.append(
                             $("<th/>", {
