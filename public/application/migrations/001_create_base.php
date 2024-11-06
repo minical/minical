@@ -2166,7 +2166,7 @@ class Migration_create_base extends CI_Migration {
 		        'constraint' => 255,
 		        'null' => TRUE,
 		    ),
-		    '`created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP'
+		    '`created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP',
 		));
 
 		$this->dbforge->add_key('id', TRUE);
