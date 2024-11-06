@@ -186,7 +186,7 @@ class Payment_model extends CI_Model {
             else
                 return array("success" => false, "message" => $error, "payment_id" => $payment_id);
         }
-        return array("success" => true, "payment_id" => $payment_id);
+        return array("success" => true, "payment_id" => $payment_id ,"gateway_charge_id"=>$gateway_charge_id);
     }
 
     function get_payment_total_by_date_range($date_start, $date_end, $employee_id = '', $customer_type_id = null, $only_include_cancelled_bookings = false, $not_include_cancelled_bookings = false)

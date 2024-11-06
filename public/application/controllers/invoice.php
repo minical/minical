@@ -1079,7 +1079,63 @@ class Invoice extends MY_Controller {
             $company_data =  $this->Company_model->get_company($this->company_id);
             $capture_payment_type = $company_data['manual_payment_capture'];
             $capture_payment_type = ($capture_payment != 'authorize_only') ? false : true;
-            
+            if((isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true) ||
+            (isset($this->is_nestpaymkd_enabled) && $this->is_nestpaymkd_enabled == true) ) {
+
+                $data = Array(
+                    "user_id" => $this->user_id,
+                    "booking_id" => $group_id,
+                    "selling_date" => $selling_date,
+                    "customer_id" => $customer_id,
+                    "amount" => $total_balance,
+                    "payment_type_id" => $payment_type_id,
+                    "description" => $description,
+                    "date_time" => gmdate("Y-m-d H:i:s"),
+                    "selected_gateway" => $this->input->post('selected_gateway'),
+                );
+                $card_data = $this->Card_model->get_active_card($customer_id, $this->company_id);
+                $data['credit_card_id'] = "";
+                if(isset($card_data) && $card_data){
+                     $data['credit_card_id'] = $card_data['id'];
+                }
+                
+                if($data['amount'] > 0)
+                {
+                    $response = $this->Payment_model->insert_payment($data, $cvc, $capture_payment_type);
+                    $get_bookings_by_group_id = $this->Booking_model->get_bookings_by_group_id($group_id, true);
+                
+                    $no_of_bookings = count($get_bookings_by_group_id);
+                    $equal_amount = $total_balance / $no_of_bookings;
+                   $payment_type    = $this->processpayment->getPaymentGatewayPaymentType($this->input->post('selected_gateway'));
+                    $payment_type_ids = $payment_type['payment_type_id'];
+                    foreach ($get_bookings_by_group_id as $booking)
+                    {
+                    
+                        $data1 = Array(
+                        "user_id" => $this->user_id,
+                        "booking_id" => $booking['booking_id'],
+                        "selling_date" => $selling_date,
+                        "customer_id" => $customer_id,
+                        "amount" => $equal_amount,
+                        "payment_type_id" => $payment_type_ids,
+                        "description" => 'PostAuth Approved ',
+                        "date_time" => gmdate("Y-m-d H:i:s"),
+                        "payment_gateway_used" =>'nestpay',
+                        "gateway_charge_id" => $response['gateway_charge_id'],
+                        "payment_status"=> 'charge',
+                        "is_captured" => 1
+                        );
+                        
+                        $this->db->insert('payment', $data1);  
+                       
+                    }
+                }
+                else
+                {
+                    $response = array('success' => false, 'message' => 'All the bookings in this group are already Paid in full.');
+                }
+
+            } else {
             $i = 1;
             $response = array();
             foreach ($get_bookings_by_group_id as $booking)
@@ -1168,7 +1224,7 @@ class Invoice extends MY_Controller {
                 $i++;
                 $remaining_balance -= $amount; 
             }
-
+            }
             if (!empty($response)) {
                 echo json_encode($response);
             }
