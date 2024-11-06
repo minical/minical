@@ -2167,7 +2167,7 @@ class Migration_create_base extends CI_Migration {
 		        'null' => TRUE,
 		    ),
 		    'created_at' => array(
-		        'type' => 'TIMESTAMP',
+		        'type' => 'timestamp',
 		        'default' => 'CURRENT_TIMESTAMP',
 		        'null' => FALSE,
 		    ),
