@@ -4065,7 +4065,8 @@ var bookingModalInvoker = function ($) {
                                 if (roomType.availability > 0) {
                                     var numberOfRoomsSelect = $("<select/>", {
                                         class: 'form-control',
-                                        name: 'room_count'
+                                        name: 'room_count',
+                                        id: roomType.id
 
                                     });
 
@@ -7001,6 +7002,7 @@ var bookingModalInvoker = function ($) {
             var select = $("<select/>", {
                 class: 'form-control charge-with form-group',
                 //style: 'max-width: 300px;'
+                room_type_id: roomTypeID
             })
 
             var chargeTypeOptionGroup = $("<optgroup/>", {
@@ -7060,6 +7062,7 @@ var bookingModalInvoker = function ($) {
                             value: ratePlan[i].rate_plan_id,
                             parent_rate_plan_id: ratePlan[i].parent_rate_plan_id,
                             text: ratePlan[i].rate_plan_name,
+                            data_rp_name: ratePlan[i].rate_plan_name,
                             class: 'rate-plan'
                         });
                         if (that.booking.rate_plan_id == ratePlan[i].rate_plan_id &&
