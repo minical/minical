@@ -4076,6 +4076,7 @@ var bookingModalInvoker = function ($) {
                             function (roomType) {
                                 if (roomType.availability > 0) {
                                     var numberOfRoomsSelect = $("<select/>", {
+
                                         class: 'form-control room_count',
                                         name: 'room_count',
                                         id: roomType.id
@@ -7045,6 +7046,7 @@ var bookingModalInvoker = function ($) {
             var select = $("<select/>", {
                 class: 'form-control charge-with form-group',
                 //style: 'max-width: 300px;'
+                room_type_id: roomTypeID
             })
 
             var chargeTypeOptionGroup = $("<optgroup/>", {
