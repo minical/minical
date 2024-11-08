@@ -36,6 +36,7 @@ class Booking extends MY_Controller
         $this->load->model('Rate_plan_model');
         $this->load->model('Rate_model');
         $this->load->model('Booking_field_model');
+        $this->load->model('Option_model');
         //$this->load->controller('company');
         $this->load->library('email');
         $this->load->library('form_validation');
@@ -1307,8 +1308,39 @@ class Booking extends MY_Controller
 
         // get booking group
         $booking_group_detail = $this->Booking_linked_group_model->get_booking_linked_group($booking_id, $this->company_id);
-        if (!empty($booking_group_detail))
-            $group_booking_info = array('group_id' => $booking_group_detail['id'], 'group_name' => $booking_group_detail['name']);
+        if (!empty($booking_group_detail)) {
+
+            if($this->is_nestpaymkd_enabled == true){
+
+                $option_name = 'group_booking_total_counts_'.$booking_group_detail['id'];
+            
+                $grp_total_counts = $this->Option_model->get_option($option_name);
+
+                $total_room_count = $total_guest_count = 0;
+                
+                if(!empty($grp_total_counts)){
+                    foreach ($grp_total_counts as $key => $value) {
+                        
+                        $val = json_decode($value['option_value'], true);
+
+                        $total_room_count += $val['room_count'];
+                        $total_guest_count += $val['guest_count'];
+                    }
+                }
+
+                $group_booking_info = array(
+                    'group_id' => $booking_group_detail['id'],
+                    'group_name' => $booking_group_detail['name'],
+                    'total_room_count' => $total_room_count,
+                    'total_guest_count' => $total_guest_count
+                );
+            } else {
+                $group_booking_info = array(
+                    'group_id' => $booking_group_detail['id'],
+                    'group_name' => $booking_group_detail['name']
+                );
+            }
+        }
         else
             $group_booking_info = null;
 
@@ -1933,6 +1965,34 @@ class Booking extends MY_Controller
 
             $this->Booking_model->create_booking_fields($booking_id, $custom_booking_fields);
         }
+
+
+
+
+
+        if($this->is_nestpaymkd_enabled == true){
+            $total_room_count += $room['room_count'];
+            $total_guest_count += $room['adult_count'];
+
+            $option_data = array(
+                'company_id' => $this->company_id,
+                'option_name' => 'group_booking_total_counts_'.$booking_group_id,
+                'option_value' => json_encode(
+                    array(
+                        'room_type_id' => intval($room_type_id),
+                        'room_count' => $total_room_count,
+                        'guest_count' => $total_guest_count
+                    )
+                )
+            );
+
+            $this->Option_model->add_option($option_data);
+        }
+
+
+
+
+
 
         return $response;
     }
