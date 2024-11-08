@@ -484,6 +484,7 @@ var bookingModalInvoker = function ($) {
                 divider: $("<li/>", {
                     class: "divider"
                 }),
+                
                 editFixRatePlan: $("<li/>").append(
                     $("<a/>", {
                         href: "#",
@@ -595,7 +596,7 @@ var bookingModalInvoker = function ($) {
                                 )
                         )
                         .append(
-                            this._getSelect('adult_count', this.adultsCount)
+                            this._getSelect('adult_count', this.adultsCount, 'adult_count')
                         )
                 )
                 .append(
@@ -1543,7 +1544,7 @@ var bookingModalInvoker = function ($) {
             }
             totalPreTaxRate -= totalInclusivePreTaxRate;
 
-            console.log(number_format(number_format(totalRate, 3, ".", ""), 2, ".", ""));
+            // console.log(number_format(number_format(totalRate, 3, ".", ""), 2, ".", ""));
             totalRate = number_format(number_format(totalRate, 3, ".", ""), 2, ".", "");
 
             if (avgRate >= 0) {
@@ -1782,6 +1783,17 @@ var bookingModalInvoker = function ($) {
                         $('select[name="state"]').attr("disabled","true");
                         }
                     }
+
+                    // if(that.groupInfo && that.groupInfo.total_room_count && that.groupInfo.total_room_count != 0){
+                    //     console.log('rm', that.groupInfo.total_room_count);
+                    //     console.log('guest', that.groupInfo.total_guest_count);
+                    //     $('.total_rm_count').text(that.groupInfo.total_room_count);
+                    //     $('.total_customer_count').text(that.groupInfo.total_guest_count);
+                    // } else {
+                    //     $('.total_rm_count').parent('span').hide();
+                    //     $('.total_customer_count').parent('span').hide();
+                    //     $('.total_group_booking_counts').hide();
+                    // }
                 },
                 error: function () {
                     console.log("booking not accesible for this company/user");
@@ -3311,7 +3323,7 @@ var bookingModalInvoker = function ($) {
                         else if (value.base_rate != null) // set custom rate value
                             rateValue = value.base_rate;
                         else
-                            rateValue = 0;
+                            rateValue = $("body #booking-modal .modal-body").find('input[name="rate"]').val();
 
                         editRateRowTh.append(
                             $("<th/>", {
@@ -4064,7 +4076,8 @@ var bookingModalInvoker = function ($) {
                             function (roomType) {
                                 if (roomType.availability > 0) {
                                     var numberOfRoomsSelect = $("<select/>", {
-                                        class: 'form-control',
+
+                                        class: 'form-control room_count',
                                         name: 'room_count',
                                         id: roomType.id
 
@@ -4104,7 +4117,7 @@ var bookingModalInvoker = function ($) {
                                                                 .append(
                                                                     $('<select/>', {
                                                                         name: 'room_type_id',
-                                                                        class: 'form-control',
+                                                                        class: 'form-control room_type_id',
                                                                         disabled: true,
                                                                         style: 'display: none;'
                                                                     })
@@ -4453,54 +4466,55 @@ var bookingModalInvoker = function ($) {
                          style: "float: left;"
                     })
                 );
-                modalHeader.append(
-                    $("<span/>", {
-                        class: "h4 heading-fix-wep total_counts",
-                        html: l("Total Rooms") + ": <span class='total_room_count' >" + 0 + "</span> ",
-                        style: "margin: 0 30px; display: none;"
-                    })
-                );
 
-                modalHeader.append(
-                    $("<span/>", {
-                        class: "h4 heading-fix-wep total_counts",
-                        html: l("Total Guest") + ": <span class='total_guest_count' >" + 0 + "</span> ",
-                        style: "display: none;"
-                    })
-                );
+                // if(innGrid.isNestPaymkdEnabled == true){
+                //     modalHeader.append(
+                //         $("<span/>", {
+                //             class: "h4 heading-fix-wep total_counts",
+                //             html: l("Total Rooms") + ": <span class='total_room_count' >" + 0 + "</span> ",
+                //             style: "margin: 0 30px; display: none;"
+                //         })
+                //     );
 
-                if(innGrid.isNestPaymkdEnabled == true){
+                //     modalHeader.append(
+                //         $("<span/>", {
+                //             class: "h4 heading-fix-wep total_counts",
+                //             html: l("Total Guest") + ": <span class='total_guest_count' >" + 0 + "</span> ",
+                //             style: "display: none;"
+                //         })
+                //     );
 
-                     modalHeader.prepend(
-                    $("<button/>", {
-                        class: "btn-light heading-fix-wep fixed_rate_group",
-                        html: l("Fixed Rate Plan"),
-                        id: "fixed_rate_group",
-                        style: "margin-left:5px; margin-top: 5px; display:none;"
-                    })
-                );
-                  modalHeader.prepend(
-                    $("<button/>", {
-                        class: "btn-light heading-fix-wep per_person_group ",
-                        html: l("Rate per Person"),
-                        id: "per_person_group",
-                        style: "margin-left:5px; margin-top: 5px; display:none;"
-                    })
-                ); 
-                    modalHeader.prepend(
-                        $("<input/>", {
-                            type: "hidden",
-                            id: "current_rate_plan_type"
-                        })
-                    );
+                //     modalHeader.prepend(
+                //         $("<button/>", {
+                //             class: "btn-light heading-fix-wep fixed_rate_group",
+                //             html: l("Fixed Rate Plan"),
+                //             id: "fixed_rate_group",
+                //             style: "margin-left:5px; margin-top: 5px; display:none;"
+                //         })
+                //     );
 
-                    modalHeader.prepend(
-                        $("<input/>", {
-                            type: "hidden",
-                            id: "current_rate_plan_amount"
-                        })
-                    );   
-                }
+                //     modalHeader.prepend(
+                //         $("<button/>", {
+                //             class: "btn-light heading-fix-wep per_person_group ",
+                //             html: l("Rate per Person"),
+                //             id: "per_person_group",
+                //             style: "margin-left:5px; margin-top: 5px; display:none;"
+                //         })
+                //     );
+                //     modalHeader.prepend(
+                //         $("<input/>", {
+                //             type: "hidden",
+                //             id: "current_rate_plan_type"
+                //         })
+                //     );
+
+                //     modalHeader.prepend(
+                //         $("<input/>", {
+                //             type: "hidden",
+                //             id: "current_rate_plan_amount"
+                //         })
+                //     );   
+                // }
                 //$('.left-sidebar').find("li#registration_card").hide();
             }
             if (this.groupInfo != null) {
@@ -4523,6 +4537,36 @@ var bookingModalInvoker = function ($) {
                         })
                     )
                 );
+
+                // if(innGrid.isNestPaymkdEnabled == true){
+                //     modalHeader.append(
+                //         $("<br/>", {
+                //             class: "total_group_booking_counts"
+                //         })
+                //     );
+                //     modalHeader.append(
+                //         $("<br/>", {
+                //             class: "total_group_booking_counts"
+                //         })
+                //     );
+
+                //     modalHeader.append(
+                //         $("<span/>", {
+                //             class: "h4 heading-fix-wep",
+                //             html: l("Total Rooms") + ": <span class='total_rm_count' >" + 0 + "</span> ",
+                //             style: ""
+                //         })
+                //     );
+
+                //     modalHeader.append(
+                //         $("<span/>", {
+                //             class: "h4 heading-fix-wep",
+                //             html: l("Total Guest") + ": <span class='total_customer_count' >" + 0 + "</span> ",
+                //             style: "margin: 0 30px;"
+                //         })
+                //     );
+                // }
+
                 invoiceGroupId = this.groupInfo.group_id;
             } else {
                 invoiceGroupId = '';
@@ -5015,7 +5059,7 @@ var bookingModalInvoker = function ($) {
             return bookingData;
         },
         convertTimeFormat (time) {
-            console.log('time', time);
+            // console.log('time', time);
             time = time ? String(time) : "12:00 AM";
             var hours = Number(time.match(/^(\d+)/)[1]);
             var minutes = Number(time.match(/:(\d+)/)[1]);
@@ -5672,11 +5716,11 @@ var bookingModalInvoker = function ($) {
                             $actions.push(this.$allActions.createDuplicate);
                     $actions.push(this.$allActions.divider);
                     $actions.push(this.$allActions.deleteBooking);
-                    if(innGrid.isNestPaymkdEnabled == true && invoice_group_id != undefined){
-                        $actions.push(this.$allActions.dividerNew);
-                        $actions.push(this.$allActions.editFixRatePlan);
-                        $actions.push(this.$allActions.editRatePerPerson);
-                    }
+                    // if(innGrid.isNestPaymkdEnabled == true && invoice_group_id != undefined){
+                    //     $actions.push(this.$allActions.dividerNew);
+                    //     $actions.push(this.$allActions.editFixRatePlan);
+                    //     $actions.push(this.$allActions.editRatePerPerson);
+                    // }
 
 
                     break;
@@ -5834,7 +5878,7 @@ var bookingModalInvoker = function ($) {
             }
         },
         _updateColorSelector: function (color) {
-            console.log('color', color);
+            // console.log('color', color);
             $("[name='color']").colorselector("setBackgroundColor", color);
             $("[name='color']").colorselector("setColor", "#" + color);
 
@@ -6855,10 +6899,10 @@ var bookingModalInvoker = function ($) {
                         that.rateWithTax = taxedRate;
                         that.rateInclusiveTax = rateInclusiveTax;
 
-                        console.log(number_format(number_format(taxedRate, 3, ".", ""), 2, ".", ""));
+                        // console.log(number_format(number_format(taxedRate, 3, ".", ""), 2, ".", ""));
                         taxedRate = number_format(number_format(taxedRate, 3, ".", ""), 2, ".", "");
                         // taxedRate = parseFloat((Math.round(taxedRate * 1000) / 1000).toFixed(2));
-                        console.log(taxedRate);
+                        // console.log(taxedRate);
                         //taxedRate = Math.round(taxedRate * 100) / 100;
 
                         var rateIncludingTaxDiv = roomTypeDIV.find('.rate-including-tax');
@@ -7798,57 +7842,120 @@ $(document).on('click','.booking_form_type', function(){
     }
 });
 
-// Create an object to store room counts by room type
-var roomCounts = {};
-var adultCounts = {};
+// if(innGrid.isNestPaymkdEnabled == true){
+//     // Create an object to store room counts by room type
+//     var roomCounts = {};
+//     var adultCounts = {};
 
-// Update the total room count on input blur
-$(document).on('blur', '.room_count', function() {
+//     // Update the total room count on input blur
+//     $(document).on('blur', '.room_count', function() {
 
-    var roomTypeID = $(this).attr('id'); // Get the room type ID
-    var newRoomCount = parseInt($(this).val()); // Get the new room count value
+//         var roomTypeID = $(this).attr('id'); // Get the room type ID
 
-    // If the new room count is not a number, set it to 0
-    if (isNaN(newRoomCount)) {
-        newRoomCount = 0;
+//         roomCounts[roomTypeID] = 0;
+
+//         var newRoomCount = parseInt($(this).val()); // Get the new room count value
+
+//         // If the new room count is not a number, set it to 0
+//         if (isNaN(newRoomCount)) {
+//             newRoomCount = 0;
+//         }
+
+//         // Update the room count for the specific room type
+//         // console.log('roomCounts[roomTypeID]',roomCounts[roomTypeID]);
+//         roomCounts[roomTypeID] = newRoomCount;
+//         // console.log('roomCounts[roomTypeID] 11',roomCounts[roomTypeID]);
+
+//         // Recalculate the total room count
+//         var totalRoomCount = 0;
+//         for (var id in roomCounts) {
+//             // console.log('totalRoomCount',totalRoomCount);
+//             // console.log('roomCounts[id]',roomCounts[id]);
+//             totalRoomCount += roomCounts[id];
+//         }
+
+//         // Update the displayed total room count
+//         $('.total_room_count').text(totalRoomCount);
+
+//         console.log('RoomTypeID:', roomTypeID, 'New Room Count:', newRoomCount, 'total Room Count:', totalRoomCount);
+//     });
+
+//     $(document).on('blur', '.adult_count', function() {
+
+//         var roomTypeID = $(this).closest('.room-type').find('.room_type_id').val(); // Get the room type ID
+        
+//         adultCounts[roomTypeID] = 0;
+
+//         // var roomCount = $(this).closest('.room-type').find('.room_count').val();
+
+//         // if(roomCount && roomCount != 0){
+
+//             var newAdultCount = parseInt($(this).val()); // Get the new room count value
+
+//             // If the new room count is not a number, set it to 0
+//             if (isNaN(newAdultCount)) {
+//                 newAdultCount = 0;
+//             }
+
+//             // Update the room count for the specific room type
+//             adultCounts[roomTypeID] = newAdultCount;
+
+//             // Recalculate the total room count
+//             var totalAdultCount = 0;
+//             for (var id in adultCounts) {
+//                 totalAdultCount += adultCounts[id];
+//             }
+
+//             // Update the displayed total room count
+//             $('.total_guest_count').text(totalAdultCount);
+
+//             console.log('RoomTypeID:', roomTypeID, 'New Adult Count:', newAdultCount);
+//         // } else {
+//         //     alert('please select room first');
+//         //     $(this).val(1);
+//         //     return false;
+//         // }
+//     });
+
+// }
+
+function handleCustomerTypeChange(bookingCustomerTypeID) {
+
+    var type = $('.booking_form_type.active').text();
+    console.log('type', type);
+
+    if(type == 'Single'){
+        $.ajax({
+            url: getBaseURL() + 'get_select_rate_plan',
+            type: "POST",
+            dataType: "json",
+            data: {
+                customer_type_id: bookingCustomerTypeID
+            },
+            dataType: "json",
+            success: function(resp) {
+                if(resp.success){
+                    var room_type_id = resp.room_type_id;
+                    $("select[name='room_type_id']").val(room_type_id);
+                    $("select[name='room_type_id']").trigger('change');
+                    $("select[name='room_type_id']").prop('disabled', true);
+
+                    var rate_plan_id = resp.rate_plan_id;
+                    setTimeout(function() {
+                        $('select.charge-with').val(rate_plan_id);
+                        $('select.charge-with').prop('disabled', true);
+                    }, 1000);
+
+                    setTimeout(function() {
+                        $("select.charge-with").trigger('change');
+                    }, 1000);
+
+                } else {
+                    $("select[name='room_type_id']").prop('disabled', false);
+                    $('select.charge-with').prop('disabled', false);
+
+                }
+            }
+        });
     }
-
-    // Update the room count for the specific room type
-    roomCounts[roomTypeID] = newRoomCount;
-
-    // Recalculate the total room count
-    var totalRoomCount = 0;
-    for (var id in roomCounts) {
-        totalRoomCount += roomCounts[id];
-    }
-
-    // Update the displayed total room count
-    $('.total_room_count').text(totalRoomCount);
-
-    console.log('RoomTypeID:', roomTypeID, 'New Room Count:', newRoomCount);
-});
-
-$(document).on('blur', '.adult_count', function() {
-
-    var roomTypeID = $(this).closest('.room-type').find('.room_type_id').val(); // Get the room type ID
-    var newAdultCount = parseInt($(this).val()); // Get the new room count value
-
-    // If the new room count is not a number, set it to 0
-    if (isNaN(newAdultCount)) {
-        newAdultCount = 0;
-    }
-
-    // Update the room count for the specific room type
-    adultCounts[roomTypeID] = newAdultCount;
-
-    // Recalculate the total room count
-    var totalAdultCount = 0;
-    for (var id in adultCounts) {
-        totalAdultCount += adultCounts[id];
-    }
-
-    // Update the displayed total room count
-    $('.total_guest_count').text(totalAdultCount);
-
-    console.log('RoomTypeID:', roomTypeID, 'New Adult Count:', newAdultCount);
-});
+}
