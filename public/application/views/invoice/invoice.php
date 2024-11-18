@@ -562,7 +562,7 @@ if((isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true ) ||
                 <strong ><?php 
 
                 $invoice_createdate = isset($invoice_create_data['date_time']) && $invoice_create_data['date_time'] ? date('Y-m-d h:i A', strtotime($invoice_create_data['date_time']))  : date('h:i A', strtotime($booking_detail['check_in_date']));
-                echo l('Invoice Create Date'); ?>:</strong> <span data-invoice_createdate="<?php echo $invoice_createdate;?>" id="invoice-create-date">
+                echo l('Invoice Date'); ?>:</strong> <span data-invoice_createdate="<?php echo $invoice_createdate;?>" id="invoice-create-date">
                 <?php echo $invoice_createdate; 
                 ?>
                 </span><br/>
