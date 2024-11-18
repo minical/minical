@@ -173,8 +173,12 @@
                     <label for="pay_for" class="col-sm-4 control-label"><?php echo l('Rate plan Type', true); ?></label>
                     <div class="col-sm-8">
                         <select class="form-control" name="select-rate-plan-export">
-                            <option>-- <?php echo l('Select rate plan'); ?> --</option>
+                            <!-- <option>-- <?php echo l('Select rate plan'); ?> --</option> -->
+                            <option value="select_all">Select All</option>
                             <option value="ota_rate_plan">OTA rate plan</option>
+                            <option value="fix_rate_plan">Fix rate plan</option>
+                            <option value="per_person_type_plan">Per person type plan</option>
+                            <hr>
                             <?php foreach ($rate_plans as $key => $value) { ?>
                                 <option value="<?php echo $value['rate_plan_id']; ?>"><?php echo $value['rate_plan_name']; ?></option>
                             <?php } ?>
