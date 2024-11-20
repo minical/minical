@@ -412,7 +412,7 @@
                 
 				<div id="folios" class="panel-heading" <?php if(count($booking_ids) > 6) { ?> style="min-width:max-content;" <?php } ?>>
 					<ul class="nav nav-tabs" style="white-space:nowrap;width:auto;">
-						<li style="display: inline-block !important;" class="<?php if($group_id == end($this->uri->segments)) echo 'active'; ?> ">
+						<li style="display: inline-block !important;" class="all_bookings <?php if($group_id == end($this->uri->segments)) echo 'active'; ?> ">
 							<div>
 							    <a href="<?php echo base_url()."invoice/show_master_invoice/".$group_id;?>">
 								<?php echo l('All', true); ?>
@@ -422,7 +422,7 @@
 						<?php 
 						    if(!empty($booking_ids)) {
 						    	foreach ($booking_ids as $value) { ?>
-						 	        <li class="<?php if($value['booking_id'] == end($this->uri->segments)) echo 'active'; ?> " style="display: inline-block !important;">
+						 	        <li class="single_booking <?php if($value['booking_id'] == end($this->uri->segments)) echo 'active'; ?> " style="display: inline-block !important;">
 						 	        	<div>
 						 	        		<span>
 						 	        			<div style="color: #457ec3;">
