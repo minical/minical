@@ -192,3 +192,17 @@ $(document).on('click', '.install_extension', function(){
             }
     });
 });
+
+$(document).ready(function(){
+
+   // alert(is_current_user_superadmin);
+   // alert(innGrid.isPartnerOwner);
+    if((is_current_user_superadmin!= 1 && innGrid.isPartnerOwner !=1) && 
+        (innGrid.companyID !=3417 && innGrid.companyID !=3219 && innGrid.companyID !=3545)){
+    $('.checbox-switch').each(function(){
+            if ($(this).find('a[name="nestpay_integration"]').length > 0) {
+                $(this).find('.extension-box').hide();
+            }
+        });
+    }
+});
