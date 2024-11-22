@@ -2816,6 +2816,22 @@ var bookingModalInvoker = function ($) {
                         if (groupBookingRL.length > 0) {
                             var roomsList = $('.modal-content').find('.room-lists');
                             roomsList.html('');
+                            roomsList.append(
+                                $("<div/>", {
+                                    style: 'padding:12px 14px 10px 14px;display:inline-block;'
+                                }).append(
+                                    $("<input/>", {
+                                        type: 'checkbox',
+                                        class: 'all-cancelled-room-checkbox',
+                                    
+                                    })
+                                ).append(
+                                        $("<span/>", {
+                                            style: 'padding:10px;',
+                                            html: '<strong>'+l("Select All Rooms")+'</strong> '
+                                        })
+                                    )
+                                );
                             var activeRoomBg = '';
                             var cRoomColor = '';
                             var showCheckBox = '';
@@ -7985,3 +8001,10 @@ function handleCustomerTypeChange(bookingCustomerTypeID) {
         });
     }
 }
+
+$(document).on('click', '.all-cancelled-room-checkbox', function() {
+        var checked = $(this).prop('checked');
+        $('.cancelled-room-checkbox').each(function() {
+            $(this).prop('checked', checked);
+        })
+});
