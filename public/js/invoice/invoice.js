@@ -364,10 +364,15 @@ innGrid.getNumberOfDays = function() {
 */
 
 $(function() {
+	
 
 	$("#print-invoice-button").on('click', function (){
 		 window.print();
 	});
+
+	$("#print-Einvoice-pdf").on('click', function (){
+		window.print();
+   });
 	
 	$(".charge_row").popover();
 	
@@ -443,5 +448,60 @@ $(function() {
 		
 		$('#folios').css('margin-left', foliosLeftScroll);
 	});
+
+	// Mastergpt
+	$('#print-Einvoice-button').click(function() {
+		var dataUrl = $(this).data('url'); // This should be the URL for send_einvoice_request
+		var button = $(this);
+		
+	
+		$.ajax({
+			url: dataUrl,
+			type: 'POST', // Ensure this matches your server method
+			dataType: 'json',
+			success: function(response) {
+				const responseString = JSON.stringify(response, null, 2);
+				if (response.access_token) {
+					alert('Authentication successful. Access Token: ' + response.access_token);
+					// Handle the access token as needed
+				} else if (response.error) {
+					alert('Error: ' + response.error);
+				} else {
+					// Handle successful response from send_einvoice_request
+					alert('E-invoice generated successfully.\n\nFull Response:\n' + responseString);
+					location.reload();
+	
+					// Change the button text to "Print E-Invoice"
+					
+				}
+			},
+			error: function(xhr, status, error) {
+				alert('An error occurred: ' + error);
+			}
+		});
+	});
+	
+	// Function to handle PDF generation
+	function generatePDF(invoiceData) {
+		// Implement your PDF generation logic here
+		// You can use libraries like jsPDF or any server-side method
+		// For example, if you're using jsPDF:
+		
+		var doc = new jsPDF();
+		
+		// Sample content
+		doc.text('Invoice Details:', 10, 10);
+		doc.text('Invoice Number: ' + invoiceData.invoice_number, 10, 20);
+		// Add other details based on invoiceData...
+	
+		// Save the PDF
+		doc.save('invoice.pdf');
+	}
+	
+	
+	
+	
+	
+	
 	
 });

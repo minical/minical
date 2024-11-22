@@ -25,6 +25,7 @@ class Customer_model extends CI_Model {
 
 	function get_customer($customer_id)
 	{
+		
 		$this->db->where('customer_id', $customer_id);
     	$this->db->from('customer');
         $query = $this->db->get();

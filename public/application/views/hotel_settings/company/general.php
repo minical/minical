@@ -294,7 +294,10 @@
 					<label for="company_bussiness_fiscal_number" class=""><?php echo l('Fiscal Number'); ?></label>
 					<input type="text" name="bussiness_fiscal_number" id="bussiness_fiscal_number" class="form-control" value="<?php 
 					if(isset($company)){ 
-					echo $company['bussiness_fiscal_number']; 
+						// echo '<pre>';
+						// print_r($company);
+						// echo '</pre>';
+					echo $company['phone']; 
 					}else{
 					echo set_value('bussiness_fiscal_number'); }?>" />
 				</div>

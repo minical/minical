@@ -1,4 +1,8 @@
 <?php if (!$read_only): ?>
+    <?php 
+    // Retrieve the 'einvoice' session value
+    $einvoice_enabled = $this->session->userdata('einvoice') === 'true'; 
+    ?>
     <!-- -->
     <div class="modal fade"  id="add-payment-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -383,9 +387,28 @@
             </div>
             <div class="page-title-actions m-025">
                 <div>
+                <!-- This is your button with the correct data-url -->
+          <button 
+
+          class="btn btn-primary m-1 <?php if ($generate_invoice_check == 1) echo 'hidden'; ?>" 
+
+                id="print-Einvoice-button" 
+                data-url="<?php echo site_url('invoice/send_einvoice_request'); ?>" 
+                >
+                <?php echo l('Generate') . ' ' . l('Einvoice'); ?>
+         </button>
+
+            <button class="btn btn-primary m-1 <?php if ($generate_invoice_check == 0) echo 'hidden'; ?>" id="print-Einvoice-pdf">
+
+                <?php echo l('print').' '.l('Einvoice'); ?>
+            </button>
+
+
+
                     <button class="btn btn-primary m-1" id="print-invoice-button">
                         <?php echo l('print').' '.l('invoice'); ?>
                     </button>
+                    
 
                     <?php
                     if ($menu_on === true):
@@ -458,6 +481,16 @@ if((isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true ) ||
         echo "<img src='" . $this->image_url . $company['company_id'] . "/" . $company_logos[0]['filename'] . "' id='company-logo-image'/><br/>";
     }
     ?>
+      <div style="text-align: right; width: 100%;">
+    <address class="text-gapp" style="display: inline-block;">
+        <?php if (isset($qr_image_url) && $qr_image_url): ?>
+            <img class="qr-print" src="<?= $qr_image_url ?>" alt="QR Code" />
+        <?php else: ?>
+            <span class="qr-print" style="width: 150px; height: 100px; display: inline-block;">No QR code found for this invoice.</span>
+        <?php endif; ?>
+    </address>
+</div>
+
 
     <div class="col-md-12 row invoice-header">
         <div class="col-xs-4 padding-left-zero padding-left-zero-wep">
@@ -481,7 +514,7 @@ if((isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true ) ||
                 echo $company['GST_number'];
                 echo ($company['bussiness_name'] != "")?"Bussiness Name: ".$company['bussiness_name']."<br/>":'';
                 echo ($company['bussiness_number'] != "")?"Bussiness Number: ".$company['bussiness_number']."<br/>":'';
-                echo ($company['bussiness_fiscal_number'] != "")?"Fiscal Number: ".$company['bussiness_fiscal_number']."<br/>":'';
+                echo ($company['phone'] != "")?"Fiscal Number: ".$company['phone']."<br/>":'';
                 ?>
                 <!-- <?php echo '<p class="invoice-header">'.$company['invoice_email_header'].'</p>'; ?> -->
                 <?php if($this->vendor_id != 9) { ?>
@@ -506,6 +539,7 @@ if((isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true ) ||
                                 <option value="<?php echo base_url()."invoice/show_invoice/".$booking_detail['booking_id']."/0/".$customer['customer_id']; ?>"
                                     <?php if ($customer_id == $customer['customer_id']) echo "SELECTED"; ?>>
                                     <?php echo $customer['customer_name']; ?>
+                                    <?php echo $customer['company_name']; ?>
                                 </option>
                             <?php
                             endforeach;
@@ -540,6 +574,13 @@ if((isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true ) ||
                     echo (array_search('Phone', array_column($customer_fields, 'name')) !== FALSE && $booking_customer['phone']) ? l('Phone', true).": ".$booking_customer['phone']."<br/>":'';
                     echo (array_search('Fax', array_column($customer_fields, 'name')) !== FALSE && $booking_customer['fax']) ? l('Fax', true).": ".$booking_customer['fax']."<br/>":'';
                     echo (array_search('Email', array_column($customer_fields, 'name')) !== FALSE && $booking_customer['email']) ? l('Email', true).": <span id='customer-email'>".$booking_customer['email']."</span><br/>":'';
+                    foreach ($customers as $customer):
+                    echo 'Company name:   '.$customer['company_name']."</span><br/>";
+                    echo 'Tax Id:  '.$customer['tax_id']."</span><br/>";
+                   endforeach;
+                
+                
+                   
 
                     if (isset($booking_customer['customer_fields']) && count($booking_customer['customer_fields']) > 0) {
                         foreach ($booking_customer['customer_fields'] as $customer_field) {
@@ -622,6 +663,23 @@ if((isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true ) ||
 
         </div>
     </div> <!-- /.container -->
+
+    <div class="col-md-12 row invoice-header">
+    <div class="col-xs-12 padding-left-zero padding-left-zero-wep">
+    <address class="text-gapp">
+        <strong class= "irn-print">IRN Number: </strong>
+        <?php
+        // Ensure $irn is defined and holds the correct value before rendering the HTML
+        $irn = isset($irn) ? $irn : null;
+        ?>
+        <span class="irn-print"><?= !empty($irn) ? $irn : 'No IRN number found for this invoice.'; ?></span>
+    </address>
+</div>
+
+
+   
+</div>
+
 
     <?php if($this->vendor_id == 9) { ?>
         <div class="col-sm-12">
@@ -847,7 +905,7 @@ if((isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true ) ||
                                                 <a class="folios_modal" href="#" data-toggle="modal" data-target="#move-charge-modal" class="update-charge-folio"><?php echo l('Move to another Folio', true); ?></a>
                                             </li>
                                         </ul>
-                                    </div>
+                                        
                                 <?php
                                 endif;
                                 ?>
@@ -1253,6 +1311,23 @@ if((isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true ) ||
             </div>
         </div>
 
+        <div class="qr-container">
+    <address class="text-gapp">
+        <?php if (isset($qr_image_url) && $qr_image_url): ?>
+            <img class="qr-print" src="<?= $qr_image_url ?>" alt="QR Code" />
+        <?php else: ?>
+            <span class="qr-print">No QR code found for this invoice.</span>
+        <?php endif; ?>
+    </address>
+</div>
+
+
+        
+           
+        
+
+ </div>
+
     </div> <!-- /. container -->
     <?php
     if ($menu_on === true):
@@ -1295,3 +1370,42 @@ if((isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true ) ||
     endif;
     ?>
 </div></div>
+<style>
+    /* Hide the IRN number in normal view */
+.irn-print {
+    display: none;
+}
+
+/* Show the IRN number only when printing */
+@media print {
+    .irn-print {
+        display: inline;
+    }
+}
+
+/* Hide the QR code in normal view */
+.qr-print {
+    display: none;
+}
+
+/* Show the QR code only when printing */
+@media print {
+    .qr-print {
+        display: inline;
+    }
+    /* Example conflicting style */
+.qr-container {
+    overflow: auto; /* To clear the float properly */
+    width: 100%; /* Ensure it takes full width */
+}
+
+.qr-print {
+    float: right; /* Float the image to the right */
+    width: 300px; /* Adjust width to your preference */
+    height: auto; /* Maintain aspect ratio */
+}
+
+
+}
+
+</style>
