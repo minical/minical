@@ -466,6 +466,7 @@
                         <th class="text-left"><?php echo l('date'); ?></th>
                         <th class="text-left"><?php echo l('booking_id'); ?></th>
 						<th class="text-left"><?php echo l($this->default_room_singular); ?></th>
+						<th class="text-left"><?php echo l('Room Type'); ?></th>
 						<th class="text-left"><?php echo l('description'); ?></th>
 						<th class="text-left"><?php echo l('paying').' '.l('customer'); ?></th>
                         <th class="text-left"><?php echo l('charge_type'); ?></th>
@@ -501,6 +502,7 @@
 								</td>
                                 <td><span name="booking_id"><?php echo $charge["booking_id"]; ?></span></td>
 								<td><span name="room_name"><?php echo $charge["room_name"]; ?></span></td>
+								<td><span name="room_type_name"><b><?php echo $charge["room_type_name"]; ?></b></span></td>
 								<td class="<?php echo (isset($charge["charge_id"]) && ($single_booking_id))?"editable_td":""; ?>" onclick="">
 									<span name="description">
 										<?php

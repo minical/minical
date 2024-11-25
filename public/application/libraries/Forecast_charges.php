@@ -63,6 +63,7 @@ class Forecast_charges
         }
         $company_id = $booking_details['company_id'];
         $room_name = $booking_details['room_name'];
+        $room_type_name = $booking_details['room_type_name'];
         $customer_name = $booking_details['booking_customer_name'];
         
 		//Load data used in calculations
@@ -208,6 +209,7 @@ class Forecast_charges
                     $rate_array[$index]['booking_id'] = $booking_id;
                     $rate_array[$index]['room_name'] =  $room_name ;
                     $rate_array[$index]['customer_name'] = $customer_name;
+                    $rate_array[$index]['room_type_name'] = $room_type_name;
 					
                     if($get_amount_only)
                     {

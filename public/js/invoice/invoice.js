@@ -115,6 +115,7 @@ innGrid.getChargeGroups = function() {
 		charge = $(this);
 		var chargeObject = {
 			room_name: charge.find("span[name='room_name']").text().trim(),
+			room_type_name: charge.find("span[name='room_type_name']").text().trim(),
 			date: innGrid._getBaseFormattedDate(charge.find("span[name='selling-date']").text().trim()),
 			description: charge.find("span[name='description']").text().trim(),
 			customer: charge.find("span[name='customer']").attr("id").trim(),
@@ -131,6 +132,7 @@ innGrid.getChargeGroups = function() {
 			$.each(chargeGroup, function(k, groupedCharge) {
 				var groupedChargeObject = {
 					room_name: groupedCharge.find("span[name='room_name']").text().trim(),
+					room_type_name: groupedCharge.find("span[name='room_type_name']").text().trim(),
 					date: innGrid._getBaseFormattedDate(groupedCharge.find("span[name='selling-date']").text().trim()),
 					pay_period: groupedCharge.find("span[name='description']").text().trim(),
 					customer: groupedCharge.find("span[name='customer']").attr("id").trim(),
@@ -152,6 +154,7 @@ innGrid.getChargeGroups = function() {
                     (groupedChargeObject.pay_period === '2' && innGrid.getDateDiff(chargeObject.date, null, 1) === groupedChargeObject.date) ) &&
 					chargeObject.description === groupedChargeObject.description &&
 					chargeObject.room_name === groupedChargeObject.room_name &&
+					chargeObject.room_type_name === groupedChargeObject.room_type_name &&
 					chargeObject.customer === groupedChargeObject.customer &&
 					chargeObject.chargeType === groupedChargeObject.chargeType &&
 					chargeObject.amount === groupedChargeObject.amount &&
@@ -168,6 +171,7 @@ innGrid.getChargeGroups = function() {
                         (groupedChargeObject.pay_period === '2' && innGrid.getDateDiff(chargeObject.date, null, -1) === groupedChargeObject.date) ) &&
 					chargeObject.description === groupedChargeObject.description &&
 					chargeObject.room_name === groupedChargeObject.room_name &&
+					chargeObject.room_type_name === groupedChargeObject.room_type_name &&
 					chargeObject.customer === groupedChargeObject.customer &&
 					chargeObject.chargeType === groupedChargeObject.chargeType &&
 					chargeObject.booking_id === groupedChargeObject.booking_id &&
@@ -203,8 +207,11 @@ innGrid.getChargeGroups = function() {
 	return chargeGroups;
 }
 
+
+
 innGrid.renderChargeGroups = function (chargeGroups) {
 	var chargeGroupID = 0;
+	var roomTypeNames = [];
   
     $.each(chargeGroups, function() {
         var chargeGroup = $(this);
@@ -221,7 +228,7 @@ innGrid.renderChargeGroups = function (chargeGroups) {
 		var description =  chargeGroup[0].find("span[name='description']").text().trim();
 		var bookingId = chargeGroup[0].find("span[name='booking_id']").text().trim();
 		var room_name = chargeGroup[0].find("span[name='room_name']").text().trim();
-
+		var room_type_name = chargeGroup[0].find("span[name='room_type_name']").text().trim();
 		var default_charge_name = $('.default_charge_name').val();
 
 		var period = "day";
@@ -271,49 +278,71 @@ innGrid.renderChargeGroups = function (chargeGroups) {
 
         var room_id_td = '';
         var room_id_data = {html: ''};
+
+        var room_type_id_td = '';
+        var room_type_id_data = {html: ''};
         if(function_name == 'show_master_invoice')
         {
             room_id_td = '<td/>';
 			var room_id_data = {html: room_name};
+
+			room_type_id_td = '<td/>';
+			var room_type_id_data = {html: '<b>'+room_type_name+'</b>'};
+
         }
+			
+		//Initialize or increment the count for the room_type_name
+        // if (!roomTypeNames[room_type_name]) {
+        //     roomTypeNames[room_type_name] = 1;
+        // } else {
+        //     roomTypeNames[room_type_name]++;
+        // }
 
-        expandableTR = $('<tr />', {
-				'class': 'expandable',
-				'name': chargeGroupID,
-				'data-toggle': "popover",
-				'data-content': "Click here to expand",
-				'data-trigger': "hover",
-				'data-placement': "bottom"
-			}).append(
+        if (jQuery.inArray(room_type_name, roomTypeNames) === -1) {
+		    roomTypeNames.push(room_type_name); // Add the room type if not already present
 
-				$('<td />', {
-							html: innGrid._getLocalFormattedDate(dateStart)+" "+l('to')+" "+innGrid._getLocalFormattedDate(dateEnd)
-						}).add(booking_id_td,
-							booking_id_data
-						).add(booking_id_td,
-							room_id_data
-						).add('<td />', {
-							html: description
-						}).add('<td />', {
-							html: customer
-						}).add('<td />', {
-							html: chargeType
-						}).add('<td />', {
-							'class': 'text-right',
-							html: amount+"/"+period+" "+l('for')+" "+chargeCount+" "+period+"s"
-						}).add('<td />', {
-							'class': 'text-right',
-							html: number_format(parseFloat(taxTotal), 2, ".", "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-						}).add('<td />', {
-							'class': 'text-right',
-							html: number_format(parseFloat(totalCharge), 2, ".", "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-						}).add('<td />', {
-							'class': 'delete-td'
-						})
-			);
-		chargeGroup[0].before(expandableTR);
+		    var expandableTR = $('<tr />', {
+		        'class': 'expandable',
+		        'name': chargeGroupID,
+		        'data-toggle': "popover",
+		        'data-content': "Click here to expand",
+		        'data-trigger': "hover",
+		        'data-placement': "bottom"
+		    }).append(
+		        $('<td />', {
+		            html: innGrid._getLocalFormattedDate(dateStart) + " " + l('to') + " " + innGrid._getLocalFormattedDate(dateEnd)
+		        }).add(booking_id_td,
+		            booking_id_data
+		        ).add(booking_id_td,
+		            room_id_data,
+		        ).add(room_type_id_td,
+		            room_type_id_data,
+		        ).add('<td />', {
+		            html: description
+		        }).add('<td />', {
+		            html: customer
+		        }).add('<td />', {
+		            html: chargeType
+		        }).add('<td />', {
+		            'class': 'text-right',
+		            html: amount + "/" + period + " " + l('for') + " " + chargeCount + " " + period + "s"
+		        }).add('<td />', {
+		            'class': 'text-right',
+		            html: number_format(parseFloat(taxTotal), 2, ".", "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+		        }).add('<td />', {
+		            'class': 'text-right',
+		            html: number_format(parseFloat(totalCharge), 2, ".", "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+		        }).add('<td />', {
+		            'class': 'delete-td'
+		        })
+		    );
+		    chargeGroup[0].before(expandableTR);
+		    chargeGroupID++;
+		}
 
-		chargeGroupID++;
+
+        // console.log('roomTypeNames',roomTypeNames);
+
 	})
 	$(".expandable").popover();
 	// if there's more than 2 of such, assign a new group number for those
@@ -366,7 +395,7 @@ innGrid.getNumberOfDays = function() {
 $(function() {
 
 	$("#print-invoice-button").on('click', function (){
-		 window.print();
+		window.print();
 	});
 	
 	$(".charge_row").popover();
@@ -376,31 +405,32 @@ $(function() {
 	
 
 	// don't collapse the invoice if the customer is staying for over 90 days. otherwise Minical crashes.
-	var getNumberOfDays = innGrid.getNumberOfDays()
-    if ($(".charge_row").length < 60)
+	var getNumberOfDays = innGrid.getNumberOfDays();
+	var chargeRowLength = innGrid.isNestPaymkdEnabled == true ? 600 : 60;
+    if ($(".charge_row").length < chargeRowLength)
 	{
 
-            var chargeGroups = innGrid.getChargeGroups();
+        var chargeGroups = innGrid.getChargeGroups();
 		innGrid.renderChargeGroups(chargeGroups);
 
-            innGrid.collapseAll();	
-            $(document).on("click", ".collapse-all", function(){
-                 innGrid.collapseAll();
-            });
+        innGrid.collapseAll();	
+        $(document).on("click", ".collapse-all", function(){
+             innGrid.collapseAll();
+        });
 
-            $(document).on("click", ".expand-all", function(){
-                innGrid.expandAll();
-            });
+        $(document).on("click", ".expand-all", function(){
+            innGrid.expandAll();
+        });
 
-            $(".expandable").on("click", function(){
-                innGrid.expand($(this));
-            });
+        $(".expandable").on("click", function(){
+            innGrid.expand($(this));
+        });
 
-        }
-        else
-        {
-            $(".collapse-all, .expand-all").addClass("disabled")
-        }
+    }
+    else
+    {
+        $(".collapse-all, .expand-all").addClass("disabled")
+    }
 
 	
 
