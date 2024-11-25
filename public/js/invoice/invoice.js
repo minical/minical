@@ -338,6 +338,44 @@ innGrid.renderChargeGroups = function (chargeGroups) {
 		    );
 		    chargeGroup[0].before(expandableTR);
 		    chargeGroupID++;
+		} else {
+			var expandableTR = $('<tr />', {
+		        'class': 'expandable hidden',
+		        'name': chargeGroupID,
+		        'data-toggle': "popover",
+		        'data-content': "Click here to expand",
+		        'data-trigger': "hover",
+		        'data-placement': "bottom"
+		    }).append(
+		        $('<td />', {
+		            html: innGrid._getLocalFormattedDate(dateStart) + " " + l('to') + " " + innGrid._getLocalFormattedDate(dateEnd)
+		        }).add(booking_id_td,
+		            booking_id_data
+		        ).add(booking_id_td,
+		            room_id_data,
+		        ).add(room_type_id_td,
+		            room_type_id_data,
+		        ).add('<td />', {
+		            html: description
+		        }).add('<td />', {
+		            html: customer
+		        }).add('<td />', {
+		            html: chargeType
+		        }).add('<td />', {
+		            'class': 'text-right',
+		            html: amount + "/" + period + " " + l('for') + " " + chargeCount + " " + period + "s"
+		        }).add('<td />', {
+		            'class': 'text-right',
+		            html: number_format(parseFloat(taxTotal), 2, ".", "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+		        }).add('<td />', {
+		            'class': 'text-right',
+		            html: number_format(parseFloat(totalCharge), 2, ".", "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+		        }).add('<td />', {
+		            'class': 'delete-td'
+		        })
+		    );
+		    chargeGroup[0].before(expandableTR);
+		    chargeGroupID++;
 		}
 
 
