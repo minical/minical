@@ -13,6 +13,7 @@ class Feature_model extends CI_Model {
         $this->db->from('feature');
         $this->db->where('company_id',$company_id);
         $this->db->where('is_deleted','0');
+        $this->db->where('show_on_website','1');
         if($limit)
         {
             $this->db->order_by("id", "DESC");
