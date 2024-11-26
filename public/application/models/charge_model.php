@@ -811,7 +811,14 @@ class Charge_model extends CI_Model {
         $this->db->join('booking as b', 'b.booking_id = charge.booking_id', 'left');
 		$this->db->join('booking_block as bb', 'bb.booking_id = b.booking_id', 'left');
 		$this->db->join('room as r', 'r.room_id = bb.room_id', 'left');
+
+		if($this->is_nestpaymkd_enabled){
+			$this->db->join('room_type as rt', 'r.room_type_id = rt.id', 'left');
+			$this->db->select('charge.*, cu.*, ct.*, user_profiles.*, b.*, b.pay_period, ct.name as charge_type_name, ct.id as charge_type_id,`cf`.`folio_id` as folio_id, CONCAT_WS(" ",first_name,  last_name ) as user_name, r.room_name, rt.name as room_type_name');
+		} else {
 		$this->db->select('charge.*, cu.*, ct.*, user_profiles.*, b.*, b.pay_period, ct.name as charge_type_name, ct.id as charge_type_id,`cf`.`folio_id` as folio_id, CONCAT_WS(" ",first_name,  last_name ) as user_name, r.room_name');
+		}
+		
 		$this->db->group_by('charge.charge_id');
         $this->db->order_by('selling_date', 'ASC');
         $query = $this->db->get("charge");
