@@ -212,6 +212,22 @@ innGrid.getChargeGroups = function() {
 innGrid.renderChargeGroups = function (chargeGroups) {
 	var chargeGroupID = 0;
 	var roomTypeNames = [];
+
+	$.each(chargeGroups, function() {
+        var chargeGroup = $(this);
+		var chargeCount = chargeGroup.length;
+
+		var room_type_name = chargeGroup[0].find("span[name='room_type_name']").text().trim();
+
+		//Initialize or increment the count for the room_type_name
+        if (!roomTypeNames[room_type_name]) {
+            roomTypeNames[room_type_name] = 1;
+        } else {
+            roomTypeNames[room_type_name]++;
+        }
+	});
+
+	console.log('roomTypeNames',roomTypeNames);
   
     $.each(chargeGroups, function() {
         var chargeGroup = $(this);
@@ -284,19 +300,24 @@ innGrid.renderChargeGroups = function (chargeGroups) {
         if(function_name == 'show_master_invoice')
         {
             room_id_td = '<td/>';
-			var room_id_data = {html: room_name};
+			// var room_id_data = {html: room_name};
+			var room_id_data = {html: '<b>'+ ' '+roomTypeNames[room_type_name]+'' +'</b>'};
+
+			//Initialize or increment the count for the room_type_name
+	        // if (!roomTypeNames[room_type_name]) {
+	        //     roomTypeNames[room_type_name] = 1;
+	        // } else {
+	        //     roomTypeNames[room_type_name]++;
+	        // }
 
 			room_type_id_td = '<td/>';
 			var room_type_id_data = {html: '<b>'+room_type_name+'</b>'};
 
         }
 			
-		//Initialize or increment the count for the room_type_name
-        // if (!roomTypeNames[room_type_name]) {
-        //     roomTypeNames[room_type_name] = 1;
-        // } else {
-        //     roomTypeNames[room_type_name]++;
-        // }
+		
+
+        // console.log('roomTypeNames',roomTypeNames);
 
         if (jQuery.inArray(room_type_name, roomTypeNames) === -1) {
 		    roomTypeNames.push(room_type_name); // Add the room type if not already present
@@ -339,8 +360,17 @@ innGrid.renderChargeGroups = function (chargeGroups) {
 		    chargeGroup[0].before(expandableTR);
 		    chargeGroupID++;
 		} else {
+
+			var hiddenClass = '';
+
+			if(
+				function_name == 'show_master_invoice'
+			) {
+				hiddenClass = ' hidden';
+			}
+
 			var expandableTR = $('<tr />', {
-		        'class': 'expandable hidden',
+		        'class': 'expandable'+hiddenClass,
 		        'name': chargeGroupID,
 		        'data-toggle': "popover",
 		        'data-content': "Click here to expand",
@@ -387,6 +417,7 @@ innGrid.renderChargeGroups = function (chargeGroups) {
 }
 
 innGrid.expand = function(expandable) {
+	$('#room_name').html('<span alt="room" title="room">Room</span>');
 	expandable.hide();
 	$(".collapsable").each(function() {
 		if ($(this).attr("name") === expandable.attr("name"))
@@ -395,11 +426,13 @@ innGrid.expand = function(expandable) {
 }
 
 innGrid.expandAll = function() {
+	$('#room_name').html('<span alt="room" title="room">Room</span>');
 	$(".collapsable").fadeIn(1500);
 	$(".expandable").hide();
 }
 
 innGrid.collapseAll = function() {
+	$('#room_name').html('<span alt="room" title="room">Room count</span>');
 	$(".collapsable").hide();
 	$(".expandable").fadeIn(1500);
 }

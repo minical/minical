@@ -465,7 +465,7 @@
 					<tr>
                         <th class="text-left"><?php echo l('date'); ?></th>
                         <th class="text-left"><?php echo l('booking_id'); ?></th>
-						<th class="text-left"><?php echo l($this->default_room_singular); ?></th>
+						<th class="text-left" id="room_name"><?php echo l($this->default_room_singular); ?></th>
 						<th class="text-left"><?php echo l('Room Type'); ?></th>
 						<th class="text-left"><?php echo l('description'); ?></th>
 						<th class="text-left"><?php echo l('paying').' '.l('customer'); ?></th>
