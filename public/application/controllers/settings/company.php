@@ -1504,24 +1504,31 @@ class Company extends MY_Controller
 
             $get_customer_type = null;
 
-            // if(
-            //     isset($cache_customer_type[$customer['Customer Type']]) && 
-            //         $cache_customer_type[$customer['Customer Type']]
-            // ){
-            //     $get_customer_type = $cache_customer_type[$customer['Customer Type']];
-            // } else {
-            //     $get_customer_type = $this->Customer_type_model->get_customer_type_by_name($this->company_id, $customer['Customer Type']);
-            //     $cache_customer_type[$customer['Customer Type']] = $get_customer_type;
-            // }
+            if($customer['Customer Type'] == '-1') {
+                $customer_type_id = '-1';
+            } else if($customer['Customer Type'] == '-2') {
+                $customer_type_id = '-2';
+            } else {
 
+                if(
+                    isset($cache_customer_type[$customer['Customer Type']]) && 
+                        $cache_customer_type[$customer['Customer Type']]
+                ){
+                    $get_customer_type = $cache_customer_type[$customer['Customer Type']];
+                } else {
+                    $get_customer_type = $this->Customer_type_model->get_customer_type_by_name($this->company_id, $customer['Customer Type']);
+                    $cache_customer_type[$customer['Customer Type']] = $get_customer_type;
+                }
+                $customer_type_id = 0;
             if(empty($get_customer_type) && !in_array($customer['Customer Type'], $customer_types) && $customer['Customer Type'] != ''){
                 $customer_type_id = $this->Customer_type_model->create_customer_type($this->company_id, $customer['Customer Type']);
 
                 $customer_types[] = $customer['Customer Type'];
             } 
-            // else {
-            //     $customer_type_id = isset($get_customer_type[0]['id']) ? $get_customer_type[0]['id'] : ' ' ;
-            // }
+                else {
+                    $customer_type_id = isset($get_customer_type[0]['id']) ? $get_customer_type[0]['id'] : ' ' ;
+                }
+            }
 
             $cache_customer_data[] = Array(
                 "customer_name" => $customer['Customer Name'] == ''? null : $customer['Customer Name'],
