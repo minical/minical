@@ -212,12 +212,12 @@ class Rates extends MY_Controller
                 
             }
 
-            if(isset($this->is_nestpaymkd_enabled) && $this->is_nestpaymkd_enabled == true){
+            if(($this->is_nestpay_enabled == true) || ($this->is_nestpaymkd_enabled == true)){
                
                 
                 $rate_plan_data = Array(
                 "room_type_id" => $room_type_id,
-                "currency_id" => $default_currency['default_currency_id'],
+                "currency_id" => $rate_plan['currency_id'],
                 "rate_plan_name" => $rate_plan['rate_plan_name']."#".$booking_id,
                 "charge_type_id" => $charge_type_id,
                 "company_id" => $this->company_id,
@@ -227,7 +227,7 @@ class Rates extends MY_Controller
             }else{
                 $rate_plan_data = Array(
                 "room_type_id" => $room_type_id,
-                "currency_id" => $default_currency['default_currency_id'],
+                "currency_id" => $rate_plan['currency_id'],
                 "rate_plan_name" => "Custom Rate Plan",
                 "charge_type_id" => $charge_type_id,
                 "company_id" => $this->company_id,
