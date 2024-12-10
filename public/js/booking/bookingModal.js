@@ -7015,34 +7015,34 @@ var bookingModalInvoker = function ($) {
                                 rate = ((show_decimal) ? parseFloat(rate).toFixed(2) : parseInt(rate));
                                 
 
-                                console.log('rate',rate);
-                                console.log('rate11',roomTypeDIV.find("[name='rate']").val());
+                                // console.log('rate',rate);
+                                // console.log('rate11',roomTypeDIV.find("[name='rate']").val());
 
-                                var rate_val = rate;
+                                // var rate_val = rate;
 
-                                if(roomTypeDIV.find("[name='rate']").val() == 0){
-                                    rate_val = rate;
-                                } else if(roomTypeDIV.find("[name='rate']").val() != rate) {
-                                    rate_val = roomTypeDIV.find("[name='rate']").val();
-                                }
+                                // if(roomTypeDIV.find("[name='rate']").val() == 0){
+                                //     rate_val = rate;
+                                // } else if(roomTypeDIV.find("[name='rate']").val() != rate) {
+                                //     rate_val = roomTypeDIV.find("[name='rate']").val();
+                                // }
 
                                 if($('#current_rate_plan_type').val() !== 'per_person_type'){
                                 roomTypeDIV.find("[name='rate']").val(rate);
                                 } 
-                                if(innGrid.isNestPaymkdEnabled == true){
-                                    roomTypeDIV.find("[name='rate']").val(rate_val);
-                                }
+                                // if(innGrid.isNestPaymkdEnabled == true){
+                                //     roomTypeDIV.find("[name='rate']").val(rate_val);
+                                // }
 
                                 $.post(getBaseURL() + "rate_plan/get_tax_amount_from_rate_plan_JSON/",
                                     {
                                         rate_plan_id: roomTypeDIV.find('.charge-with option:selected').val(),
-                                        rate: (innGrid.isNestPaymkdEnabled == true) ? rate_val : rate
+                                        rate: rate
                                     },
                                     function (tax) {
 
-                                        if(innGrid.isNestPaymkdEnabled == true)
-                                            var taxedRate = rate_val * (1 + parseFloat(tax.percentage)) + parseFloat(tax.flat_rate);
-                                        else
+                                        // if(innGrid.isNestPaymkdEnabled == true)
+                                        //     var taxedRate = rate_val * (1 + parseFloat(tax.percentage)) + parseFloat(tax.flat_rate);
+                                        // else
                                         var taxedRate = rate * (1 + parseFloat(tax.percentage)) + parseFloat(tax.flat_rate);
                                         //taxedRate = Math.round(taxedRate * 100) / 100;
                                         var rateIncludingTaxDiv = roomTypeDIV.find('.rate-including-tax');
@@ -7055,9 +7055,9 @@ var bookingModalInvoker = function ($) {
                                             rateIncludingTaxDiv.addClass("hidden");
                                         }
                                         that.rateWithTax = taxedRate;
-                                        if(innGrid.isNestPaymkdEnabled == true)
-                                            that.rateInclusiveTax = rate_val * (parseFloat(tax.inclusive_tax_percentage)) + parseFloat(tax.inclusive_tax_flat_rate);
-                                        else
+                                        // if(innGrid.isNestPaymkdEnabled == true)
+                                        //     that.rateInclusiveTax = rate_val * (parseFloat(tax.inclusive_tax_percentage)) + parseFloat(tax.inclusive_tax_flat_rate);
+                                        // else
                                         that.rateInclusiveTax = rate * (parseFloat(tax.inclusive_tax_percentage)) + parseFloat(tax.inclusive_tax_flat_rate);
                                         that._displayRateInfo(data, tax);
                                     }, 'json'
