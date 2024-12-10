@@ -4483,7 +4483,7 @@ var bookingModalInvoker = function ($) {
                     })
                 );
 
-                if(innGrid.isNestPaymkdEnabled == true){
+                if((innGrid.isNestPaymkdEnabled == true) || (innGrid.isNestPayEnabled == true)){
                     modalHeader.append(
                         $("<span/>", {
                             class: "h4 heading-fix-wep total_counts",
@@ -4554,7 +4554,7 @@ var bookingModalInvoker = function ($) {
                     )
                 );
 
-                if(innGrid.isNestPaymkdEnabled == true){
+                if((innGrid.isNestPaymkdEnabled == true) || (innGrid.isNestPayEnabled == true)){
                     modalHeader.append(
                         $("<br/>", {
                             class: "total_group_booking_counts"
@@ -5732,7 +5732,15 @@ var bookingModalInvoker = function ($) {
                             $actions.push(this.$allActions.createDuplicate);
                     $actions.push(this.$allActions.divider);
                     $actions.push(this.$allActions.deleteBooking);
-                    if(innGrid.isNestPaymkdEnabled == true && invoice_group_id != undefined){
+                    if(
+                        (
+                            innGrid.isNestPaymkdEnabled == true ||
+                            innGrid.isNestPayEnabled == true
+                        )
+                        && 
+                        invoice_group_id != undefined
+                    )
+                    {
                         $actions.push(this.$allActions.dividerNew);
                         $actions.push(this.$allActions.editFixRatePlan);
                         $actions.push(this.$allActions.editRatePerPerson);
@@ -6964,8 +6972,12 @@ var bookingModalInvoker = function ($) {
                 var old_check_out_date = innGrid._getBaseFormattedDate($('#old_check_out_date').val());
                 old_check_out_date = moment(old_check_out_date).format('YYYY-MM-DD');
 
-                if(innGrid.isNestPaymkdEnabled != true)
+                if(
+                    (innGrid.isNestPaymkdEnabled != true) || 
+                    (innGrid.isNestPayEnabled != true)
+                ){
                 roomTypeDIV.find("[name='rate']").attr("disabled", true);
+                }
                 roomTypeDIV.find("[name='pay_period']").attr("disabled", true).val(0);
 
                 var current_rate_plan_id = roomTypeDIV.find('.charge-with').val();
@@ -7884,7 +7896,7 @@ $(document).on('click','.booking_form_type', function(){
     }
 });
 
-if(innGrid.isNestPaymkdEnabled == true){
+if((innGrid.isNestPaymkdEnabled == true) || (innGrid.isNestPayEnabled == true)){
     // Create an object to store room counts by room type
     var roomCounts = {};
     var adultCounts = {};
