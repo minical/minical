@@ -301,7 +301,10 @@ innGrid.renderChargeGroups = function (chargeGroups) {
         {
             room_id_td = '<td/>';
 			// var room_id_data = {html: room_name};
-			if(innGrid.isNestPaymkdEnabled)
+			if(
+				innGrid.isNestPaymkdEnabled ||
+				innGrid.isNestPayEnabled
+			)
 				var room_id_data = {html: '<b>'+ ' '+roomTypeNames[room_type_name]+'' +'</b>'};
 			else
 				var room_id_data = {html: room_name};
@@ -322,7 +325,10 @@ innGrid.renderChargeGroups = function (chargeGroups) {
 
         // console.log('roomTypeNames',roomTypeNames);
 
-        if(innGrid.isNestPaymkdEnabled){
+        if(
+        	innGrid.isNestPaymkdEnabled ||
+			innGrid.isNestPayEnabled
+		){
 
 	        if (jQuery.inArray(room_type_name, roomTypeNames) === -1) {
 			    roomTypeNames.push(room_type_name); // Add the room type if not already present
@@ -520,7 +526,7 @@ $(function() {
 
 	// don't collapse the invoice if the customer is staying for over 90 days. otherwise Minical crashes.
 	var getNumberOfDays = innGrid.getNumberOfDays();
-	var chargeRowLength = innGrid.isNestPaymkdEnabled == true ? 2000 : 60;
+	var chargeRowLength = (innGrid.isNestPaymkdEnabled == true || innGrid.isNestPayEnabled == true) ? 2000 : 60;
     if ($(".charge_row").length < chargeRowLength)
 	{
 
