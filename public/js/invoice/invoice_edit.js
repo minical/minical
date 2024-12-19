@@ -1772,6 +1772,42 @@ $(function() {
 
                         data = JSON.parse(data);
                         if (data.success) {
+                            if(innGrid.isEasyposFisicalEnabled = 1){
+                                var folioId = $('#current_folio_id').val();
+
+                                var url = getBaseURL() + 'ep_download_invoice_print/'+$("#booking_id").val();
+
+                                url = folioId ? url + '-' + folioId : url;
+
+                                $.ajax({
+                                type   : "POST",
+                                url    : url,
+                                dataType: "json",
+                                success: function (response) {
+                                console.log('response',response);
+
+                                if(response.status){
+
+                                var url = getBaseURL()+'application/extensions/easypos_fisical_integration/fiscal_invoices/'+response.openurl;
+
+                                // Create a link element
+                                var link = document.createElement('a');
+                                link.href = url;
+                                // var match = response.openurl;
+                                link.download = response.openurl; // Change the filename as needed
+                                console.log('link',link);
+                                // Programmatically click the link to trigger the download
+                                link.click();
+                                // Clean up
+                                // document.body.removeChild(link);
+                                }else{
+                                alert(l('Some error occured! Please try again.'));
+                                }
+
+                                }
+
+                                });
+                            }
                             window.location.reload();
                         } else if (data.expire) {
                             window.location.href = getBaseURL() + 'settings/integrations/payment_gateways';
