@@ -39,7 +39,28 @@
                    <?php echo l('Date Range', true); ?> <span style="color:red;">*</span> <div class="form-group"><input name="date_range" class="form-control date_range_picker" value="01/01/2015 - 01/31/2015"  placeholder="<?php echo l('Start Date', true); ?>" ></div>
                    <button class="show_payment_report btn btn-sm btn-success" type="button"><?php echo l('Submit', true); ?></button>
                 </div>
-                <div class="col-md-3 col-lg-3 col-xs-12 col-sm-3" id="m-012">
+
+                <?php if($this->is_nestpay_enabled || $this->is_nestpaymkd_enabled): ?>
+                <div class="col-md-1 col-lg-1 col-xs-12 col-sm-1" id="m-012">
+                	<?php $last_segment = $this->uri->segment($this->uri->total_segments()); ?>
+					<select name="currency-id" class="form-control currency_name" style="width: 200%;">
+						<option value=''><?php echo l('All', true); ?></option>
+						<?php 
+							foreach($currencies as $currency)
+							{
+								echo "<option value='".$currency['currency_id']."' ";
+								if ($last_segment == $currency['currency_id'])
+								{
+									echo " SELECTED=SELECTED ";
+								}
+								echo ">".$currency['currency_code']." (".$currency['currency_name'].")</option>\n";
+							}
+						?>
+                    </select>
+                </div>
+            <?php endif; ?>
+
+                <div class="col-md-2 col-lg-2 col-xs-12 col-sm-2" id="m-012">
                     <button id="printReportButton" class="btn btn-primary pull-right hidden-print"><span class="glyphicon glyphicon-print" title="Print Report"></span></button>
                     <?php $url_date = ($this->uri->segment(4) != '') ? $this->uri->segment(4) : ""; ?>       
                     <a style="margin: 0 10px;" href="<?php if($url_date != '//'){ echo base_url()."reports/ledger/download_payments_csv_export/".$url_date; } else { echo base_url()."reports/ledger/download_payments_csv_export/"; } ?>" class="btn btn-primary pull-right ">

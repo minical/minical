@@ -1310,7 +1310,7 @@ class Booking extends MY_Controller
         $booking_group_detail = $this->Booking_linked_group_model->get_booking_linked_group($booking_id, $this->company_id);
         if (!empty($booking_group_detail)) {
 
-            if($this->is_nestpaymkd_enabled == true){
+            if($this->is_nestpaymkd_enabled == true || $this->is_nestpay_enabled == true){
 
                 $option_name = 'group_booking_total_counts_'.$booking_group_detail['id'];
             
@@ -1800,6 +1800,41 @@ class Booking extends MY_Controller
                 foreach ($raw_rate_array as $rate)
                 {
 
+
+                    if($this->is_nestpay_enabled || $this->is_nestpaymkd_enabled){
+                        if(
+                            isset($rate['adult_1_rate']) && 
+                            $rate['adult_1_rate'] &&
+                            $booking_data['rate'] != $rate['adult_1_rate']
+                        ){
+                            $rate['adult_1_rate'] = $booking_data['rate'];
+                        }
+
+                        if(
+                            isset($rate['adult_2_rate']) && 
+                            $rate['adult_2_rate'] &&
+                            $booking_data['rate'] != $rate['adult_2_rate']
+                        ){
+                            $rate['adult_2_rate'] = $booking_data['rate'];
+                        }
+
+                        if(
+                            isset($rate['adult_3_rate']) && 
+                            $rate['adult_3_rate'] &&
+                            $booking_data['rate'] != $rate['adult_3_rate']
+                        ){
+                            $rate['adult_3_rate'] = $booking_data['rate'];
+                        }
+
+                        if(
+                            isset($rate['adult_4_rate']) && 
+                            $rate['adult_4_rate'] &&
+                            $booking_data['rate'] != $rate['adult_4_rate']
+                        ){
+                            $rate['adult_4_rate'] = $booking_data['rate'];
+                        }
+                    }
+
                     $rate_array[] = array(
                         'date' => $rate['date'],
                         'base_rate' => $rate['base_rate'],
@@ -1966,13 +2001,11 @@ class Booking extends MY_Controller
             $this->Booking_model->create_booking_fields($booking_id, $custom_booking_fields);
         }
 
-
-
-
-
-        if($this->is_nestpaymkd_enabled == true){
+        if($this->is_nestpaymkd_enabled == true || $this->is_nestpay_enabled == true){
             $total_room_count += $room['room_count'];
             $total_guest_count += $room['adult_count'];
+
+            $total_guest_count = $total_guest_count * $total_room_count;
 
             $option_data = array(
                 'company_id' => $this->company_id,
@@ -1988,11 +2021,6 @@ class Booking extends MY_Controller
 
             $this->Option_model->add_option($option_data);
         }
-
-
-
-
-
 
         return $response;
     }

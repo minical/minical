@@ -32,4 +32,16 @@ $(function () {
         
         window.location.href = base_url + "/reports/ledger/show_monthly_charge_report/" + startDate+'--'+endDate;
     });
+
+
+     $('.currency_name').change(function(){ 
+
+        var currency_code = $(this).val();
+
+        if(currency_code != '') {
+            window.location.assign(getBaseURL() +"reports/ledger/show_monthly_currency_payment_report/" + currency_code);
+        } else {
+            window.location.assign(getBaseURL() +"reports/ledger/show_monthly_payment_report");
+        }
+    });
 });

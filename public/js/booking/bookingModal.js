@@ -4529,6 +4529,13 @@ var bookingModalInvoker = function ($) {
                             type: "hidden",
                             id: "current_rate_plan_amount"
                         })
+                    );
+
+                    modalHeader.prepend(
+                        $("<input/>", {
+                            type: "hidden",
+                            id: "currentRatePlanID"
+                        })
                     );   
                 }
                 //$('.left-sidebar').find("li#registration_card").hide();
@@ -6976,7 +6983,7 @@ var bookingModalInvoker = function ($) {
                     (innGrid.isNestPaymkdEnabled != true) || 
                     (innGrid.isNestPayEnabled != true)
                 ){
-                roomTypeDIV.find("[name='rate']").attr("disabled", true);
+                    roomTypeDIV.find("[name='rate']").attr("disabled", true);
                 }
                 roomTypeDIV.find("[name='pay_period']").attr("disabled", true).val(0);
 
@@ -7013,25 +7020,41 @@ var bookingModalInvoker = function ($) {
                             if (data[0] !== undefined) {
                                 var rate = data[0].rate;
                                 rate = ((show_decimal) ? parseFloat(rate).toFixed(2) : parseInt(rate));
-                                
 
-                                // console.log('rate',rate);
-                                // console.log('rate11',roomTypeDIV.find("[name='rate']").val());
+                                console.log('rate',rate);
+                                console.log('rate11',roomTypeDIV.find("[name='rate']").val());
 
-                                // var rate_val = rate;
+                                var rate_val = rate;
+                                if(innGrid.isNestPaymkdEnabled == true || innGrid.isNestPayEnabled == true){
 
-                                // if(roomTypeDIV.find("[name='rate']").val() == 0){
-                                //     rate_val = rate;
-                                // } else if(roomTypeDIV.find("[name='rate']").val() != rate) {
-                                //     rate_val = roomTypeDIV.find("[name='rate']").val();
-                                // }
+                                    var oldRatePlanId = $('#currentRatePlanID').val();
+
+                                    if(roomTypeDIV.find("[name='rate']").val() == 0){
+                                        console.log('ifff');
+                                        rate_val = rate;
+                                    } 
+                                    else if(oldRatePlanId != ratePlanID){
+                                        console.log('else ifff');
+                                        rate_val = rate;
+                                    } else if(roomTypeDIV.find("[name='rate']").val() != rate) {
+                                        console.log('else ifff 2');
+                                        rate_val = rate;
+                                    } else {
+                                        console.log('else');
+                                        rate_val = roomTypeDIV.find("[name='rate']").val();
+                                    }
+
+                                    $('#currentRatePlanID').val(ratePlanID);
+
+                                    data[0].rate = rate_val;
+                                }
 
                                 if($('#current_rate_plan_type').val() !== 'per_person_type'){
                                 roomTypeDIV.find("[name='rate']").val(rate);
                                 } 
-                                // if(innGrid.isNestPaymkdEnabled == true){
-                                //     roomTypeDIV.find("[name='rate']").val(rate_val);
-                                // }
+                                if(innGrid.isNestPaymkdEnabled == true || innGrid.isNestPayEnabled == true){
+                                    roomTypeDIV.find("[name='rate']").val(rate_val);
+                                }
 
                                 $.post(getBaseURL() + "rate_plan/get_tax_amount_from_rate_plan_JSON/",
                                     {
@@ -7040,9 +7063,9 @@ var bookingModalInvoker = function ($) {
                                     },
                                     function (tax) {
 
-                                        // if(innGrid.isNestPaymkdEnabled == true)
-                                        //     var taxedRate = rate_val * (1 + parseFloat(tax.percentage)) + parseFloat(tax.flat_rate);
-                                        // else
+                                        if(innGrid.isNestPaymkdEnabled == true || innGrid.isNestPayEnabled == true)
+                                            var taxedRate = rate_val * (1 + parseFloat(tax.percentage)) + parseFloat(tax.flat_rate);
+                                        else
                                         var taxedRate = rate * (1 + parseFloat(tax.percentage)) + parseFloat(tax.flat_rate);
                                         //taxedRate = Math.round(taxedRate * 100) / 100;
                                         var rateIncludingTaxDiv = roomTypeDIV.find('.rate-including-tax');
@@ -7055,9 +7078,9 @@ var bookingModalInvoker = function ($) {
                                             rateIncludingTaxDiv.addClass("hidden");
                                         }
                                         that.rateWithTax = taxedRate;
-                                        // if(innGrid.isNestPaymkdEnabled == true)
-                                        //     that.rateInclusiveTax = rate_val * (parseFloat(tax.inclusive_tax_percentage)) + parseFloat(tax.inclusive_tax_flat_rate);
-                                        // else
+                                        if(innGrid.isNestPaymkdEnabled == true || innGrid.isNestPayEnabled == true)
+                                            that.rateInclusiveTax = rate_val * (parseFloat(tax.inclusive_tax_percentage)) + parseFloat(tax.inclusive_tax_flat_rate);
+                                        else
                                         that.rateInclusiveTax = rate * (parseFloat(tax.inclusive_tax_percentage)) + parseFloat(tax.inclusive_tax_flat_rate);
                                         that._displayRateInfo(data, tax);
                                     }, 'json'
@@ -7916,15 +7939,11 @@ if((innGrid.isNestPaymkdEnabled == true) || (innGrid.isNestPayEnabled == true)){
         }
 
         // Update the room count for the specific room type
-        // console.log('roomCounts[roomTypeID]',roomCounts[roomTypeID]);
         roomCounts[roomTypeID] = newRoomCount;
-        // console.log('roomCounts[roomTypeID] 11',roomCounts[roomTypeID]);
 
         // Recalculate the total room count
         var totalRoomCount = 0;
         for (var id in roomCounts) {
-            // console.log('totalRoomCount',totalRoomCount);
-            // console.log('roomCounts[id]',roomCounts[id]);
             totalRoomCount += roomCounts[id];
         }
 
@@ -7940,9 +7959,8 @@ if((innGrid.isNestPaymkdEnabled == true) || (innGrid.isNestPayEnabled == true)){
         
         adultCounts[roomTypeID] = 0;
 
-        // var roomCount = $(this).closest('.room-type').find('.room_count').val();
-
-        // if(roomCount && roomCount != 0){
+        var roomCount = $(this).closest('.room-type').find('.room_count').val();
+        console.log('roomCount',roomCount);
 
             var newAdultCount = parseInt($(this).val()); // Get the new room count value
 
@@ -7958,17 +7976,20 @@ if((innGrid.isNestPaymkdEnabled == true) || (innGrid.isNestPayEnabled == true)){
             var totalAdultCount = 0;
             for (var id in adultCounts) {
                 totalAdultCount += adultCounts[id];
+            
             }
+
+        totalAdultCount = newAdultCount * roomCount;
+
+        var oldGuestCount = $('.total_guest_count').text();
+        console.log('oldGuestCount',oldGuestCount);
+        totalAdultCount = parseInt(totalAdultCount) + parseInt(oldGuestCount);
 
             // Update the displayed total room count
             $('.total_guest_count').text(totalAdultCount);
 
             console.log('RoomTypeID:', roomTypeID, 'New Adult Count:', newAdultCount);
-        // } else {
-        //     alert('please select room first');
-        //     $(this).val(1);
-        //     return false;
-        // }
+        
     });
 
 }

@@ -21,6 +21,7 @@ class Ledger extends MY_Controller {
 		$this->load->model('User_model');
 		$this->load->model('Booking_model');
         $this->load->model('Booking_sources_model');
+        $this->load->model('Currency_model');
 		
 		$global_data['menu_on'] = true;
 		$global_data['selected_menu'] = 'reports';		
@@ -426,7 +427,53 @@ class Ledger extends MY_Controller {
             $data['result'] = $this->Payment_model->get_monthly_payment_report($date);
         }
             
+        $data['currencies'] = $this->Currency_model->get_available_currency_list($this->company_id);
+        // load content
+        $data['js_files'] = array(
+            base_url().auto_version('js/report/daily_sale_report.js'),
+            base_url().'js/jquery.jqprint.0.3.js',
+            base_url().'js/moment.min.js',
+            base_url().'js/daterangepicker.js',
+        );
+        $data['css_files'][] = base_url().auto_version('css/daterangepicker.css');
+        $data['selected_submenu'] = 'Ledger'; //for css
+        $data['selected_sidebar_link'] = 'Payments';
+        $data['main_content']     = 'reports/ledger/monthly_payment_report';
+        $this->load->view('includes/bootstrapped_template', $data);
+    }
 
+    function show_monthly_currency_payment_report($currency_code, $date = '')
+    {
+        $date_range = array();
+        if ($date == '')
+        {
+            $date = $this->selling_date;
+            $data['date'] = $date;
+        }
+        else
+        {
+            $date_check = explode('--', $date);
+            if(count($date_check) > 1)
+            {
+                $date_range = array('from_date'=>$date_check[0], 'to_date'=>$date_check[1]);
+            }
+            else
+            {
+                $data['date'] = $date;
+            }
+        }
+        //get user's shift information
+        $data['dateRange'] = $date_range;
+        if($date_range)
+        {
+            $data['result'] = $this->Payment_model->get_monthly_payment_report('', $date_range, $currency_code);
+        }
+        else
+        {
+            $data['result'] = $this->Payment_model->get_monthly_payment_report($date, null, $currency_code);
+        }
+            
+        $data['currencies'] = $this->Currency_model->get_available_currency_list($this->company_id);
         // load content
         $data['js_files'] = array(
             base_url().auto_version('js/report/daily_sale_report.js'),

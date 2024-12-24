@@ -529,7 +529,7 @@ class Payment_model extends CI_Model {
         return $result;
 	}
 
-    function get_monthly_payment_report($date = NULL,$date_range = array())
+    function get_monthly_payment_report($date = NULL, $date_range = array(), $currency_code = null)
     {
         // extract month and year of $date
         //echo $date;
@@ -552,13 +552,13 @@ class Payment_model extends CI_Model {
 
 		$company_id = $this->session->userdata('current_company_id');
 
-		$sql = "
-				SELECT DISTINCT pt.payment_type_id, pt.payment_type
-				FROM payment_type as pt
-				WHERE
-					pt.company_id = '$company_id' AND
-					pt.is_deleted = '0'
-				";
+        $sql = "
+                SELECT DISTINCT pt.payment_type_id, pt.payment_type
+                FROM payment_type as pt
+                WHERE
+                    pt.company_id = '$company_id' AND
+                    pt.is_deleted = '0' AND payment_type IS NOT NULL
+                ";
 
         $q = $this->db->query($sql);
         $payment_type_array = $q->result();
@@ -574,6 +574,12 @@ class Payment_model extends CI_Model {
 //        $str_array[] = "SUM(IF(payment_gateway_used='stripe', amount,' ')) AS 'Stripe'";
         $payment_types_str = implode(", ", $str_array);
 
+        $where_currency = $currency_join = "";
+        if($currency_code){
+            $where_currency = " rp.rate_plan_id = b.rate_plan_id AND rp.currency_id = '$currency_code' AND ";
+            $currency_join = ", rate_plan as rp ";
+        }
+
         $sql = "
 			SELECT date as 'Selling Date', report_table.*
 			FROM date_interval as di
@@ -582,12 +588,13 @@ class Payment_model extends CI_Model {
 				SELECT payments.selling_date, $payment_types_str
 				FROM (
 					SELECT p.selling_date, pt.payment_type, p.payment_type_id, p.amount
-					FROM payment as p, payment_type as pt, booking as b
+					FROM payment as p, payment_type as pt, booking as b $currency_join
 					WHERE
 						p.is_deleted = '0' AND
 						p.payment_type_id = pt.payment_type_id AND
 						pt.company_id = '$company_id' AND
 						p.booking_id = b.booking_id AND
+                        $where_currency
 						b.is_deleted = '0' ";
                                         if(empty($date_range)){
                                             $sql .=" AND MONTH(p.selling_date) = '$month' AND
