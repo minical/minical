@@ -7030,17 +7030,13 @@ var bookingModalInvoker = function ($) {
                                     var oldRatePlanId = $('#currentRatePlanID').val();
 
                                     if(roomTypeDIV.find("[name='rate']").val() == 0){
-                                        console.log('ifff');
                                         rate_val = rate;
                                     } 
                                     else if(oldRatePlanId != ratePlanID){
-                                        console.log('else ifff');
                                         rate_val = rate;
                                     } else if(roomTypeDIV.find("[name='rate']").val() != rate) {
-                                        console.log('else ifff 2');
                                         rate_val = rate;
                                     } else {
-                                        console.log('else');
                                         rate_val = roomTypeDIV.find("[name='rate']").val();
                                     }
 
@@ -7154,6 +7150,7 @@ var bookingModalInvoker = function ($) {
                         var option = $("<option/>", {
                             value: data[i].id,
                             text: data[i].name,
+                            data_rp_name: data[i].name,
                         });
 
                         if (that.booking.charge_type_id == data[i].id &&
@@ -7931,6 +7928,9 @@ if((innGrid.isNestPaymkdEnabled == true) || (innGrid.isNestPayEnabled == true)){
 
         roomCounts[roomTypeID] = 0;
 
+        var adultCount = $(this).closest('.room-type').find('.adult_count').val();
+        console.log('adultCount',adultCount);
+
         var newRoomCount = parseInt($(this).val()); // Get the new room count value
 
         // If the new room count is not a number, set it to 0
@@ -7946,6 +7946,15 @@ if((innGrid.isNestPaymkdEnabled == true) || (innGrid.isNestPayEnabled == true)){
         for (var id in roomCounts) {
             totalRoomCount += roomCounts[id];
         }
+
+        var totalAdultCount = newRoomCount * adultCount;
+
+        var oldGuestCount = $('.total_guest_count').text();
+        console.log('oldGuestCount',oldGuestCount);
+        totalAdultCount = parseInt(totalAdultCount) + parseInt(oldGuestCount);
+
+        // Update the displayed total room count
+        $('.total_guest_count').text(totalAdultCount);
 
         // Update the displayed total room count
         $('.total_room_count').text(totalRoomCount);
@@ -7983,6 +7992,7 @@ if((innGrid.isNestPaymkdEnabled == true) || (innGrid.isNestPayEnabled == true)){
 
         var oldGuestCount = $('.total_guest_count').text();
         console.log('oldGuestCount',oldGuestCount);
+        oldGuestCount = parseInt(oldGuestCount) - parseInt(roomCount);
         totalAdultCount = parseInt(totalAdultCount) + parseInt(oldGuestCount);
 
             // Update the displayed total room count
