@@ -320,8 +320,220 @@ class Rates extends MY_Controller
                 'policy_code'=> $this->input->post('policy_code') !="" ? $this->security->xss_clean($this->input->post('policy_code')) : null,
 
             );
+
+            $derived_rate_enable =  $this->input->post('derivedrate_enable') != "" ? $this->security->xss_clean($this->input->post('derivedrate_enable')) : 0;
+             $parent_room_type = $this->input->post('parentroom_type') !="" ? $this->security->xss_clean($this->input->post('parentroom_type')) : null;            
+            $parent_rate_plan = $this->input->post('parentrate_plan') !="" ? $this->security->xss_clean($this->input->post('parentrate_plan')) : null;
+             $rate_logic = $this->input->post('ratelogic') !="" ? $this->security->xss_clean($this->input->post('ratelogic')) : null;
+              $rate_logic_amount = $this->input->post('ratelogic_amount') !="" ? $this->security->xss_clean($this->input->post('ratelogic_amount')) : null;        
+             $checklist = $this->input->post('dataArray_check');
+            
+            if(($this->is_derived_rate_enabled == 1) && $derived_rate_enable == 1 ){
+
+               $mims_arrival = isset($checklist[0]['min_stay_arrival']) ? $checklist[0]['min_stay_arrival'] : 0 ;
+                $mams_arrival = isset($checklist[1]['max_stay_arrival']) ? $checklist[1]['max_stay_arrival'] : 0 ;
+                $closed_to_arrival = isset($checklist[2]['closed_to_arrival']) ? $checklist[2]['closed_to_arrival'] : 0;
+                $closed_to_departure = isset($checklist[3]['closed_to_departure']) ? $checklist[3]['closed_to_departure'] : 0 ;
+                $stop_sell = isset($checklist[4]['stop_sell']) ? $checklist[4]['stop_sell'] : 0; 
+
+
+                foreach ($room_type_ids as $typeId) {
+                $rate_plan_data['room_type_id'] = $typeId;
+                // Create date range
+                
+                $date_range_id = $this->Date_range_model->create_date_range(
+                    Array(
+                        'date_start' => '2000-01-01',
+                        'date_end' => '2030-01-01'
+                    )
+                );
+
+                // Create Rate Plan
+                $new_rate_plan_id = $this->Rate_plan_model->create_rate_plan($rate_plan_data);
+
+                    $meta = array(
+                        "derived_rate_enable" => $derived_rate_enable,
+                        "parent_room_type" => $parent_room_type,
+                        "parent_rate_plan" => $parent_rate_plan,
+                        "rate_logic" => $rate_logic,
+                        "rate_logic_amount" => $rate_logic_amount,
+                        "rate_plan_id" => $new_rate_plan_id,
+                        "company_id" => $this->company_id,
+                        "rate" => 1,
+                        "mims_a" => $mims_arrival,
+                        "mams_a" => $mams_arrival,
+                        "cta" => $closed_to_arrival, 
+                        "ctd" => $closed_to_departure,
+                        "stop_sell" => $stop_sell
+                    );
+                    //prx($meta,1);
+                    $data['option_value'] = json_encode($meta);
+                    $data['option_name'] = 'derived_rate_'.$new_rate_plan_id;
+                    $data['autoload'] = 0;
+                    $data['company_id'] = $this->company_id;
+
+                $this->Option_model->add_option($data);
+                
+                $deriveddata =  $this->Option_model->get_option_by_company('derived_rate_'.$new_rate_plan_id,$this->company_id);
+                //prx($deriveddata,1);
+                $Ddetails =  json_decode($deriveddata[0]['option_value'],true);
+                
+
+                $parent_data = $this->Rate_plan_model->get_parent_rateplan_data($Ddetails['parent_room_type'],$Ddetails['parent_rate_plan']);
+
+                //prx($parent_data[0]['date_start'],1);
+                //prx($parent_data[0]['date_end'],1);
+                if(isset($parent_data[0]['date_start']) && isset($parent_data[0]['date_end']) ){ 
+
+                switch ($Ddetails['rate_logic']) {
+                    case 'IBA':
+      
+                        $adult_1_rate = ($parent_data[0]['adult_1_rate'] != 0) ? $parent_data[0]['adult_1_rate'] + $Ddetails['rate_logic_amount'] : $parent_data[0]['adult_1_rate'] ;  
+                        $adult_2_rate = ($parent_data[0]['adult_2_rate'] != 0) ? $parent_data[0]['adult_2_rate'] + $Ddetails['rate_logic_amount'] : $parent_data[0]['adult_2_rate'] ;
+                        $adult_3_rate = ($parent_data[0]['adult_3_rate'] != 0) ? $parent_data[0]['adult_3_rate'] + $Ddetails['rate_logic_amount'] : $parent_data[0]['adult_3_rate'] ;
+                        $adult_4_rate = ($parent_data[0]['adult_4_rate'] != 0) ? $parent_data[0]['adult_4_rate'] + $Ddetails['rate_logic_amount'] : $parent_data[0]['adult_4_rate'] ;
+
+                        break;
+
+                    case 'DBA':
+                        
+                        $adult_1_rate = ($parent_data[0]['adult_1_rate'] != 0) ? $parent_data[0]['adult_1_rate'] - $Ddetails['rate_logic_amount'] : $parent_data[0]['adult_1_rate'];  
+                        $adult_2_rate = ($parent_data[0]['adult_2_rate'] != 0) ? $parent_data[0]['adult_2_rate'] - $Ddetails['rate_logic_amount'] : $parent_data[0]['adult_2_rate'];
+                        $adult_3_rate = ($parent_data[0]['adult_3_rate'] != 0) ? $parent_data[0]['adult_3_rate'] - $Ddetails['rate_logic_amount'] : $parent_data[0]['adult_3_rate'];
+                        $adult_4_rate = ($parent_data[0]['adult_4_rate'] != 0) ? $parent_data[0]['adult_4_rate'] - $Ddetails['rate_logic_amount'] : $parent_data[0]['adult_4_rate'];
+
+                        break;
+
+                    case 'IBP':
+
+                        $perad1 = ($Ddetails['rate_logic_amount'] / 100) * $parent_data[0]['adult_1_rate'];
+                        $perad2 = ($Ddetails['rate_logic_amount'] / 100) * $parent_data[0]['adult_2_rate'];
+                        $perad3 = ($Ddetails['rate_logic_amount'] / 100) * $parent_data[0]['adult_3_rate'];
+                        $perad4 = ($Ddetails['rate_logic_amount'] / 100) * $parent_data[0]['adult_4_rate'];
+
+                        $adult_1_rate = ($parent_data[0]['adult_1_rate'] != 0) ? $parent_data[0]['adult_1_rate'] + $perad1 : $parent_data[0]['adult_1_rate'];  
+                        $adult_2_rate = ($parent_data[0]['adult_2_rate'] != 0) ? $parent_data[0]['adult_2_rate'] + $perad2 : $parent_data[0]['adult_2_rate'];
+                        $adult_3_rate = ($parent_data[0]['adult_3_rate'] != 0) ? $parent_data[0]['adult_3_rate'] + $perad3 : $parent_data[0]['adult_3_rate'];
+                        $adult_4_rate = ($parent_data[0]['adult_4_rate'] != 0) ? $parent_data[0]['adult_4_rate'] + $perad4 : $parent_data[0]['adult_4_rate'];
+
+                        break;
+
+                    case 'DBP':
+
+                        $perad1 = ($Ddetails['rate_logic_amount'] / 100) * $parent_data[0]['adult_1_rate'];
+                        $perad2 = ($Ddetails['rate_logic_amount'] / 100) * $parent_data[0]['adult_2_rate'];
+                        $perad3 = ($Ddetails['rate_logic_amount'] / 100) * $parent_data[0]['adult_3_rate'];
+                        $perad4 = ($Ddetails['rate_logic_amount'] / 100) * $parent_data[0]['adult_4_rate'];
+
+                        $adult_1_rate = ($parent_data[0]['adult_1_rate'] != 0) ? $parent_data[0]['adult_1_rate'] - $perad1 : $parent_data[0]['adult_1_rate'];  
+                        $adult_2_rate = ($parent_data[0]['adult_2_rate'] != 0) ? $parent_data[0]['adult_2_rate'] - $perad2 : $parent_data[0]['adult_2_rate']; 
+                        $adult_3_rate = ($parent_data[0]['adult_3_rate'] != 0) ? $parent_data[0]['adult_3_rate'] - $perad3 : $parent_data[0]['adult_3_rate']; 
+                        $adult_4_rate = ($parent_data[0]['adult_4_rate'] != 0) ? $parent_data[0]['adult_4_rate'] - $perad4 : $parent_data[0]['adult_4_rate']; 
+
+                        break;
+
+                    default:
+                        break;
+                }
+                
+                  $minimum_length_of_stay = null;
+                if($Ddetails['mims_a'] == 1){
+                  $minimum_length_of_stay = isset($parent_data[0]['minimum_length_of_stay']) ? $parent_data[0]['minimum_length_of_stay'] : null;
+                }
+                
+                 $maximum_length_of_stay = null;
+                if($Ddetails['mams_a'] == 1){  
+                  $maximum_length_of_stay = isset($parent_data[0]['maximum_length_of_stay']) ? $parent_data[0]['maximum_length_of_stay'] : null;
+                }
+
+                $closed_to_arrival = 0;
+                if($Ddetails['cta'] == 1){
+                    $closed_to_arrival = isset($parent_data[0]['closed_to_arrival']) ? $parent_data[0]['closed_to_arrival'] : 0; 
+                }
+
+                $closed_to_departure = 0;
+                if($Ddetails['ctd'] == 1){
+                    $closed_to_departure = isset($parent_data[0]['closed_to_departure']) ? $parent_data[0]['closed_to_departure'] : 0; 
+                }
+                $can_be_sold_online = 1;
+                if($Ddetails['stop_sell'] == 1){
+                    $can_be_sold_online = isset($parent_data[0]['can_be_sold_online']) ? $parent_data[0]['can_be_sold_online'] : 0; 
+                }
+
+                $additional_adult_rate =  isset($parent_data[0]['additional_adult_rate']) ? $parent_data[0]['additional_adult_rate'] : null; 
+                $additional_child_rate =  isset($parent_data[0]['additional_child_rate']) ? $parent_data[0]['additional_child_rate'] : null;
+                $minimum_length_of_stay_arrival = isset($parent_data[0]['minimum_length_of_stay_arrival']) ? $parent_data[0]['minimum_length_of_stay_arrival'] : null;
+                  $maximum_length_of_stay_arrival = isset($parent_data[0]['maximum_length_of_stay_arrival']) ? $parent_data[0]['maximum_length_of_stay_arrival'] : null;
+
+                $new_date_range_id = $this->Date_range_model->create_date_range(
+                    Array(
+                        'date_start' => date('Y-m-d', strtotime($parent_data[0]['date_start'])),
+                        'date_end' =>  date('Y-m-d', strtotime($parent_data[0]['date_end']))
+                    )
+                );
+               // $rate_plan = $this->Rate_plan_model->get_rate_plan($new_rate_plan_id);
+
+                //$rate_plan['rate_plan_id'] = $new_rate_plan_id; // for some reason, rate_plan_id is not returned
+
+                $rate_array = Array(
+                    'rate_plan_id' => $new_rate_plan_id,
+                    'base_rate' => $adult_1_rate,
+                    'adult_1_rate' => $adult_1_rate,
+                    'adult_2_rate' => $adult_2_rate,
+                    'adult_3_rate' => $adult_3_rate,
+                    'adult_4_rate' => $adult_4_rate,
+                    'additional_adult_rate' => $additional_adult_rate,
+                    'additional_child_rate' => $additional_child_rate,
+                    'minimum_length_of_stay' => $minimum_length_of_stay,
+                    'maximum_length_of_stay' => $maximum_length_of_stay,
+                    'minimum_length_of_stay_arrival' => $minimum_length_of_stay_arrival,
+                    'maximum_length_of_stay_arrival' => $maximum_length_of_stay_arrival,
+                    'closed_to_arrival' => $closed_to_arrival,
+                    'closed_to_departure' => $closed_to_departure,
+                    'can_be_sold_online'=> $can_be_sold_online
+                );
+                
+                // if ($this->allow_free_bookings) {
+                //     $rate_array['can_be_sold_online'] = 0;
+                // } else {
+                //     $rate_array['can_be_sold_online'] = 1;
+                // }
+                $new_rate_id = $this->Rate_model->create_rate($rate_array);
+
+                $this->Date_range_model->create_date_range_x_rate(
+                    Array(
+                        'rate_id' => $new_rate_id,
+                        'date_range_id' => $new_date_range_id
+                    )
+                );
+
+                // Assign the Base Rate into the newly created rate plan
+                $this->Rate_plan_model->update_rate_plan(
+                    array('base_rate_id' => $new_rate_id),
+                    $new_rate_plan_id
+                );
+
+                if ($extras) {
+                    $old_extra_ids_array = $this->Extra_model->get_rate_plan_extras($new_rate_plan_id, $rate_plan_data['room_type_id']);
+
+                    if (isset($old_extra_ids_array) && count($old_extra_ids_array) > 0) {
+                        foreach ($old_extra_ids_array as $key => $value) {
+                            $this->Extra_model->delete_rate_plan_etras($new_rate_plan_id, $rate_plan_data['room_type_id'], $value['extra_id']);
+                        }
+                    }
+
+                    foreach ($extras as $extra_id) {
+                        $this->Extra_model->create_rate_plan_extras($new_rate_plan_id, $extra_id, $rate_plan_data['room_type_id']);
+                    }
+                }
+                array_push($new_rate_plan_ids, $new_rate_plan_id);
+                $this->_create_rate_plan_log("Create New Rate Plan ( [ID {$new_rate_plan_id}])");
+            }
+            }    
+
+            }else{  
             // Store data for the room type
-            foreach ($room_type_ids as $typeId) {
+                foreach ($room_type_ids as $typeId) {
                 $rate_plan_data['room_type_id'] = $typeId;
                 // Create date range
                 $date_range_id = $this->Date_range_model->create_date_range(
@@ -374,6 +586,7 @@ class Rates extends MY_Controller
                 }
                 array_push($new_rate_plan_ids, $new_rate_plan_id);
                 $this->_create_rate_plan_log("Create New Rate Plan ( [ID {$new_rate_plan_id}])");
+            }
             }
             $value = 'Save Successful';
         }
@@ -440,7 +653,14 @@ class Rates extends MY_Controller
 				}
 			//}
 		}
-
+        if($this->is_derived_rate_enabled == 1 ){
+            $deriveddata =  $this->Option_model->get_option_by_company('derived_rate_'.$rate_plan_id,$this->company_id);
+             if(isset($deriveddata[0]['option_value'])){       
+            $data['Ddetails'] =  json_decode($deriveddata[0]['option_value'],true);
+             
+            $data['Drate_plan'] = $this->Rate_plan_model->get_rate_plans_by_room_type_id($data['Ddetails']['parent_room_type']);
+            }
+         }
 		$rate_plan_extras = array();
 		if(isset($data['rate_plan']) && $data['rate_plan']) {
 			//foreach ($data['rate_plan'] as $key => $value) {
@@ -529,7 +749,188 @@ class Rates extends MY_Controller
 			      'is_shown_in_online_booking_engine' => base64_decode($this->security->xss_clean($this->input->post('is_shown_in_online_booking_engine'))),
             'policy_code'=> $this->input->post('policy_code') !="" ? $this->security->xss_clean($this->input->post('policy_code')) : null, 
         );
+            $derived_rate_enable =  $this->input->post('derivedrate_enable') != "" ? $this->security->xss_clean($this->input->post('derivedrate_enable')) : 0;
+             $parent_room_type = $this->input->post('parentroom_type') !="" ? $this->security->xss_clean($this->input->post('parentroom_type')) : null;            
+            $parent_rate_plan = $this->input->post('parentrate_plan') !="" ? $this->security->xss_clean($this->input->post('parentrate_plan')) : null;
+             $rate_logic = $this->input->post('ratelogic') !="" ? $this->security->xss_clean($this->input->post('ratelogic')) : null;
+              $rate_logic_amount = $this->input->post('ratelogic_amount') !="" ? $this->security->xss_clean($this->input->post('ratelogic_amount')) : null;        
+             $checklist = $this->input->post('dataArray_check');
 
+            if(($this->is_derived_rate_enabled == 1) && $derived_rate_enable == 1 ){
+
+               $mims_arrival = isset($checklist[0]['min_stay_arrival']) ? $checklist[0]['min_stay_arrival'] : 0 ;
+                $mams_arrival = isset($checklist[1]['max_stay_arrival']) ? $checklist[1]['max_stay_arrival'] : 0 ;
+                $closed_to_arrival = isset($checklist[2]['closed_to_arrival']) ? $checklist[2]['closed_to_arrival'] : 0;
+                $closed_to_departure = isset($checklist[3]['closed_to_departure']) ? $checklist[3]['closed_to_departure'] : 0 ;
+                $stop_sell = isset($checklist[4]['stop_sell']) ? $checklist[4]['stop_sell'] : 0;
+
+                $deriveddatapre =  $this->Option_model->get_option_by_company('derived_rate_'.$rate_plan_id,$this->company_id);
+                //prx($deriveddata,1);
+                $Ddetailspre =  json_decode($deriveddatapre[0]['option_value'],true);
+               
+                if(($Ddetailspre['rate_logic'] != $rate_logic) || ($Ddetailspre['rate_logic_amount'] != $rate_logic_amount)){
+
+                    $meta = array(
+                        "derived_rate_enable" => $derived_rate_enable,
+                        "parent_room_type" => $parent_room_type,
+                        "parent_rate_plan" => $parent_rate_plan,
+                        "rate_logic" => $rate_logic,
+                        "rate_logic_amount" => $rate_logic_amount,
+                        "rate_plan_id" => $rate_plan_id,
+                        "company_id" => $this->company_id,
+                        "rate" => 1,
+                        "mims_a" => $mims_arrival,
+                        "mams_a" => $mams_arrival,
+                        "cta" => $closed_to_arrival, 
+                        "ctd" => $closed_to_departure,
+                        "stop_sell" => $stop_sell
+                    );
+                    //prx($meta,1);
+
+                     $this->Option_model->update_option_company('derived_rate_'.$rate_plan_id,json_encode($meta),$this->company_id);
+
+
+                    $deriveddata =  $this->Option_model->get_option_by_company('derived_rate_'.$rate_plan_id,$this->company_id);
+                    //prx($deriveddata,1);
+                    $Ddetails =  json_decode($deriveddata[0]['option_value'],true);
+                
+
+                    $parent_data = $this->Rate_plan_model->get_parent_rateplan_data($Ddetails['parent_room_type'],$Ddetails['parent_rate_plan']);
+
+                    //prx($parent_data[0]['date_start'],1);
+                    //prx($parent_data[0]['date_end'],1);
+
+
+                    switch ($Ddetails['rate_logic']) {
+                    case 'IBA':
+      
+                        $adult_1_rate = ($parent_data[0]['adult_1_rate'] != 0) ? $parent_data[0]['adult_1_rate'] + $Ddetails['rate_logic_amount'] : $parent_data[0]['adult_1_rate'] ;  
+                        $adult_2_rate = ($parent_data[0]['adult_2_rate'] != 0) ? $parent_data[0]['adult_2_rate'] + $Ddetails['rate_logic_amount'] : $parent_data[0]['adult_2_rate'] ;
+                        $adult_3_rate = ($parent_data[0]['adult_3_rate'] != 0) ? $parent_data[0]['adult_3_rate'] + $Ddetails['rate_logic_amount'] : $parent_data[0]['adult_3_rate'] ;
+                        $adult_4_rate = ($parent_data[0]['adult_4_rate'] != 0) ? $parent_data[0]['adult_4_rate'] + $Ddetails['rate_logic_amount'] : $parent_data[0]['adult_4_rate'] ;
+
+                        break;
+
+                    case 'DBA':
+                        
+                        $adult_1_rate = ($parent_data[0]['adult_1_rate'] != 0) ? $parent_data[0]['adult_1_rate'] - $Ddetails['rate_logic_amount'] : $parent_data[0]['adult_1_rate'];  
+                        $adult_2_rate = ($parent_data[0]['adult_2_rate'] != 0) ? $parent_data[0]['adult_2_rate'] - $Ddetails['rate_logic_amount'] : $parent_data[0]['adult_2_rate'];
+                        $adult_3_rate = ($parent_data[0]['adult_3_rate'] != 0) ? $parent_data[0]['adult_3_rate'] - $Ddetails['rate_logic_amount'] : $parent_data[0]['adult_3_rate'];
+                        $adult_4_rate = ($parent_data[0]['adult_4_rate'] != 0) ? $parent_data[0]['adult_4_rate'] - $Ddetails['rate_logic_amount'] : $parent_data[0]['adult_4_rate'];
+
+                        break;
+
+                    case 'IBP':
+
+                        $perad1 = ($Ddetails['rate_logic_amount'] / 100) * $parent_data[0]['adult_1_rate'];
+                        $perad2 = ($Ddetails['rate_logic_amount'] / 100) * $parent_data[0]['adult_2_rate'];
+                        $perad3 = ($Ddetails['rate_logic_amount'] / 100) * $parent_data[0]['adult_3_rate'];
+                        $perad4 = ($Ddetails['rate_logic_amount'] / 100) * $parent_data[0]['adult_4_rate'];
+
+                        $adult_1_rate = ($parent_data[0]['adult_1_rate'] != 0) ? $parent_data[0]['adult_1_rate'] + $perad1 : $parent_data[0]['adult_1_rate'];  
+                        $adult_2_rate = ($parent_data[0]['adult_2_rate'] != 0) ? $parent_data[0]['adult_2_rate'] + $perad2 : $parent_data[0]['adult_2_rate'];
+                        $adult_3_rate = ($parent_data[0]['adult_3_rate'] != 0) ? $parent_data[0]['adult_3_rate'] + $perad3 : $parent_data[0]['adult_3_rate'];
+                        $adult_4_rate = ($parent_data[0]['adult_4_rate'] != 0) ? $parent_data[0]['adult_4_rate'] + $perad4 : $parent_data[0]['adult_4_rate'];
+
+                        break;
+
+                    case 'DBP':
+
+                        $perad1 = ($Ddetails['rate_logic_amount'] / 100) * $parent_data[0]['adult_1_rate'];
+                        $perad2 = ($Ddetails['rate_logic_amount'] / 100) * $parent_data[0]['adult_2_rate'];
+                        $perad3 = ($Ddetails['rate_logic_amount'] / 100) * $parent_data[0]['adult_3_rate'];
+                        $perad4 = ($Ddetails['rate_logic_amount'] / 100) * $parent_data[0]['adult_4_rate'];
+
+                        $adult_1_rate = ($parent_data[0]['adult_1_rate'] != 0) ? $parent_data[0]['adult_1_rate'] - $perad1 : $parent_data[0]['adult_1_rate'];  
+                        $adult_2_rate = ($parent_data[0]['adult_2_rate'] != 0) ? $parent_data[0]['adult_2_rate'] - $perad2 : $parent_data[0]['adult_2_rate']; 
+                        $adult_3_rate = ($parent_data[0]['adult_3_rate'] != 0) ? $parent_data[0]['adult_3_rate'] - $perad3 : $parent_data[0]['adult_3_rate']; 
+                        $adult_4_rate = ($parent_data[0]['adult_4_rate'] != 0) ? $parent_data[0]['adult_4_rate'] - $perad4 : $parent_data[0]['adult_4_rate']; 
+
+                        break;
+
+                    default:
+                        break;
+                }
+                
+                  $minimum_length_of_stay = null;
+                if($Ddetails['mims_a'] == 1){
+                  $minimum_length_of_stay = isset($parent_data[0]['minimum_length_of_stay']) ? $parent_data[0]['minimum_length_of_stay'] : null;
+                }
+                
+                 $maximum_length_of_stay = null;
+                if($Ddetails['mams_a'] == 1){  
+                  $maximum_length_of_stay = isset($parent_data[0]['maximum_length_of_stay']) ? $parent_data[0]['maximum_length_of_stay'] : null;
+                }
+
+                $closed_to_arrival = 0;
+                if($Ddetails['cta'] == 1){
+                    $closed_to_arrival = isset($parent_data[0]['closed_to_arrival']) ? $parent_data[0]['closed_to_arrival'] : 0; 
+                }
+
+                $closed_to_departure = 0;
+                if($Ddetails['ctd'] == 1){
+                    $closed_to_departure = isset($parent_data[0]['closed_to_departure']) ? $parent_data[0]['closed_to_departure'] : 0; 
+                }
+                $can_be_sold_online = 1;
+                if($Ddetails['stop_sell'] == 1){
+                    $can_be_sold_online = isset($parent_data[0]['can_be_sold_online']) ? $parent_data[0]['can_be_sold_online'] : 0; 
+                }
+
+                $additional_adult_rate =  isset($parent_data[0]['additional_adult_rate']) ? $parent_data[0]['additional_adult_rate'] : null; 
+                $additional_child_rate =  isset($parent_data[0]['additional_child_rate']) ? $parent_data[0]['additional_child_rate'] : null;
+                $minimum_length_of_stay_arrival = isset($parent_data[0]['minimum_length_of_stay_arrival']) ? $parent_data[0]['minimum_length_of_stay_arrival'] : null;
+                  $maximum_length_of_stay_arrival = isset($parent_data[0]['maximum_length_of_stay_arrival']) ? $parent_data[0]['maximum_length_of_stay_arrival'] : null;
+
+
+                $new_date_range_id = $this->Date_range_model->create_date_range(
+                    Array(
+                        'date_start' => date('Y-m-d', strtotime($parent_data[0]['date_start'])),
+                        'date_end' =>  date('Y-m-d', strtotime($parent_data[0]['date_end']))
+                    )
+                );
+               // $rate_plan = $this->Rate_plan_model->get_rate_plan($new_rate_plan_id);
+
+                //$rate_plan['rate_plan_id'] = $new_rate_plan_id; // for some reason, rate_plan_id is not returned
+
+                $rate_array = Array(
+                    'rate_plan_id' => $rate_plan_id,
+                    'base_rate' => $adult_1_rate,
+                    'adult_1_rate' => $adult_1_rate,
+                    'adult_2_rate' => $adult_2_rate,
+                    'adult_3_rate' => $adult_3_rate,
+                    'adult_4_rate' => $adult_4_rate,
+                    'additional_adult_rate' => $additional_adult_rate,
+                    'additional_child_rate' => $additional_child_rate,
+                    'minimum_length_of_stay' => $minimum_length_of_stay,
+                    'maximum_length_of_stay' => $maximum_length_of_stay,
+                    'minimum_length_of_stay_arrival' => $minimum_length_of_stay_arrival,
+                    'maximum_length_of_stay_arrival' => $maximum_length_of_stay_arrival,
+                    'closed_to_arrival' => $closed_to_arrival,
+                    'closed_to_departure' => $closed_to_departure,
+                    'can_be_sold_online'=> $can_be_sold_online
+                );
+                // if ($this->allow_free_bookings) {
+                //     $rate_array['can_be_sold_online'] = 0;
+                // } else {
+                //     $rate_array['can_be_sold_online'] = 1;
+                // }
+                $new_rate_id = $this->Rate_model->create_rate($rate_array);
+
+                $this->Date_range_model->create_date_range_x_rate(
+                    Array(
+                        'rate_id' => $new_rate_id,
+                        'date_range_id' => $new_date_range_id
+                    )
+                );
+
+                // Assign the Base Rate into the newly created rate plan
+                $this->Rate_plan_model->update_rate_plan(
+                    array('base_rate_id' => $new_rate_id),
+                    $rate_plan_id
+                );
+
+            }
+        } 
 		//update room type
 		if ($this->Rate_plan_model->update_rate_plan($rate_plan_data, $rate_plan_id))
 		{
@@ -787,7 +1188,168 @@ class Rates extends MY_Controller
                     );
                 }
                 $this->_create_rate_plan_log("Rates created for ( Rate Plan [ID {$rate_plan_id}])");
+
+                $rate_array_channex = array();
+
+                if(($this->is_derived_rate_enabled == 1)){
+
+                    $deriveddatapre =  $this->Option_model->get_option_by_json_data('parent_rate_plan',$rate_plan_id,$this->company_id);
+                     //prx($deriveddatapre,1);
+                    foreach ($deriveddatapre as  $deriveddata) {
+                    
+                    $Ddetails =  json_decode($deriveddata['option_value'],true);
+                    // prx($Ddetails,1);
+                    $parent_data = $this->Rate_plan_model->get_parent_rateplan_data($Ddetails['parent_room_type'],$Ddetails['parent_rate_plan']);
+
+
+                    switch ($Ddetails['rate_logic']) {
+                    case 'IBA':
+      
+                        $adult_1_rate = ($parent_data[0]['adult_1_rate'] != 0) ? $parent_data[0]['adult_1_rate'] + $Ddetails['rate_logic_amount'] : $parent_data[0]['adult_1_rate'] ;  
+                        $adult_2_rate = ($parent_data[0]['adult_2_rate'] != 0) ? $parent_data[0]['adult_2_rate'] + $Ddetails['rate_logic_amount'] : $parent_data[0]['adult_2_rate'] ;
+                        $adult_3_rate = ($parent_data[0]['adult_3_rate'] != 0) ? $parent_data[0]['adult_3_rate'] + $Ddetails['rate_logic_amount'] : $parent_data[0]['adult_3_rate'] ;
+                        $adult_4_rate = ($parent_data[0]['adult_4_rate'] != 0) ? $parent_data[0]['adult_4_rate'] + $Ddetails['rate_logic_amount'] : $parent_data[0]['adult_4_rate'] ;
+
+                        break;
+
+                    case 'DBA':
+                        
+                        $adult_1_rate = ($parent_data[0]['adult_1_rate'] != 0) ? $parent_data[0]['adult_1_rate'] - $Ddetails['rate_logic_amount'] : $parent_data[0]['adult_1_rate'];  
+                        $adult_2_rate = ($parent_data[0]['adult_2_rate'] != 0) ? $parent_data[0]['adult_2_rate'] - $Ddetails['rate_logic_amount'] : $parent_data[0]['adult_2_rate'];
+                        $adult_3_rate = ($parent_data[0]['adult_3_rate'] != 0) ? $parent_data[0]['adult_3_rate'] - $Ddetails['rate_logic_amount'] : $parent_data[0]['adult_3_rate'];
+                        $adult_4_rate = ($parent_data[0]['adult_4_rate'] != 0) ? $parent_data[0]['adult_4_rate'] - $Ddetails['rate_logic_amount'] : $parent_data[0]['adult_4_rate'];
+
+                        break;
+
+                    case 'IBP':
+
+                        $perad1 = ($Ddetails['rate_logic_amount'] / 100) * $parent_data[0]['adult_1_rate'];
+                        $perad2 = ($Ddetails['rate_logic_amount'] / 100) * $parent_data[0]['adult_2_rate'];
+                        $perad3 = ($Ddetails['rate_logic_amount'] / 100) * $parent_data[0]['adult_3_rate'];
+                        $perad4 = ($Ddetails['rate_logic_amount'] / 100) * $parent_data[0]['adult_4_rate'];
+
+                        $adult_1_rate = ($parent_data[0]['adult_1_rate'] != 0) ? $parent_data[0]['adult_1_rate'] + $perad1 : $parent_data[0]['adult_1_rate'];  
+                        $adult_2_rate = ($parent_data[0]['adult_2_rate'] != 0) ? $parent_data[0]['adult_2_rate'] + $perad2 : $parent_data[0]['adult_2_rate'];
+                        $adult_3_rate = ($parent_data[0]['adult_3_rate'] != 0) ? $parent_data[0]['adult_3_rate'] + $perad3 : $parent_data[0]['adult_3_rate'];
+                        $adult_4_rate = ($parent_data[0]['adult_4_rate'] != 0) ? $parent_data[0]['adult_4_rate'] + $perad4 : $parent_data[0]['adult_4_rate'];
+
+                        break;
+
+                    case 'DBP':
+
+                        $perad1 = ($Ddetails['rate_logic_amount'] / 100) * $parent_data[0]['adult_1_rate'];
+                        $perad2 = ($Ddetails['rate_logic_amount'] / 100) * $parent_data[0]['adult_2_rate'];
+                        $perad3 = ($Ddetails['rate_logic_amount'] / 100) * $parent_data[0]['adult_3_rate'];
+                        $perad4 = ($Ddetails['rate_logic_amount'] / 100) * $parent_data[0]['adult_4_rate'];
+
+                        $adult_1_rate = ($parent_data[0]['adult_1_rate'] != 0) ? $parent_data[0]['adult_1_rate'] - $perad1 : $parent_data[0]['adult_1_rate'];  
+                        $adult_2_rate = ($parent_data[0]['adult_2_rate'] != 0) ? $parent_data[0]['adult_2_rate'] - $perad2 : $parent_data[0]['adult_2_rate']; 
+                        $adult_3_rate = ($parent_data[0]['adult_3_rate'] != 0) ? $parent_data[0]['adult_3_rate'] - $perad3 : $parent_data[0]['adult_3_rate']; 
+                        $adult_4_rate = ($parent_data[0]['adult_4_rate'] != 0) ? $parent_data[0]['adult_4_rate'] - $perad4 : $parent_data[0]['adult_4_rate']; 
+
+                        break;
+
+                    default:
+                        break;
+                }
+                
+                  $minimum_length_of_stay = null;
+                if($Ddetails['mims_a'] == 1){
+                  $minimum_length_of_stay = isset($parent_data[0]['minimum_length_of_stay']) ? $parent_data[0]['minimum_length_of_stay'] : null;
+                }
+                
+                 $maximum_length_of_stay = null;
+                if($Ddetails['mams_a'] == 1){  
+                  $maximum_length_of_stay = isset($parent_data[0]['maximum_length_of_stay']) ? $parent_data[0]['maximum_length_of_stay'] : null;
+                }
+
+                $closed_to_arrival = 0;
+                if($Ddetails['cta'] == 1){
+                    $closed_to_arrival = isset($parent_data[0]['closed_to_arrival']) ? $parent_data[0]['closed_to_arrival'] : 0; 
+                }
+
+                $closed_to_departure = 0;
+                if($Ddetails['ctd'] == 1){
+                    $closed_to_departure = isset($parent_data[0]['closed_to_departure']) ? $parent_data[0]['closed_to_departure'] : 0; 
+                }
+                $can_be_sold_online = 1;
+                if($Ddetails['stop_sell'] == 1){
+                    $can_be_sold_online = isset($parent_data[0]['can_be_sold_online']) ? $parent_data[0]['can_be_sold_online'] : 0; 
+                }
+
+                $additional_adult_rate =  isset($parent_data[0]['additional_adult_rate']) ? $parent_data[0]['additional_adult_rate'] : null; 
+                $additional_child_rate =  isset($parent_data[0]['additional_child_rate']) ? $parent_data[0]['additional_child_rate'] : null;
+                $minimum_length_of_stay_arrival = isset($parent_data[0]['minimum_length_of_stay_arrival']) ? $parent_data[0]['minimum_length_of_stay_arrival'] : null;
+                  $maximum_length_of_stay_arrival = isset($parent_data[0]['maximum_length_of_stay_arrival']) ? $parent_data[0]['maximum_length_of_stay_arrival'] : null;
+
+                $new_date_range_id = $this->Date_range_model->create_date_range(
+                    Array(
+                        'date_start' => date('Y-m-d', strtotime($parent_data[0]['date_start'])),
+                        'date_end' =>  date('Y-m-d', strtotime($parent_data[0]['date_end']))
+                    )
+                );
+               // $rate_plan = $this->Rate_plan_model->get_rate_plan($new_rate_plan_id);
+
+                //$rate_plan['rate_plan_id'] = $new_rate_plan_id; // for some reason, rate_plan_id is not returned
+
+                $rate_array = Array(
+                    'rate_plan_id' => $Ddetails['rate_plan_id'],
+                    'base_rate' => $adult_1_rate,
+                    'adult_1_rate' => $adult_1_rate,
+                    'adult_2_rate' => $adult_2_rate,
+                    'adult_3_rate' => $adult_3_rate,
+                    'adult_4_rate' => $adult_4_rate,
+                    'additional_adult_rate' => $additional_adult_rate,
+                    'additional_child_rate' => $additional_child_rate,
+                    'minimum_length_of_stay' => $minimum_length_of_stay,
+                    'maximum_length_of_stay' => $maximum_length_of_stay,
+                    'minimum_length_of_stay_arrival' => $minimum_length_of_stay_arrival,
+                    'maximum_length_of_stay_arrival' => $maximum_length_of_stay_arrival,
+                    'closed_to_arrival' => $closed_to_arrival,
+                    'closed_to_departure' => $closed_to_departure,
+                    'can_be_sold_online'=> $can_be_sold_online
+                );
+
+                $rate_array_channex[] = Array(
+                    'rate_plan_id' => $Ddetails['rate_plan_id'],
+                    'date_start' => date('Y-m-d', strtotime($parent_data[0]['date_start'])),
+                    'date_end' =>  date('Y-m-d', strtotime($parent_data[0]['date_end'])),
+                    'adult_1_rate' => $adult_1_rate,
+                    'adult_2_rate' => $adult_2_rate,
+                    'adult_3_rate' => $adult_3_rate,
+                    'adult_4_rate' => $adult_4_rate,
+                    'additional_adult_rate' => $additional_adult_rate,
+                    'minimum_length_of_stay' => $minimum_length_of_stay,
+                    'maximum_length_of_stay' => $maximum_length_of_stay,
+                    'closed_to_arrival' => $closed_to_arrival,
+                    'closed_to_departure' => $closed_to_departure,
+                    'can_be_sold_online'=> $can_be_sold_online
+                );
+
+                // if ($this->allow_free_bookings) {
+                //     $rate_array['can_be_sold_online'] = 0;
+                // } else {
+                //     $rate_array['can_be_sold_online'] = 1;
+                // }
+                $new_rate_id = $this->Rate_model->create_rate($rate_array);
+
+                $this->Date_range_model->create_date_range_x_rate(
+                    Array(
+                        'rate_id' => $new_rate_id,
+                        'date_range_id' => $new_date_range_id
+                    )
+                );
+
+                // Assign the Base Rate into the newly created rate plan
+                $this->Rate_plan_model->update_rate_plan(
+                    array('base_rate_id' => $new_rate_id),
+                    $Ddetails['rate_plan_id']
+                );
+            }
+            }
+
                 $response['status'] = "success";
+                $response['rate_array_channex'] = $rate_array_channex;
                 echo json_encode($response);
                 return;
 			}
@@ -1140,7 +1702,13 @@ class Rates extends MY_Controller
 				base_url() . auto_version('js/hotel-settings/rate-settings.js'),
                 base_url().'js/moment.min.js'
 		);
-				
+		$data['Ddetails'] = array();
+        if($this->is_derived_rate_enabled == 1 ){
+            $deriveddata =  $this->Option_model->get_option_by_company('derived_rate_'.$rate_plan_id,$this->company_id);
+             if(isset($deriveddata[0]['option_value'])){       
+            $data['Ddetails'] =  json_decode($deriveddata[0]['option_value'],true);
+             }
+         }		
 		$data['main_content'] = 'hotel_settings/rate_plan_settings/edit_rates';
 		$this->load->view('includes/bootstrapped_template', $data);
 	}
@@ -1183,6 +1751,26 @@ class Rates extends MY_Controller
 		//permission check
 		if ($this->Rate_plan_model->check_if_rate_plan_belongs_to_company($rate_plan_id, $this->company_id))
 		{
+            if($this->is_derived_rate_enabled == 1 ){
+
+                $nesteddata = $this->Option_model->get_option_by_json_data('parent_rate_plan',$rate_plan_id,$this->company_id); 
+                //prx($nesteddata);
+                if(isset($nesteddata) && $nesteddata !=''){
+
+                    foreach($nesteddata as $nestedrate) {
+                        $Ddetails =  json_decode($nestedrate['option_value'],true);
+                       
+                       $this->Rate_plan_model->delete_rate_plan($Ddetails['rate_plan_id']);
+                       $this->Option_model->delete_option('derived_rate_'.$Ddetails['rate_plan_id']);  
+                    }
+                }
+
+                $deriveddata =  $this->Option_model->get_option_by_company('derived_rate_'.$rate_plan_id,$this->company_id);
+                if(isset($deriveddata[0]['option_value'])){
+                   $this->Option_model->delete_option('derived_rate_'.$rate_plan_id);         
+                 }     
+            }
+            
 			if (!$this->Rate_plan_model->delete_rate_plan($rate_plan_id))
 			{
 				$data = array ('isSuccess'=> FALSE, 'message' => 'Rate Plan delete fail');

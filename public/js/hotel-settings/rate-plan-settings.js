@@ -114,11 +114,53 @@ innGrid.updateRatePlan = function(ratePlan) {
 	var isShownInOnlineBookingEngine = ratePlan.find('[name="is-shown-in-online-booking-engine"]').val();
 	var extraIds = ratePlan.find('[name="extra[]"]').val();
 	var policy_id = ratePlan.find('[name="policy_name"]').val();
+	let derived_rate_enable = $('input[name="derived_rate_enable"]:checked').val();
+	var parent_room_type = ratePlan.find('[name="parent_room_type"]').val();
+	var parent_rate_plan = ratePlan.find('[name="parent_rate_plan"]').val();
+	var rate_logic = ratePlan.find('[name="rate_logic"]').val();
+	var rate_logic_amount = ratePlan.find('[name="rate_logic_amount"]').val();
     
 	if(innGrid.isNestPayEnabled == 1 || innGrid.isNestPaymkdEnabled == 1){
 		if(policy_id == 0){
 			alert('Please Select any cancellation policy for ratePlan');
 			return false;
+		}
+	}
+	if(innGrid.isDerivedRateEnabled == 1){
+		if(derived_rate_enable){
+
+			if(parent_room_type == ''){
+				alert('Please Select any room type for ratePlan');
+				return false;
+			}
+
+			if(parent_rate_plan == ''){
+				alert('Please Select any parent ratePlan for derived');
+				return false;
+			}
+
+			if(rate_logic == ''){
+				alert('Please Select any rate Logic for child rate plan');
+				return false;
+			}
+
+			if(rate_logic_amount == '' || rate_logic_amount == 0 ){
+				alert('Please add rate logic amount for rate plan');
+				return false;
+			}
+			let mims_arrival = $('input[name="min_stay_arrival"]:checked').val();
+			let mams_arrival = $('input[name="max_stay_arrival"]:checked').val();
+			let closed_to_arrival = $('input[name="closed_to_arrival"]:checked').val();
+			let closed_to_departure = $('input[name="closed_to_departure"]:checked').val();
+			let stop_sell = $('input[name="stop_sell"]:checked').val();
+			var dataArrayCheck = [
+					{ "min_stay_arrival":  mims_arrival },
+					{ "max_stay_arrival":  mams_arrival },
+					{ "closed_to_arrival" : closed_to_arrival },
+					{ "closed_to_departure": closed_to_departure },
+					{ "stop_sell": stop_sell }
+				];
+			
 		}
 	}
 	//Populate updates to standard room type information
@@ -132,6 +174,12 @@ innGrid.updateRatePlan = function(ratePlan) {
             is_shown_in_online_booking_engine: btoa(unescape(encodeURIComponent(isShownInOnlineBookingEngine))),
             extras: extraIds,
             policy_code :policy_id,
+            derivedrate_enable: derived_rate_enable,
+			parentroom_type:parent_room_type,
+			parentrate_plan:parent_rate_plan,
+			ratelogic:rate_logic,
+			ratelogic_amount:rate_logic_amount,
+			dataArray_check: dataArrayCheck
         }, function (result) {
 				ratePlan.find(".updated-message").removeClass("hidden");
                 innGrid.updateRates("","",ratePlanID);
@@ -157,11 +205,53 @@ innGrid.addRatePlan = function(ratePlan) {
 	var isShownInOnlineBookingEngine = ratePlan.find('[name="is-shown-in-online-booking-engine"]').val();
 	var extraIds = ratePlan.find('[name="extra[]"]').val();
 	var policy_id = ratePlan.find('[name="policy_name"]').val();
+	let derived_rate_enable = $('input[name="derived_rate_enable"]:checked').val();
+	var parent_room_type = ratePlan.find('[name="parent_room_type"]').val();
+	var parent_rate_plan = ratePlan.find('[name="parent_rate_plan"]').val();
+	var rate_logic = ratePlan.find('[name="rate_logic"]').val();
+	var rate_logic_amount = ratePlan.find('[name="rate_logic_amount"]').val();
     
 	if(innGrid.isNestPayEnabled == 1 || innGrid.isNestPaymkdEnabled == 1){
 		if(policy_id == 0){
 			alert('Please Select any cancellation policy for ratePlan');
 			return false;
+		}
+	}
+	if(innGrid.isDerivedRateEnabled == 1){
+		if(derived_rate_enable){
+
+			if(parent_room_type == ''){
+				alert('Please Select any room type for ratePlan');
+				return false;
+			}
+
+			if(parent_rate_plan == ''){
+				alert('Please Select any parent ratePlan for derived');
+				return false;
+			}
+
+			if(rate_logic == ''){
+				alert('Please Select any rate Logic for child rate plan');
+				return false;
+			}
+
+			if(rate_logic_amount == '' || rate_logic_amount == 0 ){
+				alert('Please add rate logic amount for rate plan');
+				return false;
+			}
+			let mims_arrival = $('input[name="min_stay_arrival"]:checked').val();
+			let mams_arrival = $('input[name="max_stay_arrival"]:checked').val();
+			let closed_to_arrival = $('input[name="closed_to_arrival"]:checked').val();
+			let closed_to_departure = $('input[name="closed_to_departure"]:checked').val();
+			let stop_sell = $('input[name="stop_sell"]:checked').val();
+			var dataArrayCheck = [
+					{ "min_stay_arrival":  mims_arrival },
+					{ "max_stay_arrival":  mams_arrival },
+					{ "closed_to_arrival" : closed_to_arrival },
+					{ "closed_to_departure": closed_to_departure },
+					{ "stop_sell": stop_sell }
+				];
+			
 		}
 	}
 	//Populate updates to standard room type information
@@ -175,6 +265,12 @@ innGrid.addRatePlan = function(ratePlan) {
                 is_shown_in_online_booking_engine: btoa(unescape(encodeURIComponent(isShownInOnlineBookingEngine))),
 				extras: extraIds,
 				policy_code :policy_id,
+				derivedrate_enable: derived_rate_enable,
+				parentroom_type:parent_room_type,
+				parentrate_plan:parent_rate_plan,
+				ratelogic:rate_logic,
+				ratelogic_amount:rate_logic_amount,
+				dataArray_check: dataArrayCheck
 			}, function (result) {
 				ratePlan.find(".updated-message").removeClass("hidden");
 				$(result.new_rate_plan_ids).each(function (e, ratePlanID) {

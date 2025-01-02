@@ -129,6 +129,130 @@
 					</div>
 				</div>
                  <?php }  ?>
+                 <?php if(isset($this->is_derived_rate_enabled) && ($this->is_derived_rate_enabled == 1)){ 
+                    if(isset($Ddetails) && $Ddetails !=''){
+                 	?>
+                 	<div class="form-group">
+                    <label for="derived_rate" class="col-sm-3 control-label">
+					</label>
+                    <div class="col-sm-9">
+                        <input type="checkbox" name="derived_rate_enable" value="1" class="derived-rate-checkbox" autocomplete="off"<?php if($Ddetails['derived_rate_enable'] == 1){ echo 'checked';} ?>>
+                        <strong> <?php echo l('Derived rate plan', true); ?></strong>
+                    </div>
+                     </div>
+                     <div class="derived_html" <?php if($Ddetails['derived_rate_enable'] == 1){ echo 'style="display:block;"';}else{ echo 'style="display:none;"'; } ?>>
+                    <legend style="padding-left:95px;font-size: 18px;">Derived Options</legend>
+                    <div class="form-group">
+					<label for="parent_roomtype" class="col-sm-3 control-label">
+						<?php echo l('Parent Room Type', true); ?><span style="color:red;">*</span>
+					</label>
+					<div class="col-sm-9">
+						<select name="parent_room_type" class="select_parent_room form-control" style="width: 70%;" disabled>
+							<option value=""> Select Room Type</option>
+                             <?php
+		                    if (isset($room_types)){
+		                        ?>
+		                            <?php
+		                             foreach($room_types as $room_type)
+		                             {
+		                             	echo "<option value='".$room_type['id']."' ";
+		                           
+			                                if ($room_type['id'] == $Ddetails['parent_room_type'])
+			                                {
+			                                    echo " SELECTED=SELECTED ";
+			                                }
+			                        
+	                                	echo ">".$room_type['name']."</option>\n";
+		                            }
+		                            ?>
+		                        
+		                        <?php
+		                    }
+		                    ?>
+                        </select>
+					</div>
+				   </div>
+				   <div class="form-group">
+					<label for="parent_rateplan" class="col-sm-3 control-label">
+						<?php echo l('Parent Rate Plan', true); ?><span style="color:red;">*</span>
+					</label>
+					<div class="col-sm-9">
+						<select name="parent_rate_plan" class="select_parent_rate form-control" style="width: 70%;" disabled>
+                           <?php
+                           	//echo $Ddetails['parent_rate_plan'];
+                           	//die('hi');
+
+		                    if (isset($Drate_plan)){
+		                        ?>
+		                            <?php
+		                             foreach($Drate_plan as $rate_plan)
+		                             {
+		                             	echo "<option value='".$rate_plan['rate_plan_id']."' ";
+		                           
+			                                if ($rate_plan['rate_plan_id'] == $Ddetails['parent_rate_plan'])
+			                                {
+			                                    echo " SELECTED=SELECTED ";
+			                                }
+			                        
+	                                	echo ">".$rate_plan['rate_plan_name']."</option>\n";
+		                            }
+		                            ?>
+		                        
+		                        <?php
+		                    }
+		                    ?>
+                        </select>
+					</div>
+				   </div>
+				   <div class="form-group">
+                    <label for="Inherit_from_parent" class="col-sm-3 control-label">
+                    	<?php echo l('Inherit from parent', true); ?>
+					</label>
+                    <div class="col-sm-9">
+                        <input type="checkbox" name="derived_rate" value="derived_rate" class="derived-rate" autocomplete="off" disabled <?php if($Ddetails['rate'] == 1){ echo 'checked';} ?>>
+                         <?php echo l('Rate', true); ?>
+                         <br>
+                         <input type="checkbox" name="min_stay_arrival" value="1" class="min-stay-arrival" autocomplete="off" disabled <?php if($Ddetails['mims_a'] == 1){ echo 'checked';} ?>>
+                         <?php echo l('Min Stay Arrival', true); ?>
+                         <br>
+                         <input type="checkbox" name="max_stay_arrival" value="1" class="max-stay-arrival" autocomplete="off" disabled <?php if($Ddetails['mams_a'] == 1){ echo 'checked';} ?>>
+                         <?php echo l('Max Stay Arrival', true); ?>
+                         <br>
+                         <!-- <input type="checkbox" name="max_stay_arrival" value="max_stay_arrival" class="max-stay-arrival" autocomplete="off">
+                         <?php //echo l('Max Stay Arrival', true); ?>
+                         <br> -->
+                         <input type="checkbox" name="closed_to_arrival" value="1" class="closed-to-arrival" autocomplete="off" disabled <?php if($Ddetails['cta'] == 1){ echo 'checked';} ?>>
+                         <?php echo l('Closed To Arrival', true); ?>
+                         <br>
+                         <input type="checkbox" name="closed_to_departure" value="1" class="closed-to-departure" autocomplete="off" disabled  <?php if($Ddetails['ctd'] == 1){ echo 'checked';} ?>>
+                         <?php echo l('Closed To Departure', true); ?>
+                         <br>
+                         <input type="checkbox" name="stop_sell" value="1" class="stop-sell" autocomplete="off"  disabled <?php if($Ddetails['stop_sell'] == 1){ echo 'checked';} ?>>
+                         <?php echo l('Stop Sell', true); ?>
+                         <br>
+                    </div>
+                     </div>
+                     <div class="form-group">
+                    <label for="rate_logic" class="col-sm-3 control-label">
+                    	<strong> <?php echo l('Rate Logic', true); ?></strong><span style="color:red;">*</span>
+					</label>
+                    <div class="col-sm-5">
+                    	<select name="rate_logic" class="rate_logic form-control" style="width: 100%;" required>
+                    		<option value=""> </option>
+                           <option value="IBA" <?php if($Ddetails['rate_logic'] == 'IBA'){ echo " SELECTED = SELECTED";} ?>> Increase By Amount</option>
+                           <option value="DBA"<?php if($Ddetails['rate_logic'] == 'DBA'){ echo " SELECTED = SELECTED";} ?>> Decrease By Amount</option>
+                           <option value="IBP"<?php if($Ddetails['rate_logic'] == 'IBP'){ echo " SELECTED = SELECTED";} ?>> Increase By Percent</option>
+                           <option value="DBP"<?php if($Ddetails['rate_logic'] == 'DBP'){ echo " SELECTED = SELECTED";} ?>> Decrease By Percent</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-4">    
+                        <input type="number" name="rate_logic_amount" class="rate-logic-amount form-control" value ="<?php echo $Ddetails['rate_logic_amount'];?>" required>
+                    </div>   
+                    
+                     </div>
+                     <hr></hr>
+                 </div>
+                 	<?php } } ?>
 
 				<div class="form-group">
 					<label for="description" class="col-sm-3 control-label">

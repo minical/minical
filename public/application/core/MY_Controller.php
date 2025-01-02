@@ -140,6 +140,7 @@ class MY_Controller extends CI_Controller {
         $this->is_invoice_transfer_enabled = false;
         $this->is_loyalty_program = false;
         $this->is_easypos_fisical_enabled = false;
+        $this->is_derived_rate_enabled = false;
 
         if($get_active_modules){
             foreach ($get_active_modules as $key => $value) {
@@ -191,6 +192,9 @@ class MY_Controller extends CI_Controller {
                 }
                 if($value['extension_name'] == 'easypos_fisical_integration'){
                     $this->is_easypos_fisical_enabled = true;
+                }
+                if($value['extension_name'] == 'derived_rate_manager'){
+                    $this->is_derived_rate_enabled = true;
                 }
 
                 $config = array();

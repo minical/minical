@@ -370,7 +370,7 @@ innGrid.createRate = function() {
 
 				// update channel_manager
 
-				var rateCreatedEvent = new CustomEvent('rate_created', { "detail" : {"rate_data" : rateArray} });
+				var rateCreatedEvent = new CustomEvent('rate_created', { "detail" : {"rate_data" : rateArray, "child_rate_data" : data.rate_array_channex } });
                 document.dispatchEvent(rateCreatedEvent);
 
 				// innGrid.updateRates(
