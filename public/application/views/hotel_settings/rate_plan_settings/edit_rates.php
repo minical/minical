@@ -3,11 +3,24 @@
         <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
         <?php echo l('Back', true); ?>
     </a>
+<?php 
+if(isset($Ddetails['rate_plan_id']) && $this->is_derived_rate_enabled == 1){
 
+   $param ='disabled';
+    
+        
+    $derivedhtml = '<img class="rounded-circle" src="'.base_url().'images/chain.png">';
+
+}else{
+    $param ='';
+     $derivedhtml = '';
+}
+ ?>
     <?php echo l('Edit Rates for', true); ?>
     <a href="<?php echo base_url() . "settings/rates/rate_plans#" . $rate_plan_id; ?>">
         <?php echo $rate_plan_name . " (" . $room_type['name'] . ") "; ?>
     </a>
+    <?php echo  $derivedhtml; ?>
 </div>
 <input name="tab_identification" id="tab_identification" type='hidden' value="1" />
 <input name="room_type_id" type='hidden' value="<?php if (!empty($room_type_id)) echo $room_type_id; ?>" />
@@ -1027,14 +1040,14 @@
     <div class="card-body">
 <input name="today" type='hidden' value="<?php echo $today; ?>" />	
 <button id='modify-rates'
-        class="btn btn-primary">
+        class="btn btn-primary" <?php echo $param; ?>>
     <?php echo l('Modify Rates', true); ?>
 </button>
 <?php
 if ($this->session->userdata('user_role') == "is_admin") {
     ?>
     <button id='modify-supplied-rates'
-            class="btn btn-primary">
+            class="btn btn-primary" <?php echo $param; ?>>
         <?php echo l('Modify Supplied Rates', true); ?>
     </button>
     <?php

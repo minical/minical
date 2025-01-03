@@ -154,7 +154,112 @@
 					</div>
 				</div>
                  <?php }  ?>
+                 <?php if(isset($this->is_derived_rate_enabled) && $this->is_derived_rate_enabled == 1){ ?>
+                 	<div class="form-group">
+                    <label for="derived_rate" class="col-sm-3 control-label">
+					</label>
+                    <div class="col-sm-9">
+                        <input type="checkbox" name="derived_rate_enable" value="1" class="derived-rate-checkbox" autocomplete="off">
+                        <strong> <?php echo l('Derived rate plan', true); ?></strong>
+                    </div>
+                     </div>
+                     <div class="derived_html" style="display:none;">
+                    <legend style="padding-left:95px;font-size: 18px;">Derived Options</legend>
+                    <div class="form-group">
+					<label for="parent_roomtype" class="col-sm-3 control-label">
+						<?php echo l('Parent Room Type', true); ?><span style="color:red;">*</span>
+					</label>
+					<div class="col-sm-9">
+						<select name="parent_room_type" class="select_parent_room form-control" style="width: 70%;" required>
+							<option value=""> Select Room Type</option>
+                             <?php
+		                    if (isset($room_types)){
+		                        ?>
+		                            <?php
+		                             foreach($room_types as $room_type)
+		                             {
+		                             	echo "<option value='".$room_type['id']."' ";
+		                            // 	if (isset($room_rates)):
+		                            // 	foreach ($room_rates as $key => $value) {
 
+		                            // 		$option_value = json_decode($value['option_value'], true);
+
+			                                
+			                        //         if ($room_type['id'] == $option_value['room_type_id'] && $customer_type['id'] == $option_value['customer_type_id'])
+			                        //         {
+			                        //             echo " SELECTED=SELECTED ";
+			                        //         }
+			                        //     }
+			                        // endif;
+	                                	echo ">".$room_type['name']."</option>\n";
+		                            }
+		                            ?>
+		                        
+		                        <?php
+		                    }
+		                    ?>
+                        </select>
+					</div>
+				   </div>
+				   <div class="form-group">
+					<label for="parent_rateplan" class="col-sm-3 control-label">
+						<?php echo l('Parent Rate Plan', true); ?><span style="color:red;">*</span>
+					</label>
+					<div class="col-sm-9">
+						<select name="parent_rate_plan" class="select_parent_rate form-control" style="width: 70%;" required>
+                           
+                        </select>
+					</div>
+				   </div>
+				   <div class="form-group">
+                    <label for="Inherit_from_parent" class="col-sm-3 control-label">
+                    	<?php echo l('Inherit from parent', true); ?>
+					</label>
+                    <div class="col-sm-9">
+                        <input type="checkbox" name="derived_rate" value="derived_rate" class="derived-rate" autocomplete="off" disabled>
+                         <?php echo l('Rate', true); ?>
+                         <br>
+                         <input type="checkbox" name="min_stay_arrival" value="1" class="min-stay-arrival" autocomplete="off">
+                         <?php echo l('Min Stay Arrival', true); ?>
+                         <br>
+                         <input type="checkbox" name="max_stay_arrival" value="1" class="max-stay-arrival" autocomplete="off">
+                         <?php echo l('Max Stay Arrival', true); ?>
+                         <br>
+                         <!-- <input type="checkbox" name="max_stay_arrival" value="max_stay_arrival" class="max-stay-arrival" autocomplete="off">
+                         <?php //echo l('Max Stay Arrival', true); ?>
+                         <br> -->
+                         <input type="checkbox" name="closed_to_arrival" value="1" class="closed-to-arrival" autocomplete="off">
+                         <?php echo l('Closed To Arrival', true); ?>
+                         <br>
+                         <input type="checkbox" name="closed_to_departure" value="1" class="closed-to-departure" autocomplete="off">
+                         <?php echo l('Closed To Departure', true); ?>
+                         <br>
+                         <input type="checkbox" name="stop_sell" value="1" class="stop-sell" autocomplete="off">
+                         <?php echo l('Stop Sell', true); ?>
+                         <br>
+                    </div>
+                     </div>
+                     <div class="form-group">
+                    <label for="rate_logic" class="col-sm-3 control-label">
+                    	<strong> <?php echo l('Rate Logic', true); ?></strong><span style="color:red;">*</span>
+					</label>
+                    <div class="col-sm-5">
+                    	<select name="rate_logic" class="rate_logic form-control" style="width: 100%;" required>
+                    		<option value=""> </option>
+                           <option value="IBA"> Increase By Amount</option>
+                           <option value="DBA"> Decrease By Amount</option>
+                           <option value="IBP"> Increase By Percent</option>
+                           <option value="DBP"> Decrease By Percent</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-4">    
+                        <input type="number" name="rate_logic_amount" class="rate-logic-amount form-control" required>
+                    </div>   
+                    
+                     </div>
+                     <hr></hr>
+                 </div>
+                 	<?php }  ?>
 		<div class="form-group">
 			<label for="description" class="col-sm-3 control-label">
 				<?php echo l('Description', true); ?>
