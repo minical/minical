@@ -1751,7 +1751,7 @@ class Rates extends MY_Controller
 		//permission check
 		if ($this->Rate_plan_model->check_if_rate_plan_belongs_to_company($rate_plan_id, $this->company_id))
 		{
-            if($this->is_derived_rate_enabled == 1 ){
+            //if($this->is_derived_rate_enabled == 1 ){
 
                 $nesteddata = $this->Option_model->get_option_by_json_data('parent_rate_plan',$rate_plan_id,$this->company_id); 
                 //prx($nesteddata);
@@ -1769,7 +1769,7 @@ class Rates extends MY_Controller
                 if(isset($deriveddata[0]['option_value'])){
                    $this->Option_model->delete_option('derived_rate_'.$rate_plan_id);         
                  }     
-            }
+            //}
             
 			if (!$this->Rate_plan_model->delete_rate_plan($rate_plan_id))
 			{
