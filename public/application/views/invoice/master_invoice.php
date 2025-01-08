@@ -383,6 +383,16 @@
 			</address>
 		</div>
 		<div class="col-xs-4 text-right booking_id_div padding-right-zero">
+			<?php if(isset($this->is_custom_invoice_enabled) && $this->is_custom_invoice_enabled == true) { ?>
+            <div class="create-gpwep">
+                <strong ><?php 
+
+                echo l('Group Invoice'); ?>:</strong> <span  id="group-invoice">
+                
+                <span class="group_invoice_edit_icon"></span>
+                </span><br/>
+            </div>
+            <?php }?>
             <address>
                 <strong><?php echo l('group').' '.l('id'); ?>:</strong>
                 <?php if(isset($booking_group_detail)) { echo $booking_group_detail['id'];} ?>

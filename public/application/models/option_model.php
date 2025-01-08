@@ -159,7 +159,7 @@ class Option_model extends CI_Model {
         $this->db->where('company_id', $company_id);
     
         if($option_value){
-            $where = "(JSON_EXTRACT(option_value, '$.".$option_name."') = ".$option_value.")";
+            $where = "(JSON_EXTRACT(option_value, '$.".$option_name."') = '".$option_value."')";
             $this->db->where($where);
         }
         $query = $this->db->get('options');
