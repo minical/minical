@@ -239,6 +239,7 @@
                     <div class="col-sm-5">
                     	<select name="rate_logic" class="rate_logic form-control" style="width: 100%;" required>
                     		<option value=""> </option>
+                    		<option value="ASP" <?php if($Ddetails['rate_logic'] == 'ASP'){ echo " SELECTED = SELECTED";} ?>> Amount Same As Parent</option>
                            <option value="IBA" <?php if($Ddetails['rate_logic'] == 'IBA'){ echo " SELECTED = SELECTED";} ?>> Increase By Amount</option>
                            <option value="DBA"<?php if($Ddetails['rate_logic'] == 'DBA'){ echo " SELECTED = SELECTED";} ?>> Decrease By Amount</option>
                            <option value="IBP"<?php if($Ddetails['rate_logic'] == 'IBP'){ echo " SELECTED = SELECTED";} ?>> Increase By Percent</option>

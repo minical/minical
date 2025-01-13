@@ -144,8 +144,8 @@ innGrid.updateRatePlan = function(ratePlan) {
 				return false;
 			}
 
-			if(rate_logic_amount == '' || rate_logic_amount == 0 ){
-				alert('Please add rate logic amount for rate plan');
+			if(rate_logic_amount == '' || (rate_logic_amount != 0 && rate_logic =='ASP') ){
+				alert('Please add correct rate logic amount for rate plan');
 				return false;
 			}
 			let mims_arrival = $('input[name="min_stay_arrival"]:checked').val();
@@ -235,8 +235,8 @@ innGrid.addRatePlan = function(ratePlan) {
 				return false;
 			}
 
-			if(rate_logic_amount == '' || rate_logic_amount == 0 ){
-				alert('Please add rate logic amount for rate plan');
+			if(rate_logic_amount == '' || (rate_logic_amount != 0 && rate_logic =='ASP') ){
+				alert('Please add correct rate logic amount for rate plan');
 				return false;
 			}
 			let mims_arrival = $('input[name="min_stay_arrival"]:checked').val();

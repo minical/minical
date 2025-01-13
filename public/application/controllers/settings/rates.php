@@ -386,6 +386,14 @@ class Rates extends MY_Controller
                 if(isset($parent_data[0]['date_start']) && isset($parent_data[0]['date_end']) ){ 
 
                 switch ($Ddetails['rate_logic']) {
+                    case 'ASP':
+      
+                        $adult_1_rate = ($parent_data[0]['adult_1_rate'] != 0) ? $parent_data[0]['adult_1_rate'] : null ;  
+                        $adult_2_rate = ($parent_data[0]['adult_2_rate'] != 0) ? $parent_data[0]['adult_2_rate'] : null ;
+                        $adult_3_rate = ($parent_data[0]['adult_3_rate'] != 0) ? $parent_data[0]['adult_3_rate'] : null ;
+                        $adult_4_rate = ($parent_data[0]['adult_4_rate'] != 0) ? $parent_data[0]['adult_4_rate'] : null ;
+
+                        break;
                     case 'IBA':
       
                         $adult_1_rate = ($parent_data[0]['adult_1_rate'] != 0) ? $parent_data[0]['adult_1_rate'] + $Ddetails['rate_logic_amount'] : $parent_data[0]['adult_1_rate'] ;  
@@ -802,6 +810,14 @@ class Rates extends MY_Controller
 
 
                     switch ($Ddetails['rate_logic']) {
+                    case 'ASP':
+      
+                        $adult_1_rate = ($parent_data[0]['adult_1_rate'] != 0) ? $parent_data[0]['adult_1_rate'] : null ;  
+                        $adult_2_rate = ($parent_data[0]['adult_2_rate'] != 0) ? $parent_data[0]['adult_2_rate'] : null ;
+                        $adult_3_rate = ($parent_data[0]['adult_3_rate'] != 0) ? $parent_data[0]['adult_3_rate'] : null ;
+                        $adult_4_rate = ($parent_data[0]['adult_4_rate'] != 0) ? $parent_data[0]['adult_4_rate'] : null ;
+
+                        break;    
                     case 'IBA':
       
                         $adult_1_rate = ($parent_data[0]['adult_1_rate'] != 0) ? $parent_data[0]['adult_1_rate'] + $Ddetails['rate_logic_amount'] : $parent_data[0]['adult_1_rate'] ;  
@@ -1203,6 +1219,15 @@ class Rates extends MY_Controller
 
 
                     switch ($Ddetails['rate_logic']) {
+                        
+                    case 'ASP':
+      
+                        $adult_1_rate = ($parent_data[0]['adult_1_rate'] != 0) ? $parent_data[0]['adult_1_rate'] : null ;  
+                        $adult_2_rate = ($parent_data[0]['adult_2_rate'] != 0) ? $parent_data[0]['adult_2_rate'] : null ;
+                        $adult_3_rate = ($parent_data[0]['adult_3_rate'] != 0) ? $parent_data[0]['adult_3_rate'] : null ;
+                        $adult_4_rate = ($parent_data[0]['adult_4_rate'] != 0) ? $parent_data[0]['adult_4_rate'] : null ;
+
+                        break;    
                     case 'IBA':
       
                         $adult_1_rate = ($parent_data[0]['adult_1_rate'] != 0) ? $parent_data[0]['adult_1_rate'] + $Ddetails['rate_logic_amount'] : $parent_data[0]['adult_1_rate'] ;  
