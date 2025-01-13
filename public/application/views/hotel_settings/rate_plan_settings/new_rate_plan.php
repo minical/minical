@@ -246,6 +246,7 @@
                     <div class="col-sm-5">
                     	<select name="rate_logic" class="rate_logic form-control" style="width: 100%;" required>
                     		<option value=""> </option>
+                    		<option value="ASP"> Amount Same As Parent</option>
                            <option value="IBA"> Increase By Amount</option>
                            <option value="DBA"> Decrease By Amount</option>
                            <option value="IBP"> Increase By Percent</option>
