@@ -75,7 +75,7 @@
                 echo ($company['website'] != "") ? l('Website', true).": ".$company['website']."<br/>":'';
                 echo $company['GST_number'];
                 echo ($company['bussiness_name'] != "")?"Bussiness Name: ".$company['bussiness_name']."<br/>":'';
-                echo ($company['bussiness_number'] != "")?"Bussiness Number: ".$company['bussiness_number']."<br/>":'';
+                echo ($company['bussiness_number'] != "")?"Bussiness/NIFT Number: ".$company['bussiness_number']."<br/>":'';
                 echo ($company['bussiness_fiscal_number'] != "")?"Fiscal Number: ".$company['bussiness_fiscal_number']."<br/>":'';
                 ?>
                 <?php echo '<p class="invoice-header">'.$company['invoice_header'].'</p>'; ?>
