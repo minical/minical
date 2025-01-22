@@ -392,18 +392,19 @@
 	                <span class="group_invoice_edit_icon"></span>
 	                </span><br/>
             	</div>
-            <?php }else {
-                 if($read_only){
+            <?php }
+               // else {
+                // if($read_only){
             	?>
-                 <div class="create-gpwep">
-	                <strong ><?php 
+                 <!-- <div class="create-gpwep">
+	                <strong >
 
-	                echo l('Group Invoice'); ?>:</strong> <span  id="group-invoice">
-	                <?php echo isset($invoice_group) ? $invoice_group : ''; ?>
+	                //echo l('Group Invoice'); ?>:</strong> <span  id="group-invoice">
+	                //echo isset($invoice_group) ? $invoice_group : ''; ?>
 	                <span class="group_invoice_edit_icon"></span>
 	                </span><br/>
-                 </div>
-           <?php }} ?>
+                 </div> -->
+           <?php// }} ?>
             <address>
                 <strong><?php echo l('group').' '.l('id'); ?>:</strong>
                 <?php if(isset($booking_group_detail)) { echo $booking_group_detail['id'];} ?>
