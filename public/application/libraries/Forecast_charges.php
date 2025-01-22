@@ -259,6 +259,7 @@ class Forecast_charges
                             "taxes" => $tax_rates,
                             "room_name" =>  $room_name,
                             "customer_name" =>  $customer_name,
+                            "room_type_name" =>  $room_type_name
                         );
                         
                         if($get_amount_only)
@@ -293,6 +294,7 @@ class Forecast_charges
                         "taxes" => $tax_rates,
                         "room_name" =>  $room_name ,
                         "customer_name" =>  $customer_name,
+                        "room_type_name" =>  $room_type_name
 					);
                     
                     if($get_amount_only)
@@ -331,6 +333,7 @@ class Forecast_charges
                             "taxes" => $tax_rates,
                             "room_name" =>  $room_name,
                             "customer_name" =>  $customer_name, 
+                            "room_type_name" =>  $room_type_name 
                         );
                         $charge_start_date = Date("Y-m-d", strtotime($date_increment, strtotime($charge_start_date)));
                         
@@ -373,6 +376,7 @@ class Forecast_charges
                                     "taxes" => $tax_rates,
                                     "room_name" =>  $room_name,
                                     "customer_name" =>  $customer_name, 
+                                    "room_type_name" =>  $room_type_name
                                 );
                                 
                                 if($get_amount_only)

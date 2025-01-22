@@ -1310,7 +1310,7 @@ class Booking extends MY_Controller
         $booking_group_detail = $this->Booking_linked_group_model->get_booking_linked_group($booking_id, $this->company_id);
         if (!empty($booking_group_detail)) {
 
-            if($this->is_nestpaymkd_enabled == true || $this->is_nestpay_enabled == true){
+            if($this->is_group_booking_features == true){
 
                 $option_name = 'group_booking_total_counts_'.$booking_group_detail['id'];
             
@@ -1518,6 +1518,7 @@ class Booking extends MY_Controller
         // check linked group booking 
         if ($existing_group_id != null) {
             $booking_group_id = $existing_group_id;
+            $data['rooms'][0]['room_count'] = 1;
         } elseif ($data['isGroupBooking'] == true && isset($data['isGroupBooking'])) {
             $group_name = isset($data['groupName']) ? $data['groupName'] : null;
             $booking_group_id = $this->Booking_linked_group_model->create_booking_linked_group($group_name); // 
@@ -1801,7 +1802,7 @@ class Booking extends MY_Controller
                 {
 
 
-                    if($this->is_nestpay_enabled || $this->is_nestpaymkd_enabled){
+                    if($this->is_group_booking_features){
                         if(
                             isset($rate['adult_1_rate']) && 
                             $rate['adult_1_rate'] &&
@@ -2001,7 +2002,7 @@ class Booking extends MY_Controller
             $this->Booking_model->create_booking_fields($booking_id, $custom_booking_fields);
         }
 
-        if($this->is_nestpaymkd_enabled == true || $this->is_nestpay_enabled == true){
+        if($this->is_group_booking_features == true){
             $total_room_count += $room['room_count'];
             $total_guest_count += $room['adult_count'];
 

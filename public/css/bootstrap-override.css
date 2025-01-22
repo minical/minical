@@ -82,6 +82,12 @@
       height: 100%;
     }
   }
+
+  @media (min-width: 1200px) {
+    .container {
+        width: 1010px !important;
+    }
+  }
   
   .nav-sidebar {
     margin-right: -15px; /* 20px padding + 1px border */
@@ -1238,7 +1244,7 @@
     margin: .1rem 0;
   }
   .app-main .app-main__inner {
-    padding: 30px 30px 0px 30px;
+    /*padding: 30px 30px 0px 30px;*/
     flex: 1;
   }
   
@@ -4698,5 +4704,5 @@
     padding-bottom: 0 !important;
 }
 .cke_notifications_area{
-   display: none;
+    display: none;
 }

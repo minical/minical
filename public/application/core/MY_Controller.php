@@ -141,6 +141,7 @@ class MY_Controller extends CI_Controller {
         $this->is_loyalty_program = false;
         $this->is_easypos_fisical_enabled = false;
         $this->is_derived_rate_enabled = false;
+        $this->is_group_booking_features = false;
 
         if($get_active_modules){
             foreach ($get_active_modules as $key => $value) {
@@ -195,6 +196,9 @@ class MY_Controller extends CI_Controller {
                 }
                 if($value['extension_name'] == 'derived_rate_manager'){
                     $this->is_derived_rate_enabled = true;
+                }
+                if($value['extension_name'] == 'group_booking_features'){
+                    $this->is_group_booking_features = true;
                 }
 
                 $config = array();

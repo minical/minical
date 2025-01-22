@@ -225,8 +225,7 @@
 
 <input type="hidden" name="default_charge_name" class="default_charge_name" value="<?php echo $company['default_charge_name']; ?>">
 
-<div id='invoice-container' class="">
-	<div id='invoice-container' class="">
+<div id='invoice-container' class="container">
     <div class="app-page-title">
         <div class="page-title-wrapper">
             <div class="page-title-heading">
@@ -291,7 +290,7 @@
             </div>
         </div>
     </div>
-	</div>
+
    
 
 <div class="main-card mb-3 card">
@@ -936,4 +935,6 @@
 	<?php
 		endif;
 	?>
-</div></div>
+	</div>
+</div>
+</div>
