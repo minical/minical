@@ -281,7 +281,7 @@
 			</div>
 			<div class="col-md-3">
 				<div class="position-relative form-group">
-					<label for="company_bussiness_number" class=""><?php echo l('Business Number'); ?></label>
+					<label for="company_bussiness_number" class=""><?php echo l('Business/NIFT Number'); ?></label>
 					<input type="text" name="bussiness_number" id="bussiness_number" class="form-control" value="<?php 
 					if(isset($company)){
 					echo $company['bussiness_number']; 

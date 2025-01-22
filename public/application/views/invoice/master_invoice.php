@@ -326,7 +326,7 @@
 					echo ($company['website'] != "") ? l('Website', true).": ".$company['website']."<br/>":'';
 					echo $company['GST_number'];
 					echo ($company['bussiness_name'] != "")?"Bussiness Name: ".$company['bussiness_name']."<br/>":'';
-                    echo ($company['bussiness_number'] != "")?"Bussiness Number: ".$company['bussiness_number']."<br/>":'';
+                    echo ($company['bussiness_number'] != "")?"Bussiness/NIFT Number: ".$company['bussiness_number']."<br/>":'';
                     echo ($company['bussiness_fiscal_number'] != "")?"Fiscal Number: ".$company['bussiness_fiscal_number']."<br/>":'';
 				?>
                 <?php echo '<p class="invoice-header">'.$company['invoice_header'].'</p>'; ?>
@@ -382,22 +382,51 @@
 			</address>
 		</div>
 		<div class="col-xs-4 text-right booking_id_div padding-right-zero">
-			<?php if(isset($this->is_custom_invoice_enabled) && $this->is_custom_invoice_enabled == true) { ?>
-            <div class="create-gpwep">
-                <strong ><?php 
+			<?php if(isset($this->is_custom_invoice_enabled) && $this->is_custom_invoice_enabled == true) { 
+				?>
+            	<div class="create-gpwep">
+	                <strong ><?php 
 
-                echo l('Group Invoice'); ?>:</strong> <span  id="group-invoice">
-                
-                <span class="group_invoice_edit_icon"></span>
-                </span><br/>
-            </div>
-            <?php }?>
+	                echo l('Group Invoice'); ?>:</strong> <span  id="group-invoice">
+	                <?php echo isset($invoice_group) ? $invoice_group : ''; ?>
+	                <span class="group_invoice_edit_icon"></span>
+	                </span><br/>
+            	</div>
+            <?php }else {
+                 if($read_only){
+            	?>
+                 <div class="create-gpwep">
+	                <strong ><?php 
+
+	                echo l('Group Invoice'); ?>:</strong> <span  id="group-invoice">
+	                <?php echo isset($invoice_group) ? $invoice_group : ''; ?>
+	                <span class="group_invoice_edit_icon"></span>
+	                </span><br/>
+                 </div>
+           <?php }} ?>
             <address>
                 <strong><?php echo l('group').' '.l('id'); ?>:</strong>
                 <?php if(isset($booking_group_detail)) { echo $booking_group_detail['id'];} ?>
                 <input type="hidden" id="group_id" value="<?php if(isset($booking_group_detail)) { echo $booking_group_detail['id'];}?>">
 			    <br/>
 			    <?php echo l('group').' '.l('name'); ?>: <?php if(isset($booking_group_detail)){echo $booking_group_detail['name'];} ?><br/>
+			    <?php
+			    	if(isset($this->is_group_booking_features) && $this->is_group_booking_features == true) { 
+			     echo l('check_in_date'); ?>: <span id="check-in-date">
+
+                <?php echo isset($this->enable_hourly_booking) ? get_local_formatted_date($booking_detail['check_in_date']).' '.date('h:i A', strtotime($booking_detail['check_in_date'])) : get_local_formatted_date($booking_detail['check_in_date']);
+                ?>
+                    
+                </span><br/>
+                
+                <?php echo l('check_out_date'); ?>: <span id="check-out-date">
+                
+                <?php echo isset($this->enable_hourly_booking) ? get_local_formatted_date($booking_detail['check_out_date']).' '.date('h:i A', strtotime($booking_detail['check_out_date'])) : get_local_formatted_date($booking_detail['check_out_date']);
+                }
+                ?>
+
+                </span><br/>
+			    
 			    <span id="booking-field">
                 <?php
 
