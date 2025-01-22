@@ -233,19 +233,8 @@ class Invoice extends MY_Controller {
         $data['folios'] = $this->Folio_model->get_folios($booking_id);
         $data['invoice_create_data'] = $this->Booking_log_model->get_booking_createdate($booking_id); 
 
-        if(isset($this->is_custom_invoice_enabled) && $this->is_custom_invoice_enabled == true) {
-            $data['invoice_number'] = $this->get_custom_invoice_core($company_id,$booking_id);
-            
-        }else{
-           if($read_only == true){
-                 $defult = $this->Invoice_model->get_invoice_number($booking_id); 
-                 $custom = $this->get_custom_invoice_core($company_id,$booking_id);
-                 $data['invoice_number'] = isset($custom) ? $custom : $defult;
-           }else{
-                $data['invoice_number'] = $this->Invoice_model->get_invoice_number($booking_id); 
-           }    
-        }
-
+        
+         $data['invoice_number'] = $this->Invoice_model->get_invoice_number($booking_id); 
         $first_folio_id = isset($data['folios'][0]) && isset($data['folios'][0]['id']) ? $data['folios'][0]['id'] : null;
         
         $folio_id = $folio_id ? $folio_id : $first_folio_id;
@@ -526,7 +515,7 @@ class Invoice extends MY_Controller {
         }
         // prx($data['customers']);
         // for company logo
-        $data['invoice_group'] = $this->get_custom_group_invoice_core($company_id, $group_id); 
+        
         
         $data['company_logos']   = $this->Image_model->get_images($data['company']['logo_image_group_id']);
         //Get charges and payments sorted based on its selling dates
@@ -1591,125 +1580,6 @@ class Invoice extends MY_Controller {
         echo json_encode($void);   
     
     }
-    
-    function get_custom_invoice_core($company_id,$booking_id) {
-
-        $auto_invoice = $this->generateAlphanumericStringCore($company_id);
-        $post['post_content'] = 'custom_invoice_number_'.$booking_id;
-        $post_result = get_post($post);
-        $post_id = isset($post_result[0]['post_id']) && $post_result[0]['post_id'] ? $post_result[0]['post_id'] : 0;
-        $invoice_key = $booking_id;
-        $result = get_post_meta($post_id,$invoice_key,TRUE);
-        if(isset($result) && $result !='' )
-            return $result['meta_value'];
-        else{
-            return $auto_invoice[$company_id]['formattedString'];
-        }
-    }
-    
-    function get_custom_group_invoice_core($company_id,$group_id) {
-         
-        $auto_invoice = $this->generateGroupInvoiceStringCore($company_id);
-        $post['post_content'] = 'custom_group_invoice_'.$group_id;
-        $post_result = get_post($post);
-        $post_id = isset($post_result[0]['post_id']) && $post_result[0]['post_id'] ? $post_result[0]['post_id'] : 0;
-        $invoice_key = $group_id;
-        $result = get_post_meta($post_id,$invoice_key,TRUE);
-        if(isset($result) && $result !='' )
-
-            return $result['meta_value'];
-        else{
-            return $auto_invoice[$company_id]['formattedString'];
-        }
-    }
-
-    function generateAlphanumericStringCore($companyId) {
-
-        $currentYear = date("Y"); // Get the current year
-        $company_counters[$companyId] = [];
-         
-        $previous_auto_invoice = $this->Invoice_model->previous_invoice_details_core($companyId);
-        // Check if this company's counter is already stored
-        if (isset($previous_auto_invoice[1]->meta_value) && $previous_auto_invoice[1]->meta_value !='') {
-            $companyData['counter'] = isset($previous_auto_invoice[1]->meta_value) ? $previous_auto_invoice[1]->meta_value : null;
-             $companyData['year'] = isset($previous_auto_invoice[2]->meta_value) ? $previous_auto_invoice[2]->meta_value : null;
-        
-             // If the year has changed, reset the counter
-            if ($companyData['year'] != $currentYear) {
-                $currentCounter = 1;
-                $company_counters[$companyId]['counter'] = $currentCounter;
-                $company_counters[$companyId]['year'] = $currentYear;
-            } else {
-                // Increment the counter for the same year
-                $previous_invoice =array();
-                 //prx($previous_auto_invoice,1);
-                  //echo $previous_auto_invoice[0]->meta_value;
-                   $previous_invoice = explode('.', $previous_auto_invoice[0]->meta_value);
-                 // echo  $previous_invoice[0];
-                   $temp_count = str_pad($companyData['counter'], 6, "0", STR_PAD_LEFT);
-                if($previous_invoice[0] >= $temp_count){
-                    $companyData['counter'] = ltrim($previous_invoice[0], '0');
-                }
-                $currentCounter = $companyData['counter'] + 1;
-                $company_counters[$companyId]['counter'] = $companyData['counter'] + 1;
-                $company_counters[$companyId]['year'] = $currentYear;
-            }
-        } else {
-            // Initialize the counter for a new company
-            $currentCounter = 1;
-            $company_counters[$companyId] = ['counter' => $currentCounter, 'year' => $currentYear];
-        }
-        // Format the counter with leading zeros and append the year
-        $formattedString = str_pad($currentCounter, 6, "0", STR_PAD_LEFT) . '.' . $currentYear;
-
-        $company_counters[$companyId]['formattedString'] = $formattedString;
-
-         return $company_counters;
-    }
-
-    function generateGroupInvoiceStringCore($companyId) {
-        $currentYear = date("Y"); // Get the current year
-        $company_counters[$companyId] = [];
-        
-        $previous_auto_invoice = $this->Invoice_model->previous_group_invoice_details_core($companyId);
-        // Check if this company's counter is already stored
-        if (isset($previous_auto_invoice[1]->meta_value) && $previous_auto_invoice[1]->meta_value !='') {
-            $companyData['counter'] = isset($previous_auto_invoice[1]->meta_value) ? $previous_auto_invoice[1]->meta_value : null;
-            $companyData['year'] = isset($previous_auto_invoice[2]->meta_value) ? $previous_auto_invoice[2]->meta_value : null;
-            
-            // If the year has changed, reset the counter
-            if ($companyData['year'] != $currentYear) {
-                $currentCounter = 1;
-                $company_counters[$companyId]['counter'] = $currentCounter;
-                $company_counters[$companyId]['year'] = $currentYear;
-            } else {
-                // Increment the counter for the same year
-                $previous_invoice =array();
-                 //prx($previous_auto_invoice,1);
-                  //echo $previous_auto_invoice[0]->meta_value;
-                   $previous_invoice = explode('.', $previous_auto_invoice[0]->meta_value);
-                 // echo  $previous_invoice[0];
-                   $temp_count = str_pad($companyData['counter'], 6, "0", STR_PAD_LEFT);
-                if($previous_invoice[0] >= $temp_count){
-                    $companyData['counter'] = ltrim($previous_invoice[0], '0');
-                }
-                $currentCounter = $companyData['counter'] + 1;
-                $company_counters[$companyId]['counter'] = $companyData['counter'] + 1;
-                $company_counters[$companyId]['year'] = $currentYear;
-            }
-        } else {
-            // Initialize the counter for a new company
-            $currentCounter = 1;
-            $company_counters[$companyId] = ['counter' => $currentCounter, 'year' => $currentYear];
-        }
-        // Format the counter with leading zeros and append the year
-        $formattedString = str_pad($currentCounter, 6, "0", STR_PAD_LEFT) . '.G.' . $currentYear;
-
-        $company_counters[$companyId]['formattedString'] =$formattedString;
-
-        return $company_counters;
-    }
-
-    
+      
 }
 
