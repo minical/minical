@@ -90,7 +90,20 @@ class Permission_model extends CI_Model {
                     $function_name === 'nestpaymkd_response_ok_url' || $function_name === 'nestpaymkd_response_fail_url' || $function_name === 'get_nestpaymkd_post_bookingengine' || $function_name ===  'nestpaymkd_bookingengine_ok_fail_url' || $function_name ==='nestpaymkd_group_response_ok_url' || $function_name ==='nestpaymkd_group_response_fail_url'
                 )
             )
-
+            ||
+            (
+                $controller_name === "nestpayalb_integration" && 
+                (
+                    $function_name === 'nestpayalb_response_ok_url' || $function_name === 'nestpayalb_response_fail_url' || $function_name === 'get_nestpayalb_post_bookingengine' || $function_name ===  'nestpayalb_bookingengine_ok_fail_url' || $function_name ==='nestpayalb_group_response_ok_url' || $function_name ==='nestpayalb_group_response_fail_url'
+                )
+            )
+            ||
+            (
+                $controller_name === "nestpaysrb_integration" && 
+                (
+                    $function_name === 'nestpaysrb_response_ok_url' || $function_name === 'nestpaysrb_response_fail_url' || $function_name === 'get_nestpaysrb_post_bookingengine' || $function_name ===  'nestpaysrb_bookingengine_ok_fail_url' || $function_name ==='nestpaysrb_group_response_ok_url' || $function_name ==='nestpaysrb_group_response_fail_url'
+                )
+            )
              ||
             (
                 $controller_name === "customer" && 

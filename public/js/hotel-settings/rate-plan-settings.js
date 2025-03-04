@@ -120,7 +120,8 @@ innGrid.updateRatePlan = function(ratePlan) {
 	var rate_logic = ratePlan.find('[name="rate_logic"]').val();
 	var rate_logic_amount = ratePlan.find('[name="rate_logic_amount"]').val();
     
-	if(innGrid.isNestPayEnabled == 1 || innGrid.isNestPaymkdEnabled == 1){
+	if(innGrid.isNestPayEnabled == 1 || innGrid.isNestPaymkdEnabled == 1 
+		|| innGrid.isNestPayalbEnabled == 1 || innGrid.isNestPaysrbEnabled == 1){
 		if(policy_id == 0){
 			alert('Please Select any cancellation policy for ratePlan');
 			return false;
@@ -211,7 +212,8 @@ innGrid.addRatePlan = function(ratePlan) {
 	var rate_logic = ratePlan.find('[name="rate_logic"]').val();
 	var rate_logic_amount = ratePlan.find('[name="rate_logic_amount"]').val();
     
-	if(innGrid.isNestPayEnabled == 1 || innGrid.isNestPaymkdEnabled == 1){
+	if(innGrid.isNestPayEnabled == 1 || innGrid.isNestPaymkdEnabled == 1 
+		|| innGrid.isNestPayalbEnabled == 1 || innGrid.isNestPaysrbEnabled == 1){
 		if(policy_id == 0){
 			alert('Please Select any cancellation policy for ratePlan');
 			return false;

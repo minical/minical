@@ -40,7 +40,7 @@
                    <button class="show_payment_report btn btn-sm btn-success" type="button"><?php echo l('Submit', true); ?></button>
                 </div>
 
-                <?php if($this->is_nestpay_enabled || $this->is_nestpaymkd_enabled): ?>
+                <?php if($this->is_nestpay_enabled || $this->is_nestpaymkd_enabled || $this->is_nestpayalb_enabled || $this->is_nestpaysrb_enabled): ?>
                 <div class="col-md-1 col-lg-1 col-xs-12 col-sm-1" id="m-012">
                 	<?php $last_segment = $this->uri->segment($this->uri->total_segments()); ?>
 					<select name="currency-id" class="form-control currency_name" style="width: 200%;">
