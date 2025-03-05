@@ -39,6 +39,7 @@ class Option_model extends CI_Model {
             $this->db->where($where);
         }
         $query = $this->db->get('options');
+     
         if ($this->db->_error_message())
         {
             show_error($this->db->_error_message());

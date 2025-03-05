@@ -428,7 +428,9 @@
 <!--Show success or error message-->
 <?php 
 if((isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true ) ||
- (isset($this->is_nestpaymkd_enabled) && $this->is_nestpaymkd_enabled == true)) {
+ (isset($this->is_nestpaymkd_enabled) && $this->is_nestpaymkd_enabled == true) ||
+ (isset($this->is_nestpayalb_enabled) && $this->is_nestpayalb_enabled == true) ||
+ (isset($this->is_nestpaysrb_enabled) && $this->is_nestpaysrb_enabled == true)) {
     if($this->session->flashdata('payment_success_message'))
     {
 ?>
@@ -1048,13 +1050,13 @@ if((isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true ) ||
                                             $charge_id = substr($payment['gateway_charge_id'], 0, 20) . '...';
                                             printf(
                                                 '%s %s',
-                                                $payment['amount'] > 0 && $charge_id ? 'Charge ID:' : ($charge_id ? ($payment['selected_gateway'] = 'nestpay' || $payment['selected_gateway'] == 'nestpaymkd') ? " " :'Refund ID:' : ''),
+                                                $payment['amount'] > 0 && $charge_id ? 'Charge ID:' : ($charge_id ? ($payment['selected_gateway'] = 'nestpay' || $payment['selected_gateway'] == 'nestpaymkd' || $payment['selected_gateway'] == 'nestpayalb' || $payment['selected_gateway'] == 'nestpaysrb') ? " " :'Refund ID:' : ''),
                                                 $charge_id
                                             ); 
                                         }else{
                                             printf(
                                                 '%s %s',
-                                                $payment['amount'] > 0 && $payment['gateway_charge_id'] ? 'Charge ID:' : ($payment['gateway_charge_id'] ?($payment['selected_gateway'] = 'nestpay' || $payment['selected_gateway'] == 'nestpaymkd') ? " ": 'Refund ID:' : ''),
+                                                $payment['amount'] > 0 && $payment['gateway_charge_id'] ? 'Charge ID:' : ($payment['gateway_charge_id'] ?($payment['selected_gateway'] = 'nestpay' || $payment['selected_gateway'] == 'nestpaymkd' || $payment['selected_gateway'] == 'nestpayalb' || $payment['selected_gateway'] == 'nestpaysrb') ? " ": 'Refund ID:' : ''),
                                                 $payment['gateway_charge_id']
                                             ); 
                                         }
@@ -1134,7 +1136,7 @@ if((isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true ) ||
                                                 <button type="button" class="btn btn-success capture-payment-button hidden-print not-allowed" disabled>
                                                     <i class="fa fa-credit-card" aria-hidden="true"></i>
                                                 </button>
-                                            <?php } else if($payment['is_captured'] == 0 && ($payment['selected_gateway'] == 'nestpay' || $payment['selected_gateway'] == 'nestpaymkd')) { ?> 
+                                            <?php } else if($payment['is_captured'] == 0 && ($payment['selected_gateway'] == 'nestpay' || $payment['selected_gateway'] == 'nestpaymkd' || $payment['selected_gateway'] == 'nestpayalb' || $payment['selected_gateway'] == 'nestpaysrb')) { ?> 
                                                   <button class="btn btn-primary hidden-print delete-payment" data-toggle="tooltip" title="Refund"  title="Created by <?php echo $payment['user_name']; ?>">
                                                     <i class="fa fa-reply" aria-hidden="true"></i>
                                                 </button>

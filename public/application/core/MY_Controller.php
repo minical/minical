@@ -135,6 +135,8 @@ class MY_Controller extends CI_Controller {
         $this->is_cardknox_enabled = false;
         $this->is_nestpay_enabled = false;
         $this->is_nestpaymkd_enabled = false;
+        $this->is_nestpayalb_enabled = false;
+        $this->is_nestpaysrb_enabled = false;
         $this->is_oevai_enabled = false;
         $this->is_housekeeper_manage_enabled = false;
         $this->is_invoice_transfer_enabled = false;
@@ -178,6 +180,12 @@ class MY_Controller extends CI_Controller {
                 }
                 if($value['extension_name'] == 'nestpaymkd_integration'){
                      $this->is_nestpaymkd_enabled = true;
+                }
+                if($value['extension_name'] == 'nestpayalb_integration'){
+                    $this->is_nestpayalb_enabled = true;
+                }
+                if($value['extension_name'] == 'nestpaysrb_integration'){
+                    $this->is_nestpaysrb_enabled = true;
                 }
                 if($value['extension_name'] == 'oevai_integration'){
                     $this->is_oevai_enabled = true;

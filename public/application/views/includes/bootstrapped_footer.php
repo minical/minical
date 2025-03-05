@@ -118,6 +118,8 @@
     innGrid.featureSettings.defaultRoomType = '<?=(isset($this->default_room_type) ? $this->default_room_type : '')?>';
     innGrid.isNestPayEnabled = parseInt('<?=(($this->is_nestpay_enabled) ? 1 : 0)?>');
     innGrid.isNestPaymkdEnabled = parseInt('<?=(($this->is_nestpaymkd_enabled) ? 1 : 0)?>');
+    innGrid.isNestPayalbEnabled = parseInt('<?=(($this->is_nestpayalb_enabled) ? 1 : 0)?>');
+    innGrid.isNestPaysrbEnabled = parseInt('<?=(($this->is_nestpaysrb_enabled) ? 1 : 0)?>');
     innGrid.isHousekeeperManageEnabled = parseInt('<?=(($this->is_housekeeper_manage_enabled) ? 1 : 0)?>');
     innGrid.isEasyposFisicalEnabled = parseInt('<?=(($this->is_easypos_fisical_enabled) ? 1 : 0)?>');
     innGrid.isDerivedRateEnabled = parseInt('<?=(($this->is_derived_rate_enabled) ? 1 : 0)?>');

@@ -1087,7 +1087,10 @@ class Invoice extends MY_Controller {
             $capture_payment_type = $company_data['manual_payment_capture'];
             $capture_payment_type = ($capture_payment != 'authorize_only') ? false : true;
             if((isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true) ||
-            (isset($this->is_nestpaymkd_enabled) && $this->is_nestpaymkd_enabled == true) ) {
+            (isset($this->is_nestpaymkd_enabled) && $this->is_nestpaymkd_enabled == true) ||
+            (isset($this->is_nestpayalb_enabled) && $this->is_nestpayalb_enabled == true) ||
+            (isset($this->is_nestpaysrb_enabled) && $this->is_nestpaysrb_enabled == true)
+             ) {
 
                 $data = Array(
                     "user_id" => $this->user_id,

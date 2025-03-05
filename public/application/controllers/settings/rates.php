@@ -186,7 +186,10 @@ class Rates extends MY_Controller
             $default_currency = $this->Currency_model->get_default_currency($this->company_id);
 
             if((isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true) || 
-                   (isset($this->is_nestpaymkd_enabled) && $this->is_nestpaymkd_enabled == true)) {
+                   (isset($this->is_nestpaymkd_enabled) && $this->is_nestpaymkd_enabled == true) ||
+                   (isset($this->is_nestpayalb_enabled) && $this->is_nestpayalb_enabled == true) ||
+                   (isset($this->is_nestpaysrb_enabled) && $this->is_nestpaysrb_enabled == true)
+                   ) {
 
                 $policies = $this->Option_model->get_option_by_company('payment_policy',$this->company_id);
                
@@ -212,7 +215,8 @@ class Rates extends MY_Controller
                 
             }
 
-            if(($this->is_nestpay_enabled == true) || ($this->is_nestpaymkd_enabled == true)){
+            if(($this->is_nestpay_enabled == true) || ($this->is_nestpaymkd_enabled == true) ||
+             ($this->is_nestpayalb_enabled == true) || ($this->is_nestpaysrb_enabled == true)){
                
                 
                 $rate_plan_data = Array(
