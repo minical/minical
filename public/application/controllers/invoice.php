@@ -1086,7 +1086,10 @@ class Invoice extends MY_Controller {
             $company_data =  $this->Company_model->get_company($this->company_id);
             $capture_payment_type = $company_data['manual_payment_capture'];
             $capture_payment_type = ($capture_payment != 'authorize_only') ? false : true;
-            if((isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true) ||
+            $use_gateway = $this->input->post('use_gateway');
+
+            if($use_gateway == 1 &&
+            (isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true) ||
             (isset($this->is_nestpaymkd_enabled) && $this->is_nestpaymkd_enabled == true) ||
             (isset($this->is_nestpayalb_enabled) && $this->is_nestpayalb_enabled == true) ||
             (isset($this->is_nestpaysrb_enabled) && $this->is_nestpaysrb_enabled == true)
@@ -1116,7 +1119,7 @@ class Invoice extends MY_Controller {
                 
                     $no_of_bookings = count($get_bookings_by_group_id);
                     $equal_amount = $total_balance / $no_of_bookings;
-                   $payment_type    = $this->processpayment->getPaymentGatewayPaymentType($this->input->post('selected_gateway'));
+                   $payment_type    = $this->paymentgateway->getPaymentGatewayPaymentType($this->input->post('selected_gateway'));
                     $payment_type_ids = $payment_type['payment_type_id'];
                     foreach ($get_bookings_by_group_id as $booking)
                     {
