@@ -23,6 +23,7 @@ if (!$mysqli_connection) {
     return;
 }
 
+mysqli_set_charset($mysqli_connection, "utf8");
 $mysqli_select_db = @mysqli_select_db($mysqli_connection, $dbName);
 if (!$mysqli_select_db) {
     echo json_encode(array('success' => false, 'message' => 'Database: ' . $dbName . ' selection failed with error: ' . mysqli_error($mysqli_connection)), true);
