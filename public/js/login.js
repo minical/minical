@@ -82,3 +82,9 @@ $(function() {
         $( "#dialog-form" ).dialog( "open" );
       });
 });	
+
+$(document).ready(function() {
+    $('#forgot-password-form').on('submit', function() {
+         $(this).find('input[type="submit"]').prop('disabled', true);
+    });
+});
