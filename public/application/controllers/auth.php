@@ -1706,56 +1706,53 @@ class Auth extends MY_Controller
             $this->form_validation->set_rules('login', 'Email or login', 'trim|required|xss_clean');
                 $data['errors'] = array();
 
-                if ($this->form_validation->run()) {
-                    $email = $this->form_validation->set_value('login');
-                    
-                    // Rate limiting configuration
-                    $attemptKey = 'forgot_password_attempts_' . $email;
-                    $lastAttemptKey = 'forgot_password_last_attempt_' . $email;
-                    $maxAttempts = 1;      // Maximum attempts allowed within the time window
-                    $timeWindow = 300;     // Time window in seconds (e.g., 300 seconds = 5 minutes)
-
-                    // Get current attempts and last attempt time from session
-                    $attempts = $this->session->userdata($attemptKey);
-                    $lastAttemptTime = $this->session->userdata($lastAttemptKey);
-
-                    if ($lastAttemptTime && (time() - $lastAttemptTime) < $timeWindow) {
-                        // Within the time window: check if max attempts exceeded
-                        if ($attempts >= $maxAttempts) {
-                            $data['errors']['rate_limit'] = 'Too many password reset requests. Please try again later.';
-                            $data['main_content'] = 'auth/forgot_password_form';
-                            $this->load->view('includes/bootstrapped_template', $data);
-                            return;
-                        } else {
-                            // Increment the counter for this email
-                            $this->session->set_userdata($attemptKey, $attempts + 1);
-                        }
-                    } else {
-                        // Outside the time window: reset the counter and record the current time
-                        $this->session->set_userdata($attemptKey, 1);
-                        $this->session->set_userdata($lastAttemptKey, time());
-                    }
-
-                    // Proceed with the password reset process
-                    if (!is_null(
-                        $data = $this->tank_auth->forgot_password($email)
-                    )) {
-
-                        $whitelabelinfo = $this->session->userdata('white_label_information');
-                        $data['site_name'] = $whitelabelinfo && isset($whitelabelinfo['name']) && $whitelabelinfo['name'] ? $whitelabelinfo['name'] : $this->config->item('website_name', 'tank_auth');
-
-                        // Send email with password activation link
-                        $this->_send_email('forgot_password', $data['email'], $data);
-                        $this->_show_message($this->lang->line('auth_message_new_password_sent').' '.anchor('/auth/login/', 'Login'));
-
-                    } else {
-                        $errors = $this->tank_auth->get_error_message();
-                        foreach ($errors as $k => $v) {
-                            $data['errors'][$k] = $this->lang->line($v);
-                        }
+               if ($this->form_validation->run()) {
+                $email = $this->form_validation->set_value('login');
+                // Rate limiting configuration
+                $maxAttempts = 1;   // Maximum attempts allowed within the time window
+                $timeWindow = 300;  // Time window in seconds (e.g., 300 seconds = 5 minutes)
+                // Calculate the time threshold
+                $timeThreshold = gmdate('Y-m-d H:i:s', time() - $timeWindow);
+                // Count recent attempts from the database
+                $gettData = [
+                        'email' => $email,
+                        'attempt_time' =>  $timeThreshold
+                    ];
+                $attempts = $this->Option_model->get_reset_by_json_data('password_reset_attempts', $gettData);
+                //prx($attempts,1);
+                if ($attempts >= $maxAttempts) {
+                    $data['errors']['rate_limit'] = 'Too many password reset requests. Please try again later.';
+                    $data['main_content'] = 'auth/forgot_password_form';
+                    $this->load->view('includes/bootstrapped_template', $data);
+                    return;
+                } else {
+                    $resetData = [
+                        'email' => $email,
+                        'attempt_time' =>  gmdate('Y-m-d H:i:s')
+                    ];
+                    $reset_data = array(
+                            'company_id' => 0,
+                            'option_name ' => 'password_reset_attempts',
+                            'option_value ' => json_encode($resetData),
+                            'autoload' => 0
+                        );
+                    // Record the new attempt in the database
+                    $this->Option_model->add_option($reset_data);
+                }
+                // Proceed with the password reset process
+                if (!is_null($data = $this->tank_auth->forgot_password($email))) {
+                    $whitelabelinfo = $this->session->userdata('white_label_information');
+                    $data['site_name'] = $whitelabelinfo['name'] ?? $this->config->item('website_name', 'tank_auth');
+                    // Send email with password activation link
+                    $this->_send_email('forgot_password', $data['email'], $data);
+                    $this->_show_message($this->lang->line('auth_message_new_password_sent').' '.anchor('/auth/login/', 'Login'));
+                } else {
+                    $errors = $this->tank_auth->get_error_message();
+                    foreach ($errors as $k => $v) {
+                        $data['errors'][$k] = $this->lang->line($v);
                     }
                 }
-
+            }
                 $data['js_files'] = array(
                     base_url().auto_version('js/login.js')
                 );

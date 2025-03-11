@@ -174,6 +174,29 @@ class Option_model extends CI_Model {
 
         return $result_array;
     }
+
+    function get_reset_by_json_data($option,$getdata){
+
+        $this->db->select('*');
+        $this->db->where('option_name', $option);
+        //$this->db->where('company_id', $company_id);
+        $where1 = "(JSON_EXTRACT(option_value, '$.email') = '".$getdata['email']."')";
+        $this->db->where($where1);
+        $where2 = "(JSON_EXTRACT(option_value, '$.attempt_time') > '".$getdata['attempt_time']."')";
+        $this->db->where($where2);
+        
+        $query = $this->db->get('options');
+       //echo  $this->db->last_query();
+      
+        if ($this->db->_error_message())
+        {
+            show_error($this->db->_error_message());
+        }
+
+        $resultArray = $query->result_array();
+        $rowCount = count($resultArray); 
+        return $rowCount;
+    }
 }
 
 ?>
