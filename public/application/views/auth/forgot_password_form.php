@@ -22,6 +22,7 @@ if ($this->config->item('use_username', 'tank_auth')) {
 		col-md-pull-4
 		text-center
 		"
+	id="forgot-password-form"
 	method="post" 
 	accept-charset="utf-8"
 	style="
