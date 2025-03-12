@@ -190,6 +190,12 @@ innGrid.updateRatePlan = function(ratePlan) {
 						ratePlan.removeClass('new-panel');
 					});
 				}, 1000);
+
+
+				var rateCreatedEvent = new CustomEvent('rate_created', { "detail" : {"child_rate_data" : result.rate_array_channex } });
+                document.dispatchEvent(rateCreatedEvent);
+
+
 				//innGrid.populateRoomTypeList();
 				setTimeout(function(){ location.reload(); }, 200);
 			}

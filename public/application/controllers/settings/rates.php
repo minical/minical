@@ -748,6 +748,8 @@ class Rates extends MY_Controller
         $rate_logic_amount = $this->input->post('ratelogic_amount') !="" ? $this->security->xss_clean($this->input->post('ratelogic_amount')) : null;        
         $checklist = $this->input->post('dataArray_check');
 
+        $rate_array_channex = array();
+
         if(($this->is_derived_rate_enabled == 1) && $derived_rate_enable == 1 ){
 
             $mims_arrival = isset($checklist[0]['min_stay_arrival']) ? $checklist[0]['min_stay_arrival'] : 0 ;
@@ -781,6 +783,144 @@ class Rates extends MY_Controller
                 );
 
                 $this->Option_model->update_option_company('derived_rate_'.$rate_plan_id,json_encode($meta),$this->company_id);
+
+                // start derived
+                
+                $date_range_data['start_date'] = date("Y-m-d");
+                $date_range_data['end_date'] = date('Y-m-d', strtotime(date("Y-m-d") . " + 1 year"));
+
+                $parents_data = $this->Rate_plan_model->get_parent_rateplan_data($parent_room_type, $parent_rate_plan, $date_range_data);
+                        
+                // prx($parents_data);
+                foreach ($parents_data as  $parent_data) {
+                
+                    if ($parent_data['monday'] == 1) {
+                        $derive_details = $this->derived_rate_plan($rate_logic, $parent_data, $rate_logic_amount);
+                    }
+                    if ($parent_data['tuesday'] == 1) {
+                        $derive_details = $this->derived_rate_plan($rate_logic, $parent_data, $rate_logic_amount);
+                    }
+                    if ($parent_data['wednesday'] == 1) {
+                        $derive_details = $this->derived_rate_plan($rate_logic, $parent_data, $rate_logic_amount);
+                    }
+                    if ($parent_data['thursday'] == 1) {
+                        $derive_details = $this->derived_rate_plan($rate_logic, $parent_data, $rate_logic_amount);
+                    }
+                    if ($parent_data['friday'] == 1) {
+                        $derive_details = $this->derived_rate_plan($rate_logic, $parent_data, $rate_logic_amount);
+                    }
+                    if ($parent_data['saturday'] == 1) {
+                        $derive_details = $this->derived_rate_plan($rate_logic, $parent_data, $rate_logic_amount);
+                    }
+                    if ($parent_data['sunday'] == 1) {
+                        $derive_details = $this->derived_rate_plan($rate_logic, $parent_data, $rate_logic_amount);
+                    }
+
+                    $adult_1_rate = $derive_details['adult_1_rate'];
+                    $adult_2_rate = $derive_details['adult_2_rate'];
+                    $adult_3_rate = $derive_details['adult_3_rate'];
+                    $adult_4_rate = $derive_details['adult_4_rate'];
+                
+            
+                    $minimum_length_of_stay = null;
+                    if($mims_arrival == 1){
+                      $minimum_length_of_stay = isset($parent_data['minimum_length_of_stay']) ? $parent_data['minimum_length_of_stay'] : null;
+                    }
+                
+                    $maximum_length_of_stay = null;
+                    if($mams_arrival == 1){  
+                      $maximum_length_of_stay = isset($parent_data['maximum_length_of_stay']) ? $parent_data['maximum_length_of_stay'] : null;
+                    }
+
+                    $closed_to_arrival = 0;
+                    if($closed_to_arrival == 1){
+                        $closed_to_arrival = isset($parent_data['closed_to_arrival']) ? $parent_data['closed_to_arrival'] : 0; 
+                    }
+
+                    $closed_to_departure = 0;
+                    if($closed_to_departure == 1){
+                        $closed_to_departure = isset($parent_data['closed_to_departure']) ? $parent_data['closed_to_departure'] : 0; 
+                    }
+
+                    $can_be_sold_online = 1;
+                    if($stop_sell == 1){
+                        $can_be_sold_online = isset($parent_data['can_be_sold_online']) ? $parent_data['can_be_sold_online'] : 0; 
+                    }
+
+                    $additional_adult_rate =  isset($parent_data['additional_adult_rate']) ? $parent_data['additional_adult_rate'] : null; 
+                    $additional_child_rate =  isset($parent_data['additional_child_rate']) ? $parent_data['additional_child_rate'] : null;
+                    $minimum_length_of_stay_arrival = isset($parent_data['minimum_length_of_stay_arrival']) ? $parent_data['minimum_length_of_stay_arrival'] : null;
+                    $maximum_length_of_stay_arrival = isset($parent_data['maximum_length_of_stay_arrival']) ? $parent_data['maximum_length_of_stay_arrival'] : null;
+
+                    $new_date_range_id = $this->Date_range_model->create_date_range(
+                        Array(
+                            'date_start' => date('Y-m-d', strtotime($parent_data['date_start'])),
+                            'date_end' =>  date('Y-m-d', strtotime($parent_data['date_end'])),
+                            'monday' =>  $parent_data['monday'] == 1 ? 1 : 0,
+                            'tuesday' =>  $parent_data['tuesday'] == 1 ? 1 : 0,
+                            'wednesday' =>  $parent_data['wednesday'] == 1 ? 1 : 0,
+                            'thursday' =>  $parent_data['thursday'] == 1 ? 1 : 0,
+                            'friday' =>  $parent_data['friday'] == 1 ? 1 : 0,
+                            'saturday' =>  $parent_data['saturday'] == 1 ? 1 : 0,
+                            'sunday' =>  $parent_data['sunday'] == 1 ? 1 : 0,
+                        )
+                    );
+
+                    $rate_array = Array(
+                        'rate_plan_id' => $rate_plan_id,
+                        'base_rate' => $adult_1_rate,
+                        'adult_1_rate' => $adult_1_rate,
+                        'adult_2_rate' => $adult_2_rate,
+                        'adult_3_rate' => $adult_3_rate,
+                        'adult_4_rate' => $adult_4_rate,
+                        'additional_adult_rate' => $additional_adult_rate,
+                        'additional_child_rate' => $additional_child_rate,
+                        'minimum_length_of_stay' => $minimum_length_of_stay,
+                        'maximum_length_of_stay' => $maximum_length_of_stay,
+                        'minimum_length_of_stay_arrival' => $minimum_length_of_stay_arrival,
+                        'maximum_length_of_stay_arrival' => $maximum_length_of_stay_arrival,
+                        'closed_to_arrival' => $closed_to_arrival,
+                        'closed_to_departure' => $closed_to_departure,
+                        'can_be_sold_online'=> $can_be_sold_online
+                    );
+
+                    $rate_array_channex[] = Array(
+                        'rate_plan_id' => $rate_plan_id,
+                        'date_start' => date('Y-m-d', strtotime($parent_data['date_start'])),
+                        'date_end' =>  date('Y-m-d', strtotime($parent_data['date_end'])),
+                        'adult_1_rate' => $adult_1_rate,
+                        'adult_2_rate' => $adult_2_rate,
+                        'adult_3_rate' => $adult_3_rate,
+                        'adult_4_rate' => $adult_4_rate,
+                        'additional_adult_rate' => $additional_adult_rate,
+                        'minimum_length_of_stay' => $minimum_length_of_stay,
+                        'maximum_length_of_stay' => $maximum_length_of_stay,
+                        'closed_to_arrival' => $closed_to_arrival,
+                        'closed_to_departure' => $closed_to_departure,
+                        'can_be_sold_online'=> $can_be_sold_online
+                    );
+
+                    $new_rate_id = $this->Rate_model->create_rate($rate_array);
+
+                    $this->Date_range_model->create_date_range_x_rate(
+                        Array(
+                            'rate_id' => $new_rate_id,
+                            'date_range_id' => $new_date_range_id
+                        )
+                    );
+
+                    // Assign the Base Rate into the newly created rate plan
+                    $this->Rate_plan_model->update_rate_plan(
+                        array('base_rate_id' => $new_rate_id),
+                        $rate_plan_id
+                    );
+                }
+
+
+
+
+                // end derived
+
             }
         } 
 		//update room type
@@ -817,6 +957,7 @@ class Rates extends MY_Controller
 			'value' => $value
 		);
 		
+        $data['rate_array_channex'] = $rate_array_channex;
 		echo json_encode($data);
 	}
 
