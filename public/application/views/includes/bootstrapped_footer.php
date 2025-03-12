@@ -132,6 +132,9 @@
     innGrid.featureSettings.companySecurityStatus = '<?=(isset($this->company_security_status) ? $this->company_security_status : '')?>';
     innGrid.featureSettings.SecurityData = '<?=(isset($this->security_data_length) ? $this->security_data_length : '')?>';
 
+    innGrid.featureSettings.gatewaySquareAppId = '<?=(isset($this->gateway_square_app_id) ? $this->gateway_square_app_id : '')?>';
+    innGrid.featureSettings.gatewaySquareLocationId = '<?=(isset($this->gateway_square_location_id) ? $this->gateway_square_location_id : '')?>';
+
     var reg_flag = <?php echo $registration_flag; ?>;
     innGrid.hasExtensionsPermission = <?php echo $registration_flag; ?>;
     
