@@ -7018,54 +7018,33 @@ var bookingModalInvoker = function ($) {
                             if (data[0] !== undefined) {
                                 var rate = data[0].rate;
                                 rate = ((show_decimal) ? parseFloat(rate).toFixed(2) : parseInt(rate));
-
                                 console.log('rate',rate);
                                 console.log('rate11',roomTypeDIV.find("[name='rate']").val());
-
                                 var rate_val = rate;
-                                if(innGrid.isGroupBookingFeatures == true){
-
-                                    var oldRatePlanId = $('#currentRatePlanID').val();
-
                                     if(roomTypeDIV.find("[name='rate']").val() == 0){
                                         rate_val = rate;
-                                    } 
-                                    else if(oldRatePlanId != ratePlanID){
-                                        rate_val = rate;
                                     } else if(roomTypeDIV.find("[name='rate']").val() != rate) {
-                                        rate_val = rate;
-                                    } else {
                                         rate_val = roomTypeDIV.find("[name='rate']").val();
                                     }
-
-                                    $('#currentRatePlanID').val(ratePlanID);
-
-                                    data[0].rate = rate_val;
-                                }
-
                                 if($('#current_rate_plan_type').val() !== 'per_person_type'){
                                 roomTypeDIV.find("[name='rate']").val(rate);
                                 } 
                                 if(innGrid.isGroupBookingFeatures == true){
                                     roomTypeDIV.find("[name='rate']").val(rate_val);
                                 }
-
                                 $.post(getBaseURL() + "rate_plan/get_tax_amount_from_rate_plan_JSON/",
                                     {
                                         rate_plan_id: roomTypeDIV.find('.charge-with option:selected').val(),
-                                        rate: rate
+                                        rate: (innGrid.isGroupBookingFeatures == true) ? rate_val : rate
                                     },
                                     function (tax) {
-
                                         if(innGrid.isGroupBookingFeatures == true)
                                             var taxedRate = rate_val * (1 + parseFloat(tax.percentage)) + parseFloat(tax.flat_rate);
                                         else
                                         var taxedRate = rate * (1 + parseFloat(tax.percentage)) + parseFloat(tax.flat_rate);
                                         //taxedRate = Math.round(taxedRate * 100) / 100;
                                         var rateIncludingTaxDiv = roomTypeDIV.find('.rate-including-tax');
-
                                         rateIncludingTaxDiv.text("("+l('with tax')+": " + number_format(taxedRate, 2, ".", "") + ")");
-
                                         if (tax.percentage != 0) {
                                             rateIncludingTaxDiv.removeClass("hidden");
                                         } else {
