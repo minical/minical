@@ -1302,15 +1302,23 @@ class Customer extends MY_Controller {
         $cc_token = '';
         $cardknox_token = '';
         $cardknox_cvv_token = '';
-        
 
+        $square_token = '';
+        $square_customer_id = '';
+        
+        
         if(isset($customer_data['cc_token']) && $customer_data['cc_token'])
             $cc_token = $customer_data['cc_token'];
         if(isset($customer_data['cardknox_token']) && $customer_data['cardknox_token'])
-        $cardknox_token = $customer_data['cardknox_token'];
+            $cardknox_token = $customer_data['cardknox_token'];
         if(isset($customer_data['cardknox_cvv_token']) && $customer_data['cardknox_cvv_token'])
-        $cardknox_cvv_token = $customer_data['cardknox_cvv_token'];
+            $cardknox_cvv_token = $customer_data['cardknox_cvv_token'];
 
+        if(isset($customer_data['square_token']) && $customer_data['square_token'])
+            $square_token = $customer_data['square_token'];
+        if(isset($customer_data['square_customer_id']) && $customer_data['square_customer_id'])
+            $square_customer_id = $customer_data['square_customer_id'];
+        
 
         $customer_create_data['customer_data'] = $customer_data;
 
@@ -1320,6 +1328,8 @@ class Customer extends MY_Controller {
         unset($customer_data['kovena_vault_token']);
         unset($customer_data['cardknox_token']);
         unset($customer_data['cardknox_cvv_token']);
+        unset($customer_data['square_token']);
+        unset($customer_data['square_customer_id']);
 
         // if (isset($customer_data['csrf_token'])) {
         //     unset($customer_data['csrf_token']);
@@ -1356,45 +1366,45 @@ class Customer extends MY_Controller {
                 is_numeric($cvc) &&
                 !strrpos($cvc, '*')
             )
-        {
-            $card_data_array = array('card' =>
-                array(
-                    'card_number'       => $cc_number,
-                    'card_type'         => "",
-                    'cardholder_name'   => (isset($customer_data['customer_name']) ? $customer_data['customer_name'] : ""),
-                    'service_code'      => $cvc,
-                    'expiration_month'  => isset($customer_data['cc_expiry_month']) ? $customer_data['cc_expiry_month'] : null,
-                    'expiration_year'   => isset($customer_data['cc_expiry_year']) ? $customer_data['cc_expiry_year'] : null
-                )
-            );
-            $card_response = array();
+            {
+                $card_data_array = array('card' =>
+                    array(
+                        'card_number'       => $cc_number,
+                        'card_type'         => "",
+                        'cardholder_name'   => (isset($customer_data['customer_name']) ? $customer_data['customer_name'] : ""),
+                        'service_code'      => $cvc,
+                        'expiration_month'  => isset($customer_data['cc_expiry_month']) ? $customer_data['cc_expiry_month'] : null,
+                        'expiration_year'   => isset($customer_data['cc_expiry_year']) ? $customer_data['cc_expiry_year'] : null
+                    )
+                );
+                $card_response = array();
 
-            if($card_data_array && $card_data_array['card']['card_number']) {
+                if($card_data_array && $card_data_array['card']['card_number']) {
 
-                $card_data_array['customer_data'] = $customer_data;
+                    $card_data_array['customer_data'] = $customer_data;
 
-                $card_response = apply_filters('post.add.customer', $card_data_array);
+                    $card_response = apply_filters('post.add.customer', $card_data_array);
 
-                unset($card_data_array['customer_data']);
-            }
-            if(
-                $card_response &&
-                isset($card_response['tokenization_response']["data"]) &&
-                isset($card_response['tokenization_response']["data"]["attributes"]) &&
-                isset($card_response['tokenization_response']["data"]["attributes"]["card_token"])
-            ){
-                $card_token = $card_response['tokenization_response']["data"]["attributes"]["card_token"];
-                $card_type = $card_response['tokenization_response']["data"]["attributes"]["card_type"];
+                    unset($card_data_array['customer_data']);
+                }
+                if(
+                    $card_response &&
+                    isset($card_response['tokenization_response']["data"]) &&
+                    isset($card_response['tokenization_response']["data"]["attributes"]) &&
+                    isset($card_response['tokenization_response']["data"]["attributes"]["card_token"])
+                ){
+                    $card_token = $card_response['tokenization_response']["data"]["attributes"]["card_token"];
+                    $card_type = $card_response['tokenization_response']["data"]["attributes"]["card_type"];
 
-                $cvc_encrypted = get_cc_cvc_encrypted($cvc, $card_token);
+                    $cvc_encrypted = get_cc_cvc_encrypted($cvc, $card_token);
 
-                $card_details['cc_cvc_encrypted'] = ($cvc_encrypted) ? $cvc_encrypted : "";
-                $card_details['cc_number'] = 'XXXX XXXX XXXX '.substr($cc_number,-4);
+                    $card_details['cc_cvc_encrypted'] = ($cvc_encrypted) ? $cvc_encrypted : "";
+                    $card_details['cc_number'] = 'XXXX XXXX XXXX '.substr($cc_number,-4);
 
-                $meta['token'] = $card_token;
-                $meta['card_type'] = $card_type;
-                $card_details['customer_meta_data'] = json_encode($meta);
-            }
+                    $meta['token'] = $card_token;
+                    $meta['card_type'] = $card_type;
+                    $card_details['customer_meta_data'] = json_encode($meta);
+                }
         } else if($cc_token){
             $card_details['cc_number'] = $cc_number;
             $meta['pci_token'] = $cc_token;
@@ -1406,6 +1416,12 @@ class Customer extends MY_Controller {
             $meta['cardknox_token'] = $cardknox_token;
             $meta['cardknox_cvv_token'] = $cardknox_cvv_token;
             $meta['source'] = 'cardknox';
+            $card_details['customer_meta_data'] = json_encode($meta);
+        }
+        else if($square_token){
+            $meta['source'] = 'square';
+            $meta['token'] = $square_token;
+            $meta['square_customer_id'] = $square_customer_id;
             $card_details['customer_meta_data'] = json_encode($meta);
         }
 

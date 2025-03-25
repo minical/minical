@@ -16,6 +16,7 @@ class MY_Controller extends CI_Controller {
     public $module_assets_files;
     public $module_menus;
     public $current_payment_gateway;
+    public $current_pci_integration;
     public $is_super_admin;
     public $all_active_modules;
     public $cache_values;
@@ -144,12 +145,15 @@ class MY_Controller extends CI_Controller {
         $this->is_easypos_fisical_enabled = false;
         $this->is_derived_rate_enabled = false;
         $this->is_group_booking_features = false;
+        $this->is_tokenex_enabled = false;
+        $this->is_square_enabled = false;
 
         if($get_active_modules){
             foreach ($get_active_modules as $key => $value) {
 
                 if($value['extension_name'] == 'channexpci_integration'){
                     $this->is_channex_pci_enabled = true;
+                    $this->current_pci_integration = 'channexpci_integration';
                 }
                 if($value['extension_name'] == 'pcibooking-integration'){
                     $this->is_pci_booking_enabled = true;
@@ -207,6 +211,13 @@ class MY_Controller extends CI_Controller {
                 }
                 if($value['extension_name'] == 'group_booking_features'){
                     $this->is_group_booking_features = true;
+                }
+                if($value['extension_name'] == 'tokenex_integration'){
+                    $this->is_tokenex_enabled = true;
+                    $this->current_pci_integration = 'tokenex_integration';
+                }
+                if($value['extension_name'] == 'square-payment-integration'){
+                    $this->is_square_enabled = true;
                 }
 
                 $config = array();

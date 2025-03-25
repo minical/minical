@@ -346,7 +346,7 @@ var customer_pci_token = '';
                 console.log('customer-data',customer);
                 console.log('Kovena',innGrid.isKovenaEnabled);
                 var sensitiveCardNumber =
-                    (((innGrid.isChannePCIEnabled || innGrid.isPCIBookingEnabled) && customer.token_source != 'kovena') && customer.customer_pci_token ? '<a style="position: absolute; right: 26px; top: 7px; z-index: 9999;" title = "Show Card Number" class="show_cc" data-cc_number_encrypted="' + customer.cc_number_encrypted + '" data-cc_number="' + customer.cc_number + '" data-customer_pci_token="' + customer.customer_pci_token + '" data-token_source="' + customer.token_source + '" data-cc_detail="card_number" href="javascript:"><i class="fa fa-eye" ></i></a><input type="hidden" class="customer_id" data-cc_token="' + customer.cc_tokenex_token + '" data-cc_cvc="' + customer.cc_cvc_encrypted + '" value="' + customer.customer_id + '"/>' : '');
+                    (((innGrid.isChannePCIEnabled || innGrid.isPCIBookingEnabled) && customer.token_source != 'kovena' && customer.token_source != 'square') && customer.customer_pci_token ? '<a style="position: absolute; right: 26px; top: 7px; z-index: 9999;" title = "Show Card Number" class="show_cc" data-cc_number_encrypted="' + customer.cc_number_encrypted + '" data-cc_number="' + customer.cc_number + '" data-customer_pci_token="' + customer.customer_pci_token + '" data-token_source="' + customer.token_source + '" data-cc_detail="card_number" href="javascript:"><i class="fa fa-eye" ></i></a><input type="hidden" class="customer_id" data-cc_token="' + customer.cc_tokenex_token + '" data-cc_cvc="' + customer.cc_cvc_encrypted + '" value="' + customer.customer_id + '"/>' : '');
                 var sensitiveCardCVC = (customer.cc_cvc_encrypted ? '<a style="position: absolute; right: 26px; top: 7px; z-index: 9999;" title = "Show Card CVC" class="show_cc" data-cc_number_encrypted="' + customer.cc_number_encrypted + '" data-cc_number="' + customer.cc_number + '" data-cc_detail="card_cvc" href="javascript:"><i class="fa fa-eye" ></i></a>' : '');
 
                 $customer_form.append(
@@ -773,6 +773,41 @@ var customer_pci_token = '';
                                     update_create_client();
                                 }
                                 
+                            }
+                            else if (typeof squareGateway !== "undefined" && squareGateway) {
+                                
+                                var square_token = $('#square-payment-token').text();
+                                var square_exp_month = $('#square-payment-exp_month').text();
+                                var square_exp_year = $('#square-payment-exp_year').text();
+                                var square_lastfour = $('#square-payment-lastfour').text();
+
+                                square_exp_year = square_exp_year.substr(2, 4);
+                                
+                                customerData['cc_number'] = "XXXX XXXX XXXX "  + square_lastfour;
+                                customerData['cc_expiry_month'] = square_exp_month;
+                                customerData['cc_expiry_year'] = square_exp_year;
+                                customerData['square_token'] = square_token;
+
+                                $.ajax({
+                                    type: "POST",
+                                    dataType: 'json',
+                                    url: getBaseURL() + 'create_square_customer',
+                                    data: {data:customerData},
+                                    success: function (response) {
+                                        console.log('response',response);
+
+                                        if(response.success){
+                                            customerData.square_token = response.token;
+                                            customerData.square_customer_id = response.square_customer_id;
+
+                                            setTimeout(function(){
+                                                update_create_client(customerData);
+                                            },3000);
+                                        }
+
+                                        
+                                    }
+                                });
                             } 
                             else if (typeof kovenaGateway !== "undefined" && kovenaGateway && innGrid.isKovenaEnabled == 1) {
                                 console.log('widget',widget);
@@ -892,7 +927,7 @@ var customer_pci_token = '';
             $("#customer-modal").find("form.modal-body").attr('autocomplete', 'none');
             $("#customer-modal").find(".modal-content").find('input.form-control').attr('autocomplete', 'none');
         },
-       
+        
         _fetchCustomerData: function() {
 
             var $customerModal = $("#customer-modal");

@@ -257,7 +257,13 @@ $ifieldKey = getenv('CARDKNOX_IFIELD_KEY');
 		echo "<script>var is_current_user_admin = '".$is_current_user_admin."'</script>";
 		
 		//echo "<script>var booking_engine_tracking_code = '".html_entity_decode(html_entity_decode($company_data['booking_engine_tracking_code'] , ENT_COMPAT))."'</script>";
+
 	?>
+
+	<script type="text/javascript">
+		var gatewaySquareAppId = '<?=(isset($this->gateway_square_app_id) ? $this->gateway_square_app_id : '')?>';
+    	var gatewaySquareLocationId = '<?=(isset($this->gateway_square_location_id) ? $this->gateway_square_location_id : '')?>';
+	</script>
 
 	<script>
     <!-- Below script used for language translation  -->
