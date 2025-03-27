@@ -527,6 +527,7 @@ if((isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true ) ||
                     <input type="hidden" name="customer_name" class="customer_name" value="<?php echo $booking_customer['customer_name']; ?>">
                     <input type="hidden" class="text-right" id="customer_id"  disabled value="<?= !empty($booking_customer['customer_id']) ? $booking_customer['customer_id'] : "";?>"/>
                     <input type="hidden" class="text-right" id="evc_card_status"  value="<?= (isset($customer['evc_card_status']) && $customer['evc_card_status']) ? $customer['evc_card_status'] : ''; ?>"/>
+                    <input type="hidden" class="text-right" id="postal_code"  value="<?= (isset($booking_customer['postal_code']) && $booking_customer['postal_code']) ? $booking_customer['postal_code'] : ''; ?>"/>
                     <br/>
                     <?php
                     $customer_address = array();
