@@ -17,6 +17,7 @@ class Permission_model extends CI_Model {
             ($controller_name === "room" && $function_name === 'get_rooms_available_AJAX') ||
             ($controller_name === 'online_reservation') ||
             ($controller_name === 'online_booking_engine') ||
+            ($controller_name === 'online_group_reservation') ||
             ($controller_name === 'customer' && $function_name === 'get_cc_cvc_encrypted') ||
             ($controller_name === 'customer' && $function_name === 'detokenize_unused_token') ||
             ($controller_name === 'customer' && $function_name === 'delete_unused_token') ||
