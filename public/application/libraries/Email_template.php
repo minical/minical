@@ -235,7 +235,7 @@ class Email_template {
         }
     }
 
-    function send_booking_confirmation_email($booking_id)
+    function send_booking_confirmation_email($booking_id, $num_of_rooms = null)
     {
         $this->ci->load->helper('date_format_helper');
         $booking_data = $this->ci->Booking_model->get_booking_detail($booking_id);
@@ -574,6 +574,10 @@ class Email_template {
             'booking_source' => $booking_source,
             'booking_notes' => $booking_notes
         );
+
+        if($booking_source == 'Online Group Booking Engine'){
+            $email_data['number_of_rooms'] = $num_of_rooms;
+        }
 
         $email_data['confirmation_email_header'] = '';
         if($this->ci->booking_confirmation_email){

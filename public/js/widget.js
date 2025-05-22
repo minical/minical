@@ -22,6 +22,13 @@ window.onload = function () {
                     // var id = div.getAttribute("name");
                     var id = window.miniCal.companyId ? window.miniCal.companyId : div.getAttribute("name");
 
+                    var bookingEngineName = window.miniCal.name ? window.miniCal.name : "Booking Engine";
+
+                    var controller = 'online_reservation';
+                    if(bookingEngineName == 'Group Booking Engine'){
+                        var controller = 'online_group_reservation';
+                    }
+
                     // get today
                     var currentDate = new Date(new Date().getTime());
                     var dd = currentDate.getDate().toString();
@@ -58,7 +65,7 @@ window.onload = function () {
                         document.getElementById("find_rooms").value = resp.find_rooms;
                      };
 
-                    div.innerHTML = "<form action='"+formUrl+"online_reservation/select_dates_and_rooms/"+id+"' method='post' target='_blank' id='booking-form'>"+
+                    div.innerHTML = "<form action='"+formUrl+controller+"/select_dates_and_rooms/"+id+"' method='post' target='_blank' id='booking-form'>"+
                             "\n <ul>"+
                                 "\n <li>"+
                                     "\n <label for='check-in-date' id='check_in_date'>Check-in Date</label>"+
