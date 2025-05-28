@@ -82,27 +82,27 @@ class Permission_model extends CI_Model {
             (
                 $controller_name === "nestpay_integration" && 
                 (
-                    $function_name === 'nestpay_response_ok_url' || $function_name === 'nestpay_response_fail_url' || $function_name === 'get_nestpay_post_bookingengine' || $function_name ===  'nestpay_bookingengine_ok_fail_url' || $function_name ==='nestpay_group_response_ok_url' || $function_name ==='nestpay_group_response_fail_url'
+                    $function_name === 'nestpay_response_ok_url' || $function_name === 'nestpay_response_fail_url' || $function_name === 'get_nestpay_post_bookingengine' || $function_name ===  'nestpay_bookingengine_ok_fail_url' || $function_name ==='nestpay_group_response_ok_url' || $function_name ==='nestpay_group_response_fail_url' || $function_name ==='get_nestpay_groupbooking_post_data' || $function_name ==='nestpay_groupbooking_response_ok_fail_url'
                 )
             )||
             (
                 $controller_name === "nestpaymkd_integration" && 
                 (
-                    $function_name === 'nestpaymkd_response_ok_url' || $function_name === 'nestpaymkd_response_fail_url' || $function_name === 'get_nestpaymkd_post_bookingengine' || $function_name ===  'nestpaymkd_bookingengine_ok_fail_url' || $function_name ==='nestpaymkd_group_response_ok_url' || $function_name ==='nestpaymkd_group_response_fail_url'
+                    $function_name === 'nestpaymkd_response_ok_url' || $function_name === 'nestpaymkd_response_fail_url' || $function_name === 'get_nestpaymkd_post_bookingengine' || $function_name ===  'nestpaymkd_bookingengine_ok_fail_url' || $function_name ==='nestpaymkd_group_response_ok_url' || $function_name ==='nestpaymkd_group_response_fail_url' || $function_name ==='get_nestpaymkd_groupbooking_post_data' || $function_name ==='nestpaymkd_groupbooking_response_ok_fail_url'
                 )
             )
             ||
             (
                 $controller_name === "nestpayalb_integration" && 
                 (
-                    $function_name === 'nestpayalb_response_ok_url' || $function_name === 'nestpayalb_response_fail_url' || $function_name === 'get_nestpayalb_post_bookingengine' || $function_name ===  'nestpayalb_bookingengine_ok_fail_url' || $function_name ==='nestpayalb_group_response_ok_url' || $function_name ==='nestpayalb_group_response_fail_url'
+                    $function_name === 'nestpayalb_response_ok_url' || $function_name === 'nestpayalb_response_fail_url' || $function_name === 'get_nestpayalb_post_bookingengine' || $function_name ===  'nestpayalb_bookingengine_ok_fail_url' || $function_name ==='nestpayalb_group_response_ok_url' || $function_name ==='nestpayalb_group_response_fail_url' || $function_name ==='get_nestpayalb_groupbooking_post_data' || $function_name ==='nestpayalb_groupbooking_response_ok_fail_url'
                 )
             )
             ||
             (
                 $controller_name === "nestpaysrb_integration" && 
                 (
-                    $function_name === 'nestpaysrb_response_ok_url' || $function_name === 'nestpaysrb_response_fail_url' || $function_name === 'get_nestpaysrb_post_bookingengine' || $function_name ===  'nestpaysrb_bookingengine_ok_fail_url' || $function_name ==='nestpaysrb_group_response_ok_url' || $function_name ==='nestpaysrb_group_response_fail_url'
+                    $function_name === 'nestpaysrb_response_ok_url' || $function_name === 'nestpaysrb_response_fail_url' || $function_name === 'get_nestpaysrb_post_bookingengine' || $function_name ===  'nestpaysrb_bookingengine_ok_fail_url' || $function_name ==='nestpaysrb_group_response_ok_url' || $function_name ==='nestpaysrb_group_response_fail_url' || $function_name ==='get_nestpaysrb_groupbooking_post_data' || $function_name ==='nestpaysrb_groupbooking_response_ok_fail_url'
                 )
             )||
             (
