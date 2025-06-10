@@ -2239,15 +2239,16 @@ class Customer extends MY_Controller {
     }
     
     function insert_card_details(){
-       $error     = false;
-       $error_msg = '';
+        $error     = false;
+        $error_msg = '';
        
         $customer_data = $this->input->post('customer_data');
         $customer_data['company_id'] = $this->company_id;
 
         $customer_id = $customer_data['customer_id'];
 
-        $cc_number = isset($customer_data['card_number']) && $customer_data['card_number'] ? $customer_data['card_number'] : NULL;
+        // $cc_number = isset($customer_data['card_number']) && $customer_data['card_number'] ? $customer_data['card_number'] : NULL;
+        $cc_number = $this->input->post('cc_number');
         $cvc = $customer_data['cvc'];
         
         $card_details = array(
@@ -2285,6 +2286,7 @@ class Customer extends MY_Controller {
             if($card_data_array && $card_data_array['card']['card_number']) {
 
                 $card_data_array['customer_data'] = $customer_data;
+                $card_data_array['function_name'] = 'insert_card_details';
 
                 $card_response = apply_filters('post.add.customer', $card_data_array);
 
@@ -2310,29 +2312,31 @@ class Customer extends MY_Controller {
             }
         } 
 
-        $check_data = $this->Card_model->get_customer_primary_card($customer_id);
-        
-        if(empty($check_data)){
-            $this->Customer_model->update_customer($customer_id, $customer_data);
+        //if($this->company_id != 4462){  // for Pemberton Hotel
+            $check_data = $this->Card_model->get_customer_primary_card($customer_id);
+            
+            if(empty($check_data)){
+                $this->Customer_model->update_customer($customer_id, $customer_data);
 
-            $post_customer_data = $customer_data;
-            $post_customer_data['customer_id'] = $customer_id;
+                // $post_customer_data = $customer_data;
+                // $post_customer_data['customer_id'] = $customer_id;
 
-            // do_action('post.update.customer', $post_customer_data);
+                // do_action('post.update.customer', $post_customer_data);
 
-            if(isset($cc_number)){
-                $this->Card_model->create_customer_card_info($card_details);
+                if(isset($cc_number)){
+                    $this->Card_model->create_customer_card_info($card_details);
+                }
+                if (isset($customer_data['customer_fields']))
+                {
+                    $this->Customer_model->update_customer_fields($customer_id, $customer_data['customer_fields']); 
+                }
+            } else {
+                if(isset($cc_number)){
+                    $card_details['is_primary'] = 0;
+                    $this->Card_model->create_customer_card_info($card_details);
+                }
             }
-            if (isset($customer_data['customer_fields']))
-            {
-                $this->Customer_model->update_customer_fields($customer_id, $customer_data['customer_fields']); 
-            }
-        } else {
-            if(isset($cc_number)){
-                $card_details['is_primary'] = 0;
-                $this->Card_model->create_customer_card_info($card_details);
-            }
-        }
+        //}
         
         $booking_id = $this->input->post('booking_id');
         
@@ -2348,23 +2352,23 @@ class Customer extends MY_Controller {
            'cc_number' => $cc_number,
         );
 
-        $is_primary_card = $this->Card_model->get_customer_primary_card($data['customer_id']);
+        // $is_primary_card = $this->Card_model->get_customer_primary_card($data['customer_id']);
         $customer_data['company_id'] = $this->company_id;
 
-        if($is_primary_card) {
-            if($is_primary_card['is_primary']) {
-                // $card_details['is_primary'] = 0;
-                // $insert_customer_card = $this->Card_model->create_customer_card_info($card_details);
-            } else {
-                $card_details['is_primary'] = 0;
-                $insert_customer_card = $this->Card_model->create_customer_card_info($card_details);
-            }
+        // if($is_primary_card) {
+            // if($is_primary_card['is_primary']) {
+            //     // $card_details['is_primary'] = 0;
+            //     // $insert_customer_card = $this->Card_model->create_customer_card_info($card_details);
+            // } else {
+            //     $card_details['is_primary'] = 0;
+            //     $insert_customer_card = $this->Card_model->create_customer_card_info($card_details);
+            // }
             // $card_details['is_primary'] = 0;
             // // $insert_customer_card = $this->Card_model->create_customer_card_info($card_details);
             // $insert_customer_card = $this->Card_model->update_customer_card($is_primary_card['id'], $data['customer_id'], $card_details);
             // $data['error']     = $error;
             // $data['error_msg'] = $error_msg;
-        } 
+        // } 
         // else {
         //     $card_details['is_primary'] = 1;
         //     $insert_customer_card = $this->Card_model->create_customer_card_info($card_details);
@@ -2372,8 +2376,8 @@ class Customer extends MY_Controller {
         //     $data['error_msg'] = $error_msg;
         // }
         
-        $customer_data['card_id'] = $insert_customer_card ?? null; 
-        apply_filters('post.create.payment_source', $customer_data);
+        // $customer_data['card_id'] = $insert_customer_card ?? null; 
+        // apply_filters('post.create.payment_source', $customer_data);
 
         $this->_create_booking_log($booking_id, "New Credit Card Added by " . $customer_data['customer_name'], USER_LOG);
         
@@ -2387,16 +2391,16 @@ class Customer extends MY_Controller {
         $card_token = sqli_clean($this->security->xss_clean($this->input->post('card_token'))); 
         $booking_id = sqli_clean($this->security->xss_clean($this->input->post('booking_id'))); 
 
-        $cards = $this->Card_model->get_token_cards($card_token);
-        if (!$cards || $cards && count($cards) <= 1) {
-            $this->tokenex->delete_token($card_token);
-        }
+        // $cards = $this->Card_model->get_token_cards($card_token);
+        // if (!$cards || $cards && count($cards) <= 1) {
+        //     $this->tokenex->delete_token($card_token);
+        // }
         
         $customer_data = array(
                         'customer_id' =>$customer_id,
                         'card_id'=> $card_id
                     );
-        apply_filters('post.delete.payment_source', $customer_data);
+        // apply_filters('post.delete.payment_source', $customer_data);
 
         $del_result = $this->Card_model->delete_customer_card($customer_id, $card_id, $this->company_id);
 
