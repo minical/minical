@@ -394,16 +394,26 @@ class Rate_plan_model extends CI_Model {
     function get_parent_rateplan_data($roomtype_id , $rateplan_id, $date_range = null)
     {
 		$limit_condition = "LIMIT 7";
-    	if($date_range){
-    		$limit_condition = "";
-    	}
-        $q = "SELECT rt.rate_plan_name ,r.*,drr.rate_id,drr.date_range_id,dr.* FROM `rate_plan` as rt 
-			INNER JOIN rate as r ON rt.rate_plan_id = r.rate_plan_id
-			INNER JOIN date_range_x_rate as drr ON drr.rate_id = r.rate_id
-			INNER JOIN date_range as dr ON dr.date_range_id = drr.date_range_id 
-			where rt.rate_plan_id = $rateplan_id and rt.room_type_id = $roomtype_id and dr.date_start !='2000-01-01' and dr.date_end !='2030-01-01' ORDER BY r.rate_id DESC $limit_condition";
-        $query = $this->db->query($q);
-        
+		$date_condition = "";
+
+		if ($date_range) {
+		    $limit_condition = "";
+		    $date_condition = "AND dr.date_start >= '{$date_range['start_date']}' AND dr.date_end <= '{$date_range['end_date']}' ";
+		}
+
+		$q = "SELECT rt.rate_plan_name, r.*, drr.rate_id, drr.date_range_id, dr.* 
+		      FROM rate_plan as rt 
+		      INNER JOIN rate as r ON rt.rate_plan_id = r.rate_plan_id
+		      INNER JOIN date_range_x_rate as drr ON drr.rate_id = r.rate_id
+		      INNER JOIN date_range as dr ON dr.date_range_id = drr.date_range_id 
+		      WHERE rt.rate_plan_id = $rateplan_id 
+		        AND rt.room_type_id = $roomtype_id 
+		        $date_condition 
+		      ORDER BY r.rate_id DESC 
+		      $limit_condition";
+
+		$query = $this->db->query($q);
+
         return $query->result_array();
     }
 }
