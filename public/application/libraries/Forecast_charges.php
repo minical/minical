@@ -608,7 +608,21 @@ class Forecast_charges
                 GROUP BY b.booking_id";
        
         $query = $this->ci->db->query($sql);
-         
+
+        $booking_ids = $charge_type_ids = array();
+
+        foreach ($query->result_array() as $row){
+            $booking_ids[] = $row['booking_id'];
+            $charge_type_ids[] = $row['charge_type_id'];
+        }
+
+        $last_room_charges = $this->ci->Charge_model->get_last_applied_charge_per_booking(
+            $booking_ids,
+            $charge_type_ids,
+            null,
+            true
+        );
+
 		if ($this->ci->db->_error_message()) // error checking
 			show_error($this->ci->db->_error_message());
 		$result = array();
@@ -623,7 +637,11 @@ class Forecast_charges
                 }
                 
                 $date_start = max($row['check_in_date'], $current_selling_date);
-                $last_room_charge = $this->ci->Charge_model->get_last_applied_charge($row['booking_id'], $row['charge_type_id'], null, true);
+                // $last_room_charge = $this->ci->Charge_model->get_last_applied_charge($row['booking_id'], $row['charge_type_id'], null, true);
+
+                $booking_id = $row['booking_id'];
+                $last_room_charge = isset($last_room_charges[$booking_id]) ? $last_room_charges[$booking_id] : null;
+
                 if(isset($last_room_charge['selling_date']) && $last_room_charge['selling_date']){
                     if($row['pay_period'] == DAILY){
                         $date_start = date('Y-m-d', strtotime($last_room_charge['selling_date'].' +1 day'));
@@ -678,13 +696,13 @@ class Forecast_charges
                     $adult_count = $row['adult_count'];
                     $children_count = $row['children_count'];
                     
-                    $rate_plan   = $this->ci->Rate_plan_model->get_rate_plan($rate_plan_id);
+                    // $rate_plan   = $this->ci->Rate_plan_model->get_rate_plan($rate_plan_id);
                     
                     if($row['check_out_date'] < $current_selling_date){
                         continue;
                     }
                     
-                    $rate_array = $this->ci->rate->get_rate_array($rate_plan_id, $date_start, $row['check_out_date'], $adult_count, $children_count);
+                    $rate_array = $this->ci->rate->get_rate_array($rate_plan_id, $date_start, $row['check_out_date'], $adult_count, $children_count, array(), true);
                     // change key names (i.e. date => selling_date, rate => amount
                     foreach ($rate_array as $index => $rate)
                     {

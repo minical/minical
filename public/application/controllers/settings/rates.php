@@ -321,6 +321,7 @@ class Rates extends MY_Controller
                 'description' => isset($unsanitized_post['description']) ? $unsanitized_post['description'] : "",
                 'is_shown_in_online_booking_engine' => base64_decode($this->security->xss_clean($this->input->post('is_shown_in_online_booking_engine'))),
                 'policy_code'=> $this->input->post('policy_code') !="" ? $this->security->xss_clean($this->input->post('policy_code')) : null,
+                'company_id'=> $this->company_id
             );
 
             $derived_rate_enable =  $this->input->post('derivedrate_enable') != "" ? $this->security->xss_clean($this->input->post('derivedrate_enable')) : 0;

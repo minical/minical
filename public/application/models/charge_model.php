@@ -790,7 +790,7 @@ class Charge_model extends CI_Model {
 		return $result->result();	
 	}
 	// returns a booking's list of charges + taxes associated with it as a sub-array
-	function get_charges($booking_id, $customer_id = false, $folio_id = null, $is_first_folio = false)
+	function get_charges($booking_id, $customer_id = false, $folio_id = null, $is_first_folio = false, $is_reservation_report = false)
     {
     	$this->db->where("charge.booking_id IN ($booking_id)");
         
@@ -804,6 +804,15 @@ class Charge_model extends CI_Model {
 		}
 		
 		$this->db->where('charge.is_deleted', '0');
+
+		if($is_reservation_report){
+
+			$where = "(b.rate != 0 OR b.balance != 0 OR b.balance_without_forecast != 0)";
+
+			$this->db->where($where);
+		}
+
+
 		$this->db->join('charge_folio as cf' , 'charge.charge_id = cf.charge_id', 'left');
         $this->db->join('charge_type as ct', 'charge.charge_type_id = ct.id', 'left');
 		$this->db->join('customer as cu', 'charge.customer_id = cu.customer_id', 'left');
@@ -1145,6 +1154,40 @@ class Charge_model extends CI_Model {
 		{
 			return null;
 		}
+	}
+
+	function get_last_applied_charge_per_booking($booking_ids, $charge_type_ids, $end_date = null, $only_night_audit_charge = false)
+	{
+	    $this->db->select('*');
+	    $this->db->from('charge');
+	    $this->db->where_in('booking_id', $booking_ids);
+	    $this->db->where_in('charge_type_id', $charge_type_ids);
+	    $this->db->where('is_deleted', 0);
+
+	    if ($only_night_audit_charge) {
+	        $this->db->where('is_night_audit_charge', 1);
+	    }
+
+	    if ($end_date) {
+	        $this->db->where('selling_date <', $end_date);
+	    }
+
+	    $this->db->order_by('booking_id, selling_date DESC');
+
+	    $query = $this->db->get();
+	    $charges = $query->result_array();
+
+	    $latest_per_booking = [];
+
+	    foreach ($charges as $charge) {
+	        $booking_id = $charge['booking_id'];
+	        if (!isset($latest_per_booking[$booking_id])) {
+	            $latest_per_booking[$booking_id] = $charge;
+	        }
+	        // else skip — we already got the latest due to ORDER BY
+	    }
+
+	    return $latest_per_booking;
 	}
     
     function get_applied_charges_and_dates($booking_id, $charge_type_id, $end_date = null, $company_id = null)

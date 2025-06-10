@@ -10,17 +10,22 @@ class Rate {
 		$this->ci->load->model('Rate_model');
 	}
 
-	function get_rate_array($rate_plan_id = null, $date_start, $date_end, $adult_count = null, $children_count = null, $rate_plan_ids = array())
-	{
-		if(!$rate_plan_id && count($rate_plan_ids) > 0) {
-			// new optimized function that accept multiple rate plans ids in an array
-			$rate_array = $this->ci->Rate_model->get_daily_rates_optimized($rate_plan_ids, $date_start, $date_end, null);
-		}
-		else {
-			$rate_array = $this->ci->Rate_model->get_daily_rates($rate_plan_id, $date_start, $date_end, null);
-		}
-		
-		
+	function get_rate_array($rate_plan_id = null, $date_start, $date_end, $adult_count = null, $children_count = null, $rate_plan_ids = array(), $is_future_charges = false)
+    {
+        if(!$rate_plan_id && count($rate_plan_ids) > 0) {
+            // new optimized function that accept multiple rate plans ids in an array
+            $rate_array = $this->ci->Rate_model->get_daily_rates_optimized($rate_plan_ids, $date_start, $date_end, null);
+        }
+        else {
+
+            if($is_future_charges){
+                $rate_array = $this->ci->Rate_model->get_daily_rates_for_future_charges($rate_plan_id, $date_start, $date_end, null);
+            } else {
+                $rate_array = $this->ci->Rate_model->get_daily_rates($rate_plan_id, $date_start, $date_end, null);
+            }
+        }
+        
+        
         foreach ($rate_array as $index => $rate) {
             if ($adult_count == '1') {
 
@@ -48,11 +53,8 @@ class Rate {
             }
         }
 
-//        $rate_array[$index]['rate'] = 9;
-
-
         return $rate_array;
-	}
+    }
     
     /**
      * gets free slots

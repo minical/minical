@@ -317,6 +317,64 @@ class Rate_model extends CI_Model {
 	        }
 		return array();
 	}
+
+	function get_daily_rates_for_future_charges($rate_plan_id, $date_start = "1970-01-01", $date_end = "2050-01-01")
+	{
+	    // Define rate columns to be fetched
+	    $rate_variables = array(
+	        "adult_1_rate", "adult_2_rate", "adult_3_rate", "adult_4_rate",
+	        "additional_adult_rate", "additional_child_rate"
+	    );
+
+	    // Build subqueries for each rate variable
+	    $rate_sql_subqueries = [];
+	    foreach ($rate_variables as $var) {
+	        $rate_sql_subqueries[] = "
+	            (
+	                SELECT r.$var
+	                FROM rate r
+	                JOIN date_range_x_rate drxr ON r.rate_id = drxr.rate_id
+	                JOIN date_range dr ON dr.date_range_id = drxr.date_range_id
+	                WHERE r.rate_plan_id = '$rate_plan_id'
+	                AND r.$var IS NOT NULL
+	                AND dr.date_start <= di.date AND di.date <= dr.date_end
+	                AND (
+	                    (dr.sunday = '1' AND DAYOFWEEK(di.date) = " . SUNDAY . ") OR
+	                    (dr.monday = '1' AND DAYOFWEEK(di.date) = " . MONDAY . ") OR
+	                    (dr.tuesday = '1' AND DAYOFWEEK(di.date) = " . TUESDAY . ") OR
+	                    (dr.wednesday = '1' AND DAYOFWEEK(di.date) = " . WEDNESDAY . ") OR
+	                    (dr.thursday = '1' AND DAYOFWEEK(di.date) = " . THURSDAY . ") OR
+	                    (dr.friday = '1' AND DAYOFWEEK(di.date) = " . FRIDAY . ") OR
+	                    (dr.saturday = '1' AND DAYOFWEEK(di.date) = " . SATURDAY . ")
+	                )
+	                ORDER BY r.rate_id DESC
+	                LIMIT 1
+	            ) AS $var
+	        ";
+	    }
+
+	    // Final SQL query
+	    $rate_sql = "
+	        SELECT 
+	            di.date,
+	            WEEKDAY(di.date) AS day_of_week,
+	            " . implode(",\n", $rate_sql_subqueries) . ",
+	            rp.room_type_id,
+	            rp.rate_plan_id,
+	            rp.charge_type_id,
+	            rp.rate_plan_name
+	        FROM date_interval di
+	        JOIN rate_plan rp ON rp.rate_plan_id = '$rate_plan_id'
+	        WHERE (
+	            (di.date >= '$date_start' AND di.date < '$date_end') OR
+	            (di.date = '$date_start' AND '$date_start' = '$date_end')
+	        )
+	        GROUP BY di.date
+	    ";
+
+	    $query = $this->db->query($rate_sql);
+	    return $query->num_rows() > 0 ? $query->result_array() : [];
+	}
 	
 	// get rates between dates - property group online booking engine - very much optimized sql and we will start using it eventually for whole site
     function get_daily_rates_optimized($rate_plan_ids = array(), $date_start = "1970-01-01", $date_end = "2050-01-01", $room_type_id = 0)
