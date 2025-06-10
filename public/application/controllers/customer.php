@@ -1358,6 +1358,31 @@ class Customer extends MY_Controller {
            'cc_expiry_year' => (isset($customer_data['cc_expiry_year']) ? $customer_data['cc_expiry_year'] : NULL)
         );
 
+
+        // start for Stripe
+        if($this->is_stripe_enabled){
+            $card_response = array();
+            if(
+                $cc_number && 
+                is_numeric($cc_number) &&
+                !strrpos($cc_number, 'X') && 
+                $cvc && 
+                is_numeric($cvc) &&
+                !strrpos($cvc, '*')
+            ){
+                $this->ci->load->library('../extensions/'.$this->current_payment_gateway.'/libraries/ProcessPayment');
+
+                $card_response = $this->processpayment->create_stripe_token($cvc, $cc_number, $customer_data['cc_expiry_month'], $customer_data['cc_expiry_year']);
+
+                // $card_response = json_decode($card_response, true);
+
+                if($card_response['success']){
+                    $meta['source'] = 'stripe';
+                    $meta['stripe_token'] = $card_response['token'];
+                    $card_details['customer_meta_data'] = json_encode($meta);
+                }
+            }
+        }
         if(
             $cc_number && 
                 is_numeric($cc_number) &&
