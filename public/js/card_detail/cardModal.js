@@ -444,7 +444,9 @@
                                                 customer_data: customerData,
                                                 cc_tokenex_token: cc_tokenex_token,
                                                 cc_cvc_encrypted: cc_cvc_encrypted,
-                                                booking_id : booking_id
+                                                booking_id : booking_id,
+                                                cc_number: ccNumber  // Get the latest value here
+
                                                 
                                             },
                                             dataType: "json",
