@@ -228,7 +228,7 @@
                                             id: "extra_cc_number",
                                             type: 'text',
                                             value: logs.cc_number
-                                        })on('input', function () {
+                                        }).on('input', function () {
                                         // Remove spaces on input
                                         $(this).val($(this).val().replace(/\s+/g, ''));
                                         })
