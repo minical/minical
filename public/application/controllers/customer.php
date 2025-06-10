@@ -2283,7 +2283,7 @@ class Customer extends MY_Controller {
 
             // do_action('post.update.customer', $post_customer_data);
 
-            if(isset($cc_number)){
+            if(isset($cc_number) && $cc_number!=''){
                 $this->Card_model->create_customer_card_info($card_details);
             }
             if (isset($customer_data['customer_fields']))
