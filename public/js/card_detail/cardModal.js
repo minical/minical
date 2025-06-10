@@ -119,7 +119,7 @@
                          };
                             that._initializeCardModal(customer_data, customer_card_data[0], options.booking_id);
                             $("#card_name").attr('disabled', 'disabled');
-                            $("#cc_number").attr('disabled', 'disabled');
+                            $("#extra_cc_number").attr('disabled', 'disabled');
                         }else{
                                 $.ajax({
                                     type: "POST",
@@ -133,7 +133,7 @@
                                         if(customer_card_data != null){
                                         var customer_data = {
                                             customer_id: "",
-                                            cc_number: "",
+                                            extra_cc_number: "",
                                             cc_expiry_month: "",
                                             cc_expiry_year: "",
                                             cc_tokenex_token: "",
@@ -223,11 +223,20 @@
                                         //     frameborder: "0"
                                         // })
                                         $("<input/>", { // a workaround to disable autocomplete for email and cvv
-                                            class: "form-control cc_number",
-                                            name: "cc_number",
-                                            id: "cc_number",
+                                            class: "form-control extra_cc_number",
+                                            name: "extra_cc_number",
+                                            id: "extra_cc_number",
                                             type: 'text',
                                             value: logs.cc_number
+                                        })on('input', function () {
+                                        // Remove spaces on input
+                                        $(this).val($(this).val().replace(/\s+/g, ''));
+                                        })
+                                        .on('paste', function (e) {
+                                        e.preventDefault();
+                                        // Remove spaces on paste
+                                        const pastedData = (e.originalEvent.clipboardData || window.clipboardData).getData('text');
+                                        $(this).val(pastedData.replace(/\s+/g, ''));
                                         })
                     ).append(sensitiveCardNumber)
                     .append($('<span/>', {
@@ -256,7 +265,7 @@
                                 function(data){
                                     if(data){
                                         $('#detokenize-card').hide();
-                                        $('input[name="cc_number"]').val(data);
+                                        $('input[name="extra_cc_number"]').val(data);
                                         that._updateCardImage();
                                     }
                                 }
@@ -436,6 +445,8 @@
                                             }
                                         });
                                     } else {
+                                        logs.cc_number = '';
+                                         var ccNumber = $('#extra_cc_number').val();
                                         $.ajax({
                                             type: "POST",
                                             url: getBaseURL() + "customer/insert_card_details",
@@ -694,7 +705,7 @@
                 customer_id:  $('#Guest_id').val(),
                 customer_name:  $('#Guest_name').val(),
                 card_name:  $('#card_name').val(),
-                card_number: $('#cc_number').val(),
+                card_number: $('#extra_cc_number').val(),
                 cvc: $('#cvc').val()
             };
             if(isTokenizationEnabled == 1)
