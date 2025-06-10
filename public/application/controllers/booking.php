@@ -2402,13 +2402,13 @@ class Booking extends MY_Controller
                             'customer_name' => $paying_customer['customer_name']
                         )
                     );
+                    // for company id 4462 pemberton hotel
+                    // $post_customer_data = $paying_customer;
+                    // $post_customer_data['customer_id'] = $paying_customer_id;
 
-                    $post_customer_data = $paying_customer;
-                    $post_customer_data['customer_id'] = $paying_customer_id;
+                    // do_action('post.create.customer', $post_customer_data);
 
-                    do_action('post.create.customer', $post_customer_data);
-
-                    $new_data['booking']['booking_customer_id'] = $paying_customer_id;
+                    // $new_data['booking']['booking_customer_id'] = $paying_customer_id;
                 }
             } else {
                 $new_data['booking']['booking_customer_id'] = 0;
@@ -2683,7 +2683,11 @@ class Booking extends MY_Controller
                         }
                         // NO SPLIT: check-in date is after current selling date. Freely update the booking around without splitting.
                         else {
-                            $this->Booking_room_history_model->update_room_id($latest_block, $new_room_id, $new_room_type_id);
+                            //only for company id 4462 pemberton hotel
+                            if($this->company_id != 4462){
+
+                                $this->Booking_room_history_model->update_room_id($latest_block, $new_room_id, $new_room_type_id);
+                            }
                             $latest_block['room_id'] = $new_room_id; // because room_id's been modified
                             // only change check in date when editing reservation
                             if ($new_data['booking']['state'] == RESERVATION ||

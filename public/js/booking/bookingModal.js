@@ -4457,15 +4457,16 @@ var bookingModalInvoker = function ($) {
                     modalHeader.prepend(
                         $("<span/>", {
                             class: "h4",
-                            html: l('Edit') + ' ' + l(innGrid.featureSettings.defaultRoomSingular) + " (" + l('id') + ": " + this.booking.booking_id + ") " + l('balance') + ": <a class='booking_balance' href='" + getBaseURL() + "invoice/show_invoice/" + this.booking.booking_id + "'>" + number_format(this.booking.balance, 2, ".", "") + "</a> "
-                        })
-                    ).prepend(
-                        $("<input/>", {
-                            type: "hidden",
-                            id: "booking_id",
-                            value: this.booking.booking_id
+                             html: l('Edit') + ' ' + l(innGrid.featureSettings.defaultRoomSingular) + " (" + l('id') + ": " + this.booking.booking_id + ") " + l('balance') + ": <a class='booking_balance' data-book_id='"+this.booking.booking_id+"' href='" + getBaseURL() + "invoice/show_invoice/" + this.booking.booking_id + "'>" + number_format(this.booking.balance, 2, ".", "") + "</a> "
                         })
                     )
+                    // .prepend(
+                    //     $("<input/>", {
+                    //         type: "hidden",
+                    //         id: "booking_id",
+                    //         value: this.booking.booking_id
+                    //     })
+                    // )
                 } else {
                     modalHeader.prepend(
                         $("<span/>", {
