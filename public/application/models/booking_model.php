@@ -185,7 +185,21 @@ class Booking_model extends CI_Model {
         return null;
     }
     
-
+    function get_group_id_from_booking_id($booking_id)
+    {
+        $this->db->select('bxblg.booking_group_id as group_id');
+        $this->db->from('booking as b');
+        $this->db->join('booking_x_booking_linked_group as bxblg', 'b.booking_id = bxblg.booking_id');
+        $this->db->where('b.booking_id', $booking_id);
+        $query = $this->db->get();
+        $q = $query->result();  
+        if (isset($q[0]))
+        {
+            return $q[0]->group_id;
+        }
+        return null;
+    }
+    
     function delete_booking($booking_id)
     {
         $data = Array('is_deleted' => '1');

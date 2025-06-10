@@ -699,13 +699,25 @@ $(function() {
 	innGrid.loadRateDetail(ratePlanID, currentDate, roomTypeID);
 
 	$('#show-previous-month').on('click', function() {
+		var imageUrl = getBaseURL() + 'images/loading.gif';
+        var $loader = $('<img class="loader-img" src="' + imageUrl + '" style=""/>');
+        $loader.insertBefore($('#show-previous-month'));
 		currentDate = innGrid.addDays(currentDate, -28);
 		innGrid.loadRateDetail(ratePlanID, currentDate, roomTypeID);
+		$(document).one('ajaxStop', function () {
+         	$loader.remove();
+        });
 	});
 
 	$('#show-next-month').on('click', function() {
+		var imageUrl = getBaseURL() + 'images/loading.gif';
+        var $loader = $('<img class="loader-img" src="' + imageUrl + '" style=""/>');
+        $loader.insertBefore($('#show-previous-month'));
 		currentDate = innGrid.addDays(currentDate, 28);
 		innGrid.loadRateDetail(ratePlanID, currentDate, roomTypeID);
+		$(document).one('ajaxStop', function () {
+         	$loader.remove();
+        });
 	});
 
 	$(document).on('click','[id^="all_"]',function(){
