@@ -1753,7 +1753,7 @@ class Rates extends MY_Controller
 	function get_rates_JSON()
 	{
 		$rate_plan_id = $this->input->post('rate_plan_id');
-                $room_type_id = $this->input->post('room_type_id');
+        $room_type_id = $this->input->post('room_type_id');
 		$start_date = $this->input->post('start_date');
 			
 		$date_range = 28; // number of the days that will be displayed on calendar
@@ -1761,7 +1761,7 @@ class Rates extends MY_Controller
 		
         $rates = array();
         
-		$rates['rates'] = $this->Rate_model->get_daily_rates($rate_plan_id, $start_date, $end_date, $room_type_id);
+		$rates['rates'] = $this->Rate_model->get_daily_rates($rate_plan_id, $start_date, $end_date, $room_type_id, true);
         
         $rates['errors'] = array();
         foreach($rates['rates']  as $rate ){
