@@ -206,107 +206,109 @@ class Ledger extends MY_Controller {
         $customer_type_id = $this->input->post('customerTypeId');
         
         $company_data = $this->Company_model->get_company($this->company_id);
-        $include_cancelled_noshow_bookings = (isset($company_data['include_cancelled_noshow_bookings']) && $company_data['include_cancelled_noshow_bookings']);
+        $include_cancelled_noshow_bookings = (isset($company_data['include_cancelled_noshow_bookings']) && $company_data['include_cancelled_noshow_bookings']) ? true : false ;
 
-        // Get data in chunks to avoid memory issues
-        $chunk_size = 30; // Process 30 days at a time
-        $current_start = $start_date;
-        $booking_count = array();
-        $charges_booking_count = array();
-        $charge_total = array();
-        $room_charge_total = array();
-        $payment_total = array();
-
-        while ($current_start <= $end_date) {
-            $chunk_end = date('Y-m-d', min(strtotime($current_start . ' + ' . ($chunk_size-1) . ' days'), strtotime($end_date)));
-            
-            // Get data for current chunk
-            $booking_count += $this->Booking_model->get_booking_count($current_start, $chunk_end, 'date_wise', $customer_type_id);
-            $charges_booking_count += $this->Booking_model->get_charges_booking_count($current_start, $chunk_end, 'date_wise', $customer_type_id);
-            $charge_total += $this->Charge_model->get_all_charges($current_start, $chunk_end, $this->selling_date, false, true, $customer_type_id, null, $include_cancelled_noshow_bookings);
-            $room_charge_total += $this->Charge_model->get_all_charges($current_start, $chunk_end, $this->selling_date, true, false, $customer_type_id, null, $include_cancelled_noshow_bookings);
-            $payment_total += $this->Payment_model->get_all_payments($current_start, $chunk_end, $customer_type_id);
-            
-            $current_start = date('Y-m-d', strtotime($chunk_end . ' + 1 day'));
-        }
-
+        $booking_count   = $this->Booking_model->get_booking_count($start_date, $end_date, 'date_wise', $customer_type_id);
+        $charges_booking_count   = $this->Booking_model->get_charges_booking_count($start_date, $end_date, 'date_wise', $customer_type_id);
+        $charge_total    = $this->Charge_model->get_all_charges($start_date, $end_date, $this->selling_date, false, true, $customer_type_id, null, $include_cancelled_noshow_bookings);
+        $room_charge_total = $this->Charge_model->get_all_charges($start_date, $end_date, $this->selling_date, true, false, $customer_type_id, null, $include_cancelled_noshow_bookings);
+        $payment_total   = $this->Payment_model->get_all_payments($start_date, $end_date, $customer_type_id);
         $number_of_rooms = $this->Room_model->get_number_of_rooms($this->company_id);
         
-        // Initialize arrays
-        $monthly_data = array();
-        $daily_data = array();
-        $monthly_totals = array();
-        
-        // Process data date by date
-        $current_date = $start_date;
-        while ($current_date <= $end_date) {
-            $month = date('Y-m', strtotime($current_date));
-            
-            // Initialize month data if not exists
-            if (!isset($monthly_totals[$month])) {
-                $monthly_totals[$month] = array(
-                    'booking_count' => 0,
-                    'charges_booking_count' => 0,
-                    'occupancy_total' => 0,
-                    'revPAR_total' => 0,
-                    'room_charge_total' => 0,
-                    'charge_total' => 0,
-                    'payment_total' => 0,
-                    'date_count' => 0
+        $last_month                 = date("m", strtotime($start_date));
+        $monthly_booking_count      = 0;
+        $monthly_charges_booking_count      = 0;
+        $accumulated_occupancy_rate = 0;
+        $monthly_revPAR             = 0;
+        $monthly_ADR                = 0;
+        $monthly_room_charge_total  = 0;
+        $monthly_charge_total       = 0;
+        $monthly_payment_total      = 0;
+        $date_count                 = 0;
+
+        for ($date = $start_date; $date <= $end_date; $date = date('Y-m-d', strtotime($date."+1 day")))
+        {
+            $current_month = date("m", strtotime($date));
+            // once month changes, enter monthly sum to the monthly_data array
+            if ($current_month != $last_month) {
+                $monthly_index                = date("Y", strtotime($date."-1 day"))."-".$last_month; // only used for array indexing purpose
+                $monthly_data[$monthly_index] = Array(
+                    "booking_count"  => $monthly_booking_count,
+                    "charges_booking_count"  => $monthly_charges_booking_count,
+                    "occupancy_rate" => $accumulated_occupancy_rate / $date_count,
+                    "revPAR" => $monthly_revPAR / $date_count,
+                    //"ADR" => $monthly_ADR / $date_count,
+                    "room_charge_total"   => $monthly_room_charge_total,
+                    "charge_total"   => $monthly_charge_total,
+                    "payment_total"  => $monthly_payment_total
                 );
+
+                $last_month                 = $current_month;
+                $monthly_booking_count      = 0;
+                $monthly_charges_booking_count      = 0;
+                $accumulated_occupancy_rate = 0;
+                $monthly_revPAR             = 0;
+                $monthly_ADR                = 0;
+                $monthly_room_charge_total  = 0;
+                $monthly_charge_total       = 0;
+                $monthly_payment_total      = 0;
+                $date_count                 = 0;
             }
-            
-            // Calculate daily metrics
-            $bc = isset($booking_count[$current_date]) ? $booking_count[$current_date] : 0;
-            $cbc = isset($charges_booking_count[$current_date]) ? $charges_booking_count[$current_date] : 0;
-            $ct = isset($charge_total[$current_date]) ? $charge_total[$current_date] : 0;
-            $rct = isset($room_charge_total[$current_date]) ? $room_charge_total[$current_date] : 0;
-            $pt = isset($payment_total[$current_date]) ? $payment_total[$current_date] : 0;
-            
-            $occupancy_rate = $bc / $number_of_rooms;
-            $revPAR = $rct / $number_of_rooms;
-            $adr = ($bc > 0) ? ($rct / $bc) : 0;
-            
-            // Store daily data
-            $daily_data[$current_date] = array(
-                'booking_count' => $bc,
-                'charges_booking_count' => $cbc,
-                'occupancy_rate' => $occupancy_rate,
-                'revPAR' => $revPAR,
-                'ADR' => $adr,
-                'room_charge_total' => $rct,
-                'charge_total' => $ct,
-                'payment_total' => $pt
+
+            $bc = isset($booking_count[$date]) ? $booking_count[$date] : 0;
+            $cbc = isset($charges_booking_count[$date]) ? $charges_booking_count[$date] : 0;
+            $ct = isset($charge_total[$date]) ? $charge_total[$date] : 0;
+            $rct = isset($room_charge_total[$date]) ? $room_charge_total[$date] : 0;
+            $pt = isset($payment_total[$date]) ? $payment_total[$date] : 0;
+            $or = $bc / $number_of_rooms;
+            $rp = $rct / $number_of_rooms;
+            $adr = ($bc > 0)?($rct / $bc):0;
+
+            $daily_data[$date] = Array(
+                "booking_count"     => $bc,
+                "charges_booking_count"     => $cbc,
+                "occupancy_rate"    => $or,
+                "revPAR"            => $rp,
+                "ADR"               => $adr,
+                "room_charge_total" => $rct,
+                "charge_total"      => $ct,
+                "payment_total"     => $pt
             );
-            
-            // Accumulate monthly totals
-            $monthly_totals[$month]['booking_count'] += $bc;
-            $monthly_totals[$month]['charges_booking_count'] += $cbc;
-            $monthly_totals[$month]['occupancy_total'] += $occupancy_rate;
-            $monthly_totals[$month]['revPAR_total'] += $revPAR;
-            $monthly_totals[$month]['room_charge_total'] += $rct;
-            $monthly_totals[$month]['charge_total'] += $ct;
-            $monthly_totals[$month]['payment_total'] += $pt;
-            $monthly_totals[$month]['date_count']++;
-            
-            $current_date = date('Y-m-d', strtotime($current_date . ' + 1 day'));
-        }
-        
-        // Calculate final monthly averages
-        foreach ($monthly_totals as $month => $totals) {
-            $monthly_data[$month] = array(
-                'booking_count' => $totals['booking_count'],
-                'charges_booking_count' => $totals['charges_booking_count'],
-                'occupancy_rate' => $totals['occupancy_total'] / $totals['date_count'],
-                'revPAR' => $totals['revPAR_total'] / $totals['date_count'],
-                'room_charge_total' => $totals['room_charge_total'],
-                'charge_total' => $totals['charge_total'],
-                'payment_total' => $totals['payment_total']
-            );
+
+            $monthly_booking_count += $bc;
+            $monthly_charges_booking_count += $cbc;
+            $accumulated_occupancy_rate += $or;
+            $date_count++; // for averaging the occupancy rate for monthly data.
+            $monthly_revPAR += $rp;
+            $monthly_ADR += $adr;
+            $monthly_room_charge_total += $rct;
+            $monthly_charge_total += $ct;
+            $monthly_payment_total += $pt;
         }
 
-        // Return response based on group_by parameter
-        echo json_encode($group_by == 'daily' ? $daily_data : $monthly_data);
+        // When the loop ends, there might be unused accumulated monthly report data.
+        // If there is, append a new row to the monthly report array
+        if ($date_count > 0)
+        {
+            $date = date('Y-m-d', strtotime($date."-1 day"));
+            $monthly_index                = date("Y", strtotime($date))."-".$current_month; // only used for array indexing purpose
+            $monthly_data[$monthly_index] = Array(
+                "booking_count"  => $monthly_booking_count,
+                "charges_booking_count"  => $monthly_charges_booking_count,
+                "occupancy_rate" => $accumulated_occupancy_rate / $date_count,
+                "revPAR" => $monthly_revPAR / $date_count,
+                "ADR" => $monthly_ADR / $date_count,
+                "room_charge_total"   => $monthly_room_charge_total,
+                "charge_total"   => $monthly_charge_total,
+                "payment_total"  => $monthly_payment_total
+            );
+
+            if ($group_by == "daily") {
+                echo json_encode($daily_data);
+            } elseif ($group_by = "monthly") {
+                echo json_encode($monthly_data);
+            }
+        }
     }
 	
 	// show list of daily sales that belong in a month.
