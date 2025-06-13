@@ -604,7 +604,9 @@ class Charge_model extends CI_Model {
 
 		$query = $this->db->query($sql);
         
-        $future_charges = $this->forecast_charges->_get_day_wise_forecast_charges($start_date, date("Y-m-d", strtotime($end_date." +1day")), $current_selling_date, $get_room_charges_only, $include_taxes, $customer_type_id, $is_tax_exempt);
+        // $future_charges = $this->forecast_charges->_get_day_wise_forecast_charges($start_date, date("Y-m-d", strtotime($end_date." +1day")), $current_selling_date, $get_room_charges_only, $include_taxes, $customer_type_id, $is_tax_exempt);
+
+        $future_charges = array();
         
         if ($this->db->_error_message()) // error checking
 			show_error($this->db->_error_message());

@@ -92,6 +92,12 @@ class Email_template {
             $customer_name = $booking['booking_customer_name'];
             $invoice_hash = $booking['invoice_hash'];
             $invoice_link = $base_url . "invoice/show_invoice_read_only/".$invoice_hash;
+
+            if($base_url == 'app.roomsy.com/'){
+                $invoice_link = "https://".$invoice_link;
+            }
+
+
             $invoice_link = $folio_id ? $invoice_link.'/'.$folio_id : $invoice_link;
             $review_link = base_url() . "review/?hash=".$invoice_hash;
 
