@@ -1581,6 +1581,8 @@ class Customer extends MY_Controller {
         $square_token = '';
         $square_customer_id = '';
 
+        $stripe_token = '';
+
         if(isset($customer_data['cardknox_token']) && $customer_data['cardknox_token'])
         $cardknox_token = $customer_data['cardknox_token'];
         if(isset($customer_data['cardknox_cvv_token']) && $customer_data['cardknox_cvv_token'])
@@ -1591,10 +1593,16 @@ class Customer extends MY_Controller {
         if(isset($customer_data['square_customer_id']) && $customer_data['square_customer_id'])
             $square_customer_id = $customer_data['square_customer_id'];
 
+        if(isset($customer_data['stripe_token']) && $customer_data['stripe_token'])
+            $stripe_token = $customer_data['stripe_token'];
+
         unset($customer_data['cvc']);
         unset($customer_data['cc_number']);
         unset($customer_data['cardknox_token']);
         unset($customer_data['cardknox_cvv_token']);
+        unset($customer_data['square_token']);
+        unset($customer_data['square_customer_id']);
+        unset($customer_data['stripe_token']);
 
         // if (isset($customer_data['csrf_token'])) {
         //     unset($customer_data['csrf_token']);
@@ -1613,7 +1621,11 @@ class Customer extends MY_Controller {
         
         if(isset($customer_data['cc_number']) && $customer_data['cc_number']){
             $card_details['cc_number'] = $customer_data['cc_number'];
-        }else{
+        }
+        else if($cc_number){
+            $card_details['cc_number'] = $cc_number;
+        }
+        else{
             unset($card_details['cc_number']);
         }
         if(isset($customer_data['cc_expiry_month']) && $customer_data['cc_expiry_month']){
@@ -1697,6 +1709,11 @@ class Customer extends MY_Controller {
             $meta['source'] = 'square';
             $meta['token'] = $square_token;
             $meta['square_customer_id'] = $square_customer_id;
+            $card_details['customer_meta_data'] = json_encode($meta);
+        }
+        else if($stripe_token){
+            $meta['source'] = 'stripe';
+            $meta['token'] = $stripe_token;
             $card_details['customer_meta_data'] = json_encode($meta);
         }
 
