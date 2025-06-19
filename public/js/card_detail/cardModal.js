@@ -41,6 +41,11 @@
             }
         };
 
+        setTimeout(function() {
+            var event = new CustomEvent('post.open_card_model', { "detail": { "customer_id": options.customer_id, "card_id": options.cus_card_id } });
+            document.dispatchEvent(event);
+        }, 300);
+
         options = $.extend({}, defaults, options);
         if(options.key_data == "delete" && options.customer_id){
             
@@ -204,7 +209,7 @@
                 var sensitiveCardCVC = '';//logs.cc_cvc_encrypted ? '<a style="position: absolute; right: 120px; top: 7px; z-index: 9999;" title = "Show Card CVC" class="show_pay_details_cc" data-cc_detail="card_cvc" data-cc_number="'+logs.cc_number+'" href="javascript:"><i class="fa fa-eye" ></i></a>' : '';
                     card_data = 
                     $("<div/>", {
-                        class: "form-group"
+                        class: "form-group credit_card_field"
                     })
                     .append($("<label/>", {
                         for : "credit_card",
@@ -291,7 +296,7 @@
                             )
                     .append(
                     $("<div/>", {
-                        class: "form-group"
+                        class: "form-group credit_card_field"
                     }).append(
                             $("<input/>", {
                                 style: "opacity: 0; width: 1px; height: 1px; margin: 0px; padding: 0px;",
@@ -535,7 +540,32 @@
                                             // else
                                             // {
 
-                                            update_create_client();
+                                    if (typeof stripeCardGateway !== "undefined" && stripeCardGateway) {
+                                
+                                        $('#multiple-card-button').trigger('click');
+
+                                        setTimeout(function(){
+                                            var stripe_token = $('#stripe-card-token').val();
+                                            var stripe_exp_month = $('#stripe-card-exp_month').val();
+                                            var stripe_exp_year = $('#stripe-card-exp_year').val();
+                                            var stripe_lastfour = $('#stripe-card-lastfour').val();
+
+                                            stripe_exp_year = stripe_exp_year.substr(2, 4);
+                                            
+                                            customerData['cc_number'] = "XXXX XXXX XXXX "  + stripe_lastfour;
+                                            customerData['cc_expiry_month'] = stripe_exp_month;
+                                            customerData['cc_expiry_year'] = stripe_exp_year;
+                                            customerData['stripe_token'] = stripe_token;
+
+                                            
+                                            update_create_client(customerData);
+                                            
+                                        },3000);
+                                    } else {
+                                        update_create_client();
+                                    }
+
+                                            
 
                                 // }   
                                     })

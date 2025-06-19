@@ -1291,8 +1291,6 @@ class Customer extends MY_Controller {
         $encrypted_customerData = ($this->security->xss_clean($this->input->post('customer_data', TRUE)));
         $customer_data = json_decode(base64_decode($encrypted_customerData), true);
 
-        // prx($customer_data);
-
         $customer_data['customer_name'] = sqli_clean($this->security->xss_clean($customer_data['customer_name']));
 
         $customer_data['company_id'] = $this->company_id;
@@ -1305,6 +1303,8 @@ class Customer extends MY_Controller {
 
         $square_token = '';
         $square_customer_id = '';
+
+        $stripe_token = '';
         
         
         if(isset($customer_data['cc_token']) && $customer_data['cc_token'])
@@ -1318,6 +1318,9 @@ class Customer extends MY_Controller {
             $square_token = $customer_data['square_token'];
         if(isset($customer_data['square_customer_id']) && $customer_data['square_customer_id'])
             $square_customer_id = $customer_data['square_customer_id'];
+
+        if(isset($customer_data['stripe_token']) && $customer_data['stripe_token'])
+            $stripe_token = $customer_data['stripe_token'];
         
 
         $customer_create_data['customer_data'] = $customer_data;
@@ -1330,6 +1333,7 @@ class Customer extends MY_Controller {
         unset($customer_data['cardknox_cvv_token']);
         unset($customer_data['square_token']);
         unset($customer_data['square_customer_id']);
+        unset($customer_data['stripe_token']);
 
         // if (isset($customer_data['csrf_token'])) {
         //     unset($customer_data['csrf_token']);
@@ -1358,31 +1362,57 @@ class Customer extends MY_Controller {
            'cc_expiry_year' => (isset($customer_data['cc_expiry_year']) ? $customer_data['cc_expiry_year'] : NULL)
         );
 
+        // start for Elavon
+        // if($this->is_elavon_enabled){
+        //     $card_response = array();
+        //     if(
+        //         $cc_number && 
+        //         is_numeric($cc_number) &&
+        //         !strrpos($cc_number, 'X') && 
+        //         $cvc && 
+        //         is_numeric($cvc) &&
+        //         !strrpos($cvc, '*')
+        //     ){
+        //         $this->ci->load->library('../extensions/'.$this->current_payment_gateway.'/libraries/ProcessPayment');
 
-        // start for Stripe
-        if($this->is_stripe_enabled){
-            $card_response = array();
-            if(
-                $cc_number && 
-                is_numeric($cc_number) &&
-                !strrpos($cc_number, 'X') && 
-                $cvc && 
-                is_numeric($cvc) &&
-                !strrpos($cvc, '*')
-            ){
-                $this->ci->load->library('../extensions/'.$this->current_payment_gateway.'/libraries/ProcessPayment');
+        //         $cc_expiry_date = $customer_data['cc_expiry_month'].$customer_data['cc_expiry_year'];
 
-                $card_response = $this->processpayment->create_stripe_token($cvc, $cc_number, $customer_data['cc_expiry_month'], $customer_data['cc_expiry_year']);
+        //         $card_response = $this->processpayment->create_elavon_token($cc_number, $cc_expiry_date, $cvc);
 
-                // $card_response = json_decode($card_response, true);
+        //         prx($card_response);
+        //     }
+        // }
 
-                if($card_response['success']){
-                    $meta['source'] = 'stripe';
-                    $meta['stripe_token'] = $card_response['token'];
-                    $card_details['customer_meta_data'] = json_encode($meta);
-                }
-            }
-        }
+
+        // start for moneris
+        // if($this->is_moneris_enabled){
+        //     $card_response = array();
+        //     if(
+        //         $cc_number && 
+        //         is_numeric($cc_number) &&
+        //         !strrpos($cc_number, 'X') && 
+        //         $cvc && 
+        //         is_numeric($cvc) &&
+        //         !strrpos($cvc, '*')
+        //     ){
+        //         $this->ci->load->library('../extensions/'.$this->current_payment_gateway.'/libraries/ProcessPayment');
+
+        //         $cc_expiry_date = $customer_data['cc_expiry_year'].$customer_data['cc_expiry_month'];
+
+        //         $card_response = $this->processpayment->create_moneris_token($cc_number, $cc_expiry_date);
+
+        //         $card_response = json_decode($card_response, true);
+
+        //         if($card_response['success']){
+        //             $meta['source'] = 'moneris';
+        //             $meta['moneris_card_token'] = $card_response['card_token'];
+        //             $card_details['customer_meta_data'] = json_encode($meta);
+        //         }
+        //     }
+        // }
+
+
+
         if(
             $cc_number && 
                 is_numeric($cc_number) &&
@@ -1447,6 +1477,11 @@ class Customer extends MY_Controller {
             $meta['source'] = 'square';
             $meta['token'] = $square_token;
             $meta['square_customer_id'] = $square_customer_id;
+            $card_details['customer_meta_data'] = json_encode($meta);
+        }
+        else if($stripe_token){
+            $meta['source'] = 'stripe';
+            $meta['token'] = $stripe_token;
             $card_details['customer_meta_data'] = json_encode($meta);
         }
 
@@ -2273,8 +2308,20 @@ class Customer extends MY_Controller {
         $customer_id = $customer_data['customer_id'];
 
         // $cc_number = isset($customer_data['card_number']) && $customer_data['card_number'] ? $customer_data['card_number'] : NULL;
-        $cc_number = $this->input->post('cc_number');
+
+        $stripe_token = '';
+        if($this->is_stripe_enabled){
+            $cc_number = $customer_data['cc_number'];
+
+            if(isset($customer_data['stripe_token']) && $customer_data['stripe_token'])
+                $stripe_token = $customer_data['stripe_token'];
+        } else {
+            $cc_number = $this->input->post('cc_number');
+        }
+
         $cvc = $customer_data['cvc'];
+
+        unset($customer_data['stripe_token']);
         
         $card_details = array(
            'is_primary' => 1,
@@ -2336,6 +2383,12 @@ class Customer extends MY_Controller {
                 $card_details['customer_meta_data'] = json_encode($meta);
             }
         } 
+
+        if($stripe_token){
+            $meta['source'] = 'stripe';
+            $meta['token'] = $stripe_token;
+            $card_details['customer_meta_data'] = json_encode($meta);
+        }
 
         //if($this->company_id != 4462){  // for Pemberton Hotel
             $check_data = $this->Card_model->get_customer_primary_card($customer_id);

@@ -808,6 +808,29 @@ var customer_pci_token = '';
                                         
                                     }
                                 });
+                            }
+
+                            else if (typeof stripeGateway !== "undefined" && stripeGateway) {
+                                
+                                $('#card-button').trigger('click');
+
+                                setTimeout(function(){
+                                    var stripe_token = $('#stripe-token').text();
+                                    var stripe_exp_month = $('#stripe-exp_month').text();
+                                    var stripe_exp_year = $('#stripe-exp_year').text();
+                                    var stripe_lastfour = $('#stripe-lastfour').text();
+
+                                    stripe_exp_year = stripe_exp_year.substr(2, 4);
+                                    
+                                    customerData['cc_number'] = "XXXX XXXX XXXX "  + stripe_lastfour;
+                                    customerData['cc_expiry_month'] = stripe_exp_month;
+                                    customerData['cc_expiry_year'] = stripe_exp_year;
+                                    customerData['stripe_token'] = stripe_token;
+
+                                    
+                                    update_create_client(customerData);
+                                    
+                                },3000);
                             } 
                             else if (typeof kovenaGateway !== "undefined" && kovenaGateway && innGrid.isKovenaEnabled == 1) {
                                 console.log('widget',widget);

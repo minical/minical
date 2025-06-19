@@ -263,6 +263,8 @@ $ifieldKey = getenv('CARDKNOX_IFIELD_KEY');
 	<script type="text/javascript">
 		var gatewaySquareAppId = '<?=(isset($this->gateway_square_app_id) ? $this->gateway_square_app_id : '')?>';
     	var gatewaySquareLocationId = '<?=(isset($this->gateway_square_location_id) ? $this->gateway_square_location_id : '')?>';
+
+    	var stripePublicKey = '<?=(isset($this->stripe_public_key) ? $this->stripe_public_key : '')?>';
 	</script>
 
 	<script>

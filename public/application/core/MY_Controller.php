@@ -435,6 +435,8 @@ class MY_Controller extends CI_Controller {
             $this->gateway_meta_data = json_decode($company['gateway_meta_data'], true);
             $this->gateway_square_app_id = isset($this->gateway_meta_data['app_id']) ? $this->gateway_meta_data['app_id'] : '';
             $this->gateway_square_location_id = isset($this->gateway_meta_data['location_id']) ? $this->gateway_meta_data['location_id'] : '';
+
+            $this->stripe_public_key = $company['stripe_publishable_key'];
             
             $user = $this->User_model->get_user_by_id($this->user_id);
             $this->user_email = $user['email'];
