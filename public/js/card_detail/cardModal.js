@@ -44,7 +44,7 @@
         setTimeout(function() {
             var event = new CustomEvent('post.open_card_model', { "detail": { "customer_id": options.customer_id, "card_id": options.cus_card_id } });
             document.dispatchEvent(event);
-        }, 300);
+        }, 1000);
 
         options = $.extend({}, defaults, options);
         if(options.key_data == "delete" && options.customer_id){
