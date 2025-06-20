@@ -1186,6 +1186,16 @@ if((isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true ) ||
                                                     </a>
                                                 </li>
                                             <?php } ?>
+
+                                            <?php if($payment['is_captured'] == 1 && $payment['payment_gateway_used'] && $this->company_id == 4081){ ?>
+                                                <li role="presentation">
+                                                    <a href="#" class="delete-payment" data-is_delete="yes" title="Created by <?php echo $payment['user_name']; ?>">
+                                                        <?php echo l('delete'); ?>
+                                                    </a>
+                                                </li>
+                                            <?php } ?>
+
+
                                             <li>
                                                 <a class="folios_modal" href="#" data-toggle="modal" data-target="#move-charge-modal" class="update-charge-folio"><?php echo l('Move to another Folio', true); ?></a>
                                             </li>

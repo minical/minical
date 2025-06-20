@@ -234,12 +234,18 @@ innGrid.deletePaymentRow = function(item, e) {
     var refundHeading = l('Full Refund', true);
     var remainingAmount = (tr.data('remaining-amount') != '') ? tr.data('remaining-amount') : null;
     var payType = $(tr).data('pay-type');
+
+    var isDelete = $(item).data('is_delete'); // will be 'yes' for delete, undefined/null for refund
+
+    console.log('innGrid.companyID',innGrid.companyID);
+    console.log('isDelete', isDelete);
+
     if (remainingAmount != null) {
         amountTotal = remainingAmount;
         amountStatus = l('remaining', true);
         refundHeading = l('Remaining Refund', true);
     }
-    if ($(tr).data('is_gateway') == 1) {
+    if ($(tr).data('is_gateway') == 1 && isDelete == undefined) {
         $('#refund-payment-modal').modal('show');
         if (payType != 'Authorized') {
             payType = '';
