@@ -2327,7 +2327,7 @@ class Customer extends MY_Controller {
         // $cc_number = isset($customer_data['card_number']) && $customer_data['card_number'] ? $customer_data['card_number'] : NULL;
 
         $stripe_token = '';
-        if($this->is_stripe_enabled){
+        if($this->is_stripe_enabled && $this->stripe_public_key){
             $cc_number = $customer_data['cc_number'];
 
             if(isset($customer_data['stripe_token']) && $customer_data['stripe_token'])
