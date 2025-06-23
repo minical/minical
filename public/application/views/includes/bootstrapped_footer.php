@@ -135,6 +135,7 @@
     innGrid.featureSettings.gatewaySquareAppId = '<?=(isset($this->gateway_square_app_id) ? $this->gateway_square_app_id : '')?>';
     innGrid.featureSettings.gatewaySquareLocationId = '<?=(isset($this->gateway_square_location_id) ? $this->gateway_square_location_id : '')?>';
 
+    innGrid.isStripeEnabled = parseInt('<?=(($this->is_stripe_enabled) ? 1 : 0)?>');
     innGrid.featureSettings.stripePublicKey = '<?=(isset($this->stripe_public_key) ? $this->stripe_public_key : '')?>';
 
     var reg_flag = <?php echo $registration_flag; ?>;
