@@ -393,6 +393,7 @@
                                             // disabled: "disabled",
                                             html: (customer_card_data.cc_number) ? l("Update") : l("Save")
                                         }).on("click", function () {
+                                            $("#save_card").prop('disabled', true);
                                     var errorMsg = '';       
                                     // if (isTokenizationEnabled == 1 && !$.payment.validateCardExpiry($("input[name='cc_expiry']").payment('cardExpiryVal')) &&
                                     //     $("input[name='cc_expiry']").val() !== '') {
@@ -445,6 +446,7 @@
                                                    // $(document).find("#" + customer.customer_id + ".token").find(".token-label").text(customerData.customer_name);
                                                     $("#card-modal").modal('hide');
                                                     $("#pay_details_tab").click();
+                                                    $("#save_card").prop('disabled', false);
                                                 }
                                                /// $('#button-update-customer').attr('disabled', false);
                                             }
@@ -481,6 +483,7 @@
                                                    // $(document).find("#" + customer.customer_id + ".token").find(".token-label").text(customerData.customer_name);
                                                     $("#card-modal").modal('hide');
                                                     $("#pay_details_tab").click();
+                                                    $("#save_card").prop('disabled', false);
                                                    
                                                    // $("#booking_detail").modal('show');
                                                 }
