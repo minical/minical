@@ -1176,6 +1176,10 @@ class Invoice extends MY_Controller {
                     }
                 }
                 if($remaining_balance <= 0){
+                    $response = array(
+                        'success' => false,
+                        'message' => 'You cannot make a payment for a negative amount on a group invoice. Please process a refund through the individual bookings instead.'
+                    );
                     break;
                 }
                 
