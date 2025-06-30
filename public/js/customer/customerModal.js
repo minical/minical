@@ -820,15 +820,24 @@ var customer_pci_token = '';
                                     var stripe_exp_year = $('#stripe-exp_year').text();
                                     var stripe_lastfour = $('#stripe-lastfour').text();
 
-                                    stripe_exp_year = stripe_exp_year.substr(2, 4);
                                     
-                                    customerData['cc_number'] = "XXXX XXXX XXXX "  + stripe_lastfour;
-                                    customerData['cc_expiry_month'] = stripe_exp_month;
-                                    customerData['cc_expiry_year'] = stripe_exp_year;
-                                    customerData['stripe_token'] = stripe_token;
 
+                                    if (
+                                        stripe_token && 
+                                        stripe_exp_month && 
+                                        stripe_exp_year && 
+                                        stripe_lastfour
+                                    ) {
+                                        stripe_exp_year = stripe_exp_year.substr(2, 4);
                                     
-                                    update_create_client(customerData);
+                                        customerData['cc_number'] = "XXXX XXXX XXXX "  + stripe_lastfour;
+                                        customerData['cc_expiry_month'] = stripe_exp_month;
+                                        customerData['cc_expiry_year'] = stripe_exp_year;
+                                        customerData['stripe_token'] = stripe_token;
+
+                                        update_create_client(customerData);
+                                    }
+
                                     
                                 },3000);
                             } 
