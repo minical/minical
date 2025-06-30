@@ -144,7 +144,7 @@ class Extensions extends MY_Controller
                         $extension['is_vendor_module'] = isset($module['is_vendor_module']) && $module['is_vendor_module'] ? true : false;
                         $extension['is_admin_module'] = isset($module['is_admin_module']) && $module['is_admin_module'] ? true : false;
                         $extension['supported_in_minimal'] = isset($module['supported_in_minimal']) && $module['supported_in_minimal'] ? true : false;
-
+                        $extension['categories']= isset($module['categories']) ? $module['categories']:"";
                         $final_modules[] = $extension;
                         $flag = false;
                     }
@@ -264,7 +264,7 @@ class Extensions extends MY_Controller
                     $extension['marketplace_product_link']= isset($module['marketplace_product_link'])?$module['marketplace_product_link']:"";
                     $extension['is_vendor_module'] = isset($module['is_vendor_module']) && $module['is_vendor_module'] ?true : false;
                     $extension['is_admin_module'] = isset($module['is_admin_module']) && $module['is_admin_module'] ?true : false;
-
+                    $extension['categories']= isset($module['categories']) ? $module['categories']:"";
                     $final_modules[] = $extension;
                 }
             }
@@ -368,7 +368,7 @@ class Extensions extends MY_Controller
                         $extension['marketplace_product_link']= isset($module['marketplace_product_link'])?$module['marketplace_product_link']:"";
                         $extension['is_vendor_module'] = isset($module['is_vendor_module']) && $module['is_vendor_module'] ?true : false;
                         $extension['is_admin_module'] = isset($module['is_admin_module']) && $module['is_admin_module'] ?true : false;
-
+                        $extension['categories']= isset($module['categories']) ? $module['categories']:"";
                         $final_modules[] = $extension;
                     }
                 }
@@ -485,7 +485,7 @@ class Extensions extends MY_Controller
                 $extension['is_vendor_module'] = isset($module['is_vendor_module']) && $module['is_vendor_module'] ?true : false;
                 $extension['is_admin_module'] = isset($module['is_admin_module']) && $module['is_admin_module'] ?true : false;
                 $extension['is_active'] = $extension_status == "active" ? 1 : 0;
-
+                $extension['categories']= isset($module['categories']) ? $module['categories']:"";
                 $final_modules[] = $extension;
             }
         }
@@ -654,7 +654,7 @@ class Extensions extends MY_Controller
                         $extension['marketplace_product_link']= isset($module['marketplace_product_link'])?$module['marketplace_product_link']:"";
                         $extension['is_vendor_module'] = isset($module['is_vendor_module']) && $module['is_vendor_module'] ?true : false;
                         $extension['is_admin_module'] = isset($module['is_admin_module']) && $module['is_admin_module'] ?true : false;
-
+                        $extension['categories']= isset($module['categories']) ? $module['categories']:"";
                         $final_modules[] = $extension;
                         $flag = false;
                     }

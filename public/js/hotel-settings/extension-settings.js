@@ -6,10 +6,48 @@ $(document).ready(function(){
 
 
 $(document).on('click', '.extension-status-button', function () {
-	var extensionName = $(this).attr('name');
-    // var extensionStatus = $(this).data('status');
+	var $clicked = $(this);
+    var extensionName = $clicked.attr('name');
+    var category = $clicked.data('category');
+    var isChecked = $clicked.prop('checked');
 
-    if ($(this).prop("checked")) {
+     if (category === 'payment_process' && isChecked) {
+     	let deactivated = [];
+     	 $('.extension-status-button[data-category="payment_process"]').each(function () {
+            var $btn = $(this);
+            var otherName = $btn.attr('name');
+
+            if ($btn[0] !== $clicked[0] && $btn.prop('checked')) {
+                
+                deactivated.push(otherName); // Collect other enabled extensions being turned off
+            }
+        });
+        
+    	if (deactivated.length > 0) {
+            alert("Only one payment gateway can be active at a time.\n\nCurrently active:\n" + deactivated.join(", "));
+            
+            // Uncheck the current one again since it's being blocked
+            $clicked.prop('checked', false);
+
+            return false; // Prevent enabling current one
+        }
+
+        // ✅ Allow current extension to be enabled (call your PHP function here)
+        $.post(getBaseURL() + 'extensions/change_extension_status', {
+            extension_name: extensionName,
+            extension_status: 0
+        }, function (results) {
+            if (results.success) {
+                location.reload();
+            } else {
+                alert(results.message || 'Failed to activate the extension.');
+            }
+        }, 'json');
+
+        return false; // Stop default checkbox behavior if needed
+     }else{
+
+     	if ($(this).prop("checked")) {
       
          var extension_action = extensionStatus = 0;
     } else {
@@ -32,6 +70,8 @@ $(document).on('click', '.extension-status-button', function () {
 					//alert(results.message);
 				}
 			}, 'json');
+
+     }
 	//}
 });
 
