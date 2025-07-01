@@ -564,30 +564,36 @@
             }
             
             var trial_expiry_date = $('#trial_expiry_date').val();
-            if(trial_expiry_date != '' && subscription_state == 'trialing')
-            {
-                 const startDate = new Date(trial_expiry_date);
-                 const currentDate = new Date();
 
-                // Calculate the time difference in milliseconds
-                const timeDiff = Math.abs(currentDate.getTime() - startDate.getTime());
+            if (trial_expiry_date !== '' && subscription_state === 'trialing') {
+                const startDate = new Date(trial_expiry_date);
+                const currentDate = new Date();
 
-                // Convert the time difference to days
-                const days = Math.ceil(timeDiff / (1000 * 3600 * 24));
-                
-                var url = '<?php echo base_url(); ?>settings/company/view_subscription';
-                if(days <= 5 && days >= 0)
-                {
-                    if(days == '0')
-                    {
-                        $('.trial_period').html(l('Your trial will expire today. To avoid service interruption') + ', <a href="'+url+'">'+l("please click here")+'</a>')
+                // Ensure the date is valid
+                if (!isNaN(startDate.getTime())) {
+                    // Calculate the time difference in milliseconds
+                    const timeDiff = startDate.getTime() - currentDate.getTime();
+
+                    // Convert the time difference to days
+                    const days = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+                    var url = '<?php echo base_url(); ?>settings/company/view_subscription';
+
+                    if (days <= 5 && days >= 0) {
+                        if (days === 0) {
+                            $('.trial_period').html(
+                                l('Your trial will expire today. To avoid service interruption') +
+                                ', <a href="' + url + '">' + l('please click here') + '</a>'
+                            );
+                        } else {
+                            $('.trial_period').html(
+                                l('Your trial will expire in') + ' ' + days + ' ' + l('days') + '. ' +
+                                l('To avoid service interruption') + ', <a href="' + url + '">' + l('please click here') + '</a>'
+                            );
+                        }
+
+                        $('.trial_period').css('display', 'block');
                     }
-                    else
-                    {
-                        $('.trial_period').html(l('Your trial will expire in')+' '+days+' '+l("days")+'. '+l("To avoid service interruption")+', <a href="'+url+'">'+l("please click here")+'</a>')
-                    }
-                    
-                    $('.trial_period').css('display', 'block');
                 }
             }
         
