@@ -13,13 +13,16 @@ $(document).on('click', '.extension-status-button', function () {
 
      if (category === 'payment_process' && isChecked) {
      	let deactivated = [];
-     	 $('.extension-status-button[data-category="payment_process"]').each(function () {
+     	$('.extension-status-button[data-category="payment_process"]').each(function () {
             var $btn = $(this);
-            var otherName = $btn.attr('name');
+            var otherName = $btn.data('ext_name');
 
             if ($btn[0] !== $clicked[0] && $btn.prop('checked')) {
                 
-                deactivated.push(otherName); // Collect other enabled extensions being turned off
+                // Only push if not already in array
+		        if (!deactivated.includes(otherName)) {
+		            deactivated.push(otherName);
+		        } // Collect other enabled extensions being turned off
             }
         });
         

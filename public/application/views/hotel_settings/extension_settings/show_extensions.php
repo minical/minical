@@ -139,7 +139,7 @@ if($is_favourite) { ?>
                                         </a>
                                         <label class="extension-box" style="padding-right: 1.5rem !important;">
                                             <input type="checkbox" class="extension-status-button" data-status="<?php echo $extension['is_active']; ?>" data-category="<?php echo $extension['categories'][0]; ?>"
-                                            name="<?php echo $extension['extension_folder_name']; ?>"
+                                            name="<?php echo $extension['extension_folder_name']; ?>" data-ext_name = "<?= $extension['extension_name'];?>"
                                                 <?= $extension['is_active'] ? 'checked=checked' : ''; ?> <?php if((isset($extension['supported_in_minimal']) && $extension['supported_in_minimal'] == 1) || $this->company_subscription_level == 1) {} else { echo "disabled"; } ?>/>
                                             <?php if($this->user_permission != 'is_employee'){ ?>
                                                 <?php if((isset($extension['supported_in_minimal']) && $extension['supported_in_minimal'] == 1) || $this->company_subscription_level == 1) { ?>
@@ -324,8 +324,8 @@ if($is_favourite) { ?>
                                         </a>
                                         <label class="extension-box" style="padding-right: 1.5rem !important;">
                                             <input type="checkbox" class="extension-status-button" data-status="<?php echo $extension['is_active']; ?>" 
-                                            data-category="<?php echo $extension['categories'][0]; ?>"
-                                            name="<?php echo $extension['extension_folder_name']; ?>"
+                                            data-category="<?php echo isset($extension['categories'][0]) && $extension['categories'][0] ? $extension['categories'][0] : null; ?>"
+                                            name="<?php echo $extension['extension_folder_name']; ?>" data-ext_name = "<?= $extension['extension_name'];?>"
                                                 <?= $extension['is_active'] ? 'checked=checked' : ''; ?> <?php if((isset($extension['supported_in_minimal']) && $extension['supported_in_minimal'] == 1) || $this->company_subscription_level == 1) {} else { echo "disabled"; } ?>/>
                                             <?php if($this->user_permission != 'is_employee'){ ?>
                                                 <?php if((isset($extension['supported_in_minimal']) && $extension['supported_in_minimal'] == 1) || $this->company_subscription_level == 1) { ?>

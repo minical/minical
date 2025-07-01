@@ -611,7 +611,9 @@ class Forecast_charges
 
         $booking_ids = $charge_type_ids = array();
 
-        if($_SERVER['REQUEST_URI'] != '/reports/ledger/show_monthly_tax_report'){
+        $request_uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+
+        if (strpos($request_uri, '/reports/ledger/show_monthly_tax_report') !== 0) {
 
             foreach ($query->result_array() as $row){
                 $booking_ids[] = $row['booking_id'];
@@ -751,8 +753,8 @@ class Forecast_charges
                         }
                     }
                 }
-			}
-		}
+            }
+        }
         return $result;
     }
 
