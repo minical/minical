@@ -148,6 +148,7 @@ class MY_Controller extends CI_Controller {
         $this->is_tokenex_enabled = false;
         $this->is_square_enabled = false;
         $this->is_stripe_enabled = false;
+        $this->is_guest_sign_enabled = false;
 
         if($get_active_modules){
             foreach ($get_active_modules as $key => $value) {
@@ -222,6 +223,9 @@ class MY_Controller extends CI_Controller {
                 }
                 if($value['extension_name'] == 'stripe-integration'){
                     $this->is_stripe_enabled = true;
+                }
+                if($value['extension_name'] == 'guest-signature-integration'){
+                    $this->is_guest_sign_enabled = true;
                 }
 
                 $config = array();

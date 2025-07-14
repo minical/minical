@@ -138,6 +138,8 @@
     innGrid.isStripeEnabled = parseInt('<?=(($this->is_stripe_enabled) ? 1 : 0)?>');
     innGrid.featureSettings.stripePublicKey = '<?=(isset($this->stripe_public_key) ? $this->stripe_public_key : '')?>';
 
+    innGrid.isGuestSignEnabled = parseInt('<?=(($this->is_guest_sign_enabled) ? 1 : 0)?>');
+
     var reg_flag = <?php echo $registration_flag; ?>;
     innGrid.hasExtensionsPermission = <?php echo $registration_flag; ?>;
     

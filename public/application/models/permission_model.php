@@ -118,6 +118,12 @@ class Permission_model extends CI_Model {
                     $function_name === 'post_add_customer_callback'
                 )
             )
+            ||
+            $controller_name === "guest_signature" && 
+            (
+                $function_name === 'show_signature_form' ||
+                $function_name === 'save_guest_signature'
+            )
 
         ) {
             return true; // let em access the page!

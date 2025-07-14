@@ -170,11 +170,13 @@
                                                 <input type="checkbox" class="extension-status-button" data-status="<?php echo $extension['is_active']; ?>" name="<?php echo $extension['extension_folder_name']; ?>"
                                                 <?= $extension['is_active'] ? 'checked=checked' : ''; ?>/>
                                             </label >-->
-                                             <?php if($company_data['creation_date'] < '2024-01-01' || $this->user_email == SUPER_ADMIN ) {?>
-                                            <a href="javascript:" data-ext_name="<?php echo $extension['extension_folder_name']; ?>" class="install_extension" >Install</a>
-                                             <?php } else {?>
-                                               <span style="float: right; margin: 8px 15px;" disabled >Install</span>
-                                              <?php } ?>
+                                            <?php if($extension['extension_folder_name'] == 'guest-signature-integration' && $this->user_email == SUPER_ADMIN ) {?>
+                                                <a href="javascript:" data-ext_name="<?php echo $extension['extension_folder_name']; ?>" class="install_extension" >Install</a>
+                                            <?php } elseif(($company_data['creation_date'] < '2024-01-01' || $this->user_email == SUPER_ADMIN) && $extension['extension_folder_name'] != 'guest-signature-integration' ) {?>
+                                                <a href="javascript:" data-ext_name="<?php echo $extension['extension_folder_name']; ?>" class="install_extension" >Install</a>
+                                            <?php } else { ?>
+                                                <span style="float: right; margin: 8px 15px;" disabled >Install</span>
+                                            <?php } ?>
                                         </div>
                                     </div>
                                 </div>
