@@ -904,6 +904,7 @@ class Booking_model extends CI_Model {
                 b.is_ota_booking,
                 r.room_name,
                 rt.name as room_type_name,
+                cp.name as company_name,
                 $select_column
                 (
                     SELECT 
@@ -927,6 +928,7 @@ class Booking_model extends CI_Model {
             LEFT JOIN booking_block as bb ON bb.booking_id = b.booking_id
             LEFT JOIN room as r ON r.room_id = bb.room_id
             LEFT JOIN room_type as rt ON r.room_type_id = rt.id
+            LEFT JOIN company as cp ON cp.company_id = b.company_id
             $get_booking_review
             WHERE b.booking_id = '$booking_id' 
 
