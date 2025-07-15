@@ -1767,7 +1767,7 @@ var bookingModalInvoker = function ($) {
                     }
 
                     if (data.booking.state == 0 && !data.allow_state_change) {
-                        $('select[name="state"]').attr("disabled","true");
+                        // $('select[name="state"]').attr("disabled","true");
                         $('#button-check-in').prop("disabled", true);
                     }
                     //alert(data.allow_change_state);
@@ -8028,4 +8028,27 @@ $(document).on('click', '.all-cancelled-room-checkbox', function() {
         $('.cancelled-room-checkbox').each(function() {
             $(this).prop('checked', checked);
         })
-});
+});// $(document).on('change', '#color', function() {
+
+//         var color = $(this).val();
+//         var bookingID = $('.booking_balance').data('book_id');
+        
+//         console.log('color',color);
+//         console.log('bookingID',bookingID);
+
+//         $.ajax({
+//             type: "POST",
+//             url: getBaseURL() + "booking/change_booking_color",
+//             data: {
+//                 booking_color: color,
+//                 booking_id: bookingID
+//             },
+//             dataType: "json",
+//             success: function (response) {
+//                 console.log('response',response);
+//                 if(response.success){
+//                     if (innGrid.reloadBookings) innGrid.reloadBookings();
+//                 }
+//             }
+//         });
+// });

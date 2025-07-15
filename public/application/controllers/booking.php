@@ -1130,7 +1130,7 @@ class Booking extends MY_Controller
                 $booking['check_in_date'],
                 $booking['check_out_date'],
                 $booking['adult_count'],
-                $booking['children_count']
+                $booking['children_count'], array(), false, true
             );
             if(isset($rate_array[0]))
             {
@@ -1500,7 +1500,7 @@ class Booking extends MY_Controller
                 $post_customer_data = $paying_customer;
                 $post_customer_data['customer_id'] = $paying_customer_id;
 
-                do_action('post.create.customer', $post_customer_data);
+                // do_action('post.create.customer', $post_customer_data);
 
                 $booking_data['booking_customer_id'] = $paying_customer_id;
             }
@@ -1606,7 +1606,7 @@ class Booking extends MY_Controller
             $days = $interval->format('%a');
 
             $this->load->library('rate');
-            $raw_rate_array = $this->rate->get_rate_array($booking_data['rate_plan_id'], $start_date, $end_date, $booking_data['adult_count'], $booking_data['children_count']);
+            $raw_rate_array = $this->rate->get_rate_array($booking_data['rate_plan_id'], $start_date, $end_date, $booking_data['adult_count'], $booking_data['children_count'], array(), false, true);
 
             $rate_array = array();
             foreach ($raw_rate_array as $rate)
@@ -1658,7 +1658,7 @@ class Booking extends MY_Controller
             $post_booking_data['booking_id'] = $booking_id;
             $post_booking_data['company_id'] = $this->company_id;
 
-            do_action('post.update.booking', $post_booking_data);
+            // do_action('post.update.booking', $post_booking_data);
 
             $response['rate_plan_id'] = $rate_plan_id;
             $response['rate_plan_name'] = $rate_plan['rate_plan_name'];
@@ -1715,7 +1715,8 @@ class Booking extends MY_Controller
         $post_booking_data['room_id'] = $room['room_id'];
         $post_booking_data['room_type_id'] =  $room['room_type_id'];
         $post_booking_data['company_id'] = $this->company_id;
-        do_action('post.create.booking', $post_booking_data);
+        $post_booking_data['booking_id'] = $booking_id;
+        // do_action('post.create.booking', $post_booking_data);
 
         if (isset($customer_data['staying_customers'])) {
             $staying_customers = $customer_data['staying_customers'];
@@ -1734,7 +1735,7 @@ class Booking extends MY_Controller
                     $post_customer_data = $customer;
                     $post_customer_data['customer_id'] = $staying_customer_id;
 
-                    do_action('post.create.customer', $post_customer_data);
+                    // do_action('post.create.customer', $post_customer_data);
 
                     $staying_customer_ids[] = $staying_customer_id;
                 }
@@ -1795,7 +1796,7 @@ class Booking extends MY_Controller
                 $days = $interval->format('%a');
 
                 $this->load->library('rate');
-                $raw_rate_array = $this->rate->get_rate_array($booking_data['rate_plan_id'], $start_date, $end_date, $booking_data['adult_count'], $booking_data['children_count']);
+                $raw_rate_array = $this->rate->get_rate_array($booking_data['rate_plan_id'], $start_date, $end_date, $booking_data['adult_count'], $booking_data['children_count'], array(), false, true);
 
                 $rate_array = array();
                 foreach ($raw_rate_array as $rate)
@@ -1934,7 +1935,7 @@ class Booking extends MY_Controller
         $this->Booking_room_history_model->insert_booking_room_history_batch($booking_history_batch);
         $post_booking_data['group_booking'] = $booking_history_batch;
 
-        do_action('post.create.booking', $post_booking_batch_data);
+        // do_action('post.create.booking', $post_booking_batch_data);
 
 
         //Create a corresponding invoice
@@ -1958,7 +1959,7 @@ class Booking extends MY_Controller
                     $post_customer_data = $customer;
                     $post_customer_data['customer_id'] = $staying_customer_id;
 
-                    do_action('post.create.customer', $post_customer_data);
+                    // do_action('post.create.customer', $post_customer_data);
 
                     $staying_customer_ids[] = $staying_customer_id;
                 }
@@ -2178,7 +2179,7 @@ class Booking extends MY_Controller
             $post_booking_data = $booking;
             $post_booking_data['booking_id'] = $booking_id;
 
-            do_action('post.update.booking', $post_booking_data);
+            // do_action('post.update.booking', $post_booking_data);
 
 
             $this->_create_booking_log($booking_id, "Booking cancelled");
@@ -2202,7 +2203,7 @@ class Booking extends MY_Controller
                         $days = $interval->format('%a');
 
                         $this->load->library('rate');
-                        $raw_rate_array = $this->rate->get_rate_array($booking_existing_data['rate_plan_id'], $start_date, $end_date, $booking_existing_data['adult_count'], $booking_existing_data['children_count']);
+                        $raw_rate_array = $this->rate->get_rate_array($booking_existing_data['rate_plan_id'], $start_date, $end_date, $booking_existing_data['adult_count'], $booking_existing_data['children_count'], array(), false, true);
                         $rate_array = array();
                         foreach ($raw_rate_array as $rate)
                         {
@@ -2292,7 +2293,7 @@ class Booking extends MY_Controller
                         $children_count = $booking_existing_data['children_count'];
 
                         $this->load->library('rate');
-                        $rate_array = $this->rate->get_rate_array($parent_rate_plan_id, $date_start, $date_end, $adult_count, $children_count);
+                        $rate_array = $this->rate->get_rate_array($parent_rate_plan_id, $date_start, $date_end, $adult_count, $children_count, array(), false, true);
 
                         foreach ($rate_array as $rate)
                         {
@@ -2434,7 +2435,7 @@ class Booking extends MY_Controller
                         $post_customer_data = $customer;
                         $post_customer_data['customer_id'] = $staying_customer_id;
 
-                        do_action('post.create.customer', $post_customer_data);
+                        // do_action('post.create.customer', $post_customer_data);
 
                         $staying_customer_ids[] = $staying_customer_id;
                     }
@@ -2454,7 +2455,7 @@ class Booking extends MY_Controller
 
                 $booking['booked_by'] = isset($new_data['booking']['booked_by']) && $new_data['booking']['booked_by'] ? $new_data['booking']['booked_by'] : NULL;
 
-                $booking_existing_data = $this->Booking_model->get_booking($booking_id);
+                //$booking_existing_data = $this->Booking_model->get_booking($booking_id);
 
                 // if rate plan changes then create new rate plan
                 if(isset($room['use_rate_plan']) && $room['use_rate_plan'])
@@ -2469,7 +2470,7 @@ class Booking extends MY_Controller
                         $days = $interval->format('%a');
 
                         $this->load->library('rate');
-                        $raw_rate_array = $this->rate->get_rate_array($booking['rate_plan_id'], $start_date, $end_date, $booking['adult_count'], $booking['children_count']);
+                        $raw_rate_array = $this->rate->get_rate_array($booking['rate_plan_id'], $start_date, $end_date, $booking['adult_count'], $booking['children_count'], array(), false, true);
                         $rate_array = array();
                         foreach ($raw_rate_array as $rate)
                         {
@@ -2560,7 +2561,7 @@ class Booking extends MY_Controller
                         if (!($old_data['booking']['check_in_date'] == $room['check_in_date'] && $old_data['booking']['check_out_date'] == $room['check_out_date'])) {
 
                             $this->load->library('rate');
-                            $rate_array = $this->rate->get_rate_array($parent_rate_plan_id, $date_start, $date_end, $adult_count, $children_count);
+                            $rate_array = $this->rate->get_rate_array($parent_rate_plan_id, $date_start, $date_end, $adult_count, $children_count, array(), false, true);
 
                             foreach ($rate_array as $rate)
                             {
@@ -2673,7 +2674,7 @@ class Booking extends MY_Controller
                                 $post_booking_data['room_type_id'] = $block['room_type_id'];
                                 $post_booking_data['check_in_date'] = $this->selling_date;
                                 $post_booking_data['check_out_date'] = $block['check_out_date'];
-                                do_action('post.update.booking', $post_booking_data);
+                                // do_action('post.update.booking', $post_booking_data);
                             }
                             else
                             {
@@ -2751,7 +2752,7 @@ class Booking extends MY_Controller
                     $post_charge_data = $charge_data;
                     $post_charge_data['company_id'] = $this->company_id;
 
-                    do_action('post.create.charge', $post_charge_data);
+                    // do_action('post.create.charge', $post_charge_data);
                 }
             }
         }
@@ -2767,7 +2768,7 @@ class Booking extends MY_Controller
         }
 
         $return_type = $this->is_total_balance_include_forecast ? 'balance' : 'balance_without_forecast';
-        $balance = $this->Booking_model->update_booking_balance($booking_id, $return_type);
+        $balance = $this->Booking_model->update_booking_balance($booking_id, $return_type, $old_data['booking'], $old_data['booking_extras']);
         $response['balance'] = $balance;
         if(is_numeric($new_state) && $new_state == '5')
         {
@@ -2795,6 +2796,16 @@ class Booking extends MY_Controller
 
         $this->Booking_model->update_booking($booking_id, array('state' => $new_state));
 
+        $is_update_availability = false;
+        if(
+            (strtotime($new_data['rooms'][0]['check_in_date']) != strtotime($booking_existing_data['check_in_date'])) ||
+            (strtotime($new_data['rooms'][0]['check_out_date']) != strtotime($booking_existing_data['check_out_date'])) ||
+            ($new_data['rooms'][0]['room_type_id'] != $booking_existing_data['room_type_id']) ||
+            ($new_data['rooms'][0]['room_id'] != $booking_existing_data['room_id'])
+        ) {
+            $is_update_availability = true;
+        }
+
         $update_availability_data = array(
                         'start_date' => $start_date,
                         'end_date' => $end_date,
@@ -2802,9 +2813,13 @@ class Booking extends MY_Controller
                         'company_id' => $this->company_id,
                         'update_from' => 'booking_controller'
                     );
+        if($is_update_availability) {
+            do_action('update_availability', $update_availability_data);
+        }
 
-        do_action('update_availability', $update_availability_data);
-        do_action('update_siteminder_availability', $update_availability_data);
+        if($this->company_id != 4462){ // for pemberton hotel
+            do_action('update_siteminder_availability', $update_availability_data);
+        }
 
         echo json_encode($response);
     }
@@ -3124,7 +3139,7 @@ class Booking extends MY_Controller
         $this->Booking_model->delete_booking($booking_id);
 
         $post_booking_data['booking_id'] = $booking_id;
-        do_action('post.delete.booking', $post_booking_data);
+        // do_action('post.delete.booking', $post_booking_data);
 
         $this->_create_booking_log($booking_id, "Booking deleted");
 
@@ -3199,7 +3214,7 @@ class Booking extends MY_Controller
             $post_charge_data = $charges;
             $post_charge_data['company_id'] = $this->company_id;
 
-            do_action('post.create.charge', $post_charge_data);
+            // do_action('post.create.charge', $post_charge_data);
             
             $charge_rate = $this->Charge_type_model->get_taxes($invoice_array[$i]['charge_type_id']);
             for ($j = 0; $j < count($charge_rate); $j++) {
@@ -3612,7 +3627,7 @@ class Booking extends MY_Controller
             $post_booking_data = $update_data;
             $post_booking_data['booking_id'] = $booking_id;
 
-            do_action('post.update.booking', $post_booking_data);
+            // do_action('post.update.booking', $post_booking_data);
             
             $this->_create_booking_log(
                                         $booking_id,
@@ -3662,7 +3677,7 @@ class Booking extends MY_Controller
             $post_booking_data['check_in_date'] = $check_in_date;
             $post_booking_data['check_out_date'] = $check_out_date;
 
-            do_action('post.update.booking', $post_booking_data);
+            // do_action('post.update.booking', $post_booking_data);
             
 
             $return_type = $session_data['is_total_balance_include_forecast'] ? 'balance' : 'balance_without_forecast';

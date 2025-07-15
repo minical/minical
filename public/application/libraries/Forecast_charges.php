@@ -67,7 +67,7 @@ class Forecast_charges
         $customer_name = $booking_details['booking_customer_name'];
         
 		//Load data used in calculations
-		$current_selling_date = $this->ci->Company_model->get_selling_date($company_id);
+		$current_selling_date = $this->ci->selling_date ? $this->ci->selling_date : $this->ci->Company_model->get_selling_date($company_id);
 		$check_in_date = date('Y-m-d', strtotime($booking_details['check_in_date']));
 		$check_out_date = date('Y-m-d', strtotime($booking_details['check_out_date']));
         
@@ -183,7 +183,7 @@ class Forecast_charges
 				$adult_count = $booking_details['adult_count'];
 				$children_count = $booking_details['children_count'];
 				
-				$rate_array = $this->ci->rate->get_rate_array($rate_plan_id, $date_start, $date_end, $adult_count, $children_count);
+				$rate_array = $this->ci->rate->get_rate_array($rate_plan_id, $date_start, $date_end, $adult_count, $children_count, array(), false, true);
 				
 				$last_tax_rate_amount = $tax_rates = null;
 				// change key names (i.e. date => selling_date, rate => amount
@@ -417,7 +417,7 @@ class Forecast_charges
 	
     
     // get forecast extra charge array without taxes
-    function _get_forecast_extra_charges($booking_id, $get_amount_only = false, $booking_details = false)
+    function _get_forecast_extra_charges($booking_id, $get_amount_only = false, $booking_details = false, $booking_extras = null)
 	{
 		$extra_array = Array();
         $extra_charges = 0;
@@ -429,7 +429,10 @@ class Forecast_charges
 		{
 			return $get_amount_only ? $extra_charges : $extra_array;
 		}
-		if (($extras = $this->ci->Booking_extra_model->get_booking_extras($booking_id)))
+
+        $extras = $booking_extras ? $booking_extras : $this->ci->Booking_extra_model->get_booking_extras($booking_id);
+
+		if ($extras)
 		{
 			foreach ($extras as $extra) {
                 
@@ -901,7 +904,7 @@ class Forecast_charges
                         continue;
                     }
 
-                    $rate_array = $this->ci->rate->get_rate_array($rate_plan_id, $date_start, $row['check_out_date'], $adult_count, $children_count);
+                    $rate_array = $this->ci->rate->get_rate_array($rate_plan_id, $date_start, $row['check_out_date'], $adult_count, $children_count, array(), false, true);
                     // change key names (i.e. date => selling_date, rate => amount
                     foreach ($rate_array as $index => $rate)
                     {
@@ -1051,7 +1054,7 @@ class Forecast_charges
             $rate_plan_id = $booking_details['rate_plan_id'];
             $adult_count = $booking_details['adult_count'];
             $children_count = $booking_details['children_count'];
-            $rate_array = $this->ci->rate->get_rate_array($rate_plan_id, $start_date, $end_date, $adult_count, $children_count);
+            $rate_array = $this->ci->rate->get_rate_array($rate_plan_id, $start_date, $end_date, $adult_count, $children_count, array(), false, true);
 			
 			$last_tax_rate_amount = $rate_plan_tax_rates = null;
             // change key names (i.e. date => selling_date, rate => amount

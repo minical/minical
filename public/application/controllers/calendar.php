@@ -151,8 +151,10 @@ class Calendar extends MY_Controller
 			) {
 				$this->_update_booking_rate_plan($booking_id, $destination);
 			}
+
+			$booking_data = $this->Booking_model->get_booking_detail($booking_id);
             
-            $this->Booking_model->update_booking_balance($booking_id);
+            $this->Booking_model->update_booking_balance($booking_id, 'balance', $booking_data);
             
 			echo "success";
 			return true;
@@ -249,7 +251,7 @@ class Calendar extends MY_Controller
 			}
 
 	        $this->load->library('rate');
-	        $rate_array = $this->rate->get_rate_array($parent_rate_plan_id, $date_start, $date_end, $adult_count, $children_count);
+	        $rate_array = $this->rate->get_rate_array($parent_rate_plan_id, $date_start, $date_end, $adult_count, $children_count, array(), false, true);
 
 	        $this->load->model(array('Rate_model','Date_range_model'));
 	        foreach ($rate_array as $rate)

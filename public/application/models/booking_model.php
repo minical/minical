@@ -1070,12 +1070,12 @@ class Booking_model extends CI_Model {
         return $this->db->query($sql);
     }
     
-    function update_booking_balance($booking_id, $return_type = 'balance') 
+    function update_booking_balance($booking_id, $return_type = 'balance', $booking_details = null, $booking_extras = null) 
     {       
         if (!$booking_id) {
             return null;
         }
-        
+
         $sql = "SELECT *,
                     IFNULL(
                     (
@@ -1134,8 +1134,8 @@ class Booking_model extends CI_Model {
         
         if($booking)
         {
-            $forecast = $this->forecast_charges->_get_forecast_charges($booking_id, true);
-            $forecast_extra = $this->forecast_charges->_get_forecast_extra_charges($booking_id, true);
+            $forecast = $this->forecast_charges->_get_forecast_charges($booking_id, true, $booking_details);
+            $forecast_extra = $this->forecast_charges->_get_forecast_extra_charges($booking_id, true, $booking_details, $booking_extras);
             $booking_charge_total_with_forecast = (floatval($booking['charge_total']) + floatval($forecast['total_charges']) + floatval($forecast_extra));
             $data = array(
                 'booking_id' => $booking_id,

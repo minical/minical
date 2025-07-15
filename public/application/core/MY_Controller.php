@@ -339,38 +339,47 @@ class MY_Controller extends CI_Controller {
     {
         if ($this->tank_auth->is_logged_in()) 
         {
-            $user_restriction = $this->Option_model->get_option_by_user('login_security', $this->ci->session->userdata('user_id'));
-
-            if($user_restriction){
-                $minical_access = json_decode($user_restriction[0]['option_value'], true);
-
-                if($minical_access['login_security_otp_verified'] == 0) {
-
-                    $email = $this->ci->session->userdata('email');
-
-                    $encode_email = base64_encode($email);
-                    $encode_from = base64_encode('security');
-
-                    if( 
-                        $this->uri->segment(1) != 'auth' &&
-                        $this->uri->segment(2) != 'show_qr_code'
-                    ) {
-
-                        redirect('auth/show_qr_code?email='.$encode_email.'&from='.$encode_from, 'refresh');
-                        // return false;
-                    }
-                }
-            }
 
             $this->company_id = $this->ci->session->userdata('current_company_id');
 
-            $company = $this->ci->Company_model->get_company($this->company_id);
-            $company_key_data = $this->ci->Company_model->get_company_api_permission($this->company_id);
-            $company_security_data = $this->ci->Option_model->get_option_by_company('company_security', $this->company_id);
+            $company_security_data = $this->Option_model->get_option_by_company('company_security', $this->company_id);
 
             $company_security = array();
             if($company_security_data)
                 $company_security = json_decode($company_security_data[0]['option_value'], true);
+
+            if(
+                isset($company_security['security_status']) &&
+                $company_security['security_status'] == 1
+            ) {
+
+                $user_restriction = $this->Option_model->get_option_by_user('login_security', $this->ci->session->userdata('user_id'));
+
+                if($user_restriction){
+                    $minical_access = json_decode($user_restriction[0]['option_value'], true);
+
+                    if($minical_access['login_security_otp_verified'] == 0) {
+
+                        $email = $this->ci->session->userdata('email');
+
+                        $encode_email = base64_encode($email);
+                        $encode_from = base64_encode('security');
+
+                        if( 
+                            $this->uri->segment(1) != 'auth' &&
+                            $this->uri->segment(2) != 'show_qr_code'
+                        ) {
+
+                            redirect('auth/show_qr_code?email='.$encode_email.'&from='.$encode_from, 'refresh');
+                            // return false;
+                        }
+                    }
+                }
+
+            }
+
+            $company = $this->ci->Company_model->get_company($this->company_id);
+            $company_key_data = $this->ci->Company_model->get_company_api_permission($this->company_id);
 
             if(!$this->input->is_ajax_request() && !($company && isset($company['company_id']) && $company['company_id'])){
                 $controller_name = $this->ci->uri->rsegment(1);
@@ -395,7 +404,10 @@ class MY_Controller extends CI_Controller {
             $this->company_feature_limit = $company['limit_feature'];
             $this->company_creation_date = $company['creation_date'];
             
-            if($company_security){
+            if(
+                isset($company_security['security_status']) &&
+                $company_security['security_status'] == 1
+            ) {
                 $this->company_lock_time = $company_security['lock_timer'];
                 $this->company_security_status = $company_security['security_status'];
             }
@@ -406,8 +418,10 @@ class MY_Controller extends CI_Controller {
             $this->automatic_email_confirmation = $company['automatic_email_confirmation'];
             $this->automatic_email_cancellation = $company['automatic_email_cancellation'];
             
-            $company_partner_type_id = $this->Whitelabel_partner_model->get_partner_detail($company['partner_id']);
-            $this->company_partner_type_id = isset($company_partner_type_id) && isset($company_partner_type_id['type_id']) ? $company_partner_type_id['type_id'] : 1;
+            $this->company_partner_type_id = 1;
+            
+            // $company_partner_type_id = $this->Whitelabel_partner_model->get_partner_detail($company['partner_id']);
+            // $this->company_partner_type_id = isset($company_partner_type_id) && isset($company_partner_type_id['type_id']) ? $company_partner_type_id['type_id'] : 1;
             $this->company_ui_theme = isset($company['ui_theme']) ? $company['ui_theme'] : 0;
             
             $this->selling_date = $company['selling_date'] ? $company['selling_date'] : date('Y-m-d');
@@ -432,9 +446,17 @@ class MY_Controller extends CI_Controller {
             $this->restrict_checkout_with_balance = $company['restrict_checkout_with_balance'];
             $this->calendar_days = $company['calendar_days'];
 
-            $this->security_data =  $this->Company_security_model->get_deatils_by_company_user(null, $this->user_id);
+            $this->security_data = array();
+            $this->security_data_length = 0;
 
-            $this->security_data_length = count($this->security_data);
+            if(
+                isset($company_security['security_status']) &&
+                $company_security['security_status'] == 1
+            ) {
+                $this->security_data =  $this->Company_security_model->get_deatils_by_company_user(null, $this->user_id);
+
+                $this->security_data_length = count($this->security_data);
+            }
 
             $this->gateway_meta_data = json_decode($company['gateway_meta_data'], true);
             $this->gateway_square_app_id = isset($this->gateway_meta_data['app_id']) ? $this->gateway_meta_data['app_id'] : '';
@@ -468,23 +490,23 @@ class MY_Controller extends CI_Controller {
             // Will be used for support, vendor, and property owner
             $this->is_property_owner = (($user && isset($user['email']) && $user['email'] == SUPER_ADMIN) || ($admin_user_ids && isset($admin_user_ids['admin_user_id']) && $this->user_id == $admin_user_ids['admin_user_id']) || $this->user_permission == 'is_owner');
 
-            $common_booking_sources = json_decode(COMMON_BOOKING_SOURCES, true);
-            $i = 0;
-            $booking_sources = $this->Booking_source_model->get_common_booking_sources_settings($this->company_id);
+            // $common_booking_sources = json_decode(COMMON_BOOKING_SOURCES, true);
+            // $i = 0;
+            // $booking_sources = $this->Booking_source_model->get_common_booking_sources_settings($this->company_id);
             
-            if(empty($booking_sources)){
-                foreach($common_booking_sources as $key => $source)
-                {
-                    $data = array(
-                        'booking_source_id' => $key,
-                        'company_id' => $this->company_id,
-                        'is_hidden' => 0,
-                        'sort_order' => $i++,
-                        'commission_rate' => 0
-                    );
-                    $this->Booking_source_model->update_common_booking_sources_settings($this->company_id, $key, $data);
-                }
-            }
+            // if(empty($booking_sources)){
+            //     foreach($common_booking_sources as $key => $source)
+            //     {
+            //         $data = array(
+            //             'booking_source_id' => $key,
+            //             'company_id' => $this->company_id,
+            //             'is_hidden' => 0,
+            //             'sort_order' => $i++,
+            //             'commission_rate' => 0
+            //         );
+            //         $this->Booking_source_model->update_common_booking_sources_settings($this->company_id, $key, $data);
+            //     }
+            // }
 
             $host_name = $_SERVER['HTTP_HOST'];
             $protocol = $this->config->item('server_protocol');
