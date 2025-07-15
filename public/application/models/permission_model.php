@@ -108,7 +108,7 @@ class Permission_model extends CI_Model {
             (
                 $controller_name === "helixpay_integrations" && 
                 (
-                    $function_name === 'helixpay_response_success_url' || $function_name === 'helixpay_response_fail_url' || $function_name === 'get_helixpay_post_bookingengine' || $function_name ===  'helixpay_bookingengine_ok_fail_url'
+                    $function_name === 'helixpay_response_success_url' || $function_name === 'helixpay_response_fail_url' || $function_name === 'get_helixpay_post_bookingengine' || $function_name === 'helixpay_bookingengine_ok_url'  || $function_name === 'helixpay_bookingengine_fail_url'
                 )
             )
              ||
