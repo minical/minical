@@ -272,7 +272,10 @@ class Customer extends MY_Controller {
             $filters['show_only_checked_in_and_checked_out'] = true;
         }
         
-        $bookings = $this->Booking_model->get_bookings($filters+array('booking_customer_id' => $customer_id), null, null, true);
+        //$bookings = $this->Booking_model->get_bookings($filters+array('booking_customer_id' => $customer_id), null, null, true); //include rooms not assigned
+
+        //include rooms assign only
+        $bookings = $this->Booking_model->get_bookings($filters+array('booking_customer_id' => $customer_id), null, null, false);
         // Must be called RIGHT AFTER the query that we want to get the number of rows for.
         $config['total_rows'] = $this->Booking_model->get_found_rows(); 
         foreach ($bookings as $index => $booking)
