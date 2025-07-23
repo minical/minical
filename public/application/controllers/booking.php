@@ -2043,6 +2043,8 @@ class Booking extends MY_Controller
         $payment_details = $this->Payment_model->get_payments($booking_id);
         $booking_existing_data = $this->Booking_model->get_booking($booking_id);
 
+        $early_checkout = false;
+
         $final_amount = 0;
 
         if($new_state == 4 && $payment_details)
@@ -2060,11 +2062,22 @@ class Booking extends MY_Controller
         }
 
         // convert forecast charges into custom charges for hourly bookings
-
+        // prx($new_data, 1);
+        // prx($new_state);
         if(
-            isset($new_data['number_of_days']) && 
-            $new_data['number_of_days'] == 0 &&
-            $new_state == CHECKOUT
+            (
+                isset($new_data['number_of_days']) && 
+                $new_data['number_of_days'] == 0 &&
+                $new_state == CHECKOUT
+            ) ||
+            (
+                $new_state == CHECKOUT &&
+                isset($new_data['rooms']) && 
+                isset($new_data['rooms'][0]) && 
+                isset($new_data['rooms'][0]['check_in_date']) && 
+                isset($new_data['rooms'][0]['check_out_date']) && 
+                $new_data['rooms'][0]['check_in_date'] == $new_data['rooms'][0]['check_out_date']
+            )
         )
         {
 
@@ -2121,6 +2134,7 @@ class Booking extends MY_Controller
             if(empty($last_hourly_charge)){
 
                 $charge_id = $this->Charge_model->insert_charge($charge_data);
+                $early_checkout = true;
 
                 //invoice log 
                 $this->load->model('Invoice_log_model');
@@ -2767,7 +2781,13 @@ class Booking extends MY_Controller
             $this->send_booking_cancellation_email($booking_id);
         }
 
-        $return_type = $this->is_total_balance_include_forecast ? 'balance' : 'balance_without_forecast';
+
+        if($early_checkout){
+            $return_type = 'balance_without_forecast';
+        } else {
+            $return_type = $this->is_total_balance_include_forecast ? 'balance' : 'balance_without_forecast';
+        }
+
         $balance = $this->Booking_model->update_booking_balance($booking_id, $return_type, $old_data['booking'], $old_data['booking_extras']);
         $response['balance'] = $balance;
         if(is_numeric($new_state) && $new_state == '5')
