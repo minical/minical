@@ -19,7 +19,7 @@
     $my_companies = $this->Company_model->get_companies($this->user_id);
     
     ?>
-<div class="app-sidebar sidebar-shadow m-038">
+<div class="app-sidebar sidebar-shadow m-038 hidden-print">
     <?php if($menus) {?>
     <div class="openbtn">
      <button type="button" id="hamburger-02" class="hamburger hamburger--elastic desktop-toggle-nav">
