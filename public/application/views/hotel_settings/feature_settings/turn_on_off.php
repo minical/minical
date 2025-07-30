@@ -673,7 +673,7 @@
                                <?= $company_data['restrict_checkout_with_balance'] == 1 ? 'checked=checked' : ''; ?>/>
                         <span></span>
                     </label>
-                    <label for="restrict_checkout_with_balance"><b><?= l("Restrict bookings to checkout with balance", true); ?></b></label>
+                    <label for="restrict_checkout_with_balance"><b><?= l("Block checkout with outstanding balance after the selling date has passed.", true); ?></b></label>
                 </div>
             </div>
             <div class="form-group features-div-padding ">
