@@ -2135,48 +2135,38 @@ class Company extends MY_Controller
                 $extra_id = $extras['new_id'];
             }
 
-            if($extra['Booking Id']){
+            if ($extra['Booking Id']) {
 
-                $booking_extra = null;
-                if(
-                    isset($this->cache_values['Extra Booking'][$extra['Booking Id']]) && 
-                        $this->cache_values['Extra Booking'][$extra['Booking Id']]
-                ){
-                    $booking_extra = $this->cache_values['Extra Booking'][$extra['Booking Id']];
-                } 
+                $booking_id = null;
+                if (
+                    isset($this->cache_values['Booking'][$extra['Booking Id']]) &&
+                    $this->cache_values['Booking'][$extra['Booking Id']]
+                ) {
+                    $booking_id = $this->cache_values['Booking'][$extra['Booking Id']];
+                }
 
-                if(empty($booking_extra)){
+                if (isset($booking_id['new_id']) && $booking_id['new_id']) {
+                    $booking_extra_id = $this->Booking_extra_model->create_booking_extra(
+                        $booking_id['new_id'],
+                        $extra_id,
+                        $extra['Start Date'],
+                        $extra['End Date'],
+                        $extra['Quantity'],
+                        $extra['Default Rate']
+                    );
 
-                    $booking_id = null;
-                    if(
-                        isset($this->cache_values['Booking'][$extra['Booking Id']]) && 
-                            $this->cache_values['Booking'][$extra['Booking Id']]
-                    ){
-                        $booking_id = $this->cache_values['Booking'][$extra['Booking Id']];
-                    } 
-
-                    $booking_extra_id = null;
-
-                    if(isset($booking_id['new_id']) && $booking_id['new_id']) {
-                        $booking_extra_id = $this->Booking_extra_model->create_booking_extra(
-                            $booking_id['new_id'],
-                            $extra_id,$extra['Start Date'],
-                            $extra['End Date'],
-                            $extra['Quantity'],
-                            $extra['Default Rate']
-                        );
-                    }
-
-                    if($booking_extra_id) {
-                        $data_import_mapping = Array(
-                            "new_id" => $booking_extra_id,
-                            "old_id" => $extra['Booking Extra Id'],
+                    if ($booking_extra_id) {
+                        $data_import_mapping = [
+                            "new_id"     => $booking_extra_id,
+                            "old_id"     => $extra['Booking Extra Id'],
                             "company_id" => $this->company_id,
-                            "type" => "extra_booking"
-                        );
+                            "type"       => "extra_booking"
+                        ];
 
                         $this->import_insert_batch[] = $data_import_mapping;
-                        $this->cache_values['Extra Booking'][$extra['Booking Id']] = $data_import_mapping;
+
+                        // Support multiple extras per booking
+                        $this->cache_values['Extra Booking'][$extra['Booking Extra Id']] = $data_import_mapping;
                     }
                 }
             }
