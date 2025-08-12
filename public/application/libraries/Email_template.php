@@ -97,7 +97,6 @@ class Email_template {
                 $invoice_link = "https://".$invoice_link;
             }
 
-
             $invoice_link = $folio_id ? $invoice_link.'/'.$folio_id : $invoice_link;
             $review_link = base_url() . "review/?hash=".$invoice_hash;
 
@@ -605,7 +604,23 @@ class Email_template {
 
         $whitelabelinfo = $this->ci->session->userdata('white_label_information');
 
-        $from_email = isset($whitelabelinfo['do_not_reply_email']) && $whitelabelinfo['do_not_reply_email'] ? $whitelabelinfo['do_not_reply_email'] : (isset($company['email']) && $company['email'] ? $company['email'] : 'donotreply@minical.io');
+
+        if($company_id == 2483){
+            $whitelabelinfo = null;
+            $white_label_detail = $this->ci->Whitelabel_partner_model->get_partners(array('id' => $company['partner_id']));
+            
+            if($white_label_detail && isset($white_label_detail[0])) {
+                $whitelabelinfo = $white_label_detail[0];
+            }
+
+            $from_email = $whitelabelinfo && isset($whitelabelinfo['support_email']) && $whitelabelinfo['support_email'] ? $whitelabelinfo['support_email'] : 'support@minical.io';
+        } else {
+            $whitelabelinfo = $this->ci->session->userdata('white_label_information');
+
+            $from_email = isset($whitelabelinfo['do_not_reply_email']) && $whitelabelinfo['do_not_reply_email'] ? $whitelabelinfo['do_not_reply_email'] : (isset($company['email']) && $company['email'] ? $company['email'] : 'donotreply@minical.io');
+        }
+
+        // $from_email = isset($whitelabelinfo['do_not_reply_email']) && $whitelabelinfo['do_not_reply_email'] ? $whitelabelinfo['do_not_reply_email'] : (isset($company['email']) && $company['email'] ? $company['email'] : 'donotreply@minical.io');
 
         $email_from = isset($this->ci->avoid_dmarc_blocking) && $this->ci->avoid_dmarc_blocking ? $from_email : $company['email'];
 
@@ -1371,10 +1386,29 @@ class Email_template {
         {
             $email_list .= ",".$company['additional_company_emails'];
         }
-        
-        $whitelabelinfo = $this->ci->session->userdata('white_label_information');
 
-        $from_email = isset($whitelabelinfo['do_not_reply_email']) && $whitelabelinfo['do_not_reply_email'] ? $whitelabelinfo['do_not_reply_email'] : 'donotreply@minical.io';
+
+        if($company_id == 2483){
+            $whitelabelinfo = null;
+            $white_label_detail = $this->ci->Whitelabel_partner_model->get_partners(array('id' => $company['partner_id']));
+            
+            if($white_label_detail && isset($white_label_detail[0])) {
+                $whitelabelinfo = $white_label_detail[0];
+            }
+
+            $from_email = $whitelabelinfo && isset($whitelabelinfo['support_email']) && $whitelabelinfo['support_email'] ? $whitelabelinfo['support_email'] : 'support@minical.io';
+        } else {
+            $whitelabelinfo = $this->ci->session->userdata('white_label_information');
+
+            $from_email = isset($whitelabelinfo['do_not_reply_email']) && $whitelabelinfo['do_not_reply_email'] ? $whitelabelinfo['do_not_reply_email'] : 'donotreply@minical.io';
+        }
+
+
+        
+        
+        // $whitelabelinfo = $this->ci->session->userdata('white_label_information');
+
+        // $from_email = isset($whitelabelinfo['do_not_reply_email']) && $whitelabelinfo['do_not_reply_email'] ? $whitelabelinfo['do_not_reply_email'] : 'donotreply@minical.io';
 
         $email_from = isset($this->ci->avoid_dmarc_blocking) && $this->ci->avoid_dmarc_blocking ? $from_email : $company['email'];
 
