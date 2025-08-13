@@ -116,304 +116,204 @@ class Availability_model extends CI_Model {
 	// net availability
     function get_availability($start_date, $end_date, $room_types, $ota_id, $filter_can_be_sold_online=FALSE, $adult_count = null, $children_count = null, $get_inventory = false, $get_max_availability = true, $get_inventorysold = true, $get_closeout_status = true, $is_overbooking = false, $company_id = null, $ota_key = null)
     {
-    	$room_types_string = implode(', ', $room_types);
+		$room_types_string = implode(', ', array_map('intval', $room_types));
 		$can_be_sold_online_filter = $filter_can_be_sold_online ? 'AND r.can_be_sold_online = 1' : '';
-    	
-        $adult_count_sql = $adult_count ? "rt.max_adults >= $adult_count AND " : "";
-        $children_count_sql = $children_count ? "rt.max_children >= $children_count AND " : "";
-        $max_occupancy_sql = $min_occupancy_sql = "";
-        if ($adult_count || $children_count) {
-            $total_occupants = (int)$adult_count + (int)$children_count;
-            $max_occupancy_sql = "rt.max_occupancy >= $total_occupants AND ";
-            $min_occupancy_sql = "rt.min_occupancy <= $total_occupants AND ";
-        }
-
-        $inventory_select = $inventory_join = "";
-        if ($get_inventory) {
-			
-			if($get_max_availability)
-			{
-				$inventory_select = "IF(tresult.max_availability < 0, 0, tresult.max_availability) AS max_availability, ";
-				$inventory_join = "LEAST(
-							(
-								SELECT
-									IFNULL((
-										SELECT
-											drxrtxc.availability 
-										from 
-											date_range as dr,
-											date_range_x_room_type as drxrt,
-											date_range_x_room_type_x_channel as drxrtxc
-										where 
-											drxrtxc.date_range_x_room_type_id = drxrt.date_range_x_room_type_id AND
-											drxrtxc.channel_id = ".$ota_id." AND
-											rt.id = drxrt.room_type_id AND
-											dr.date_range_id = drxrt.date_range_id AND
-											dr.date_start <= di.date AND 
-											di.date <= dr.date_end AND
-											(
-												(dr.sunday = '1' AND DAYOFWEEK(di.date) = '".SUNDAY."') OR
-												(dr.monday = '1' AND DAYOFWEEK(di.date) = '".MONDAY."') OR
-												(dr.tuesday = '1' AND DAYOFWEEK(di.date) = '".TUESDAY."') OR
-												(dr.wednesday = '1' AND DAYOFWEEK(di.date) = '".WEDNESDAY."') OR
-												(dr.thursday = '1' AND DAYOFWEEK(di.date) = '".THURSDAY."') OR
-												(dr.friday = '1' AND DAYOFWEEK(di.date) = '".FRIDAY."') OR
-												(dr.saturday = '1' AND DAYOFWEEK(di.date) = '".SATURDAY."')
-											)
-										order by drxrt.date_range_x_room_type_id DESC
-										LIMIT 0,1
-									), 999)
-							),
-							count(r.room_id)
-                    ) AS max_availability, ";
-			}
-			if($get_inventorysold)
-			{
-				$inventory_select .= " IF(tresult.inventory_sold < 0, 0, tresult.inventory_sold) AS inventory_sold,";
-				$inventory_join .= "(
-							(
-								SELECT
-									count(DISTINCT b.booking_id)
-								FROM
-									booking as b, 
-									booking_block as brh,
-									room as r,
-									company as c
-								WHERE
-									DATE(brh.check_out_date) > di.date AND 
-									di.date >= DATE(brh.check_in_date) AND
-									b.booking_id = brh.booking_id AND
-									c.company_id = b.company_id AND
-									IF(c.book_over_unconfirmed_reservations = 1, b.state < 4, (b.state < 4 OR b.state = 7)) AND
-									b.is_deleted = '0' AND
-									".(($ota_id == -1) ? "" : "b.source IN (".$ota_id.") AND")."
-									r.room_type_id = rt.id AND
-									brh.room_id = r.room_id AND
-									r.is_deleted = '0' AND 
-									c.company_id = ".$company_id." AND 
-									b.company_id = ".$company_id." $can_be_sold_online_filter
-							) + (
-								SELECT
-									count(DISTINCT b.booking_id)
-								FROM
-									booking as b, 
-									booking_block as brh,
-									company as c
-								WHERE
-									DATE(brh.check_out_date) > di.date AND 
-									di.date >= DATE(brh.check_in_date) AND
-									b.booking_id = brh.booking_id AND
-									c.company_id = b.company_id AND
-									IF(c.book_over_unconfirmed_reservations = 1, b.state < 4, (b.state < 4 OR b.state = 7)) AND
-									b.is_deleted = '0' AND
-									".(($ota_id == -1) ? "" : "b.source IN (".$ota_id.") AND")."
-									brh.room_type_id = rt.id AND
-									c.company_id = ".$company_id." AND 
-									b.company_id = ".$company_id." AND
-									(brh.room_id IS NULL OR brh.room_id = 0)
-							)
-                    ) AS inventory_sold,";
-			}
-        }
-		
-		$get_closeout_status_select = $get_closeout_status_join = "";
-		if($get_closeout_status)
-		{
-			$get_closeout_status_select = "IF(tresult.closeout_status < 0, 0, tresult.closeout_status) AS closeout_status, ";
-			$get_closeout_status_join = ", IFNULL(
-											(
-												SELECT
-													IFNULL((
-														SELECT
-															drxrtxs.can_be_sold_online
-														from 
-															date_range as dr,
-															date_range_x_room_type as drxrt,
-															date_range_x_room_type_x_status as drxrtxs
-														where 
-															drxrtxs.date_range_x_room_type_id = drxrt.date_range_x_room_type_id AND
-															drxrtxs.channel_id = ".$ota_id." AND
-															rt.id = drxrt.room_type_id AND
-															dr.date_range_id = drxrt.date_range_id AND
-															dr.date_start <= di.date AND 
-															di.date <= dr.date_end AND
-															(
-																(dr.sunday = '1' AND DAYOFWEEK(di.date) = '".SUNDAY."') OR
-																(dr.monday = '1' AND DAYOFWEEK(di.date) = '".MONDAY."') OR
-																(dr.tuesday = '1' AND DAYOFWEEK(di.date) = '".TUESDAY."') OR
-																(dr.wednesday = '1' AND DAYOFWEEK(di.date) = '".WEDNESDAY."') OR
-																(dr.thursday = '1' AND DAYOFWEEK(di.date) = '".THURSDAY."') OR
-																(dr.friday = '1' AND DAYOFWEEK(di.date) = '".FRIDAY."') OR
-																(dr.saturday = '1' AND DAYOFWEEK(di.date) = '".SATURDAY."')
-															)
-														order by drxrt.date_range_x_room_type_id DESC
-														LIMIT 0,1
-													), 1)
-											),
-											1
-										) AS closeout_status ";
+		$adult_count_sql = $adult_count ? "rt.max_adults >= ".$this->db->escape_str((int)$adult_count)." AND " : "";
+		$children_count_sql = $children_count ? "rt.max_children >= ".$this->db->escape_str((int)$children_count)." AND " : "";
+		$max_occupancy_sql = $min_occupancy_sql = "";
+		if ($adult_count || $children_count) {
+			$total_occupants = (int)$adult_count + (int)$children_count;
+			$max_occupancy_sql = "rt.max_occupancy >= ".$this->db->escape_str($total_occupants)." AND ";
+			$min_occupancy_sql = "rt.min_occupancy <= ".$this->db->escape_str($total_occupants)." AND ";
 		}
+		$company_filter_assigned = $company_id ? " AND c.company_id = ".$this->db->escape_str((int)$company_id)." AND b.company_id = ".$this->db->escape_str((int)$company_id)."" : "";
+		$company_filter_unassigned = $company_id ? " AND c.company_id = ".$this->db->escape_str((int)$company_id)." AND b.company_id = ".$this->db->escape_str((int)$company_id)."" : "";
+		$ota_sources_condition = ($ota_id == -1) ? "1=1" : ("b.source IN (".$ota_id.")");
 
-        $check_out_date_label = "IF(rt.prevent_inline_booking = 1, DATE(brh.check_out_date) + INTERVAL 1 DAY, DATE(brh.check_out_date))";
-        $check_in_date_label = "IF(rt.prevent_inline_booking = 1, DATE(brh.check_in_date) - INTERVAL 1 DAY, DATE(brh.check_in_date))";
-
-        $count_distinct_bookings = "count(DISTINCT IF(rt.prevent_inline_booking = 1, r.room_id, b.booking_id))";
-
-        // a hack to fix availability for Dublin motel
-        $unassigned_bookings_count_sql = $company_id == "8490013980" ? "" :
-            "- (
-                                SELECT
-                                    count(DISTINCT b.booking_id)
-                                FROM
-                                    booking as b, 
-                                    booking_block as brh,
-                                    company as c
-                                WHERE
-                                    DATE(brh.check_out_date) > di.date AND 
-                                    di.date >= DATE(brh.check_in_date) AND
-                                    b.booking_id = brh.booking_id AND
-                                    c.company_id = b.company_id AND
-                                    IF(c.book_over_unconfirmed_reservations = 1, b.state < 4, (b.state < 4 OR b.state = 7)) AND
-                                    b.is_deleted = '0' AND
-                                    brh.room_type_id = rt.id AND
-                                    (brh.room_id IS NULL OR brh.room_id = 0)
-                            )";
-
-
-        $sql = "
-                SELECT 
-                tresult.date,
-                tresult.room_type_id,
-                tresult.name,
-                $inventory_select
-                $get_closeout_status_select
-				IF(tresult.availability < 0, 0, tresult.availability) AS availability
-            FROM 
-            (
-                SELECT 
-                    di.date, 
-                    rt.id as room_type_id, 
-                    rt.name,
-                    $inventory_join
-                    GREATEST
-                    (
-                        0,
-
-                        LEAST(
-                            # Availability Among ALL bookings
-                            count(r.room_id) - (
-                                SELECT
-                                    $count_distinct_bookings
-                                FROM
-                                    booking as b, 
-                                    booking_block as brh,
-                                    room as r,
-                                    company as c
-                                WHERE
-                                    $check_out_date_label > di.date AND 
-                                    di.date >= $check_in_date_label AND
-                                    b.booking_id = brh.booking_id AND
-                                    c.company_id = b.company_id AND
-                                    IF(c.book_over_unconfirmed_reservations = 1, b.state < 4, (b.state < 4 OR b.state = 7)) AND
-                                    b.is_deleted = '0' AND
-                                    r.room_type_id = rt.id AND
-                                    brh.room_id = r.room_id AND
-                                    r.is_deleted = '0' $can_be_sold_online_filter
-                            ) 
-                            $unassigned_bookings_count_sql,
-
-                            # Availability for OTA bookings
-                            (
-                                (
-									SELECT(IFNULL((
-										SELECT
-											drxrtxc.availability
-										from 
-											date_range as dr,
-											date_range_x_room_type as drxrt,
-											date_range_x_room_type_x_channel as drxrtxc
-										where 
-											drxrtxc.date_range_x_room_type_id = drxrt.date_range_x_room_type_id AND
-											drxrtxc.channel_id = ".$ota_id." AND
-											rt.id = drxrt.room_type_id AND
-											dr.date_range_id = drxrt.date_range_id AND
-											dr.date_start <= di.date AND 
-											di.date <= dr.date_end AND
-											(
-												(dr.sunday = '1' AND DAYOFWEEK(di.date) = '".SUNDAY."') OR
-												(dr.monday = '1' AND DAYOFWEEK(di.date) = '".MONDAY."') OR
-												(dr.tuesday = '1' AND DAYOFWEEK(di.date) = '".TUESDAY."') OR
-												(dr.wednesday = '1' AND DAYOFWEEK(di.date) = '".WEDNESDAY."') OR
-												(dr.thursday = '1' AND DAYOFWEEK(di.date) = '".THURSDAY."') OR
-												(dr.friday = '1' AND DAYOFWEEK(di.date) = '".FRIDAY."') OR
-												(dr.saturday = '1' AND DAYOFWEEK(di.date) = '".SATURDAY."')
-											)
-										order by drxrt.date_range_x_room_type_id DESC
-										LIMIT 0,1
-									), 999)) - $count_distinct_bookings
-									FROM
-										booking as b, 
-										booking_block as brh,
-										room as r
-									WHERE
-										".(($ota_id == -1) ? "" : "b.source IN (".$ota_id.") AND")."
-										r.room_type_id = rt.id AND
-										brh.room_id = r.room_id AND
-										$check_out_date_label > di.date AND 
-										di.date >= $check_in_date_label AND
-										b.booking_id = brh.booking_id AND
-										b.state < 4 AND
-										b.is_deleted = '0' AND
-										r.is_deleted = '0'
-								) - (
-									SELECT
-										count(DISTINCT b.booking_id)
-									FROM
-										booking as b, 
-										booking_block as brh
-									WHERE
-										".(($ota_id == -1) ? "" : "b.source IN (".$ota_id.") AND")."
-										brh.room_type_id = rt.id AND
-										(brh.room_id IS NULL OR brh.room_id = 0) AND
-										DATE(brh.check_out_date) > di.date AND 
-										di.date >= DATE(brh.check_in_date) AND
-										b.booking_id = brh.booking_id AND
-										b.state < 4 AND
-										b.is_deleted = '0'
-								)
-                            )
-                        )
-
-                    ) 
-                    - (IF(rt.ota_close_out_threshold AND '$ota_id' > 0 AND '$ota_key' != 'obe', rt.ota_close_out_threshold, 0)) as availability
-					$get_closeout_status_join  
-                FROM
-                    date_interval as di,
-                    room_type as rt
-                LEFT JOIN room as r ON r.room_type_id = rt.id AND r.is_deleted = '0' ".$can_be_sold_online_filter."
-                WHERE
-                    rt.id IN (".$room_types_string.") AND                    
-                    $adult_count_sql       
-                    $children_count_sql 
-                    $max_occupancy_sql
-                    $min_occupancy_sql
-                    di.date >= '$start_date' AND 
-                    '$end_date' >= di.date AND
-                    rt.is_deleted = '0' 
-                    
-
-                GROUP BY rt.id, di.date
-                ORDER BY di.date ASC 
-            ) as tresult
+		$sql = "
+			SELECT
+				di.date,
+				rt.id AS room_type_id,
+				rt.name AS room_type_name,
+				rt.name AS name,
+				-- derived metrics
+				(IFNULL(bk_ota_assigned.cnt_assigned_ota,0) + IFNULL(bk_ota_unassigned.cnt_unassigned_ota,0)) AS inventory_sold,
+				IF(
+					LEAST(IFNULL(cap.availability, 999), IFNULL(rooms.total_rooms, 0)) < 0,
+					0,
+					LEAST(IFNULL(cap.availability, 999), IFNULL(rooms.total_rooms, 0))
+				) AS max_availability,
+				IFNULL(st.can_be_sold_online, 1) AS closeout_status,
+				GREATEST(
+					0,
+					LEAST(
+						IFNULL(rooms.total_rooms, 0) - (IFNULL(bk_all_assigned.cnt_assigned_all,0) + IFNULL(bk_all_unassigned.cnt_unassigned_all,0)),
+						IFNULL(cap.availability, 999) - (IFNULL(bk_ota_assigned.cnt_assigned_ota,0) + IFNULL(bk_ota_unassigned.cnt_unassigned_ota,0))
+					)
+					- IF(rt.ota_close_out_threshold AND " . (is_numeric($ota_id) ? (int)$ota_id : 0) . " > 0 AND '".$this->db->escape_str((string)$ota_key)."' != 'obe', rt.ota_close_out_threshold, 0)
+				) AS availability
+			FROM
+				date_interval di
+			JOIN room_type rt
+				ON rt.id IN ($room_types_string)
+				AND rt.is_deleted = '0'
+			LEFT JOIN (
+				SELECT r.room_type_id, COUNT(r.room_id) AS total_rooms
+				FROM room r
+				JOIN room_type rt2 ON rt2.id = r.room_type_id AND rt2.is_deleted = '0'
+				WHERE r.is_deleted = '0'
+				  AND r.room_type_id IN ($room_types_string)
+				GROUP BY r.room_type_id
+			) rooms ON rooms.room_type_id = rt.id
+			-- assigned bookings (all sources)
+			LEFT JOIN (
+				SELECT
+					di2.date,
+					rt2.id AS room_type_id,
+					COUNT(DISTINCT CASE WHEN rt2.prevent_inline_booking = 1 THEN r.room_id ELSE b.booking_id END) AS cnt_assigned_all
+				FROM date_interval di2
+				JOIN room_type rt2 ON rt2.id IN ($room_types_string) AND rt2.is_deleted = '0'
+				JOIN room r ON r.room_type_id = rt2.id AND r.is_deleted = '0' $can_be_sold_online_filter
+				JOIN booking_block brh ON brh.room_id = r.room_id
+				JOIN booking b ON b.booking_id = brh.booking_id AND b.is_deleted = '0'
+				JOIN company c ON c.company_id = b.company_id
+				WHERE
+					IF(rt2.prevent_inline_booking = 1, DATE(brh.check_out_date) + INTERVAL 1 DAY, DATE(brh.check_out_date)) > di2.date AND
+					di2.date >= IF(rt2.prevent_inline_booking = 1, DATE(brh.check_in_date) - INTERVAL 1 DAY, DATE(brh.check_in_date)) AND
+					IF(c.book_over_unconfirmed_reservations = 1, b.state < 4, (b.state < 4 OR b.state = 7))
+					$company_filter_assigned
+					AND di2.date BETWEEN '$start_date' AND '$end_date'
+				GROUP BY di2.date, rt2.id
+			) bk_all_assigned ON bk_all_assigned.date = di.date AND bk_all_assigned.room_type_id = rt.id
+			-- unassigned bookings (all sources)
+			LEFT JOIN (
+				SELECT
+					di2.date,
+					rt2.id AS room_type_id,
+					COUNT(DISTINCT b.booking_id) AS cnt_unassigned_all
+				FROM date_interval di2
+				JOIN room_type rt2 ON rt2.id IN ($room_types_string) AND rt2.is_deleted = '0'
+				JOIN booking_block brh ON brh.room_type_id = rt2.id AND (brh.room_id IS NULL OR brh.room_id = 0)
+				JOIN booking b ON b.booking_id = brh.booking_id AND b.is_deleted = '0'
+				JOIN company c ON c.company_id = b.company_id
+				WHERE
+					DATE(brh.check_out_date) > di2.date AND di2.date >= DATE(brh.check_in_date) AND
+					IF(c.book_over_unconfirmed_reservations = 1, b.state < 4, (b.state < 4 OR b.state = 7))
+					$company_filter_unassigned
+					AND di2.date BETWEEN '$start_date' AND '$end_date'
+				GROUP BY di2.date, rt2.id
+			) bk_all_unassigned ON bk_all_unassigned.date = di.date AND bk_all_unassigned.room_type_id = rt.id
+			-- assigned OTA bookings
+			LEFT JOIN (
+				SELECT di2.date, rt2.id AS room_type_id,
+					COUNT(DISTINCT CASE WHEN rt2.prevent_inline_booking = 1 THEN r.room_id ELSE b.booking_id END) AS cnt_assigned_ota
+				FROM date_interval di2
+				JOIN room_type rt2 ON rt2.id IN ($room_types_string) AND rt2.is_deleted = '0'
+				JOIN room r ON r.room_type_id = rt2.id AND r.is_deleted = '0'
+				JOIN booking_block brh ON brh.room_id = r.room_id
+				JOIN booking b ON b.booking_id = brh.booking_id AND b.is_deleted = '0'
+				JOIN company c ON c.company_id = b.company_id
+				WHERE
+					IF(rt2.prevent_inline_booking = 1, DATE(brh.check_out_date) + INTERVAL 1 DAY, DATE(brh.check_out_date)) > di2.date AND
+					di2.date >= IF(rt2.prevent_inline_booking = 1, DATE(brh.check_in_date) - INTERVAL 1 DAY, DATE(brh.check_in_date)) AND
+					IF(c.book_over_unconfirmed_reservations = 1, b.state < 4, (b.state < 4 OR b.state = 7)) AND
+					$ota_sources_condition
+					$company_filter_assigned
+					AND di2.date BETWEEN '$start_date' AND '$end_date'
+				GROUP BY di2.date, rt2.id
+			) bk_ota_assigned ON bk_ota_assigned.date = di.date AND bk_ota_assigned.room_type_id = rt.id
+			-- unassigned OTA bookings
+			LEFT JOIN (
+				SELECT di2.date, rt2.id AS room_type_id, COUNT(DISTINCT b.booking_id) AS cnt_unassigned_ota
+				FROM date_interval di2
+				JOIN room_type rt2 ON rt2.id IN ($room_types_string) AND rt2.is_deleted = '0'
+				JOIN booking_block brh ON brh.room_type_id = rt2.id AND (brh.room_id IS NULL OR brh.room_id = 0)
+				JOIN booking b ON b.booking_id = brh.booking_id AND b.is_deleted = '0'
+				JOIN company c ON c.company_id = b.company_id
+				WHERE
+					DATE(brh.check_out_date) > di2.date AND di2.date >= DATE(brh.check_in_date) AND
+					IF(c.book_over_unconfirmed_reservations = 1, b.state < 4, (b.state < 4 OR b.state = 7)) AND
+					$ota_sources_condition
+					$company_filter_unassigned
+					AND di2.date BETWEEN '$start_date' AND '$end_date'
+				GROUP BY di2.date, rt2.id
+			) bk_ota_unassigned ON bk_ota_unassigned.date = di.date AND bk_ota_unassigned.room_type_id = rt.id
+			-- latest channel cap per date and room_type
+			LEFT JOIN (
+				SELECT
+					m.date,
+					m.room_type_id,
+					COALESCE(drxrtxc.availability, 999) AS availability
+				FROM (
+					SELECT
+						di3.date,
+						rt3.id AS room_type_id,
+						MAX(drxrt.date_range_x_room_type_id) AS latest_drxrt_id
+					FROM date_interval di3
+					JOIN room_type rt3 ON rt3.id IN ($room_types_string) AND rt3.is_deleted = '0'
+					JOIN date_range dr ON
+						dr.date_start <= di3.date AND di3.date <= dr.date_end AND
+						(
+							(dr.sunday = '1' AND DAYOFWEEK(di3.date) = '".SUNDAY."') OR
+							(dr.monday = '1' AND DAYOFWEEK(di3.date) = '".MONDAY."') OR
+							(dr.tuesday = '1' AND DAYOFWEEK(di3.date) = '".TUESDAY."') OR
+							(dr.wednesday = '1' AND DAYOFWEEK(di3.date) = '".WEDNESDAY."') OR
+							(dr.thursday = '1' AND DAYOFWEEK(di3.date) = '".THURSDAY."') OR
+							(dr.friday = '1' AND DAYOFWEEK(di3.date) = '".FRIDAY."') OR
+							(dr.saturday = '1' AND DAYOFWEEK(di3.date) = '".SATURDAY."')
+						)
+					JOIN date_range_x_room_type drxrt ON drxrt.date_range_id = dr.date_range_id
+						AND drxrt.room_type_id = rt3.id
+					WHERE di3.date >= '$start_date' AND di3.date <= '$end_date'
+					GROUP BY di3.date, rt3.id
+				) m
+				LEFT JOIN date_range_x_room_type_x_channel drxrtxc
+					ON drxrtxc.date_range_x_room_type_id = m.latest_drxrt_id
+					AND drxrtxc.channel_id = ".$ota_id.
+			") cap ON cap.date = di.date AND cap.room_type_id = rt.id
+			-- latest status (can_be_sold_online) per date and room_type
+			LEFT JOIN (
+				SELECT
+					m2.date,
+					m2.room_type_id,
+					COALESCE(drxrtxs.can_be_sold_online, 1) AS can_be_sold_online
+				FROM (
+					SELECT
+						di4.date,
+						rt4.id AS room_type_id,
+						MAX(drxrt4.date_range_x_room_type_id) AS latest_drxrt_id
+					FROM date_interval di4
+					JOIN room_type rt4 ON rt4.id IN ($room_types_string) AND rt4.is_deleted = '0'
+					JOIN date_range dr4 ON
+						dr4.date_start <= di4.date AND di4.date <= dr4.date_end AND
+						(
+							(dr4.sunday = '1' AND DAYOFWEEK(di4.date) = '".SUNDAY."') OR
+							(dr4.monday = '1' AND DAYOFWEEK(di4.date) = '".MONDAY."') OR
+							(dr4.tuesday = '1' AND DAYOFWEEK(di4.date) = '".TUESDAY."') OR
+							(dr4.wednesday = '1' AND DAYOFWEEK(di4.date) = '".WEDNESDAY."') OR
+							(dr4.thursday = '1' AND DAYOFWEEK(di4.date) = '".THURSDAY."') OR
+							(dr4.friday = '1' AND DAYOFWEEK(di4.date) = '".FRIDAY."') OR
+							(dr4.saturday = '1' AND DAYOFWEEK(di4.date) = '".SATURDAY."')
+						)
+					JOIN date_range_x_room_type drxrt4 ON drxrt4.date_range_id = dr4.date_range_id
+						AND drxrt4.room_type_id = rt4.id
+					WHERE di4.date >= '$start_date' AND di4.date <= '$end_date'
+					GROUP BY di4.date, rt4.id
+				) m2
+				LEFT JOIN date_range_x_room_type_x_status drxrtxs
+					ON drxrtxs.date_range_x_room_type_id = m2.latest_drxrt_id
+					AND drxrtxs.channel_id = ".$ota_id.
+			") st ON st.date = di.date AND st.room_type_id = rt.id
+		WHERE
+			$adult_count_sql
+			$children_count_sql
+			$max_occupancy_sql
+			$min_occupancy_sql
+			di.date >= '$start_date' AND di.date <= '$end_date'
+		ORDER BY di.date ASC
 		";
-
-//		echo $sql; die;
-
+		
 		$query = $this->db->query($sql);
-
-		if (isset($_GET['dev_mode'])) {
-            echo $this->db->last_query();
-        }
 
 		$result_array = Array();
 		if ($this->db->_error_message())
@@ -429,42 +329,37 @@ class Availability_model extends CI_Model {
 		}
 
 		$grouped_by_room_type = array();
-		// organize the array into room_types
 		foreach ($result_array as $availability)
 		{
-            if ($get_inventory) {
-                $grouped_by_room_type[$availability['room_type_id']][] = Array(
-                        'date' => $availability['date'],
-                        'availability' => isset($availability['availability']) ? $availability['availability'] : null,
-                        'max_availability' => isset($availability['max_availability']) ? $availability['max_availability'] : null,
-                        'inventory_sold' => isset($availability['inventory_sold']) ? $availability['inventory_sold'] : null,
-                        'closeout_status' => isset($availability['closeout_status']) ? $availability['closeout_status'] : null
-                    );
-            } else {
-                $grouped_by_room_type[$availability['room_type_id']][] = Array(
-                        'date' => $availability['date'],
-                        'availability' => isset($availability['availability']) ? $availability['availability'] : null,
-                        'closeout_status' => isset($availability['closeout_status']) ? $availability['closeout_status'] : null
-                    );
-            }
+			if ($get_inventory) {
+				$grouped_by_room_type[$availability['room_type_id']][] = Array(
+					'date' => $availability['date'],
+					'room_type_name' => isset($availability['room_type_name']) ? $availability['room_type_name'] : (isset($availability['name']) ? $availability['name'] : null),
+					'name' => isset($availability['name']) ? $availability['name'] : (isset($availability['room_type_name']) ? $availability['room_type_name'] : null),
+					'availability' => isset($availability['availability']) ? $availability['availability'] : null,
+					'max_availability' => isset($availability['max_availability']) ? $availability['max_availability'] : null,
+					'inventory_sold' => isset($availability['inventory_sold']) ? $availability['inventory_sold'] : null,
+					'closeout_status' => isset($availability['closeout_status']) ? $availability['closeout_status'] : null
+				);
+			} else {
+				$grouped_by_room_type[$availability['room_type_id']][] = Array(
+					'date' => $availability['date'],
+					'availability' => isset($availability['availability']) ? $availability['availability'] : null,
+					'closeout_status' => isset($availability['closeout_status']) ? $availability['closeout_status'] : null
+				);
+			}
 		}
-        
+
 		$date_ranged_array = array();
-
-        if (isset($_GET['dev_mode'])) {
-            print_r($grouped_by_room_type);
-        }
-
 		foreach ($grouped_by_room_type as $key => $array_of_room_type)
 		{
 			$date_ranged_array[$key] = get_array_with_range_of_dates(
-																$array_of_room_type,
-																$ota_id);
-		};
-       
+												$array_of_room_type,
+												$ota_id);
+		}
 		return $date_ranged_array;
+	}
 
-    }
 
 	// max availability set by hotels
     function get_max_availability($start_date, $end_date, $room_types, $channel, $filter_can_be_sold_online=FALSE)
