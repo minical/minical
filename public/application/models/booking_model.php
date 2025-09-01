@@ -92,22 +92,6 @@ class Booking_model extends CI_Model {
         return NULL; 
     }
     
-//     function get_ota_bookings($ota_booking_id = null)
-//     {
-//         $sql = "SELECT * FROM booking as b
-//                 left join booking_block as brh on brh.booking_id = b.booking_id
-//                 where b.booking_notes LIKE 'created via Booking.com. Booking ID: ".$ota_booking_id."%'
-//                 and b.state != 4 and b.is_deleted = 0";
-        
-//         $query = $this->db->query($sql);
-// //        echo $this->db->last_query();
-//         if($query->num_rows() >= 1)
-//         {
-//             return $query->result_array();
-//         }
-//         return array();
-//     }
-    
     //get booking table based on filters
     //elements of the filter array are: start_date, end_date, state, order_by, order, offset, num
     function get_bookings($filters, $company_id = 0, $group_by1 = NULL, $include_room_no_assigned = false, $include_customer_all_details = false)
@@ -878,6 +862,8 @@ class Booking_model extends CI_Model {
             SELECT 
                 c.customer_name as booking_customer_name,
                 c.email as booking_customer_email,
+                c.phone as booking_customer_phone,
+                c.address as booking_customer_address,
                 c.customer_type as booking_customer_type,
                 b.state,
                 b.is_deleted,
@@ -2854,24 +2840,35 @@ class Booking_model extends CI_Model {
         return $booking_fields;
     }
 
-    function get_ota_bookings($company_id){
-
-        $where = "(JSON_TYPE(JSON_EXTRACT(customer_meta_data, '$.token')) != 'NULL')";
-
+    function get_ota_bookings($company_id)
+    {
         $this->db->from('booking as b');
         $this->db->join('booking_block as bb', 'bb.booking_id = b.booking_id');
         $this->db->join('customer as c', 'c.customer_id = b.booking_customer_id');
         $this->db->join('customer_card_detail as ccd', 'ccd.customer_id = c.customer_id');
-        $this->db->where('c.is_deleted','0');
-        $this->db->where('b.is_deleted','0');
-        // $this->db->where('b.is_ota_booking','1');
-        $this->db->where($where);
-        $this->db->where('b.company_id',$company_id);
-        $this->db->where('UNIX_TIMESTAMP(bb.check_out_date) + (86400 * 7) < UNIX_TIMESTAMP(NOW())');
+
+        $this->db->where('c.is_deleted', '0');
+        // $this->db->where('b.is_deleted', '0');
+        // $this->db->where('b.is_ota_booking', '1');
+        $this->db->where('b.company_id', $company_id);
+
+        // ✅ JSON related safe conditions
+        $this->db->where('ccd.customer_meta_data IS NOT NULL');
+        $this->db->where("ccd.customer_meta_data != ''", NULL, FALSE);
+        $this->db->where("JSON_UNQUOTE(JSON_EXTRACT(ccd.customer_meta_data, '$.token')) != ''", NULL, FALSE);
+        $this->db->where("JSON_TYPE(JSON_EXTRACT(ccd.customer_meta_data, '$.token')) = 'STRING'", NULL, FALSE);
+        $this->db->where("JSON_UNQUOTE(JSON_EXTRACT(ccd.customer_meta_data, '$.token')) NOT LIKE 'tok\_%'", NULL, FALSE);
+        $this->db->where("JSON_UNQUOTE(JSON_EXTRACT(ccd.customer_meta_data, '$.token')) NOT LIKE '%ccof%'", NULL, FALSE);
+        $this->db->where("JSON_UNQUOTE(JSON_EXTRACT(ccd.customer_meta_data, '$.token')) NOT LIKE '%=%'", NULL, FALSE);
+
+        // ✅ Date condition
+        // $this->db->where('UNIX_TIMESTAMP(bb.check_out_date) + (86400 * 7) < UNIX_TIMESTAMP(NOW())', NULL, FALSE);
+        $this->db->where('bb.check_out_date < NOW() - INTERVAL 7 DAY');
+
 
         $query = $this->db->get();
 
-        if($query->num_rows() >= 1){
+        if ($query->num_rows() >= 1) {
             return $query->result_array();
         }
         return NULL;
