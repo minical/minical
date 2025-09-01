@@ -4460,13 +4460,13 @@ var bookingModalInvoker = function ($) {
                              html: l('Edit') + ' ' + l(innGrid.featureSettings.defaultRoomSingular) + " (" + l('id') + ": " + this.booking.booking_id + ") " + l('balance') + ": <a class='booking_balance' data-book_id='"+this.booking.booking_id+"' href='" + getBaseURL() + "invoice/show_invoice/" + this.booking.booking_id + "'>" + number_format(this.booking.balance, 2, ".", "") + "</a> "
                         })
                     )
-                    // .prepend(
-                    //     $("<input/>", {
-                    //         type: "hidden",
-                    //         id: "booking_id",
-                    //         value: this.booking.booking_id
-                    //     })
-                    // )
+                    .prepend(
+                        $("<input/>", {
+                            type: "text",
+                            id: "original_booking_customer_id",
+                            value: that.booking.booking_customer_id
+                        })
+                    )
                 } else {
                     modalHeader.prepend(
                         $("<span/>", {
@@ -4825,7 +4825,7 @@ var bookingModalInvoker = function ($) {
                         text: l("Save")
                     }).on('click', function () {
                         that.button = $(this);
-                        //that.button.prop('disabled', true);
+                        that.button.prop('disabled', true);
                         var todays = moment($("#sellingDate").val() + ' 00:00:00').format('YYYY-MM-DD');
                         var checkInDate = moment(that.booking.check_in_date).format('YYYY-MM-DD');
                         var balance = parseInt(that.booking.balance_without_forecast);
@@ -4968,7 +4968,7 @@ var bookingModalInvoker = function ($) {
         },
         _fetchBookingData: function () {
             var that = this;
-            var payingCustomer = '';
+            var payingCustomer = null;
             var stayingCustomers = [];
             var customerOrder = 0;
             var isGroupBooking = null;
@@ -4981,10 +4981,6 @@ var bookingModalInvoker = function ($) {
             }
             $("div.guest-block .tokenfield div.token").each(function () {
 
-//                if($('.tokenfield input.booked_by').attr('booked_by') == '1')
-//                {
-//                    booked_by_id = $(this).attr("id") ? $(this).attr("id") : null;
-//                }
                 var customerOptions = {
                     customer_id: $(this).attr("id") ? $(this).attr("id") : null,
                     customer_name: $(this).find(".token-label").text()
@@ -5000,6 +4996,24 @@ var bookingModalInvoker = function ($) {
                 customerOrder++;
 
             });
+
+            var originalCustomerId = parseInt($('#original_booking_customer_id').val() || 0, 10);
+            var customerChanged = false;
+
+            // console.log('originalCustomerId',originalCustomerId);
+            // console.log('payingCustomer',payingCustomer);
+            // console.log('payingCustomer.customer_id',payingCustomer.customer_id);
+
+            if (originalCustomerId) {
+                if (!payingCustomer || !parseInt(payingCustomer.customer_id || 0, 10)) {
+                    customerChanged = true;
+                } else {
+                    customerChanged = originalCustomerId !== parseInt(payingCustomer.customer_id, 10);
+                }
+            }
+
+            console.log('customerChanged',customerChanged);
+            // bookingData.customer_changed = customerChanged;
 
             $("div.booked-by-block .tokenfield div.token").each(function () {
                 booked_by_id = $(this).attr("id") ? $(this).attr("id") : null;
@@ -5027,8 +5041,8 @@ var bookingModalInvoker = function ($) {
                 }
 
                 rooms.push({
-                    check_in_date: innGrid.enableHourlyBooking == 1 ? moment(innGrid._getBaseFormattedDate($("[name='check_in_date']").val()) + ' ' + that.convertTimeFormat($("[name='check_in_time']").val())).format('YYYY-MM-DD HH:mm:ss') : moment(innGrid._getBaseFormattedDate($("[name='check_in_date']").val()) + ' ' + '00:00:00').format('YYYY-MM-DD HH:mm:ss'),
-                    check_out_date: innGrid.enableHourlyBooking == 1 ? moment(innGrid._getBaseFormattedDate($("[name='check_out_date']").val()) + ' ' + that.convertTimeFormat($("[name='check_out_time']").val())).format('YYYY-MM-DD HH:mm:ss') : moment(innGrid._getBaseFormattedDate($("[name='check_out_date']").val()) + ' ' + '00:00:00').format('YYYY-MM-DD HH:mm:ss'),
+                    check_in_date: innGrid.enableHourlyBooking == 1 ? moment(innGrid._getBaseFormattedDate($("input[name='check_in_date']").val()) + ' ' + that.convertTimeFormat($("[name='check_in_time']").val())).format('YYYY-MM-DD HH:mm:ss') : moment(innGrid._getBaseFormattedDate($("input[name='check_in_date']").val()) + ' ' + '00:00:00').format('YYYY-MM-DD HH:mm:ss'),
+                    check_out_date: innGrid.enableHourlyBooking == 1 ? moment(innGrid._getBaseFormattedDate($("input[name='check_out_date']").val()) + ' ' + that.convertTimeFormat($("[name='check_out_time']").val())).format('YYYY-MM-DD HH:mm:ss') : moment(innGrid._getBaseFormattedDate($("input[name='check_out_date']").val()) + ' ' + '00:00:00').format('YYYY-MM-DD HH:mm:ss'),
                     // for single booking
                     room_id: $(this).find("[name='room_id']").val(),
                     // for group booking
@@ -5067,7 +5081,8 @@ var bookingModalInvoker = function ($) {
                 },
                 isGroupBooking: isGroupBooking,
                 groupName: groupName,
-                guests: $('input[name=customers]').val() ? $('input[name=customers]').val() : ''
+                guests: $('input[name=customers]').val() ? $('input[name=customers]').val() : '',
+                customer_changed: customerChanged, // ← this is the important flag
             };
 
             var booking_fields = [];
@@ -5238,6 +5253,8 @@ var bookingModalInvoker = function ($) {
                             that._updateModalContent();
                             that._getLinkedGroupBookingRoomList();
 
+                            $('#original_booking_customer_id').val(response[0].booking_customer_id);
+
                             if(response[0] && response[0].rate_plan_id){
                                 var option = $("<option/>", {
                                     value: response[0].rate_plan_id,
@@ -5404,6 +5421,8 @@ var bookingModalInvoker = function ($) {
                         //that._populateEditBookingModal();
                         that._updateModalContent();
                         that._getLinkedGroupBookingRoomList();
+
+                        $('#original_booking_customer_id').val(data.customers.paying_customer.customer_id);
 
                         // update booking balance
                         if (response && $.isNumeric(response.balance)) {

@@ -1573,10 +1573,12 @@ class Booking extends MY_Controller
                     $response[] = array(
                                         'booking_id' => $booking_id, 
                                         'rate_plan_id' => $booking_response['rate_plan_id'], 
-                                        'rate_plan_name' => $booking_response['rate_plan_name'], 'balance' => $balance
+                                        'rate_plan_name' => $booking_response['rate_plan_name'],
+                                        'balance' => $balance,
+                                        'booking_customer_id' => $booking_data['booking_customer_id']
                                     );
                 } else {
-                    $response[] = array('booking_id' => $booking_id, 'balance' => $balance);
+                    $response[] = array('booking_id' => $booking_id, 'balance' => $balance, 'booking_customer_id' => $booking_data['booking_customer_id']);
                 }
                 
 
@@ -2405,29 +2407,85 @@ class Booking extends MY_Controller
             }
 
             // update paying customer
-            if (isset($new_data['customers']['paying_customer']) &&
-                $new_data['customers']['paying_customer'] != '') {
+            
+            // if(
+            //     isset($new_data['customers']['paying_customer']) &&
+            //     $new_data['customers']['paying_customer'] != ''
+            // ){
+            //     $paying_customer = $new_data['customers']['paying_customer'] ?? '';
+            //     if ($paying_customer) {
+                    
+            //         if(
+            //             !empty($paying_customer['customer_id'])
+            //         ) {
+
+            //             // Only update if customer_changed is set and the customer_id is different
+            //             if(
+            //                 !empty($new_data['customer_changed']) &&
+            //                 $paying_customer['customer_id'] != ($old_data['booking']['booking_customer_id'] ?? null)
+            //             ) {
+            //                 $new_data['booking']['booking_customer_id'] = $paying_customer['customer_id'];
+            //             } else {
+            //                 // Keep the old customer_id if not changed
+            //                 $new_data['booking']['booking_customer_id'] = $old_data['booking']['booking_customer_id'] ?? 0;
+            //             }
+            //         } else {
+            //             // Create new customer and assign
+            //             $paying_customer_id = $this->Customer_model->create_customer([
+            //                 'company_id' => $this->company_id,
+            //                 'customer_name' => $paying_customer['customer_name']
+            //             ]);
+            //             $new_data['booking']['booking_customer_id'] = $paying_customer_id;
+            //         }
+            //     } else {
+            //         $new_data['booking']['booking_customer_id'] = 0;
+            //     }
+            // }
+
+
+
+
+
+
+            $old_customer_id = isset($old_data['booking']['booking_customer_id']) ? (int) $old_data['booking']['booking_customer_id'] : null;
+
+            $new_data['booking']['booking_customer_id'] = $old_customer_id ?? 0;
+
+            // Handle paying_customer only if provided
+            if (!empty($new_data['customers']['paying_customer']) && is_array($new_data['customers']['paying_customer'])) {
+                
                 $paying_customer = $new_data['customers']['paying_customer'];
-                if (isset($paying_customer['customer_id'])) {
-                    $new_data['booking']['booking_customer_id'] = $paying_customer['customer_id'];
-                } else {
-                    $paying_customer_id = $this->Customer_model->create_customer(
-                        Array(
-                            'company_id' => $this->company_id,
-                            'customer_name' => $paying_customer['customer_name']
-                        )
-                    );
-                    // for company id 4462 pemberton hotel
-                    // $post_customer_data = $paying_customer;
-                    // $post_customer_data['customer_id'] = $paying_customer_id;
+                $customer_id     = !empty($paying_customer['customer_id']) ? (int) $paying_customer['customer_id'] : null;
 
-                    // do_action('post.create.customer', $post_customer_data);
+                // CASE 1: Existing customer
+                if ($customer_id) {
+                    if (!empty($new_data['customer_changed']) && $customer_id !== $old_customer_id) {
+                        // only update if truly changed
+                        $new_data['booking']['booking_customer_id'] = $customer_id;
+                    } else {
+                        // no change → keep old
+                        $new_data['booking']['booking_customer_id'] = $old_customer_id ?? $customer_id;
+                    }
 
-                    // $new_data['booking']['booking_customer_id'] = $paying_customer_id;
-                }
-            } else {
-                $new_data['booking']['booking_customer_id'] = 0;
+                // CASE 2: New customer
+                } 
+                // elseif (!empty($paying_customer['customer_name'])) {
+                //     try {
+                //         $paying_customer_id = $this->Customer_model->create_customer([
+                //             'company_id'    => $this->company_id,
+                //             'customer_name' => trim($paying_customer['customer_name']),
+                //         ]);
+                //         $new_data['booking']['booking_customer_id'] = (int) $paying_customer_id;
+                //     } catch (Exception $e) {
+                //         // fallback: keep old
+                //         $new_data['booking']['booking_customer_id'] = $old_customer_id ?? 0;
+                //     }
+                // } 
+                // else → no valid info, so keep old
             }
+
+
+
 
 
             // update staying customers
