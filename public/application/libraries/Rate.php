@@ -25,31 +25,28 @@ class Rate {
             }
         }
         
-        
+        // Cast once
+        $adult_count    = (int) $adult_count;
+        $children_count = (int) $children_count;
+
         foreach ($rate_array as $index => $rate) {
-            if ($adult_count == '1') {
 
-                $children_count = $this->get_children_count_adjusted($adult_count, $children_count, $rate);
-                $rate_array[$index]['rate'] = $rate['adult_1_rate'] + ($children_count * $rate['additional_child_rate']);
+            if ($adult_count <= 4) {
+                // Adjust children just for this rate calculation
+                $adjusted_children = $this->get_children_count_adjusted($adult_count, $children_count, $rate);
 
-            } elseif ($adult_count == '2') {
+                $base_rate = $rate["adult_{$adult_count}_rate"];
 
-                $children_count = $this->get_children_count_adjusted($adult_count, $children_count, $rate);
-                $rate_array[$index]['rate'] = $rate['adult_2_rate'] + ($children_count * $rate['additional_child_rate']);
-
-            } elseif ($adult_count == '3') {
-
-                $children_count = $this->get_children_count_adjusted($adult_count, $children_count, $rate);
-                $rate_array[$index]['rate'] = $rate['adult_3_rate'] + ($children_count * $rate['additional_child_rate']);
-
-            } elseif ($adult_count == '4') {
-
-                $children_count = $this->get_children_count_adjusted($adult_count, $children_count, $rate);
-                $rate_array[$index]['rate'] = $rate['adult_4_rate'] + ($children_count * $rate['additional_child_rate']);
-
+                $rate_array[$index]['rate'] =
+                    $base_rate + ($adjusted_children * $rate['additional_child_rate']);
             } else {
-                $extra_adult_count          = max(0, intval($adult_count) - 4);
-                $rate_array[$index]['rate'] = $rate['adult_4_rate'] + ($extra_adult_count * $rate['additional_adult_rate']) + ($children_count * $rate['additional_child_rate']);
+                // For more than 4 adults
+                $extra_adult_count = $adult_count - 4;
+
+                $rate_array[$index]['rate'] =
+                    $rate['adult_4_rate']
+                    + ($extra_adult_count * $rate['additional_adult_rate'])
+                    + ($children_count * $rate['additional_child_rate']);
             }
         }
 
@@ -65,19 +62,27 @@ class Rate {
      * @param $adult_count
      * @return int
      */
-    private function get_positions_left($rate, $adult_count)
+    
+    /**
+     * Counts how many following slots (up to 4) have the same price.
+     * Example: adult_1_rate = 89, adult_2_rate = 89 → 1 free slot.
+     */
+    private function get_positions_left(array $rate, int $adult_count): int
     {
         $positions = 0;
         $current_rate = $rate["adult_{$adult_count}_rate"];
 
-        for($i= $adult_count+1; $i <= 4; $i++){
-            if($rate["adult_{$i}_rate"] == $current_rate){
+        for ($i = $adult_count + 1; $i <= 4; $i++) {
+            if ($rate["adult_{$i}_rate"] == $current_rate) {
                 $positions++;
+            } else {
+                break;
             }
         }
 
         return $positions;
     }
+
 	
 	function get_average_daily_rate($rates)
 	{
@@ -96,9 +101,16 @@ class Rate {
      * @param $rate
      * @return mixed
      */
-    private function get_children_count_adjusted($adult_count, $children_count, $rate)
+
+    /**
+     * Only reduce child count if there are true "free child slots".
+     * Free child slots exist only if adults < 2 and the next slot
+     * has the same price as current.
+     */
+    private function get_children_count_adjusted(int $adult_count, int $children_count, array $rate): int
     {
-        if ($free_positions = $this->get_positions_left($rate, $adult_count)) {
+        if ($adult_count < 2) {
+            $free_positions = $this->get_positions_left($rate, $adult_count);
             $children_count = max(0, $children_count - $free_positions);
         }
 
