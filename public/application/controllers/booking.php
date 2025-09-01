@@ -2303,7 +2303,7 @@ class Booking extends MY_Controller
                         $rate_plan = $this->Rate_plan_model->get_rate_plan($rate_plan_id);
 
                         $parent_rate_plan_id = $rate_plan['parent_rate_plan_id'];
-                        $date_start = $new_data['booking']['check_in_date'];
+                        $date_start = $new_data['booking']['new_check_in_date'] ?? $room['check_in_date'];
                         $date_end = $new_data['booking']['check_out_date'];
                         $adult_count = $booking_existing_data['adult_count'];
                         $children_count = $booking_existing_data['children_count'];
