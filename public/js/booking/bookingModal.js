@@ -4462,7 +4462,7 @@ var bookingModalInvoker = function ($) {
                     )
                     .prepend(
                         $("<input/>", {
-                            type: "text",
+                            type: "hidden",
                             id: "original_booking_customer_id",
                             value: that.booking.booking_customer_id
                         })
