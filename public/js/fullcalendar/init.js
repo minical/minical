@@ -402,7 +402,10 @@ innGrid.buildCalendar = function (rooms) {
 
             var resDetails = '<div class="tooltip-reservation" style="display:none;background-color: white;position:absolute;z-index:10001;padding:8px ; font-size: 12px; border: 2px solid rgba(0,0,0,0.5)">' +
                 '<p><span>' + groupId + '</span> <span>' + groupName + '</span></p>' +
-                '<p style="margin-bottom:8px;text-transform: capitalize;"><strong>' + info.event.extendedProps.data.booking_customer + staying_customers + '</strong></p>' +
+                '<p style="margin-bottom:8px;text-transform: capitalize;"><strong>' 
+                    + info.event.extendedProps.data.booking_customer 
+                    + (staying_customers ? ', ' + staying_customers : '') 
+                    + '</strong></p>'+
                 '<p><strong>' + l("Room", true) + ':</strong> ' + info.event.extendedProps.data.room_name + '</p>' +
                 '<p><span><strong>' + l("check_in", true) + ':</strong> ' + innGrid._getLocalFormattedDate(checkInDate) + '</span> <span><strong>' + l("check_out", true) + ':</strong> ' + innGrid._getLocalFormattedDate(checkOutDate) + '</span></p>' +
                 '<p><strong>' + l("Number of nights", true) + ':</strong> ' + diffDays + '</p>' +
