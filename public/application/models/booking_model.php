@@ -59,7 +59,7 @@ class Booking_model extends CI_Model {
                     booking ON booking.booking_id = booking_block.booking_id
                 LEFT JOIN
                     room ON booking_block.room_id = room.room_id
-                WHERE booking_group_id = $group_id AND booking.is_deleted = 0 AND booking.state < 3";
+                WHERE booking_group_id = $group_id AND booking.is_deleted = 0";
         $query = $this->db->query($sql);
         if($query->num_rows() >= 1)
         {
