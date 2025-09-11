@@ -484,7 +484,15 @@ class Invoice extends MY_Controller {
             $data['booking_customer'] = $this->Customer_model->get_customer_info($customer_id);
         }
         else {
-            $booking_customer = $this->Customer_model->get_customer_info($data['booking_detail']['booking_customer_id']);
+            if(
+                isset($data['booking_detail']['booked_by']) &&
+                $data['booking_detail']['booked_by']
+            ) {
+                $booked_by_customer = $data['booking_detail']['booked_by'];
+            } else {
+                $booked_by_customer = $data['booking_detail']['booking_customer_id'];
+            }
+            $booking_customer = $this->Customer_model->get_customer_info($booked_by_customer);
             $data['booking_customer'] = $booking_customer;
         }
         /*Get data from card table*/
