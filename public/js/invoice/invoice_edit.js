@@ -2146,6 +2146,37 @@ $(document).on('click', '.qty_minus', function() {
     calculatePOSTotal();
 });
 
+$(document).on('change', 'input[name="extra_qty"]', function () {
+    updateExtraCharges()
+});
+
+function updateExtraCharges() {
+    extraCharges = []; // reset array
+    $('input[name="extra_qty"]').each(function () {
+        var $input = $(this);
+        var qty = parseInt($input.val()) || 0;
+        // get extraID from class e.g. extra_qty_152
+        var match = $input.attr('class').match(/extra_qty_(\d+)/);
+        if (!match) return;
+        var extraID = match[1];
+        var $parent = $input.closest('.name-rate-div');
+        var extraChargeTypeID = $parent.find('.charge-div .extra_charge_type_' + extraID).attr('id');
+        var extraChargeTypeName = $parent.find('.charge-div .extra_charge_type_' + extraID).data('charge_name');
+        var extraName = $parent.find('.extra_name_' + extraID).data('extra_name');
+        var extraRate = parseFloat($parent.find('.extra_rate_' + extraID).text()) || 0;
+        if (qty > 0) {
+            extraCharges.push({
+                extra_id: extraID,
+                description: extraName,
+                charge_type_id: extraChargeTypeID,
+                qty: qty,
+                amount: extraRate * qty
+            });
+        }
+    });
+    calculatePOSTotal(); // refresh total after update
+}
+
 function calculatePOSTotal() {
     var total = 0;
     $.each(extraCharges, function(key, value) {
