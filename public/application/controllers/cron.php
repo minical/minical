@@ -96,47 +96,39 @@ class Cron extends CI_Controller
 			if($ota_bookings){
 				foreach($ota_bookings as $booking){
 
-					$timestamp = strtotime($booking['check_out_date']); //1373673600
+					$api_key = $_SERVER['CHANNEX_PCI_API_KEY'];
 
-					// getting current date 
-					$cDate = strtotime(date('Y-m-d H:i:s'));
+				    $card_token = $booking['token'];
 
-					// Getting the value of old date + 7 days
-					$oldDate = $timestamp + (86400 * 7); // 86400 seconds in 24 hrs 
+				    $api_url = 'https://pci.channex.io/api/v1/cards/'.$card_token.'?api_key='.$api_key;
 
-					if($oldDate < $cDate)
-					{
-						$api_key = $_SERVER['CHANNEX_PCI_API_KEY'];
+				    $method_type = 'delete';
 
-					    $customer_meta_data = json_decode($booking['customer_meta_data'], true);
-					    $card_token = $customer_meta_data['token'];
+				    $data = $headers = array();
 
-					    $api_url = 'https://pci.channex.io/api/v1/cards/'.$card_token.'?api_key='.$api_key;
+				    $response = $this->call_api($api_url, $data, $headers, $method_type, $company_id);
+				    $response = json_decode($response, true);
 
-					    $method_type = 'delete';
+				    if($response['success']){
 
-					    $data = $headers = array();
+            			$update_data = array(
+            								'customer_meta_data' => NULL,
+            								'cc_number' => NULL,
+            								'cc_expiry_month' => NULL,
+            								'cc_expiry_year' => NULL,
+            								'cc_tokenex_token' => NULL,
+            								'cc_cvc_encrypted' => NULL,
+            								);
 
-					    $response = $this->call_api($api_url, $data, $headers, $method_type, $company_id);
-					    $response = json_decode($response, true);
+				    	$this->Card_model->update_customer_primary_card($booking['customer_id'], $update_data);
 
-					    if($response['success']){
+				    	$property_data = $this->Channex_model->get_channex_x_company(null, $company_id);
 
-					    	$meta = $customer_meta_data;
-					    	$meta['token'] = null;
-	            			$update_data = array(
-	            								'customer_meta_data' => NULL,
-	            								'cc_number' => NULL,
-	            								'cc_expiry_month' => NULL,
-	            								'cc_expiry_year' => NULL,
-	            								'cc_tokenex_token' => NULL,
-	            								'cc_cvc_encrypted' => NULL,
-	            								);
-
-					    	$this->Card_model->update_customer_primary_card($booking['customer_id'], $update_data);
-
-					    	$property_data = $this->Channex_model->get_channex_x_company(null, $company_id);
-					    	
+				    	if(
+				    		isset($property_data['ota_property_id']) &&
+				    		$property_data['ota_property_id']
+				    	) {
+				    	
 					    	$log_data = array(
 				    					'ota_property_id' => $property_data['ota_property_id'],
 				    					'request_type' => 4,
@@ -145,10 +137,10 @@ class Cron extends CI_Controller
 				    					'xml_out' => json_encode($response['resp'])
 									);
 				    		$this->Channex_model->save_logs($log_data);
+				    	}
 
-					    	echo "Card token deleted successfully - ".$card_token.'<br/>';
-					    }
-					}
+				    	echo "Card token deleted successfully - ".$card_token.'<br/>';
+				    }
 				}
 			}
 		}

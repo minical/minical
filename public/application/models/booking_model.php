@@ -2842,31 +2842,75 @@ class Booking_model extends CI_Model {
 
     function get_ota_bookings($company_id)
     {
-        $this->db->from('booking as b');
-        $this->db->join('booking_block as bb', 'bb.booking_id = b.booking_id');
-        $this->db->join('customer as c', 'c.customer_id = b.booking_customer_id');
-        $this->db->join('customer_card_detail as ccd', 'ccd.customer_id = c.customer_id');
+        // $this->db->from('booking as b');
+        // $this->db->join('booking_block as bb', 'bb.booking_id = b.booking_id');
+        // $this->db->join('customer as c', 'c.customer_id = b.booking_customer_id');
+        // $this->db->join('customer_card_detail as ccd', 'ccd.customer_id = c.customer_id');
 
-        $this->db->where('c.is_deleted', '0');
-        // $this->db->where('b.is_deleted', '0');
-        // $this->db->where('b.is_ota_booking', '1');
-        $this->db->where('b.company_id', $company_id);
+        // $this->db->where('c.is_deleted', '0');
+        // // $this->db->where('b.is_deleted', '0');
+        // // $this->db->where('b.is_ota_booking', '1');
+        // $this->db->where('b.company_id', $company_id);
 
-        // ✅ JSON related safe conditions
-        $this->db->where('ccd.customer_meta_data IS NOT NULL');
-        $this->db->where("ccd.customer_meta_data != ''", NULL, FALSE);
-        $this->db->where("JSON_UNQUOTE(JSON_EXTRACT(ccd.customer_meta_data, '$.token')) != ''", NULL, FALSE);
-        $this->db->where("JSON_TYPE(JSON_EXTRACT(ccd.customer_meta_data, '$.token')) = 'STRING'", NULL, FALSE);
-        $this->db->where("JSON_UNQUOTE(JSON_EXTRACT(ccd.customer_meta_data, '$.token')) NOT LIKE 'tok\_%'", NULL, FALSE);
-        $this->db->where("JSON_UNQUOTE(JSON_EXTRACT(ccd.customer_meta_data, '$.token')) NOT LIKE '%ccof%'", NULL, FALSE);
-        $this->db->where("JSON_UNQUOTE(JSON_EXTRACT(ccd.customer_meta_data, '$.token')) NOT LIKE '%=%'", NULL, FALSE);
+        // // JSON related safe conditions
+        // $this->db->where('ccd.customer_meta_data IS NOT NULL');
+        // $this->db->where("ccd.customer_meta_data != ''", NULL, FALSE);
+        // $this->db->where("JSON_UNQUOTE(JSON_EXTRACT(ccd.customer_meta_data, '$.token')) != ''", NULL, FALSE);
+        // $this->db->where("JSON_TYPE(JSON_EXTRACT(ccd.customer_meta_data, '$.token')) = 'STRING'", NULL, FALSE);
+        // $this->db->where("JSON_UNQUOTE(JSON_EXTRACT(ccd.customer_meta_data, '$.token')) NOT LIKE 'tok\_%'", NULL, FALSE);
+        // $this->db->where("JSON_UNQUOTE(JSON_EXTRACT(ccd.customer_meta_data, '$.token')) NOT LIKE '%ccof%'", NULL, FALSE);
+        // $this->db->where("JSON_UNQUOTE(JSON_EXTRACT(ccd.customer_meta_data, '$.token')) NOT LIKE '%=%'", NULL, FALSE);
 
-        // ✅ Date condition
-        // $this->db->where('UNIX_TIMESTAMP(bb.check_out_date) + (86400 * 7) < UNIX_TIMESTAMP(NOW())', NULL, FALSE);
-        $this->db->where('bb.check_out_date < NOW() - INTERVAL 7 DAY');
+        // // Date condition
+        // $this->db->where('bb.check_out_date < NOW() - INTERVAL 7 DAY');
+
+        $sql = "SELECT 
+                DISTINCT r.token,
+                r.card_id,
+                r.customer_id,
+                r.company_id,
+                r.booking_id,
+                r.check_out_date
+            FROM
+            (
+                SELECT 
+                    JSON_UNQUOTE(JSON_EXTRACT(ccd.customer_meta_data, '$.token')) AS token,
+                    ccd.id AS card_id,
+                    c.customer_id,
+                    b.company_id,
+                    b.booking_id,
+                    MAX(bb.check_out_date) AS check_out_date
+                FROM 
+                    booking AS b
+                JOIN booking_block AS bb 
+                    ON bb.booking_id = b.booking_id
+                JOIN customer AS c 
+                    ON c.customer_id = b.booking_customer_id
+                JOIN customer_card_detail AS ccd 
+                    ON ccd.customer_id = c.customer_id
+                WHERE 
+                    c.is_deleted = 0
+                    AND b.company_id = $company_id
+                    AND ccd.customer_meta_data IS NOT NULL
+                    AND ccd.customer_meta_data != ''
+                    AND JSON_TYPE(JSON_EXTRACT(ccd.customer_meta_data, '$.token')) = 'STRING'
+                    AND JSON_UNQUOTE(JSON_EXTRACT(ccd.customer_meta_data, '$.token')) != ''
+                    AND JSON_UNQUOTE(JSON_EXTRACT(ccd.customer_meta_data, '$.token')) NOT LIKE 'tok\_%'
+                    AND JSON_UNQUOTE(JSON_EXTRACT(ccd.customer_meta_data, '$.token')) NOT LIKE '%ccof%'
+                    AND JSON_UNQUOTE(JSON_EXTRACT(ccd.customer_meta_data, '$.token')) NOT LIKE '%=%'
+                GROUP BY ccd.id
+            ) AS r
+            WHERE 
+                r.check_out_date < NOW() - INTERVAL 15 DAY
+                AND r.company_id IS NOT NULL 
+                AND r.company_id != ''
+                #AND r.booking_id IS NOT NULL 
+                #AND r.booking_id != ''
+                AND r.token IS NOT NULL
+                AND r.token != ''";
 
 
-        $query = $this->db->get();
+        $query = $this->db->query($sql);
 
         if ($query->num_rows() >= 1) {
             return $query->result_array();
