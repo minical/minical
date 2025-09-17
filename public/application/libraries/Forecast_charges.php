@@ -183,7 +183,7 @@ class Forecast_charges
 				$adult_count = $booking_details['adult_count'];
 				$children_count = $booking_details['children_count'];
 				
-				$rate_array = $this->ci->rate->get_rate_array($rate_plan_id, $date_start, $date_end, $adult_count, $children_count, array(), false, true);
+				$rate_array = $this->ci->rate->get_rate_array($rate_plan_id, $date_start, $date_end, $adult_count, $children_count, array(), false, true, true);
 				
 				$last_tax_rate_amount = $tax_rates = null;
 				// change key names (i.e. date => selling_date, rate => amount
@@ -200,8 +200,8 @@ class Forecast_charges
 					$rate_array[$index]['amount'] = $rate_array[$index]['rate'];
 					unset($rate_array[$index]['rate']);
 					$rate_array[$index]['description'] = $rate_plan['rate_plan_name'];
-					$rate_array[$index]['charge_type_id'] = $charge_type['id'];
-					$rate_array[$index]['charge_type_name'] = $charge_type['name'];
+					$rate_array[$index]['charge_type_id'] = $charge_type['id'] ?? null;
+					$rate_array[$index]['charge_type_name'] = $charge_type['name'] ?? null;
                     $rate_array[$index]['pay_period'] = DAILY; // temporary fix as all rate plans are daily only for now. eventually this may allow weekly & monthly,
                     $rate_array[$index]['taxes'] = $tax_rates;
                     unset($rate_array[$index]['rate_plan_name']);
@@ -326,8 +326,8 @@ class Forecast_charges
                             "description"  => $description,
                             "selling_date" => $charge_start_date,
                             "amount"       => $booking_details['rate'],
-                            "charge_type_id" => $charge_type['id'],
-                            "charge_type_name" => $charge_type['name'],
+                            "charge_type_id" => isset($charge_type['id']) && $charge_type['id'] ? $charge_type['id'] : null,
+                            "charge_type_name" => isset($charge_type['name']) && $charge_type['name'] ? $charge_type['name'] : null,
                             "pay_period"   => $booking_details['pay_period'],
                             "booking_id"   => $booking_id,
                             "taxes" => $tax_rates,
@@ -436,7 +436,7 @@ class Forecast_charges
 		{
 			foreach ($extras as $extra) {
                 
-				$current_selling_date = $this->ci->Company_model->get_selling_date($company_id);
+                $current_selling_date = $this->ci->selling_date ? $this->ci->selling_date : $this->ci->Company_model->get_selling_date($company_id);
                 
                 $tax_rates = $this->ci->Tax_model->get_tax_rates_by_charge_type_id($extra['charge_type_id'], $company_id, $extra['rate']);
 				

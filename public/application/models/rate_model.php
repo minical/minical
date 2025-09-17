@@ -142,7 +142,7 @@ class Rate_model extends CI_Model {
 	}
 	
 	// get rates between dates
-	function get_daily_rates($rate_plan_id, $date_start = "1970-01-01", $date_end = "2050-01-01", $room_type_id = 0, $is_front_rates = false, $is_select_less_vars = false)
+	function get_daily_rates($rate_plan_id, $date_start = "1970-01-01", $date_end = "2050-01-01", $room_type_id = 0, $is_front_rates = false, $is_select_less_vars = false, $is_select_only_adult_rates = false)
 	{
 		// Fetch rate POST variables
 		$rate_variables = array(
@@ -192,6 +192,17 @@ class Rate_model extends CI_Model {
 								'maximum_length_of_stay',
 								'minimum_length_of_stay_arrival',
 								'maximum_length_of_stay_arrival'
+							);
+		}
+
+		if($is_select_only_adult_rates){
+			$rate_variables = array(
+								"adult_1_rate",
+								"adult_2_rate",
+								"adult_3_rate",
+								"adult_4_rate",
+								"additional_adult_rate",
+								"additional_child_rate"
 							);
 		}
 		 
