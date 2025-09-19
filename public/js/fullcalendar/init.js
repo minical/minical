@@ -635,7 +635,8 @@ function occupacyMoved(info) {
     confirmation_string = confirmation_string + l("Are you sure?");
 
     if (!confirm(confirmation_string)) {
-        info.revert();
+        // info.revert();
+        innGrid.reloadBookings();
     } else {
         $.ajax({
             url: getBaseURL() + 'calendar/move_booking_room_history',
