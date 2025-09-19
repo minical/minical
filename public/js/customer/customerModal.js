@@ -820,8 +820,6 @@ var customer_pci_token = '';
                                     var stripe_exp_year = $('#stripe-exp_year').text();
                                     var stripe_lastfour = $('#stripe-lastfour').text();
 
-                                    
-
                                     if (
                                         stripe_token && 
                                         stripe_exp_month && 
@@ -835,9 +833,10 @@ var customer_pci_token = '';
                                         customerData['cc_expiry_year'] = stripe_exp_year;
                                         customerData['stripe_token'] = stripe_token;
 
-                                        update_create_client(customerData);
+                                        // update_create_client(customerData);
                                     }
 
+                                    update_create_client(customerData);
                                     
                                 },3000);
                             } 
