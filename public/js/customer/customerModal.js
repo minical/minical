@@ -983,7 +983,7 @@ var customer_pci_token = '';
             };
             if (isTokenizationEnabled == 1) {
                 customerData['cc_expiry_month'] = $.trim($customerModal.find("[name='cc_expiry']").val().substring(0, 2));
-                customerData['cc_expiry_year'] = $.trim($customerModal.find("[name='cc_expiry']").val().substring(5, 7))
+                customerData['cc_expiry_year'] = $customerModal.find("[name='cc_expiry']").val().length == 2 ? $.trim($customerModal.find("[name='cc_expiry']").val()) : $.trim($customerModal.find("[name='cc_expiry']").val().substring(5, 7))
             }
             // fetch custom customer field data
             // find input elements that contain 'customer_field_' string and fetch em
