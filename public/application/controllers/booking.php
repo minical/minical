@@ -1074,12 +1074,12 @@ class Booking extends MY_Controller
             // Step 1: Accumulate payments for each booking_id
             $payment_totals = [];
             if($payment_details && count($payment_details) > 0){
-            foreach ($payment_details as $payment) {
-                if (!isset($payment_totals[$payment['booking_id']])) {
-                    $payment_totals[$payment['booking_id']] = 0;
+                foreach ($payment_details as $payment) {
+                    if (!isset($payment_totals[$payment['booking_id']])) {
+                        $payment_totals[$payment['booking_id']] = 0;
+                    }
+                    $payment_totals[$payment['booking_id']] += $payment['amount'];
                 }
-                $payment_totals[$payment['booking_id']] += $payment['amount'];
-            }
             }
 
             // Step 2: Update $data['rows'] with the accumulated payment totals
@@ -2042,7 +2042,7 @@ class Booking extends MY_Controller
         $cancelled_group_booking = $this->input->post('group_booking_cancellation');
         $brh_data = array();
 
-        $payment_details = $this->Payment_model->get_payments($booking_id);
+        $payment_details = $this->Payment_model->get_payments($booking_id, false, null, false, true);
         $booking_existing_data = $this->Booking_model->get_booking($booking_id);
 
         $early_checkout = false;
@@ -2064,8 +2064,6 @@ class Booking extends MY_Controller
         }
 
         // convert forecast charges into custom charges for hourly bookings
-        // prx($new_data, 1);
-        // prx($new_state);
         if(
             (
                 isset($new_data['number_of_days']) && 
@@ -2078,7 +2076,8 @@ class Booking extends MY_Controller
                 isset($new_data['rooms'][0]) && 
                 isset($new_data['rooms'][0]['check_in_date']) && 
                 isset($new_data['rooms'][0]['check_out_date']) && 
-                $new_data['rooms'][0]['check_in_date'] == $new_data['rooms'][0]['check_out_date']
+                $new_data['rooms'][0]['check_in_date'] == $new_data['rooms'][0]['check_out_date'] &&
+                $this->company_id == 4549 // KI residence
             )
         )
         {
@@ -2093,16 +2092,16 @@ class Booking extends MY_Controller
                 }
             } else {
 
-                $final_amount = 0;
-                foreach($payment_details as $payment)
-                {
-                    $final_amount += $payment['amount'];
-                }
+                // $final_amount = 0;
+                // foreach($payment_details as $payment)
+                // {
+                //     $final_amount += $payment['amount'];
+                // }
 
-                if($booking_existing_data['rate'] != $final_amount){
-                    echo json_encode(array('response' => 'failure', 'message' => l('You are unable to checkout with a balance on the invoice', true)));
-                    return;
-                }
+                // if($booking_existing_data['rate'] != $final_amount){
+                //     echo json_encode(array('response' => 'failure', 'message' => l('You are unable to checkout with a balance on the invoice', true)));
+                //     return;
+                // }
             }
 
             $charge_data = Array(
@@ -2136,7 +2135,9 @@ class Booking extends MY_Controller
             if(empty($last_hourly_charge)){
 
                 $charge_id = $this->Charge_model->insert_charge($charge_data);
-                $early_checkout = true;
+                
+                if($this->company_id == 4549)
+                    $early_checkout = true;
 
                 //invoice log 
                 $this->load->model('Invoice_log_model');
@@ -2408,85 +2409,33 @@ class Booking extends MY_Controller
 
             // update paying customer
             
-            // if(
-            //     isset($new_data['customers']['paying_customer']) &&
-            //     $new_data['customers']['paying_customer'] != ''
-            // ){
-            //     $paying_customer = $new_data['customers']['paying_customer'] ?? '';
-            //     if ($paying_customer) {
-                    
-            //         if(
-            //             !empty($paying_customer['customer_id'])
-            //         ) {
-
-            //             // Only update if customer_changed is set and the customer_id is different
-            //             if(
-            //                 !empty($new_data['customer_changed']) &&
-            //                 $paying_customer['customer_id'] != ($old_data['booking']['booking_customer_id'] ?? null)
-            //             ) {
-            //                 $new_data['booking']['booking_customer_id'] = $paying_customer['customer_id'];
-            //             } else {
-            //                 // Keep the old customer_id if not changed
-            //                 $new_data['booking']['booking_customer_id'] = $old_data['booking']['booking_customer_id'] ?? 0;
-            //             }
-            //         } else {
-            //             // Create new customer and assign
-            //             $paying_customer_id = $this->Customer_model->create_customer([
-            //                 'company_id' => $this->company_id,
-            //                 'customer_name' => $paying_customer['customer_name']
-            //             ]);
-            //             $new_data['booking']['booking_customer_id'] = $paying_customer_id;
-            //         }
-            //     } else {
-            //         $new_data['booking']['booking_customer_id'] = 0;
-            //     }
-            // }
-
-
-
-
-
-
-            $old_customer_id = isset($old_data['booking']['booking_customer_id']) ? (int) $old_data['booking']['booking_customer_id'] : null;
+            $old_customer_id = isset($old_data['booking']['booking_customer_id']) 
+                ? (int) $old_data['booking']['booking_customer_id'] 
+                : null;
 
             $new_data['booking']['booking_customer_id'] = $old_customer_id ?? 0;
 
             // Handle paying_customer only if provided
-            if (!empty($new_data['customers']['paying_customer']) && is_array($new_data['customers']['paying_customer'])) {
-                
-                $paying_customer = $new_data['customers']['paying_customer'];
-                $customer_id     = !empty($paying_customer['customer_id']) ? (int) $paying_customer['customer_id'] : null;
+            if (isset($new_data['customers']['paying_customer'])) {
+                $paying_customer = $new_data['customers']['paying_customer'] ?? [];
+                $customer_id     = !empty($paying_customer['customer_id']) 
+                    ? (int) $paying_customer['customer_id'] 
+                    : null;
 
-                // CASE 1: Existing customer
                 if ($customer_id) {
+                    // CASE 1: New/existing customer selected
                     if (!empty($new_data['customer_changed']) && $customer_id !== $old_customer_id) {
-                        // only update if truly changed
                         $new_data['booking']['booking_customer_id'] = $customer_id;
                     } else {
-                        // no change → keep old
                         $new_data['booking']['booking_customer_id'] = $old_customer_id ?? $customer_id;
                     }
-
-                // CASE 2: New customer
-                } 
-                // elseif (!empty($paying_customer['customer_name'])) {
-                //     try {
-                //         $paying_customer_id = $this->Customer_model->create_customer([
-                //             'company_id'    => $this->company_id,
-                //             'customer_name' => trim($paying_customer['customer_name']),
-                //         ]);
-                //         $new_data['booking']['booking_customer_id'] = (int) $paying_customer_id;
-                //     } catch (Exception $e) {
-                //         // fallback: keep old
-                //         $new_data['booking']['booking_customer_id'] = $old_customer_id ?? 0;
-                //     }
-                // } 
-                // else → no valid info, so keep old
+                } else {
+                    // CASE 2: Paying customer explicitly removed
+                    if (!empty($new_data['customer_changed'])) {
+                        $new_data['booking']['booking_customer_id'] = null;
+                    }
+                }
             }
-
-
-
-
 
             // update staying customers
             $this->Customer_model->delete_all_staying_customers($booking_id);
@@ -2756,11 +2705,11 @@ class Booking extends MY_Controller
                         }
                         // NO SPLIT: check-in date is after current selling date. Freely update the booking around without splitting.
                         else {
-                            //only for company id 4462 pemberton hotel
+                            // only for company id 4462 pemberton hotel
                             if($this->company_id != 4462){
-
                                 $this->Booking_room_history_model->update_room_id($latest_block, $new_room_id, $new_room_type_id);
                             }
+
                             $latest_block['room_id'] = $new_room_id; // because room_id's been modified
                             // only change check in date when editing reservation
                             if ($new_data['booking']['state'] == RESERVATION ||
@@ -2846,8 +2795,10 @@ class Booking extends MY_Controller
             $return_type = $this->is_total_balance_include_forecast ? 'balance' : 'balance_without_forecast';
         }
 
-        $balance = $this->Booking_model->update_booking_balance($booking_id, $return_type, $old_data['booking'], $old_data['booking_extras']);
+        $balance = $this->Booking_model->update_booking_balance($booking_id, $return_type);
+        
         $response['balance'] = $balance;
+        $response['booking_customer_id'] = $new_data['booking']['booking_customer_id'];
         if(is_numeric($new_state) && $new_state == '5')
         {
             $new_checkin_date = $new_data['rooms'][0]['check_in_date'];

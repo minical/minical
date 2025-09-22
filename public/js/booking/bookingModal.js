@@ -313,7 +313,7 @@ var bookingModalInvoker = function ($) {
                 invoice_group_id = $('#group_id').val();
                 console.log('invoice_group_id',invoice_group_id);
                 $('.group_invoice').attr('href', getBaseURL() + "invoice/show_master_invoice/" + invoice_group_id);
-            },2000);
+            },3000);
 
             // array of different option buttons
             this.$allActions = {
@@ -5000,11 +5000,13 @@ var bookingModalInvoker = function ($) {
             var originalCustomerId = parseInt($('#original_booking_customer_id').val() || 0, 10);
             var customerChanged = false;
 
-            // console.log('originalCustomerId',originalCustomerId);
-            // console.log('payingCustomer',payingCustomer);
-            // console.log('payingCustomer.customer_id',payingCustomer.customer_id);
-
-            if (originalCustomerId) {
+            if (!originalCustomerId) {
+                // no original customer → any new paying customer means changed
+                if (payingCustomer && (payingCustomer.customer_id || payingCustomer.customer_name)) {
+                    customerChanged = true;
+                }
+            } else {
+                // there was an original customer → compare
                 if (!payingCustomer || !parseInt(payingCustomer.customer_id || 0, 10)) {
                     customerChanged = true;
                 } else {
@@ -5072,18 +5074,70 @@ var bookingModalInvoker = function ($) {
                 residual_rate: (that.booking.residual_rate ? that.booking.residual_rate : 0),
                 color: $("[name='color']").val()
             };
+            // var bookingData = {
+            //     booking: updateBookingData,
+            //     rooms: rooms,
+            //     customers: {
+            //         paying_customer: payingCustomer,
+            //         staying_customers: stayingCustomers
+            //     },
+            //     isGroupBooking: isGroupBooking,
+            //     groupName: groupName,
+            //     guests: $('input[name=customers]').val() ? $('input[name=customers]').val() : '',
+            //     customer_changed: customerChanged, // ← this is the important flag
+            // };
+
             var bookingData = {
                 booking: updateBookingData,
                 rooms: rooms,
-                customers: {
-                    paying_customer: payingCustomer,
-                    staying_customers: stayingCustomers
-                },
                 isGroupBooking: isGroupBooking,
                 groupName: groupName,
                 guests: $('input[name=customers]').val() ? $('input[name=customers]').val() : '',
-                customer_changed: customerChanged, // ← this is the important flag
+                customer_changed: customerChanged, // important flag
+                customers: {} // start empty
             };
+
+            // only send paying_customer if changed
+            // if (customerChanged) {
+            //     if (payingCustomer) {
+            //         if (payingCustomer.customer_id) {
+            //             bookingData.customers.paying_customer = {
+            //                 customer_id: payingCustomer.customer_id
+            //             };
+            //         } else if (payingCustomer.customer_name) {
+            //             bookingData.customers.paying_customer = {
+            //                 customer_name: payingCustomer.customer_name
+            //             };
+            //         }
+            //     } else {
+            //         // explicitly send null when removed
+            //         bookingData.customers.paying_customer = null;
+            //     }
+            // }
+
+
+            if (customerChanged) {
+                if (payingCustomer && (payingCustomer.customer_id || payingCustomer.customer_name)) {
+                    bookingData.customers.paying_customer = {};
+                    if (payingCustomer.customer_id) {
+                        bookingData.customers.paying_customer.customer_id = payingCustomer.customer_id;
+                    }
+                    if (payingCustomer.customer_name) {
+                        bookingData.customers.paying_customer.customer_name = payingCustomer.customer_name;
+                    }
+                } else {
+                    // explicitly mark removed
+                    bookingData.customers.paying_customer = null;
+                }
+            }
+
+
+
+
+            // only send staying_customers if changed
+            if (stayingCustomers.length > 0) {
+                bookingData.customers.staying_customers = stayingCustomers;
+            }
 
             var booking_fields = [];
 
@@ -5390,6 +5444,7 @@ var bookingModalInvoker = function ($) {
                 },
                 dataType: "json",
                 success: function (response) {
+                    console.log('response',response);
                     if (response.response == 'failure') {
                         $('#reservation-message').modal('show');
                         $('#reservation-message .message').html(response.message);
@@ -5422,7 +5477,11 @@ var bookingModalInvoker = function ($) {
                         that._updateModalContent();
                         that._getLinkedGroupBookingRoomList();
 
-                        $('#original_booking_customer_id').val(data.customers.paying_customer.customer_id);
+                        if (response.booking_customer_id !== null && response.booking_customer_id !== 0 && response.booking_customer_id !== '0') {
+                            $('#original_booking_customer_id').val(response.booking_customer_id);
+                        } else {
+                            $('#original_booking_customer_id').val('');
+                        }
 
                         // update booking balance
                         if (response && $.isNumeric(response.balance)) {

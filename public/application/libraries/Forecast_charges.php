@@ -421,16 +421,22 @@ class Forecast_charges
 	{
 		$extra_array = Array();
         $extra_charges = 0;
-		$booking_details = $booking_details ? $booking_details : $this->ci->Booking_model->get_booking_detail($booking_id);
-        $room_name = $booking_details['room_name'];
-        $company_id = $booking_details['company_id'];
-       
-        if ($booking_details['state'] == CANCELLED || $booking_details['state'] == CHECKOUT)
-		{
-			return $get_amount_only ? $extra_charges : $extra_array;
-		}
 
         $extras = $booking_extras ? $booking_extras : $this->ci->Booking_extra_model->get_booking_extras($booking_id);
+
+        if($extras){
+
+    		$booking_details = $booking_details ? $booking_details : $this->ci->Booking_model->get_booking_detail($booking_id);
+            $room_name = $booking_details['room_name'];
+            $company_id = $booking_details['company_id'];
+           
+            if ($booking_details['state'] == CANCELLED || $booking_details['state'] == CHECKOUT)
+    		{
+    			return $get_amount_only ? $extra_charges : $extra_array;
+    		}
+        }
+
+        // $extras = $booking_extras ? $booking_extras : $this->ci->Booking_extra_model->get_booking_extras($booking_id);
 
 		if ($extras)
 		{

@@ -377,7 +377,7 @@ class Payment_model extends CI_Model {
 	
 	// get payments sorted by date. used for monthly summary report
     
-    function get_payments($booking_id, $customer_id = false, $folio_id = null, $is_first_folio = false)
+    function get_payments($booking_id, $customer_id = false, $folio_id = null, $is_first_folio = false, $is_only_amount = false)
     {
         $this->db->where("booking_id IN ($booking_id)");
         
@@ -390,17 +390,22 @@ class Payment_model extends CI_Model {
         if ($customer_id != false)
         	$this->db->where('payment.customer_id', $customer_id);
         $this->db->where('payment.is_deleted', '0');
-        $this->db->join('payment_folio' , 'payment.payment_id = payment_folio.payment_id', 'left');
-        $this->db->join('payment_type', 'payment.payment_type_id = payment_type.payment_type_id', 'left');
-        $this->db->join('user_profiles', 'payment.user_id = user_profiles.user_id', 'left');
-        $this->db->join('customer', 'payment.customer_id = customer.customer_id', 'left');
-        $this->db->select('payment.payment_id, payment.is_captured, description, customer_name, date_time, booking_id, amount, payment_status, payment.is_deleted, payment_type, payment.payment_type_id, payment.payment_gateway_used, gateway_charge_id, read_only, selling_date, CONCAT_WS(" ",first_name,  last_name ) as user_name,payment_folio.folio_id as folio_id, payment.payment_link_id');
+
+        if(!$is_only_amount){
+	        $this->db->join('payment_folio' , 'payment.payment_id = payment_folio.payment_id', 'left');
+	        $this->db->join('payment_type', 'payment.payment_type_id = payment_type.payment_type_id', 'left');
+	        $this->db->join('user_profiles', 'payment.user_id = user_profiles.user_id', 'left');
+	        $this->db->join('customer', 'payment.customer_id = customer.customer_id', 'left');
+        	$this->db->select('payment.payment_id, payment.is_captured, description, customer_name, date_time, booking_id, amount, payment_status, payment.is_deleted, payment_type, payment.payment_type_id, payment.payment_gateway_used, gateway_charge_id, read_only, selling_date, CONCAT_WS(" ",first_name,  last_name ) as user_name,payment_folio.folio_id as folio_id, payment.payment_link_id');
+    	} else {
+    		$this->db->select('amount');
+    	}
         $this->db->order_by('selling_date', 'ASC');
         $this->db->order_by('date_time', 'ASC');
         $query = $this->db->get("payment");
 		if ($this->db->_error_message())
 			show_error($this->db->_error_message());
-        if ($query->num_rows() > 0) {
+        if ($query && $query->num_rows() > 0) {
             return $query->result_array();
         }
     }
