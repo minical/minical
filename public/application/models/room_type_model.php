@@ -156,8 +156,8 @@ class Room_type_model extends CI_Model {
                     LEFT JOIN `room` AS r ON r.room_type_id = rt.id
                     LEFT JOIN `booking_block` AS brh
                     ON  r.room_id = brh.room_id AND 
-                        brh.check_in_date < '$check_out_date' AND 
-                        brh.check_out_date > '$check_in_date'
+                        Date(brh.check_in_date) < '$check_out_date' AND 
+                        Date(brh.check_out_date) > '$check_in_date'
                     LEFT JOIN `booking` AS b ON b.booking_id = brh.booking_id
                     WHERE (b.state < 4 OR b.state = 7) AND `b`.`is_deleted` != '1' AND
                         `rt`.`company_id` = '$company_id' AND `b`.`company_id` = '$company_id' AND `rt`.`is_deleted` = 0 AND `r`.`is_deleted` = 0

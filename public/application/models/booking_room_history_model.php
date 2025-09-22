@@ -248,7 +248,7 @@ class Booking_room_history_model extends CI_Model {
 					FROM booking_block as brh, booking as b
 					WHERE 
 						brh.room_id = '$room_id' AND 
-						'$start_date' < brh.check_out_date AND brh.check_in_date < '$end_date' AND 
+						'$start_date' < Date(brh.check_out_date) AND Date(brh.check_in_date) < '$end_date' AND 
 						brh.booking_id != '$booking_id' AND
 						brh.booking_id = b.booking_id AND
 						(

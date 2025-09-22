@@ -533,8 +533,8 @@ class Booking extends MY_Controller
             $check_out_date = urldecode($check_out_date);
         }
 
-        $check_in_date = date('Y-m-d H:i:s', strtotime($check_in_date));
-        $check_out_date = date('Y-m-d H:i:s', strtotime($check_out_date));
+        $check_in_date = date('Y-m-d', strtotime($check_in_date));
+        $check_out_date = date('Y-m-d', strtotime($check_out_date));
         //If current selling date is between check-in and check-out date
         //use current selling date as the check in date for checking available rooms
         if ($check_in_date <= $this->selling_date && $this->selling_date <= $check_out_date) {
@@ -1470,8 +1470,8 @@ class Booking extends MY_Controller
         //check overbooking
         if(!$is_duplicate && !(isset($data['isGroupBooking']) && (boolean)$data['isGroupBooking']))
         {
-            $start_date = (isset($data['rooms']) && isset($data['rooms'][0]) && isset($data['rooms'][0]['check_in_date']) ? $data['rooms'][0]['check_in_date'] : null);
-            $end_date = (isset($data['rooms']) && isset($data['rooms'][0]) && isset($data['rooms'][0]['check_out_date']) ? $data['rooms'][0]['check_out_date'] : null);
+            $start_date = (isset($data['rooms']) && isset($data['rooms'][0]) && isset($data['rooms'][0]['check_in_date']) ? date('Y-m-d', strtotime($data['rooms'][0]['check_in_date'])) : null);
+            $end_date = (isset($data['rooms']) && isset($data['rooms'][0]) && isset($data['rooms'][0]['check_out_date']) ? date('Y-m-d', strtotime($data['rooms'][0]['check_out_date'])) : null);
             $room_id = (isset($data['rooms']) && isset($data['rooms'][0]) && isset($data['rooms'][0]['room_id']) ? $data['rooms'][0]['room_id'] : null);
             if ($room_id) {
                 $bookings_found_in_range = $this->Booking_model->check_overbooking($start_date, $end_date, $room_id);

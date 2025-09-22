@@ -2765,7 +2765,7 @@ class Booking_model extends CI_Model {
                     FROM `booking_block` as `room_history`
                     LEFT JOIN `booking` as `b` ON `room_history`.`booking_id` = b.`booking_id`
                     WHERE 
-                    ('$start_date' < (room_history.check_out_date) AND (room_history.check_in_date) < '$end_date') AND 
+                    ('$start_date' < Date(room_history.check_out_date) AND Date(room_history.check_in_date) < '$end_date') AND 
                     b.`is_deleted` = '0' AND 
                     b.company_id = '$this->company_id' AND    
                     b.`state` != 4 

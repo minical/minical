@@ -97,6 +97,13 @@ class Calendar extends MY_Controller
 			$error_message = "Warning: Reservation cannot start before today";			
 		}
 	*/
+
+
+		$start1 = date('Y-m-d', strtotime($this->input->post('start1')));
+		$end1 = date('Y-m-d', strtotime($this->input->post('end1')));
+		$start2 = date('Y-m-d', strtotime($this->input->post('start2')));
+		$end2 = date('Y-m-d', strtotime($this->input->post('end2')));
+
 		if ($state == INHOUSE && $start1 != $start2) {
 			//echo "$start1, $end1, $start2, $end2";
 			$error_message = l("Warning: In-house guest's check-in date cannot change", true);			
@@ -122,7 +129,7 @@ class Calendar extends MY_Controller
 		// (in other words, make sure the block is the tail-most block
 		// The reason we do this is because...?
 		if ($latest_booking_room_history_data['booking_id'] == $booking_id AND
-			$latest_booking_room_history_data['check_in_date'] == $start1
+			date('Y-m-d', strtotime($latest_booking_room_history_data['check_in_date'])) == $start1
 			)
 		{
 			
