@@ -577,7 +577,8 @@ class Email_template {
             'amount_due' => $booking_data['balance'],
             'rate_plan_detail' => $rate_plan,
             'booking_source' => $booking_source,
-            'booking_notes' => $booking_notes
+            'booking_notes' => $booking_notes,
+            'room_name' => $room_data['room_name']
         );
 
         if($booking_source == 'Online Group Booking Engine'){

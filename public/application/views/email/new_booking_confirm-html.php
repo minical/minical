@@ -187,6 +187,7 @@
 
                                                                       ?>:&nbsp;</strong><?php echo $adult_count > 1 ? $adult_count.' Adults' : $adult_count.' Adult'; ?>
                                                                         <?php echo $children_count ? ($children_count > 1 ? ','.$children_count.' Children' : ','.$children_count.' Child') : ''; ?></span></p>
+                                                                    <p style="mso-line-height-rule: exactly;line-height: 175%;margin: 0;"><span style="color: #000000;"><strong><?php echo l('Room Name', true); ?>:&nbsp;</strong><?php echo $room_name; ?></span></p>
                                                                     <p style="mso-line-height-rule: exactly;font-size: 14px;line-height: 175%;margin: 0;"><span style="color: #000000;"><strong><?php echo l('Check-In Date', true); ?>:&nbsp;</strong><?php echo $check_in_date; ?></span></p>
                                                                     <p style="mso-line-height-rule: exactly;font-size: 14px;line-height: 175%;margin: 0;"><span style="color: #000000;"><strong><?php echo l('Check-Out Date', true); ?>:&nbsp;</strong><?php echo $check_out_date; ?></span></p>
                                                                     <?php if($booking_type): ?><p style="mso-line-height-rule: exactly;line-height: 175%;margin: 0;"><span style="color: #000000;"><strong><?php echo l('Booking Type', true); ?>:&nbsp;</strong><?php echo $booking_type; ?></span></p><?php endif; ?>
