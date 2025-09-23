@@ -1476,6 +1476,13 @@ $(function() {
         dateFormat: ($('#companyDateFormat').val()).toLowerCase()
     });
 
+    console.log('innGrid.userPermission',innGrid.userPermission);
+
+    if (innGrid.userPermission === 'is_employee') {
+        $("input[name='payment_date']").datepicker('destroy'); // disables the picker
+        $("input[name='payment_date']").prop('readonly', true); // prevent manual typing
+    }
+
     $(".payment-modal-button").on("click", function() {
         $("[name='payment_amount']").val(number_format(parseFloat($("#amount_due").text().replace(/,/g, '')), 2, ".", ""));
     });
