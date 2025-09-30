@@ -150,7 +150,7 @@ class Calendar extends MY_Controller
 					'booking_id' => $booking_id,
 					'room_id' => trim($room_id),
 					'check_in_date' => $start2,
-					'check_out_date' => $this->enable_new_calendar ? $end2 : Date("Y-m-d", (strtotime($start2) + $duration_of_stay))
+					'check_out_date' => $this->enable_new_calendar ? $end2 : Date("Y-m-d", (strtotime($end2)))
 				);
 
 			

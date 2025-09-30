@@ -243,12 +243,20 @@ class Booking_room_history_model extends CI_Model {
             $unconfirmed_reservation_sql = " AND b.state != '" . UNCONFIRMED_RESERVATION . "'";
         }
 
+        $brh_check_out_date = "brh.check_out_date";
+        $brh_check_in_date = "brh.check_in_date";
+        
+        if(!$this->enable_new_calendar){
+            $brh_check_out_date = "Date(brh.check_out_date)";
+            $brh_check_in_date = "Date(brh.check_in_date)";
+        }
+
         // this query ignores CANCELLED, NO_SHOW, DELETED BOOKINGS (Hence, bookings can be dragged on top of those bookings even if they exist within the date range)
         $sql = "SELECT *				
 					FROM booking_block as brh, booking as b
 					WHERE 
 						brh.room_id = '$room_id' AND 
-						'$start_date' < Date(brh.check_out_date) AND Date(brh.check_in_date) < '$end_date' AND 
+						'$start_date' < $brh_check_out_date AND $brh_check_in_date < '$end_date' AND 
 						brh.booking_id != '$booking_id' AND
 						brh.booking_id = b.booking_id AND
 						(
