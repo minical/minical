@@ -1160,6 +1160,11 @@ class Charge_model extends CI_Model {
 
 	function get_last_applied_charge_per_booking($booking_ids, $charge_type_ids, $end_date = null, $only_night_audit_charge = false)
 	{
+	    // Guard: no booking IDs or charge type IDs provided
+	    if (empty($booking_ids) || empty($charge_type_ids)) {
+	        return [];
+	    }
+
 	    $this->db->select('*');
 	    $this->db->from('charge');
 	    $this->db->where_in('booking_id', $booking_ids);
@@ -1170,15 +1175,21 @@ class Charge_model extends CI_Model {
 	        $this->db->where('is_night_audit_charge', 1);
 	    }
 
-	    if ($end_date) {
+	    if (!empty($end_date)) {
 	        $this->db->where('selling_date <', $end_date);
 	    }
 
 	    $this->db->order_by('booking_id, selling_date DESC');
 
 	    $query = $this->db->get();
-	    $charges = $query->result_array();
 
+	    // Check if query execution failed
+	    if (!$query) {
+	        log_message('error', 'DB error in get_last_applied_charge_per_booking: ' . $this->db->last_query());
+	        return [];
+	    }
+
+	    $charges = $query->result_array();
 	    $latest_per_booking = [];
 
 	    foreach ($charges as $charge) {
