@@ -1057,7 +1057,8 @@ class Auth extends MY_Controller
             'name' => $this->input->post('name'),
             'number_of_rooms' => $this->input->post('number_of_rooms'),
             'user_id' => $this->user_id,
-            'close_io'=>true    // if true then the request is from My Property page, otherwise registration page.
+            'close_io'=> false
+            //'close_io'=>true    // if true then the request is from My Property page, otherwise registration page.
         );
 
         $subscription_type = $this->input->post('subscription_type');
