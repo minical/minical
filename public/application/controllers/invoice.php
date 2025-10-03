@@ -1157,98 +1157,107 @@ class Invoice extends MY_Controller {
                 }
 
             } else {
-            $i = 1;
-            $response = array();
-            foreach ($get_bookings_by_group_id as $booking)
-            {
-                $balance = $booking['balance'];
-                
-                if($distribute_equal_amount == "Yes")
-                {
-                    if($i == $no_of_bookings && $amount_diff != 0)
-                    {
-                        $amount = $equal_amount - $amount_diff;
-                        $amount = round($amount, 2);
+
+                // For proportional distribution
+                $total_group_balance = array_sum(array_column($get_bookings_by_group_id, 'balance'));
+
+                $i = 1;
+                $response = array();
+                foreach ($get_bookings_by_group_id as $booking) {
+                    $balance = $booking['balance'];
+
+                    if ($distribute_equal_amount == "Yes") {
+                        // Equal distribution
+                        if ($i == $no_of_bookings && $amount_diff != 0) {
+                            $amount = $equal_amount - $amount_diff;
+                            $amount = round($amount, 2);
+                        } else {
+                            $amount = round($equal_amount, 2);
+                        }
+                    } elseif ($distribute_equal_amount == "Proportional") {
+                        // ✅ Proportional distribution
+                        if ($total_group_balance > 0) {
+                            $share_ratio = $balance / $total_group_balance;
+                            $amount = round($total_balance * $share_ratio, 2);
+
+                            // prevent overpay
+                            if ($amount > $balance) {
+                                $amount = $balance;
+                            }
+                        } else {
+                            $amount = 0;
+                        }
+                    } else {
+                        // Sequential (old fallback logic)
+                        $amount = $balance;
+                        if ($remaining_balance < $balance) {
+                            $amount = $remaining_balance;
+                        }
                     }
-                    else
-                    {
-                        $amount = round($equal_amount, 2);
-                    }                
-                }
-                else
-                {
-                    $amount = $balance;
-                    if($remaining_balance < $balance)
-                    {
-                        $amount = $remaining_balance;
+
+                    if ($remaining_balance <= 0) {
+                        $response = array(
+                            'success' => false,
+                            'message' => 'You cannot make a payment for a negative amount on a group invoice. Please process a refund through the individual bookings instead.'
+                        );
+                        break;
                     }
-                }
-                if($remaining_balance <= 0){
-                    $response = array(
-                        'success' => false,
-                        'message' => 'You cannot make a payment for a negative amount on a group invoice. Please process a refund through the individual bookings instead.'
+
+                    $data = Array(
+                        "user_id" => $this->user_id,
+                        "booking_id" => $booking['booking_id'],
+                        "selling_date" => $selling_date,
+                        "customer_id" => $customer_id,
+                        "amount" => $amount,
+                        "payment_type_id" => $payment_type_id,
+                        "description" => $description,
+                        "date_time" => gmdate("Y-m-d H:i:s"),
+                        "selected_gateway" => $this->input->post('selected_gateway'),
                     );
-                    break;
-                }
-                
-                $data = Array(
-                    "user_id" => $this->user_id,
-                    "booking_id" => $booking['booking_id'],
-                    "selling_date" => $selling_date,
-                    "customer_id" => $customer_id,
-                    "amount" => $amount,
-                    "payment_type_id" => $payment_type_id,
-                    "description" => $description,
-                    "date_time" => gmdate("Y-m-d H:i:s"),
-                    "selected_gateway" => $this->input->post('selected_gateway'),
-                );
-                $card_data = $this->Card_model->get_active_card($customer_id, $this->company_id);
-                $data['credit_card_id'] = "";
-                if(isset($card_data) && $card_data){
-                     $data['credit_card_id'] = $card_data['id'];
-                }
-                
-                if($data['amount'] > 0)
-                {
-                    $response = $this->Payment_model->insert_payment($data, $cvc, $capture_payment_type);
-                }
-                else
-                {
-                    $response = array('success' => false, 'message' => 'All the bookings in this group are already Paid in full.');
-                }
-                if($response['success'] == false){
-                    $response[] = array(
-                                    "booking_id" => $booking['booking_id'],
-                                    "error_msg" =>  $response['message']
-                                );
-                }
-                elseif($response['success'])
-                {
 
-                    $post_payment_data = $response;
-                    $post_payment_data['payment_id'] = $response['payment_id'];
-
-                    do_action('post.create.payment', $post_payment_data);
-
-                    $invoice_log_data = array();
-                    $invoice_log_data['date_time'] = gmdate('Y-m-d h:i:s');
-                    $invoice_log_data['booking_id'] = $booking['booking_id'];
-                    $invoice_log_data['user_id'] = $this->session->userdata('user_id');
-                    $invoice_log_data['action_id'] = $company_data['manual_payment_capture'] ? AUTHORIZED_PAYMENT : CAPTURED_PAYMENT;
-                    $invoice_log_data['charge_or_payment_id'] = $response['payment_id'];
-                    $invoice_log_data['new_amount'] = $amount;
-                    if($invoice_log_data['charge_or_payment_id'])
-                    {
-                        $this->Payment_model->insert_payment_folio(array('payment_id' => $response['payment_id'], 'folio_id' => $folio_id));
-                        
-                        $invoice_log_data['log'] = $company_data['manual_payment_capture'] ? 'Payment Authorized' : 'Payment Captured';
-                        $this->Invoice_log_model->insert_log($invoice_log_data);
+                    $card_data = $this->Card_model->get_active_card($customer_id, $this->company_id);
+                    $data['credit_card_id'] = "";
+                    if (isset($card_data) && $card_data) {
+                        $data['credit_card_id'] = $card_data['id'];
                     }
-                    $this->Booking_model->update_booking_balance($booking['booking_id']);
+
+                    if ($data['amount'] > 0) {
+                        $response = $this->Payment_model->insert_payment($data, $cvc, $capture_payment_type);
+                    } else {
+                        $response = array('success' => false, 'message' => 'All the bookings in this group are already Paid in full.');
+                    }
+
+                    if ($response['success'] == false) {
+                        $response[] = array(
+                            "booking_id" => $booking['booking_id'],
+                            "error_msg" =>  $response['message']
+                        );
+                    } elseif ($response['success']) {
+
+                        $post_payment_data = $response;
+                        $post_payment_data['payment_id'] = $response['payment_id'];
+
+                        do_action('post.create.payment', $post_payment_data);
+
+                        $invoice_log_data = array();
+                        $invoice_log_data['date_time'] = gmdate('Y-m-d h:i:s');
+                        $invoice_log_data['booking_id'] = $booking['booking_id'];
+                        $invoice_log_data['user_id'] = $this->session->userdata('user_id');
+                        $invoice_log_data['action_id'] = $company_data['manual_payment_capture'] ? AUTHORIZED_PAYMENT : CAPTURED_PAYMENT;
+                        $invoice_log_data['charge_or_payment_id'] = $response['payment_id'];
+                        $invoice_log_data['new_amount'] = $amount;
+
+                        if ($invoice_log_data['charge_or_payment_id']) {
+                            $this->Payment_model->insert_payment_folio(array('payment_id' => $response['payment_id'], 'folio_id' => $folio_id));
+                            $invoice_log_data['log'] = $company_data['manual_payment_capture'] ? 'Payment Authorized' : 'Payment Captured';
+                            $this->Invoice_log_model->insert_log($invoice_log_data);
+                        }
+                        $this->Booking_model->update_booking_balance($booking['booking_id']);
+                    }
+
+                    $i++;
+                    $remaining_balance -= $amount; 
                 }
-                $i++;
-                $remaining_balance -= $amount; 
-            }
             }
             if (!empty($response)) {
                 echo json_encode($response);

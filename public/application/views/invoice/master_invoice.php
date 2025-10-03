@@ -121,6 +121,7 @@
 				                        <select name="payment_distribution" class="input-field form-control">
 				                            <option value="No"><?php echo l('settle_folio_balance'); ?></option>
 				                            <option value="Yes"><?php echo l('distribute_payment_evenly'); ?></option>
+				                            <option value="Proportional"><?php echo l('Split Payment Proportionally', true); ?></option>
 				                        </select>
 				                    </div>
 				                </div>
