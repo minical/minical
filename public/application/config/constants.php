@@ -112,6 +112,8 @@ define('COMMON_BOOKING_SOURCES',
         ))
     );
 
+define('SUB_SOURCE_BOOKING_DOT_COM','BookingCom');
+
 // Customer Types
 define('BLACKLIST', '-1');
 define('VIP', '-2');
