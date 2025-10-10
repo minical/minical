@@ -226,7 +226,7 @@
 
 <input type="hidden" name="default_charge_name" class="default_charge_name" value="<?php echo $company['default_charge_name']; ?>">
 
-<div id='invoice-container' class="container">
+<div id='invoice-container' >
     <div class="app-page-title">
         <div class="page-title-wrapper">
             <div class="page-title-heading">
@@ -330,7 +330,7 @@
                     echo ($company['bussiness_number'] != "")?"Bussiness/NIFT Number: ".$company['bussiness_number']."<br/>":'';
                     echo ($company['bussiness_fiscal_number'] != "")?"Fiscal Number: ".$company['bussiness_fiscal_number']."<br/>":'';
 				?>
-                <?php echo '<p class="invoice-header">'.$company['invoice_header'].'</p>'; ?>
+                <?php //echo '<p class="invoice-header">'.$company['invoice_header'].'</p>'; ?>
                 	
                 </address>
 		</div>
@@ -445,7 +445,12 @@
 			</address>
         </div>
 	</div> <!-- /.container -->
-
+	
+   <?php if($this->vendor_id == 9) { ?>
+        <div class="col-sm-12">
+            <?php echo '<p class="invoice-header">'.$company['invoice_header'].'</p>'; ?>
+        </div>
+    <?php } ?>
 	<div class="col-md-12 row charges-and-payments">
 		<?php if(!$read_only) { ?>	
 			<div class="panel panel-success" style="overflow: hidden;width:100%;">
