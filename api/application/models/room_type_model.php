@@ -69,9 +69,6 @@ class Room_type_model extends CI_Model {
         );
         $req = Requests::get($this->config->item('api_url').'/v1/inventory/availability?'.$query);
         // if response empty aka no availability, ensure actual array is created anyway
-		if(isset($_GET['dev_mode']) && $_GET['dev_mode'] === getenv('DEVMODE_PASS')){
-			echo $this->config->item('api_url').'/v1/inventory/availability?'.$query;
-		}
 //		print_r($req);die;
 		
 		$avail_array = $req->body ? json_decode($req->body, true) : null;

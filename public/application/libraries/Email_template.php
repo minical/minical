@@ -146,10 +146,6 @@ class Email_template {
             $this->ci->email->send();
             echo "sent email to ".$email_list;
 
-            if(isset($_GET['dev_mode'])) {
-                echo $this->ci->email->print_debugger();
-            }
-
             // Log the email sent
             $log_data['date_time'] = gmdate('Y-m-d H:i:s');
             $log_data['selling_date'] = $this->ci->session->userdata('current_selling_date');
@@ -634,11 +630,9 @@ class Email_template {
 
         $this->ci->email->send();
 
-        $this->reset_language($company['default_language']);
 
-        if(isset($_GET['dev_mode'])) {
-            echo $this->ci->email->print_debugger();
-        }
+
+        $this->reset_language($company['default_language']);
 
         return array(
             "success" => true,
@@ -1503,10 +1497,6 @@ class Email_template {
 
         $this->reset_language($company['default_language']);
 
-        if(isset($_GET['dev_mode'])) {
-            echo $this->ci->email->print_debugger();
-        }
-
         return array(
             "success" => true,
             "message" => "Email successfully sent to ".$customer_email,
@@ -1617,10 +1607,6 @@ class Email_template {
         $this->ci->email->send();
 
         $this->reset_language($company['default_language']);
-
-        if(isset($_GET['dev_mode'])) {
-            echo $this->ci->email->print_debugger();
-        }
 
         return array(
             "success" => true,

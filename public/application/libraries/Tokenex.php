@@ -493,20 +493,12 @@ class Tokenex {
 
     public function make_authorization_for_cielo($customer, $merchant_id, $merchant_key, $booking_id, $amount){
 
-        if (isset($_GET['dev_mode'])) {
-            echo "customer";print_r($customer);
-        }
         $card_data = array(
                             "Token" => $customer['cc_tokenex_token']
                         );
         $card_number_data = $this->detokenize($card_data);
-        if (isset($_GET['dev_mode'])) {
-            echo "card_number_data";print_r($card_number_data);
-        }
+        
         $card_type = $this->_get_credit_card_type($card_number_data['data']);
-        if (isset($_GET['dev_mode'])) {
-            echo "card_type";print_r($card_type);
-        }
         
         $authorize_header = array('Content-Type: application/json',
                                 'MerchantId:'.$merchant_id,
@@ -535,9 +527,6 @@ class Tokenex {
                 );
         
         $authorize_response = $this->call_api($this->api_transparent_url, 'Detokenize', $authorize_data, $authorize_header, true);
-        if (isset($_GET['dev_mode'])) {
-            echo "authorize_response";print_r($authorize_response);
-        }
 
         $authorize_response = json_decode($authorize_response);
         if(
@@ -643,9 +632,7 @@ class Tokenex {
         $refund_data = array();
 
         $refund_response = $this->call_api($this->cielo_url, '/1/sales/'.$payment_id.'/void?amount='.$amount, $refund_data, $refund_header, true, 'put');
-        if (isset($_GET['dev_mode'])) {
-            echo "refund_response";print_r($refund_response);
-        }
+    
         $refund_response = json_decode($refund_response);
 
         if(
@@ -1228,13 +1215,8 @@ class Tokenex {
     
     
     function _process_transaction_tokenex($data){        
-        if (isset($_GET['dev_mode'])) {
-            print_r($data);
-        }
+        
         $response_xml = $this->call_api($this->api_payment_url, 'ProcessTransaction', $data);
-        if (isset($_GET['dev_mode'])) {
-            print_r($response_xml);
-        }
         
         $response_obj = $this->xml_to_object($response_xml);
         // prx($response_obj);
