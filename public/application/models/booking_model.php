@@ -1274,16 +1274,7 @@ class Booking_model extends CI_Model {
             show_error($this->db->_error_message());
         }
        
-        $query = $this->db->query('select LAST_INSERT_ID( ) AS last_id');
-        $result = $query->result_array();
-        if(isset($result[0]))
-        {
-          $new_booking_id = $result[0]['last_id'];
-        }
-            else
-        {
-          return null;
-        }
+        $new_booking_id = $this->db->insert_id();
         
         // Generate new invoice_hash for the new booking (for guest to check the invoice later)
         $this->load->helper("guid");        
@@ -1326,16 +1317,8 @@ class Booking_model extends CI_Model {
             // insert_id function won't work as it converts id(bigint) to int, results in incorrect value
             // $new_booking_id = $this->db->insert_id();
 
-            $query = $this->db->query('select LAST_INSERT_ID( ) AS last_id');
-            $result = $query->result_array();
-            if(isset($result[0]))
-            {
-                $new_booking_id = $result[0]['last_id'];
-            }
-            else
-            {
-                return null;
-            }
+            $new_booking_id =  $this->db->insert_id();
+            
             $number_of_bookings = count($booking_batch);
             $last_id = $new_booking_id + ($number_of_bookings - 1);
 
