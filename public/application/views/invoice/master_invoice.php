@@ -331,6 +331,9 @@
                     echo ($company['bussiness_fiscal_number'] != "")?"Fiscal Number: ".$company['bussiness_fiscal_number']."<br/>":'';
 				?>
                 <?php //echo '<p class="invoice-header">'.$company['invoice_header'].'</p>'; ?>
+                <?php if($this->vendor_id != 9) { ?>
+                    <?php echo '<p class="invoice-header">'.$company['invoice_header'].'</p>'; ?>
+                <?php } ?>	
                 	
                 </address>
 		</div>
