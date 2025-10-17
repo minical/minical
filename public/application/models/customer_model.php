@@ -670,16 +670,7 @@ class Customer_model extends CI_Model {
             show_error($this->db->_error_message());
 		}
       
-      $query = $this->db->query('select LAST_INSERT_ID( ) AS last_id');
-      $result = $query->result_array();
-      if(isset($result[0]))
-      {  
-        return $result[0]['last_id'];
-      }
-      else
-      {  
-        return null;
-      }
+      return $this->db->insert_id();
       // insert_id function won't work as it converts id(bigint) to int, results in incorrect value
 //        return $this->db->insert_id();
     }

@@ -11,17 +11,17 @@ class Image_model extends CI_Model {
     function create_image_group($image_type_id)
     {
         $this->db->insert("image_group", Array("image_type_id" => $image_type_id));
-		//$image_group_id = $this->db->insert_id();
-        $query = $this->db->query('select LAST_INSERT_ID( ) AS last_id');
-		$result = $query->result_array();
-        if(isset($result[0]))
-        {
-          $image_group_id = $result[0]['last_id'];
-        }
-            else
-        {
-          $image_group_id = null;
-        }
+		$image_group_id = $this->db->insert_id();
+        // $query = $this->db->query('select LAST_INSERT_ID( ) AS last_id');
+		// $result = $query->result_array();
+        // if(isset($result[0]))
+        // {
+        //   $image_group_id = $result[0]['last_id'];
+        // }
+        //     else
+        // {
+        //   $image_group_id = null;
+        // }
 
 		if ($this->db->_error_message()) // error checking
 			show_error($this->db->_error_message());

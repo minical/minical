@@ -82,17 +82,17 @@ class Invoice_model extends CI_Model {
 			show_error($this->db->_error_message());
 		}
 		
-		//$invoice_id = $this->db->insert_id();
-        $query = $this->db->query('select LAST_INSERT_ID( ) AS last_id');
-        $result = $query->result_array();
-        if(isset($result[0]))
-        {
-          $invoice_id = $result[0]['last_id'];
-        }
-        else
-        {
-          $invoice_id = null;
-        }
+		$invoice_id = $this->db->insert_id();
+        // $query = $this->db->query('select LAST_INSERT_ID( ) AS last_id');
+        // $result = $query->result_array();
+        // if(isset($result[0]))
+        // {
+        //   $invoice_id = $result[0]['last_id'];
+        // }
+        // else
+        // {
+        //   $invoice_id = null;
+        // }
 		
 		$data = array (
 			'invoice_id' => $invoice_id,
@@ -147,17 +147,17 @@ class Invoice_model extends CI_Model {
             show_error($this->db->_error_message());
         }
 
-        //$invoice_id = $this->db->insert_id();
-        $query = $this->db->query('select LAST_INSERT_ID( ) AS last_id');
-        $result = $query->result_array();
-        if(isset($result[0]))
-        {
-            $invoice_id = $result[0]['last_id'];
-        }
-        else
-        {
-            $invoice_id = null;
-        }
+        $invoice_id = $this->db->insert_id();
+        // $query = $this->db->query('select LAST_INSERT_ID( ) AS last_id');
+        // $result = $query->result_array();
+        // if(isset($result[0]))
+        // {
+        //     $invoice_id = $result[0]['last_id'];
+        // }
+        // else
+        // {
+        //     $invoice_id = null;
+        // }
 
         $data = array();
         foreach ($booking_ids as $booking_id) {

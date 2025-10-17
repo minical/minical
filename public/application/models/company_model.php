@@ -14,16 +14,7 @@ class Company_model extends CI_Model {
 		$this->db->insert("company", $data);
 
 		//return $this->db->insert_id();
-		$query = $this->db->query('select LAST_INSERT_ID( ) AS last_id');
-		$result = $query->result_array();
-		if(isset($result[0]))
-		{
-			return $result[0]['last_id'];
-		}
-		else
-		{
-			return null;
-		}
+		return $this->db->insert_id();
 	}
     
     function get_all_companies($is_ota_connected = false, $ota_key = null)
@@ -990,16 +981,7 @@ function get_total_companies($extension_name = null, $is_extension_active = fals
 		$this->db->insert("review_management", $data);
 
 		//return $this->db->insert_id();
-		$query = $this->db->query('select LAST_INSERT_ID( ) AS last_id');
-		$result = $query->result_array();
-		if(isset($result[0]))
-		{
-			return $result[0]['last_id'];
-		}
-		else
-		{
-			return null;
-		}
+		return $this->db->insert_id();
 	}
 
 	function update_review_links($company_id, $ota_id, $data)

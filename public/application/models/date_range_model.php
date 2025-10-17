@@ -17,17 +17,8 @@ class Date_range_model extends CI_Model {
 		}
 		else 
 		{
-			//return $this->db->insert_id();
-      $query = $this->db->query('select LAST_INSERT_ID( ) AS last_id');
-      $result = $query->result_array();
-      if(isset($result[0]))
-      {  
-        return $result[0]['last_id'];
-      }
-      else
-      {  
-        return null;
-      }
+			return $this->db->insert_id();
+      
 		}
 	}
 	
@@ -42,17 +33,8 @@ class Date_range_model extends CI_Model {
 		}
 		else 
 		{
-			//return $this->db->insert_id();
-      $query = $this->db->query('select LAST_INSERT_ID( ) AS last_id');
-      $result = $query->result_array();
-      if(isset($result[0]))
-      {  
-        return $result[0]['last_id'];
-      }
-      else
-      {  
-        return null;
-      }
+			return $this->db->insert_id();
+      
 		}
 	}
 
@@ -66,17 +48,7 @@ class Date_range_model extends CI_Model {
 		}
 		else 
 		{
-			//return $this->db->insert_id();
-      $query = $this->db->query('select LAST_INSERT_ID( ) AS last_id');
-      $result = $query->result_array();
-      if(isset($result[0]))
-      {  
-        return $result[0]['last_id'];
-      }
-      else
-      {  
-        return null;
-      }
+			return $this->db->insert_id();
 		}
 	}
     function create_date_range_x_room_type_x_status($data)
@@ -89,17 +61,8 @@ class Date_range_model extends CI_Model {
 		}
 		else 
 		{
-			//return $this->db->insert_id();
-      $query = $this->db->query('select LAST_INSERT_ID( ) AS last_id');
-      $result = $query->result_array();
-      if(isset($result[0]))
-      {  
-        return $result[0]['last_id'];
-      }
-      else
-      {  
-        return null;
-      }
+			return $this->db->insert_id();
+      
 		}
 	}
 	
@@ -114,17 +77,8 @@ class Date_range_model extends CI_Model {
 		}
 		else 
 		{
-			//return $this->db->insert_id();
-      $query = $this->db->query('select LAST_INSERT_ID( ) AS last_id');
-      $result = $query->result_array();
-      if(isset($result[0]))
-      {  
-        return $result[0]['last_id'];
-      }
-      else
-      {  
-        return null;
-      }
+			return $this->db->insert_id();
+      
 		}
 	}
 
@@ -155,17 +109,8 @@ class Date_range_model extends CI_Model {
 		}
 		else 
 		{
-                        //return $this->db->insert_id();
-                        $query = $this->db->query('select LAST_INSERT_ID( ) AS last_id');
-                        $result = $query->result_array();
-                        if(isset($result[0]))
-                        {  
-                        return $result[0]['last_id'];
-                        }
-                        else
-                        {  
-                        return null;
-                        }
+      return $this->db->insert_id();
+                        
 		}
 	}
 }

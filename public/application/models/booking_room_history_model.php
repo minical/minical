@@ -19,15 +19,8 @@ class Booking_room_history_model extends CI_Model {
         if ($this->db->_error_message()) // error checking
             show_error($this->db->_error_message());
 
-        $query = $this->db->query('select LAST_INSERT_ID( ) AS last_id');
-        $result = $query->result_array();
-        if (isset($result[0])) {
-            return $result[0]['last_id'];
-        } else {
-            return null;
-        }
         // insert_id function won't work as it converts id(bigint) to int, results in incorrect value
-//		return $this->db->insert_id();
+		return $this->db->insert_id();
     }
 
     function insert_booking_room_history_batch ($booking_history_batch) {

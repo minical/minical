@@ -19,17 +19,17 @@ class Booking_extra_model extends CI_Model {
 		);
 		
 		$this->db->insert('booking_x_extra', $data);	
-		//$booking_extra_id = $this->db->insert_id();
-    $query = $this->db->query('select LAST_INSERT_ID( ) AS last_id');
-		$result = $query->result_array();
-    if(isset($result[0]))
-    {  
-      $booking_extra_id = $result[0]['last_id'];
-    }
-		else
-    {  
-      $booking_extra_id = null;
-    }
+		$booking_extra_id = $this->db->insert_id();
+    // $query = $this->db->query('select LAST_INSERT_ID( ) AS last_id');
+		// $result = $query->result_array();
+    // if(isset($result[0]))
+    // {  
+    //   $booking_extra_id = $result[0]['last_id'];
+    // }
+		// else
+    // {  
+    //   $booking_extra_id = null;
+    // }
 		
 		if ($this->db->_error_message()) 
 		{

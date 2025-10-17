@@ -52,18 +52,9 @@ class Payment_model extends CI_Model {
 		
 		$this->db->insert('payment_type', $data);    
     
-    $query = $this->db->query('select LAST_INSERT_ID( ) AS last_id');
-		$result = $query->result_array();
-    if(isset($result[0]))
-    {  
-      return $result[0]['last_id'];
-    }
-		else
-    {  
-      return null;
-    }
+    
     // insert_id function won't work as it converts id(bigint) to int, results in incorrect value
-//        return $this->db->insert_id();
+       return $this->db->insert_id();
     }
 	
 	function update_payment_type($payment_type_id, $data, $company_id = null)
@@ -169,12 +160,13 @@ class Payment_model extends CI_Model {
             $data['payment_status'] = 'charge';
             unset($data['selected_gateway']);
             $this->db->insert('payment', $data);            
-            $query = $this->db->query('select LAST_INSERT_ID( ) AS last_id');
-            $result = $query->result_array();
-            if(isset($result[0]))
-            {
-                $payment_id = $result[0]['last_id'];
-            }
+            // $query = $this->db->query('select LAST_INSERT_ID( ) AS last_id');
+            // $result = $query->result_array();
+            // if(isset($result[0]))
+            // {
+            //     $result[0]['last_id'];
+            // }
+            $payment_id = $this->db->insert_id();
             $error = $this->db->_error_message();
         }
         
@@ -927,13 +919,7 @@ class Payment_model extends CI_Model {
     function insert_payment_folio ($data) {
 		$data = (object) $data;
 		$this->db->insert("payment_folio", $data);
-		$query = $this->db->query('select LAST_INSERT_ID( ) AS last_id');
-		$result = $query->result_array();
-		if (isset($result[0])) {
-			return $result[0]['last_id'];
-		} else {
-			return null;
-		}
+		return $this->db->insert_id();
 	}
 	
 	function get_payments_by_date($company_id = NULL, $date= NULL, $date_range = array(), $payment_type_id = null)
