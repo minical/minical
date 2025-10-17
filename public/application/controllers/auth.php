@@ -1850,88 +1850,186 @@ class Auth extends MY_Controller
      *
      * @return void
      */
+    // function activate_employee()
+    // {
+    //     $user_id      = $this->uri->segment(3);
+    //     $new_pass_key = $this->uri->segment(4);
+
+    //     $this->form_validation->set_rules('new_password', 'New Password', 'trim|required|xss_clean|min_length['.$this->config->item('password_min_length', 'tank_auth').']|max_length['.$this->config->item('password_max_length', 'tank_auth').']|alpha_dash');
+    //     $this->form_validation->set_rules('confirm_new_password', 'Confirm new Password', 'trim|required|xss_clean|matches[new_password]');
+
+
+
+    //     $data['errors'] = array();
+    //     if ($this->form_validation->run()) {                                // validation ok
+    //         $new_password = $this->form_validation->set_value('new_password');
+
+    //         if (!is_null(
+    //             $data = $this->tank_auth->reset_password(
+    //                 $user_id,
+    //                 $new_pass_key,
+    //                 $new_password
+    //             )
+    //         )
+    //         ) {
+
+    //             // success
+
+    //             //$this->_show_message($this->lang->line('auth_message_registration_completed_2').' '.anchor('/auth/login/', 'Login'));
+    //             $user_data = $this->User_model->get_user_profile($user_id);
+    //             $this->tank_auth->login(
+    //                 $user_data['email'],
+    //                 $new_password,
+    //                 1,
+    //                 0,
+    //                 1
+    //             );
+
+    //             redirect('/menu/select_hotel/'.$user_data['company_id']);
+    //         } else {
+    //             // fail
+    //             $this->_show_message($this->lang->line('auth_message_new_employee_failed'));
+    //         }
+    //     } else {
+    //         // Try to activate user by password key (if not activated yet)
+    //         if ($this->config->item('email_activation', 'tank_auth')) {
+    //             $this->tank_auth->activate_user($user_id, $new_pass_key, false);
+    //         }
+
+    //         if (!$this->tank_auth->can_reset_password($user_id, $new_pass_key)) {
+    //             $this->_show_message($this->lang->line('auth_message_new_employee_failed'));
+    //         }
+    //     }
+
+    //     if(isset($_POST['submit'])){
+
+    //         if($this->input->post('new_password') == ''){
+    //             $data['errors']['blank_new_password'] = 'The New Password field is required.';
+    //         }
+
+    //         if($this->input->post('new_password') != '' && strlen($this->input->post('new_password')) < 6 && strlen($this->input->post('new_password')) > 20){
+    //             $data['errors']['short_new_password'] = 'The New Password be between 6 and 20 characters long';
+    //         }
+
+    //         if($this->input->post('confirm_new_password') == ''){
+    //             $data['errors']['blank_confirm_new_password'] = 'The Confirm new Password field is required.';
+    //         }
+
+    //         if($this->input->post('new_password') != $this->input->post('confirm_new_password')){
+    //             $data['errors']['password_not_match'] = 'The Confirm new Password field does not match the New Password field.';
+    //         }
+    //         if ($this->input->post('new_password') != '' && !preg_match('/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{6,20}$/', $this->input->post('new_password'))) {
+    //             $data['errors']['password_contains_special_characters'] = 'The New Password field must contain alphanumeric characters, underscores, and dashes.';
+    //         }
+
+    //     }
+
+    //     $user_profile = $this->User_model->get_user_profile($user_id);
+    //     $data['email'] = $user_profile['email'];
+
+    //     $data['css_files'] = array(base_url().auto_version('css/register_employee_form.css'));
+
+    //     $data['main_content'] = 'auth/activate_employee_form';
+
+    //     $this->load->view('includes/bootstrapped_template', $data);
+    // }
+
     function activate_employee()
     {
         $user_id      = $this->uri->segment(3);
         $new_pass_key = $this->uri->segment(4);
 
-        $this->form_validation->set_rules('new_password', 'New Password', 'trim|required|xss_clean|min_length['.$this->config->item('password_min_length', 'tank_auth').']|max_length['.$this->config->item('password_max_length', 'tank_auth').']|alpha_dash');
-        $this->form_validation->set_rules('confirm_new_password', 'Confirm new Password', 'trim|required|xss_clean|matches[new_password]');
+        // ------------------------------
+        // 1. Setup validation rules
+        // ------------------------------
+        $this->form_validation->set_rules(
+            'new_password',
+            'New Password',
+            'trim|required|min_length[' . $this->config->item('password_min_length', 'tank_auth') . ']|max_length[' . $this->config->item('password_max_length', 'tank_auth') . ']|callback_valid_password'
+        );
 
+        $this->form_validation->set_rules(
+            'confirm_new_password',
+            'Confirm New Password',
+            'trim|required|matches[new_password]'
+        );
 
+        $data['errors'] = [];
 
-        $data['errors'] = array();
-        if ($this->form_validation->run()) {                                // validation ok
+        // ------------------------------
+        // 2. When form is submitted and valid
+        // ------------------------------
+        if ($this->form_validation->run()) {
             $new_password = $this->form_validation->set_value('new_password');
 
-            if (!is_null(
-                $data = $this->tank_auth->reset_password(
-                    $user_id,
-                    $new_pass_key,
-                    $new_password
-                )
-            )
-            ) {
+            // Try resetting the password
+            $reset_result = $this->tank_auth->reset_password(
+                $user_id,
+                $new_pass_key,
+                $new_password
+            );
 
-                // success
-
-                //$this->_show_message($this->lang->line('auth_message_registration_completed_2').' '.anchor('/auth/login/', 'Login'));
+            if (!is_null($reset_result)) {
+                // ✅ Password reset successful
                 $user_data = $this->User_model->get_user_profile($user_id);
+
+                // Auto-login the user
                 $this->tank_auth->login(
                     $user_data['email'],
                     $new_password,
-                    1,
-                    0,
-                    1
+                    1, // remember
+                    0, // is admin
+                    1  // bypass
                 );
 
-                redirect('/menu/select_hotel/'.$user_data['company_id']);
+                // Redirect to menu
+                redirect('/menu/select_hotel/' . $user_data['company_id']);
             } else {
-                // fail
+                // ❌ Password reset failed
                 $this->_show_message($this->lang->line('auth_message_new_employee_failed'));
+                return;
             }
+
         } else {
-            // Try to activate user by password key (if not activated yet)
+            // ------------------------------
+            // 3. Handle invalid or initial request
+            // ------------------------------
             if ($this->config->item('email_activation', 'tank_auth')) {
                 $this->tank_auth->activate_user($user_id, $new_pass_key, false);
             }
 
             if (!$this->tank_auth->can_reset_password($user_id, $new_pass_key)) {
                 $this->_show_message($this->lang->line('auth_message_new_employee_failed'));
+                return;
             }
         }
 
-        if(isset($_POST['submit'])){
-
-            if($this->input->post('new_password') == ''){
-                $data['errors']['blank_new_password'] = 'The New Password field is required.';
-            }
-
-            if($this->input->post('new_password') != '' && strlen($this->input->post('new_password')) < 4){
-                $data['errors']['short_new_password'] = 'The New Password field must be at least 4 characters in length.';
-            }
-
-            if($this->input->post('confirm_new_password') == ''){
-                $data['errors']['blank_confirm_new_password'] = 'The Confirm new Password field is required.';
-            }
-
-            if($this->input->post('new_password') != $this->input->post('confirm_new_password')){
-                $data['errors']['password_not_match'] = 'The Confirm new Password field does not match the New Password field.';
-            }
-            if ($this->input->post('new_password') != '' && preg_match('/[^a-zA-Z\d]/', $this->input->post('new_password'))) {
-                $data['errors']['password_contains_special_characters'] = 'The New Password field must contain alphanumeric characters, underscores, and dashes.';
-            }
-        }
-
+        // ------------------------------
+        // 4. Prepare view data
+        // ------------------------------
         $user_profile = $this->User_model->get_user_profile($user_id);
         $data['email'] = $user_profile['email'];
-
-        $data['css_files'] = array(base_url().auto_version('css/register_employee_form.css'));
-
+        $data['css_files'] = [base_url() . auto_version('css/register_employee_form.css')];
         $data['main_content'] = 'auth/activate_employee_form';
 
         $this->load->view('includes/bootstrapped_template', $data);
     }
+
+    public function valid_password($password)
+    {
+        $pattern = '/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{6,20}$/';
+
+        if (!preg_match($pattern, $password)) {
+            $this->form_validation->set_message(
+                'valid_password',
+                'The Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.'
+            );
+            return false;
+        }
+        return true;
+    }
+
+
 
     /**
      * Change user email
