@@ -102,12 +102,12 @@
     innGrid.featureSettings.allow_free_bookings = parseInt('<?=(isset($this->allow_free_bookings) ? $this->allow_free_bookings : 0)?>');
     innGrid.featureSettings.selectedPaymentGateway = '<?=(isset($this->selected_payment_gateway) ? $this->selected_payment_gateway : '')?>';
     innGrid.featureSettings.bookingCancelledWithBalance = parseInt('<?=(isset($this->booking_cancelled_with_balance) ? $this->booking_cancelled_with_balance : 0)?>');
-    innGrid.isCCVisualizationEnabled = parseInt('<?=(($this->is_cc_visualization_enabled) ? 1 : 0)?>');
-    innGrid.isAsaasPaymentEnabled = parseInt('<?=(($this->selected_payment_gateway == "asaas") ? 1 : 0)?>');
+    innGrid.isCCVisualizationEnabled = parseInt('<?= isset($this->is_cc_visualization_enabled) && $this->is_cc_visualization_enabled ? 1 : 0 ?>');
+    innGrid.isAsaasPaymentEnabled = parseInt('<?= isset($this->selected_payment_gateway) && $this->selected_payment_gateway ? 1 : 0 ?>');
     innGrid.isChannePCIEnabled = parseInt('<?=(($this->is_channex_pci_enabled) ? 1 : 0)?>');
     innGrid.isPCIBookingEnabled = parseInt('<?=(($this->is_pci_booking_enabled) ? 1 : 0)?>');
-    innGrid.restrictCvcNotMandatory = parseInt('<?=(($this->restrict_cvc_not_mandatory) ? 1 : 0)?>');
-    innGrid.restrictEditAfterCheckout = parseInt('<?=(($this->restrict_edit_after_checkout) ? 1 : 0)?>');
+    innGrid.restrictCvcNotMandatory = parseInt('<?= isset($this->restrict_cvc_not_mandatory) && $this->restrict_cvc_not_mandatory ? 1 : 0 ?>');
+    innGrid.restrictEditAfterCheckout = parseInt('<?= isset($this->restrict_edit_after_checkout) && $this->restrict_edit_after_checkout ? 1 : 0 ?>');
     innGrid.featureSettings.cuurentLanguage = "<?=$this->session->userdata('language') ? $this->session->userdata('language') : ''?>";
     innGrid.imageUrl = "<?= $this->image_url; ?>";
     innGrid.companyAPIKey = "<?=(isset($this->company_api_key) ? $this->company_api_key : '')?>";
@@ -140,7 +140,7 @@
 
     innGrid.isGuestSignEnabled = parseInt('<?=(($this->is_guest_sign_enabled) ? 1 : 0)?>');
     
-    innGrid.userPermission = "<?=$this->user_permission;?>";
+    innGrid.userPermission = "<?= isset($this->user_permission) ? $this->user_permission : '' ?>";
 
     var reg_flag = <?php echo $registration_flag; ?>;
     innGrid.hasExtensionsPermission = <?php echo $registration_flag; ?>;
@@ -215,23 +215,23 @@ if ( isset($this->user_id) && $this->user_id
 
     // add non-translated-keys to DB 
     <?php if($this->user_id === SUPER_ADMIN_USER_ID) { ?>
-    setInterval(function () {
-        // console.log('nonTranslatedKeys', nonTranslatedKeys);
-        if (nonTranslatedKeys.length > 0){
+    // setInterval(function () {
+    //     // console.log('nonTranslatedKeys', nonTranslatedKeys);
+    //     if (nonTranslatedKeys.length > 0){
 
-            $.ajax({
-                type: "POST",
-                url: getBaseURL() + 'language_translation/insert_non_translated_keys',
-                data: { non_translated_keys: nonTranslatedKeys},
-                dataType: "json",
-                success: function( data ) {
-                    console.log('data', data);
-                }
-            });
+    //         $.ajax({
+    //             type: "POST",
+    //             url: getBaseURL() + 'language_translation/insert_non_translated_keys',
+    //             data: { non_translated_keys: nonTranslatedKeys},
+    //             dataType: "json",
+    //             success: function( data ) {
+    //                 console.log('data', data);
+    //             }
+    //         });
 
-            nonTranslatedKeys = [];
-        }
-    }, 10000);
+    //         nonTranslatedKeys = [];
+    //     }
+    // }, 10000);
     <?php } ?>
 
 </script>
@@ -312,7 +312,7 @@ $(document).ready(function(){
         url: getBaseURL() + 'auth/checkSession',
         data: {},
         success: function( data ) {
-            console.log('data', data);
+            // console.log('data', data);
         }
     });
 
