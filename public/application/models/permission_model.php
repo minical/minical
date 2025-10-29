@@ -124,6 +124,13 @@ class Permission_model extends CI_Model {
                 $function_name === 'show_signature_form' ||
                 $function_name === 'save_guest_signature'
             )
+            ||
+            $controller_name === "setting" && 
+            (
+                $function_name === 'index' ||
+                $function_name === 'review' ||
+                $function_name === 'thank_you'
+            )
 
         ) {
             return true; // let em access the page!
