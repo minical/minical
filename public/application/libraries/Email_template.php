@@ -1516,7 +1516,7 @@ class Email_template {
         {
             $customer_name = $booking['booking_customer_name'];
             $invoice_hash = $booking['invoice_hash'];
-            $review_link = base_url() . "review/?hash=".$invoice_hash;
+            $review_link = base_url() . "review/".$booking['company_id']."?hash=".$invoice_hash;
             // Company logo
             $email_header = $this->ci->Image_model
                 ->get_company_logo_url($company['company_id'], $company['logo_image_group_id'], 1);

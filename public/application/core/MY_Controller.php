@@ -98,11 +98,26 @@ class MY_Controller extends CI_Controller {
         $modules_path = $this->config->item('module_location');     
         $modules = scandir($modules_path);
 
-        if(!$this->company_id && $this->uri->segment(3) != ''){
-            $company_id = $this->uri->segment(3);
+        // if(!$this->company_id && $this->uri->segment(3) != ''){
+        //     $company_id = $this->uri->segment(3);
+        // } else {
+        //     $company_id = $this->company_id;
+        // }
+
+
+        if (!$this->company_id) {
+            // Check if current controller is 'review'
+            if ($this->uri->segment(1) == 'review' && $this->uri->segment(2) != '' && $this->uri->segment(2) != 'thank_you') {
+                $company_id = $this->uri->segment(2);
+            } else {
+                $company_id = $this->uri->segment(3);
+            }
         } else {
             $company_id = $this->company_id;
         }
+
+
+
 
         if($company_id){
             $this->session->set_userdata('anonymous_company_id', $company_id);
@@ -253,35 +268,75 @@ class MY_Controller extends CI_Controller {
             }
         }
         
-        require APPPATH."config/routes.php";
+        // require APPPATH."config/routes.php";
 
-        if (isset($module_permission) && count($module_permission) > 0) {
+        // if (isset($module_permission) && count($module_permission) > 0) {
+        //     foreach ($module_permission as $key => $module) {
+
+        //         if ($this->router->fetch_module() && strpos($module, $this->router->fetch_module()) !== FALSE) {
+        //             if (
+        //                 isset($company_id) &&
+        //                 $company_id &&
+        //                 (strpos($key, 'cron') == 0 || strpos($key, 'public') == 0) &&
+        //                 ($this->permission->is_extension_active($this->router->fetch_module(), $company_id))
+        //             ) {
+        //                 // let it run
+        //             } else {
+        //                 if(
+        //                     isset($company_id) &&
+        //                     $company_id &&
+        //                     ($this->permission->is_extension_active($this->router->fetch_module(), $company_id))
+        //                 ){
+        //                     // let it run
+        //                 } else {
+        //                     show_404();
+        //                 }
+        //             }
+        //         } else {
+        //             // continue with loop
+        //         }
+        //     }
+        // }
+
+        require APPPATH . "config/routes.php";
+
+        if (!empty($module_permission)) {
+            $router_module = $this->router->fetch_module();
+
+            // Skip this whole block for public review links
+            $current_controller = $this->router->fetch_class();
+            $current_function = $this->router->fetch_method();
+
+            if ($current_controller === 'setting' && $current_function === 'index' && strpos($_SERVER['REQUEST_URI'], '/review') !== false) {
+                // ✅ allow public review page
+                return;
+            }
+
+            // Only check active status once
+            $is_active = null;
+            if (!empty($company_id) && $router_module) {
+                $is_active = $this->permission->is_extension_active($router_module, $company_id);
+            }
+
             foreach ($module_permission as $key => $module) {
-
-                if ($this->router->fetch_module() && strpos($module, $this->router->fetch_module()) !== FALSE) {
-                    if (
-                        isset($company_id) &&
-                        $company_id &&
-                        (strpos($key, 'cron') == 0 || strpos($key, 'public') == 0) &&
-                        ($this->permission->is_extension_active($this->router->fetch_module(), $company_id))
-                    ) {
-                        // let it run
-                    } else {
-                        if(
-                            isset($company_id) &&
-                            $company_id &&
-                            ($this->permission->is_extension_active($this->router->fetch_module(), $company_id))
-                        ){
+                if ($router_module && strpos($module, $router_module) !== false) {
+                    
+                    if ($company_id && $is_active) {
+                        // if it's cron/public module → allow
+                        if (strpos($key, 'cron') === 0 || strpos($key, 'public') === 0) {
                             // let it run
                         } else {
-                            show_404();
+                            // also allowed because $is_active is true
                         }
+                    } else {
+                        // company_id missing or extension not active
+                        show_404();
                     }
-                } else {
-                    // continue with loop
                 }
+                // else: module name does not match current router module → continue
             }
         }
+
 
         $active_extensions = $this->Extension_model->get_active_extensions($company_id);
         $modules_path = APPPATH.'extensions/';
