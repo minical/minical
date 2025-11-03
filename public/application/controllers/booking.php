@@ -424,10 +424,14 @@ class Booking extends MY_Controller
                 'source'=> isset($new_data['booking']['source']) ? $new_data['booking']['source'] : null
             ),
             'booking_block' => Array(
-                'check_in_date' => isset($new_data['rooms'][0]['check_in_date']) ? $new_data['rooms'][0]['check_in_date'] : null,
-                'check_out_date' => isset($new_data['rooms'][0]['check_out_date']) ? $new_data['rooms'][0]['check_out_date'] : null,
-                'room_id' => (isset($new_data['rooms'][0]['room_id']) && $new_data['rooms'][0]['room_id']) ? $new_data['rooms'][0]['room_id'] : 0,
-            ),
+                'check_in_date' => $new_data['rooms'][0]['check_in_date'] ?? null,
+                'check_out_date' => $new_data['rooms'][0]['check_out_date'] ?? null,
+                // 'room_id' => !empty($new_data['rooms'][0]['room_id']) ? $new_data['rooms'][0]['room_id'] : 0,
+                
+                // ✅ FIX: don't force to 0, preserve old value if missing
+                'room_id' => $new_data['rooms'][0]['room_id']
+                    ?? ($old_data['booking_block']['room_id'] ?? null),
+                ),
             'customers' => Array(
                 //'paying_customer' => $new_data['customers']['paying_customer']['customer_name'],
                 'staying_customers' => isset($new_data['customers']['staying_customers']) ? $new_data['customers']['staying_customers'] : array()
@@ -497,6 +501,22 @@ class Booking extends MY_Controller
                                 $log_data = 'Changed booking notes to '.$new_data[$category][$index];
                             }elseif(empty($new_data[$category][$index]) && !empty($old_data[$category][$index])){
                                 $log_data = 'Deleted booking notes is '.$old_data[$category][$index];
+                            }
+                        }
+
+                        // ✅ FIX: prevent false "Changed room to Not Assigned"
+                        if ($log_type == 17) {
+                            $new_room = $new_data[$category][$index];
+                            $old_room = $old_data[$category][$index];
+
+                            // Skip if missing or unchanged
+                            if (
+                                $new_room === null ||
+                                $new_room === '' ||
+                                ($new_room == 0 && $old_room == 0) ||
+                                $new_room == $old_room
+                            ) {
+                                continue;
                             }
                         }
 
