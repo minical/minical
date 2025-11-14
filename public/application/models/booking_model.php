@@ -1279,11 +1279,21 @@ class Booking_model extends CI_Model {
         // Generate new invoice_hash for the new booking (for guest to check the invoice later)
         $this->load->helper("guid");        
         
+        // $guid = generate_guid();
+        // $count = 0;
+        // while($count < 5 || $this->get_booking_id_from_invoice_hash($guid)){
+        //     $guid = generate_guid();
+        //     $count++;
+        // }
+
         $guid = generate_guid();
-        $count = 0;
-        while($count < 5 || $this->get_booking_id_from_invoice_hash($guid)){
+        $attempt = 0;
+        $max_attempts = 10;
+
+        // Retry until hash is unique or max attempts reached
+        while ($this->get_booking_id_from_invoice_hash($guid) && $attempt < $max_attempts) {
             $guid = generate_guid();
-            $count++;
+            $attempt++;
         }
         
         $this->db->query("UPDATE booking SET invoice_hash = '".$guid."' WHERE booking_id = '".$new_booking_id."'");
