@@ -53,7 +53,7 @@ services:
     depends_on:
       - db
     ports:
-      - "8080:80"
+      - "8090:80"
     environment:
       PMA_HOST: db
       PMA_USER: minical
