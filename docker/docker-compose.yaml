@@ -1,24 +1,27 @@
 version: '3'
 services:
-    web:
-        image: nginx:latest
-        ports:
-            - "8080:80"
-        volumes:
-            - ./nginx.conf:/etc/nginx/conf.d/default.conf
-            
-        links:
-            - php
+      web:
+    image: nginx:alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ../:/app
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - php
 
-    php:
-        build:
-            context: .
-            dockerfile: PHP.Dockerfile
-        volumes:
-            
-        links:
-            - db
-            - composer
+
+      php:
+    build:
+      context: ..
+      dockerfile: PHP.Dockerfile
+    restart: unless-stopped
+    volumes:
+      - ../:/app
+    depends_on:
+      - db
+
 
     db:
         image: mariadb:latest
@@ -34,10 +37,15 @@ services:
         ports:
             - 3306:3306
 
-    composer:
-        image: composer:latest
-        command: ["composer", "install"]
-        volumes:
+     composer:
+    image: composer:2
+    working_dir: /app
+    volumes:
+      - ../:/app
+    depends_on:
+      - php
+    command: install
+
         
 
     phpmyadmin:
