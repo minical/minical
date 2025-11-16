@@ -6,7 +6,7 @@ services:
             - "8080:80"
         volumes:
             - ./nginx.conf:/etc/nginx/conf.d/default.conf
-            - ../:/app
+            
         links:
             - php
 
@@ -15,7 +15,7 @@ services:
             context: .
             dockerfile: PHP.Dockerfile
         volumes:
-            - ../:/app
+            
         links:
             - db
             - composer
@@ -38,7 +38,7 @@ services:
         image: composer:latest
         command: ["composer", "install"]
         volumes:
-            - ..:/app
+        
 
     phpmyadmin:
         image: phpmyadmin/phpmyadmin
