@@ -28,7 +28,7 @@ services:
     depends_on:
       - php
     ports:
-      - "80:80"
+      - "8800:80"
     volumes:
       # same project code mount for nginx
       - ../:/app
@@ -53,7 +53,7 @@ services:
     depends_on:
       - db
     ports:
-      - "8000:80"
+      - "9900:80"
     environment:
       PMA_HOST: db
       PMA_USER: minical
