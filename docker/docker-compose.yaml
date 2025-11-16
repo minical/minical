@@ -1,61 +1,71 @@
-version: '3'
+version: '3.8'
+
 services:
-      web:
-    image: nginx:alpine
-    restart: unless-stopped
-    ports:
-      - "80:80"
-    volumes:
-      - ../:/app
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
-    depends_on:
-      - php
-
-
-      php:
+  php:
     build:
       context: ..
-      dockerfile: PHP.Dockerfile
+      dockerfile: docker/PHP.Dockerfile
+    container_name: php
+    working_dir: /app
     restart: unless-stopped
     volumes:
+      # mount project root (one level up from /docker) into /app
       - ../:/app
     depends_on:
       - db
+    environment:
+      APP_ENV: production
+      APP_DEBUG: 'false'
+      DB_HOST: db
+      DB_DATABASE: minical
+      DB_USERNAME: minical
+      DB_PASSWORD: secret
 
+  web:
+    image: nginx:alpine
+    container_name: web
+    restart: unless-stopped
+    depends_on:
+      - php
+    ports:
+      - "80:80"
+    volumes:
+      # same project code mount for nginx
+      - ../:/app
+      # your custom nginx.conf from docker/nginx.conf
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
 
-    db:
-        image: mariadb:latest
-        environment:
-            MYSQL_USER: 'minical'
-            MYSQL_PASSWORD: 'MiniCalPwd'
-            # ensure the password matches the DATABASE_PASS above
-            MYSQL_ROOT_PASSWORD: 'MiniCalPwd'
-            # ensure the name matches the DATABASE_NAME above
-            MYSQL_DATABASE: 'minical'
-        volumes:
-            - mysqldata:/var/lib/mysql
-        ports:
-            - 3306:3306
+  db:
+    image: mysql:5.7
+    container_name: db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: minical
+      MYSQL_USER: minical
+      MYSQL_PASSWORD: secret
+    volumes:
+      - mysqldata:/var/lib/mysql
 
-     composer:
+  phpmyadmin:
+    image: phpmyadmin:latest
+    restart: unless-stopped
+    depends_on:
+      - db
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: db
+      PMA_USER: minical
+      PMA_PASSWORD: secret
+
+  composer:
     image: composer:2
     working_dir: /app
     volumes:
       - ../:/app
-    depends_on:
-      - php
-    command: install
-
-        
-
-    phpmyadmin:
-        image: phpmyadmin/phpmyadmin
-        ports:
-            - '8888:80'
-        environment:
-            PMA_HOST: db
-        depends_on:
-            - db
+    entrypoint: ["composer"]
 
 volumes:
-    mysqldata: {}
+  mysqldata:
+
