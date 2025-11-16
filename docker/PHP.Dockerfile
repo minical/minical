@@ -11,4 +11,6 @@ RUN docker-php-ext-install mysqli && docker-php-ext-enable mysqli
 #     && docker-php-ext-configure gd --with-freetype --with-jpeg \
 #     && docker-php-ext-install -j$(nproc) gd
 
-RUN pecl install xdebug && docker-php-ext-enable xdebug
+# Xdebug is only needed for local dev, not for server / Coolify builds
+# RUN pecl install xdebug && docker-php-ext-enable xdebug
+
