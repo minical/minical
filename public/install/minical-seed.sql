@@ -3,6 +3,18 @@
 
 SET sql_mode = '';
 --
+-- Table structure for table `currency`
+--
+
+DROP TABLE IF EXISTS `currency`;
+CREATE TABLE `currency` (
+  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `code` VARCHAR(10) NOT NULL,
+  `name` VARCHAR(255) NOT NULL,
+  `symbol` VARCHAR(10) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+--
 -- Dumping data for table `currency`
 --
 
