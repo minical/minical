@@ -15,6 +15,7 @@ $dbPass = getenv("DATABASE_PASS");
 $dbName = getenv("DATABASE_NAME");
 
 $maxRuntime = 3; // less then your max script execution limit
+$lineLength = 1048576; // support long INSERT lines in the seed file
 $deadline = time() + $maxRuntime;
 
 $mysqli_connection = @mysqli_connect("$dbHost", "$dbUser", "$dbPass", "$dbName");
@@ -46,7 +47,7 @@ if ($result = mysqli_query($mysqli_connection, $sql)) {
 
 $queryCount = 0;
 $query = '';
-while ($deadline > time() AND ($line = fgets($fp, 102400))) {
+while ($deadline > time() AND ($line = fgets($fp, $lineLength))) {
     if (substr($line, 0, 2) == '--' OR trim($line) == '') {
         continue;
     }
