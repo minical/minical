@@ -407,18 +407,21 @@ class Email_template {
         }
 
         $room_type = $this->ci->Room_type_model->get_room_type($room_data['room_type_id']);
-        $logo_images = $this->ci->Image_model->get_images($company['logo_image_group_id']);
+
+        $logo_images = null;
+        if(isset($company['logo_image_group_id']) && $company['logo_image_group_id'])
+            $logo_images = $this->ci->Image_model->get_images($company['logo_image_group_id']);
 
 
         $booking_hash = $booking_modify_link = "";
-        if($company['customer_modify_booking'])
+        if(isset($company['customer_modify_booking']) && $company['customer_modify_booking'])
         {
             $booking_hash = $booking_data['invoice_hash'];
             $booking_modify_link = base_url() . "booking/show_booking_information/".$booking_hash;
         }
 
         $booking_notes = "";
-        if($company['send_booking_notes'])
+        if(isset($company['send_booking_notes']) && $company['send_booking_notes'])
         {
             $booking_notes = $booking_data['booking_notes'];
         }
@@ -576,6 +579,8 @@ class Email_template {
             'booking_notes' => $booking_notes,
             'room_name' => $room_data['room_name']
         );
+
+        $email_data['number_of_rooms'] = null;
 
         if($booking_source == 'Online Group Booking Engine'){
             $email_data['number_of_rooms'] = $num_of_rooms;

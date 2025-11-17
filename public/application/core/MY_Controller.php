@@ -397,7 +397,10 @@ class MY_Controller extends CI_Controller {
 
             $this->company_id = $this->ci->session->userdata('current_company_id');
 
-            $company_security_data = $this->Option_model->get_option_by_company('company_security', $this->company_id);
+            $company_security_data = array();
+            if (!$this->input->is_ajax_request()) {
+                $company_security_data = $this->Option_model->get_option_by_company('company_security', $this->company_id);
+            }
 
             $company_security = array();
             if($company_security_data)
@@ -434,7 +437,11 @@ class MY_Controller extends CI_Controller {
             }
 
             $company = $this->ci->Company_model->get_company($this->company_id);
-            $company_key_data = $this->ci->Company_model->get_company_api_permission($this->company_id);
+
+            $company_key_data = array();
+            if (!$this->input->is_ajax_request()) {
+                $company_key_data = $this->ci->Company_model->get_company_api_permission($this->company_id);
+            }
 
             if(!$this->input->is_ajax_request() && !($company && isset($company['company_id']) && $company['company_id'])){
                 $controller_name = $this->ci->uri->rsegment(1);
@@ -566,7 +573,19 @@ class MY_Controller extends CI_Controller {
             $host_name = $_SERVER['HTTP_HOST'];
             $protocol = $this->config->item('server_protocol');
             $is_hosted_prod_service = getenv('IS_HOSTED_PROD_SERVICE');
-            if ((!$whitelabelinfo && $this->company_data['partner_id']) || ($whitelabelinfo && ($is_hosted_prod_service || $host_name ==  'app.minical.io' || $host_name ==  'demo.minical.io') && isset($whitelabelinfo['id']) && $whitelabelinfo['id'] != $this->company_data['partner_id'])) {
+            if (
+                    (
+                        !$whitelabelinfo && $this->company_data['partner_id']
+                    ) || 
+                    (
+                        $whitelabelinfo && 
+                        (
+                            $is_hosted_prod_service || 
+                            $host_name ==  'app.minical.io' || 
+                            $host_name ==  'demo.minical.io'
+                        ) && isset($whitelabelinfo['id']) && $whitelabelinfo['id'] != $this->company_data['partner_id']
+                    ) && !$this->input->is_ajax_request()
+                ) {
                 $white_label_detail = $this->Whitelabel_partner_model->get_partners(array('id' => $this->company_data['partner_id']));
                 if($white_label_detail && isset($white_label_detail[0])) {
                     $this->session->set_userdata('white_label_information', $white_label_detail[0]);

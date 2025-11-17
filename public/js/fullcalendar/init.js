@@ -362,6 +362,8 @@ innGrid.buildCalendar = function (rooms) {
 
     if (innGrid.isDisplayTooltip) {
         calendar_options['eventMouseEnter'] = function (info) {
+        // console.log('info',info);
+            var bookingId = (info.event.extendedProps.data.booking_id != 'null') ? "<strong>" + l("Booking ID") + ":</strong> " + info.event.extendedProps.data.booking_id : '';
             var groupId = (info.event.extendedProps.data.id_group_booking != 'null') ? "<strong>" + l("group_id") + ":</strong> " + info.event.extendedProps.data.id_group_booking : '';
             var groupName = (info.event.extendedProps.data.group_name != 'null') ? "<strong>" + l("group_name") + ":</strong> " + info.event.extendedProps.data.group_name : '';
            var totalAmount =  parseFloat(info.event.extendedProps.data.balance) + parseFloat(info.event.extendedProps.data.payment_total);
@@ -406,6 +408,7 @@ innGrid.buildCalendar = function (rooms) {
                     + info.event.extendedProps.data.booking_customer 
                     + (staying_customers ? ', ' + staying_customers : '') 
                     + '</strong></p>'+
+                '<p>' + bookingId + '</p>' +
                 '<p><strong>' + l("Room", true) + ':</strong> ' + info.event.extendedProps.data.room_name + '</p>' +
                 '<p><span><strong>' + l("check_in", true) + ':</strong> ' + innGrid._getLocalFormattedDate(checkInDate) + '</span> <span><strong>' + l("check_out", true) + ':</strong> ' + innGrid._getLocalFormattedDate(checkOutDate) + '</span></p>' +
                 '<p><strong>' + l("Number of nights", true) + ':</strong> ' + diffDays + '</p>' +
