@@ -71,7 +71,7 @@ services:
     container_name: filebrowser
     restart: unless-stopped
     ports:
-      - "8080:80"          # change host port if 8080 is taken
+      - "7700:80"          # change host port if 8080 is taken
     volumes:
       - ./:/srv            # exposes your project root inside the UI
       - ./filebrowser.db:/database.db   # persists user/db settings
