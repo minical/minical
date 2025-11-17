@@ -28,7 +28,7 @@ services:
     depends_on:
       - php
     ports:
-      - "8800:80"
+      - "8801:80"
     volumes:
       # same project code mount for nginx
       - ../:/app
@@ -53,7 +53,7 @@ services:
     depends_on:
       - db
     ports:
-      - "9900:80"
+      - "9901:80"
     environment:
       PMA_HOST: db
       PMA_USER: minical
@@ -71,7 +71,7 @@ services:
     container_name: filebrowser
     restart: unless-stopped
     ports:
-      - "7700:80"          # change host port if 8080 is taken
+      - "7701:80"          # change host port if 8080 is taken
     volumes:
       - ./:/srv            # exposes your project root inside the UI
       - ./filebrowser.db:/database.db   # persists user/db settings
