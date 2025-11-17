@@ -93,7 +93,7 @@
 							if ($company_data['website_is_taking_online_reservation'] == '1'):
 						?>
 								<li>
-									<a href="https://demo.minical.io/online_reservation/select_dates_and_rooms/<?php echo $company_data['company_id']; ?>" class="nav-link text-right">
+									<a href="https://app.minical.io/online_reservation/select_dates_and_rooms/<?php echo $company_data['company_id']; ?>" class="nav-link text-right">
 									<span class="glyphicon glyphicon-calendar nav-link"></span> Book Online</a>
 								</li>
 						<?php
