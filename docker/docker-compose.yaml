@@ -66,6 +66,20 @@ services:
       - ../:/app
     entrypoint: ["composer"]
 
+  filebrowser:
+    image: filebrowser/filebrowser:latest
+    container_name: filebrowser
+    restart: unless-stopped
+    ports:
+      - "8080:80"          # change host port if 8080 is taken
+    volumes:
+      - ./:/srv            # exposes your project root inside the UI
+      - ./filebrowser.db:/database.db   # persists user/db settings
+    environment:
+      FB_BASEURL: ""       # set if you want a sub-path, e.g., "/files"
+
 volumes:
   mysqldata:
+
+  
 
