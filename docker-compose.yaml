@@ -3,14 +3,14 @@ version: '3.8'
 services:
   php:
     build:
-      context: .
+      context: ..
       dockerfile: docker/PHP.Dockerfile
     container_name: php
     working_dir: /app
     restart: unless-stopped
     volumes:
       # mount project root (one level up from /docker) into /app
-      - ./:/app
+      - ../:/app
     depends_on:
       - db
     environment:
@@ -31,7 +31,7 @@ services:
       - "8800:80"
     volumes:
       # same project code mount for nginx
-      - ./:/app
+      - ../:/app
       # your custom nginx.conf from docker/nginx.conf
       - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
 
@@ -63,8 +63,22 @@ services:
     image: composer:2
     working_dir: /app
     volumes:
-      - ./:/app
+      - ../:/app
     entrypoint: ["composer"]
+
+  filebrowser:
+    image: filebrowser/filebrowser:latest
+    container_name: filebrowser
+    restart: unless-stopped
+    ports:
+      - "8080:80"          # change host port if 8080 is taken
+    volumes:
+      - ./:/srv            # exposes your project root inside the UI
+      - ./filebrowser.db:/database.db   # persists user/db settings
+    environment:
+      FB_BASEURL: ""       # set if you want a sub-path, e.g., "/files"
 
 volumes:
   mysqldata:
+
+  
