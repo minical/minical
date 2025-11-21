@@ -464,10 +464,43 @@ function BasicView(element, calendar, viewName) {
 					
                 }
 
-				for(var index in rowCount)
-				{
-					s0 += "<tr><td class='fc-state-default'><div class='fc-day-content' data-id='"+rowCount[index]+"' data-room_type_id='"+index+"'>"+rowCount[index]+"</div></td></tr>";
-				}
+                // render rowCount sorted by key in descending order
+                var rowKeys = [];
+                for (var k in rowCount) {
+                    if (rowCount.hasOwnProperty(k)) {
+
+                        // skip 'total' for now
+                        if (k === "total") continue;
+
+                        rowKeys.push(k);
+                    }
+                }
+
+                // normal DESC sort
+                rowKeys.sort(function(a, b) {
+                    var na = parseInt(a, 10), nb = parseInt(b, 10);
+                    if (!isNaN(na) && !isNaN(nb)) {
+                        return nb - na;         // numeric DESC
+                    }
+                    return (a < b) ? 1 : (a > b ? -1 : 0); // string DESC
+                });
+
+                // render sorted rows
+                for (var r = 0; r < rowKeys.length; r++) {
+                    var index = rowKeys[r];
+                    s0 += "<tr><td class='fc-state-default'><div class='fc-day-content' data-id='"+rowCount[index]+"' data-room_type_id='"+index+"'>"+rowCount[index]+"</div></td></tr>";
+                }
+
+                // finally add TOTAL (always last)
+                if (rowCount.hasOwnProperty("total")) {
+                    s0 += "<tr><td class='fc-state-default'><div class='fc-day-content' data-id='"+rowCount["total"]+"' data-room_type_id='total'>"+rowCount["total"]+"</div></td></tr>";
+                }
+
+
+				// for(var index in rowCount)
+				// {
+				// 	s0 += "<tr><td class='fc-state-default'><div class='fc-day-content' data-id='"+rowCount[index]+"' data-room_type_id='"+index+"'>"+rowCount[index]+"</div></td></tr>";
+				// }
 
                 $(s).appendTo(tbody);
                 $(s0).appendTo(tbody0);
