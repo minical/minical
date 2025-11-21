@@ -438,10 +438,7 @@ class MY_Controller extends CI_Controller {
 
             $company = $this->ci->Company_model->get_company($this->company_id);
 
-            $company_key_data = array();
-            if (!$this->input->is_ajax_request()) {
-                $company_key_data = $this->ci->Company_model->get_company_api_permission($this->company_id);
-            }
+            $company_key_data = $this->ci->Company_model->get_company_api_permission($this->company_id);
 
             if(!$this->input->is_ajax_request() && !($company && isset($company['company_id']) && $company['company_id'])){
                 $controller_name = $this->ci->uri->rsegment(1);
