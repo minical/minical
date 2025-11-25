@@ -4966,6 +4966,181 @@ var bookingModalInvoker = function ($) {
                 })
             );
         },
+        // _fetchBookingData: function () {
+        //     var that = this;
+        //     var payingCustomer = null;
+        //     var stayingCustomers = [];
+        //     var customerOrder = 0;
+        //     var isGroupBooking = null;
+        //     var groupName = '';
+        //     var booked_by_id = '';
+
+        //     if (that.selectedGroupType == 'linked_group') {
+        //         isGroupBooking = true;
+        //         groupName = this.$modalBody.find('input[name="group_name"]').val();
+        //     }
+        //     $("div.guest-block .tokenfield div.token").each(function () {
+
+        //         var customerOptions = {
+        //             customer_id: $(this).attr("id") ? $(this).attr("id") : null,
+        //             customer_name: $(this).find(".token-label").text()
+        //         };
+
+        //         // customer name is passed, in case it's a new customer
+        //         // (without customer id) that needs to be created
+        //         if (customerOrder === 0) {
+        //             payingCustomer = customerOptions
+        //         } else {
+        //             stayingCustomers.push(customerOptions);
+        //         }
+        //         customerOrder++;
+
+        //     });
+
+        //     var originalCustomerId = parseInt($('#original_booking_customer_id').val() || 0, 10);
+        //     var customerChanged = false;
+
+        //     if (!originalCustomerId) {
+        //         // No original → any new paying customer counts as change
+        //         if (payingCustomer && (payingCustomer.customer_id || payingCustomer.customer_name)) {
+        //             customerChanged = true;
+        //         }
+        //     } else {
+        //         if (!payingCustomer) {
+        //             // Was a customer, now removed
+        //             customerChanged = true;
+        //         } else if (!parseInt(payingCustomer.customer_id || 0, 10)) {
+        //             // Original had ID but new one doesn't → new customer with name only
+        //             customerChanged = true;
+        //         } else if (originalCustomerId !== parseInt(payingCustomer.customer_id, 10)) {
+        //             // Different customer ID
+        //             customerChanged = true;
+        //         }
+        //     }
+
+
+        //     console.log('customerChanged',customerChanged);
+        //     // bookingData.customer_changed = customerChanged;
+
+        //     $("div.booked-by-block .tokenfield div.token").each(function () {
+        //         booked_by_id = $(this).attr("id") ? $(this).attr("id") : null;
+        //     });
+
+        //     var rooms = [];
+        //     if ($('input[name=booking-type-radio]:checked').val() == 'group') {
+        //         var roomsBlock = $('#room-type-list').find('.room-type');
+        //     } else {
+        //         var roomsBlock = $('.room-type');
+        //     }
+        //     roomsBlock.each(function () {
+        //         var useRatePlan = undefined;
+        //         var ratePlanID = undefined;
+        //         var chargeTypeID = undefined;
+
+        //         if ($(this).find(".charge-with option:selected").hasClass('rate-plan') === true) {
+        //             // if user is using rate_plan, assign rate_plan_id
+        //             useRatePlan = 1;
+        //             ratePlanID = $(this).find(".charge-with").val();
+        //         } else {
+        //             // if booking is not using rate plan, assign charge_type_id
+        //             useRatePlan = 0;
+        //             chargeTypeID = $(this).find(".charge-with").val();
+        //         }
+
+        //         rooms.push({
+        //             check_in_date: innGrid.enableHourlyBooking == 1 ? moment(innGrid._getBaseFormattedDate($("input[name='check_in_date']").val()) + ' ' + that.convertTimeFormat($("[name='check_in_time']").val())).format('YYYY-MM-DD HH:mm:ss') : moment(innGrid._getBaseFormattedDate($("input[name='check_in_date']").val()) + ' ' + '00:00:00').format('YYYY-MM-DD HH:mm:ss'),
+        //             check_out_date: innGrid.enableHourlyBooking == 1 ? moment(innGrid._getBaseFormattedDate($("input[name='check_out_date']").val()) + ' ' + that.convertTimeFormat($("[name='check_out_time']").val())).format('YYYY-MM-DD HH:mm:ss') : moment(innGrid._getBaseFormattedDate($("input[name='check_out_date']").val()) + ' ' + '00:00:00').format('YYYY-MM-DD HH:mm:ss'),
+        //             // for single booking
+        //             room_id: $(this).find("[name='room_id']").val(),
+        //             // for group booking
+        //             room_type_id: $(this).find("[name='room_type_id'] option:selected").val(),//$(this).find("[name='room_type_id']").val(),
+        //             room_count: $(this).find("[name='room_count']").val(),
+        //             rate: $(this).find("[name='rate']").val() ? $(this).find("[name='rate']").val() : 0,
+        //             use_rate_plan: useRatePlan,
+        //             rate_plan_id: ratePlanID,
+        //             charge_type_id: chargeTypeID,
+        //             pay_period: $(this).find("[name='pay_period']").val(),
+        //             adult_count: $(this).find("[name='adult_count'] option:selected").val(),
+        //             children_count: $(this).find("[name='children_count'] option:selected").val()
+        //         });
+
+        //     });
+
+        //     var updateBookingData = {
+        //         state: $('#booking-modal select[name="state"]').val(),
+        //         rate: $("[name='rate']").val() ? $("[name='rate']").val() : 0,
+        //         pay_period: $("[name='pay_period'] option:selected").val(),
+        //         adult_count: $("[name='adult_count'] option:selected").val(),
+        //         children_count: $("[name='children_count'] option:selected").val(),
+        //         booking_notes: $("[name='booking_notes']").val(),
+        //         source: $("[name='source'] option:selected").val(),
+        //         booked_by: booked_by_id,
+        //         add_daily_charge: (that.booking.add_daily_charge == 0 ? 0 : 1),
+        //         residual_rate: (that.booking.residual_rate ? that.booking.residual_rate : 0),
+        //         color: $("[name='color']").val()
+        //     };
+        //     // var bookingData = {
+        //     //     booking: updateBookingData,
+        //     //     rooms: rooms,
+        //     //     customers: {
+        //     //         paying_customer: payingCustomer,
+        //     //         staying_customers: stayingCustomers
+        //     //     },
+        //     //     isGroupBooking: isGroupBooking,
+        //     //     groupName: groupName,
+        //     //     guests: $('input[name=customers]').val() ? $('input[name=customers]').val() : '',
+        //     //     customer_changed: customerChanged, // ← this is the important flag
+        //     // };
+
+        //     var bookingData = {
+        //         booking: updateBookingData,
+        //         rooms: rooms,
+        //         isGroupBooking: isGroupBooking,
+        //         groupName: groupName,
+        //         guests: $('input[name=customers]').val() ? $('input[name=customers]').val() : '',
+        //         customer_changed: customerChanged, // important flag
+        //         customers: {} // start empty
+        //     };
+
+        //     // only send paying_customer if changed
+        //     if (customerChanged) {
+        //         if (payingCustomer) {
+        //             if (payingCustomer.customer_id) {
+        //                 bookingData.customers.paying_customer = {
+        //                     customer_id: payingCustomer.customer_id
+        //                 };
+        //             } else if (payingCustomer.customer_name) {
+        //                 bookingData.customers.paying_customer = {
+        //                     customer_name: payingCustomer.customer_name
+        //                 };
+        //             }
+        //         } else {
+        //             // explicitly send null when removed
+        //             bookingData.customers.paying_customer = null;
+        //         }
+        //     }
+
+
+
+        //     // only send staying_customers if changed
+        //     if (stayingCustomers.length > 0 || customerChanged) {
+        //         bookingData.customers.staying_customers = stayingCustomers;
+        //     }
+
+
+        //     var booking_fields = [];
+
+        //     $('input[name="custom_booking_field[]"]').each(function (i, v) {
+        //         booking_fields.push({
+        //             id: $(this).attr('id'),
+        //             value: $(this).val()
+        //         });
+        //     });
+        //     bookingData['custom_booking_fields'] = booking_fields;
+
+        //     return bookingData;
+        // },
+
         _fetchBookingData: function () {
             var that = this;
             var payingCustomer = null;
@@ -4979,76 +5154,102 @@ var bookingModalInvoker = function ($) {
                 isGroupBooking = true;
                 groupName = this.$modalBody.find('input[name="group_name"]').val();
             }
+
+            // ---------------------------
+            // Parse customers
+            // ---------------------------
             $("div.guest-block .tokenfield div.token").each(function () {
+                var cid = $(this).attr("id");
+                var cname = $(this).find(".token-label").text();
 
-                var customerOptions = {
-                    customer_id: $(this).attr("id") ? $(this).attr("id") : null,
-                    customer_name: $(this).find(".token-label").text()
-                };
+                var customerOptions = {};
+                // if (cid) {
+                //     customerOptions.customer_id = cid;  // existing customer
+                //     customerOptions.customer_name = null; // prevent accidental overwrite
+                // } else if (cname) {
+                //     customerOptions.customer_name = cname; // new customer (no id yet)
+                //     customerOptions.customer_id = null;
+                // }
 
-                // customer name is passed, in case it's a new customer
-                // (without customer id) that needs to be created
+                if (cid) {
+                    customerOptions.customer_id = cid;  
+                    customerOptions.customer_name = cname;  // ✅ include name too
+                } else if (cname) {
+                    customerOptions.customer_name = cname; 
+                    customerOptions.customer_id = null;
+                }
+
                 if (customerOrder === 0) {
-                    payingCustomer = customerOptions
+                    payingCustomer = customerOptions;
                 } else {
                     stayingCustomers.push(customerOptions);
                 }
                 customerOrder++;
-
             });
 
+            // ---------------------------
+            // Detect paying customer change
+            // ---------------------------
             var originalCustomerId = parseInt($('#original_booking_customer_id').val() || 0, 10);
             var customerChanged = false;
 
             if (!originalCustomerId) {
-                // no original customer → any new paying customer means changed
+                // No original → any new paying customer counts as change
                 if (payingCustomer && (payingCustomer.customer_id || payingCustomer.customer_name)) {
                     customerChanged = true;
                 }
             } else {
-                // there was an original customer → compare
-                if (!payingCustomer || !parseInt(payingCustomer.customer_id || 0, 10)) {
+                if (!payingCustomer) {
+                    // Was a customer, now removed
                     customerChanged = true;
-                } else {
-                    customerChanged = originalCustomerId !== parseInt(payingCustomer.customer_id, 10);
+                } else if (!parseInt(payingCustomer.customer_id || 0, 10)) {
+                    // Original had ID but new one doesn't → new customer with name only
+                    customerChanged = true;
+                } else if (originalCustomerId !== parseInt(payingCustomer.customer_id, 10)) {
+                    // Different customer ID
+                    customerChanged = true;
                 }
             }
 
-            console.log('customerChanged',customerChanged);
-            // bookingData.customer_changed = customerChanged;
+            console.log('customerChanged', customerChanged);
 
+            // ---------------------------
+            // Booked by
+            // ---------------------------
             $("div.booked-by-block .tokenfield div.token").each(function () {
                 booked_by_id = $(this).attr("id") ? $(this).attr("id") : null;
             });
 
+            // ---------------------------
+            // Rooms
+            // ---------------------------
             var rooms = [];
-            if ($('input[name=booking-type-radio]:checked').val() == 'group') {
-                var roomsBlock = $('#room-type-list').find('.room-type');
-            } else {
-                var roomsBlock = $('.room-type');
-            }
+            var roomsBlock = $('input[name=booking-type-radio]:checked').val() == 'group'
+                ? $('#room-type-list').find('.room-type')
+                : $('.room-type');
+
             roomsBlock.each(function () {
                 var useRatePlan = undefined;
                 var ratePlanID = undefined;
                 var chargeTypeID = undefined;
 
                 if ($(this).find(".charge-with option:selected").hasClass('rate-plan') === true) {
-                    // if user is using rate_plan, assign rate_plan_id
                     useRatePlan = 1;
                     ratePlanID = $(this).find(".charge-with").val();
                 } else {
-                    // if booking is not using rate plan, assign charge_type_id
                     useRatePlan = 0;
                     chargeTypeID = $(this).find(".charge-with").val();
                 }
 
                 rooms.push({
-                    check_in_date: innGrid.enableHourlyBooking == 1 ? moment(innGrid._getBaseFormattedDate($("input[name='check_in_date']").val()) + ' ' + that.convertTimeFormat($("[name='check_in_time']").val())).format('YYYY-MM-DD HH:mm:ss') : moment(innGrid._getBaseFormattedDate($("input[name='check_in_date']").val()) + ' ' + '00:00:00').format('YYYY-MM-DD HH:mm:ss'),
-                    check_out_date: innGrid.enableHourlyBooking == 1 ? moment(innGrid._getBaseFormattedDate($("input[name='check_out_date']").val()) + ' ' + that.convertTimeFormat($("[name='check_out_time']").val())).format('YYYY-MM-DD HH:mm:ss') : moment(innGrid._getBaseFormattedDate($("input[name='check_out_date']").val()) + ' ' + '00:00:00').format('YYYY-MM-DD HH:mm:ss'),
-                    // for single booking
+                    check_in_date: innGrid.enableHourlyBooking == 1
+                        ? moment(innGrid._getBaseFormattedDate($("input[name='check_in_date']").val()) + ' ' + that.convertTimeFormat($("[name='check_in_time']").val())).format('YYYY-MM-DD HH:mm:ss')
+                        : moment(innGrid._getBaseFormattedDate($("input[name='check_in_date']").val()) + ' ' + '00:00:00').format('YYYY-MM-DD HH:mm:ss'),
+                    check_out_date: innGrid.enableHourlyBooking == 1
+                        ? moment(innGrid._getBaseFormattedDate($("input[name='check_out_date']").val()) + ' ' + that.convertTimeFormat($("[name='check_out_time']").val())).format('YYYY-MM-DD HH:mm:ss')
+                        : moment(innGrid._getBaseFormattedDate($("input[name='check_out_date']").val()) + ' ' + '00:00:00').format('YYYY-MM-DD HH:mm:ss'),
                     room_id: $(this).find("[name='room_id']").val(),
-                    // for group booking
-                    room_type_id: $(this).find("[name='room_type_id'] option:selected").val(),//$(this).find("[name='room_type_id']").val(),
+                    room_type_id: $(this).find("[name='room_type_id'] option:selected").val(),
                     room_count: $(this).find("[name='room_count']").val(),
                     rate: $(this).find("[name='rate']").val() ? $(this).find("[name='rate']").val() : 0,
                     use_rate_plan: useRatePlan,
@@ -5058,9 +5259,11 @@ var bookingModalInvoker = function ($) {
                     adult_count: $(this).find("[name='adult_count'] option:selected").val(),
                     children_count: $(this).find("[name='children_count'] option:selected").val()
                 });
-
             });
 
+            // ---------------------------
+            // Base booking data
+            // ---------------------------
             var updateBookingData = {
                 state: $('#booking-modal select[name="state"]').val(),
                 rate: $("[name='rate']").val() ? $("[name='rate']").val() : 0,
@@ -5074,18 +5277,6 @@ var bookingModalInvoker = function ($) {
                 residual_rate: (that.booking.residual_rate ? that.booking.residual_rate : 0),
                 color: $("[name='color']").val()
             };
-            // var bookingData = {
-            //     booking: updateBookingData,
-            //     rooms: rooms,
-            //     customers: {
-            //         paying_customer: payingCustomer,
-            //         staying_customers: stayingCustomers
-            //     },
-            //     isGroupBooking: isGroupBooking,
-            //     groupName: groupName,
-            //     guests: $('input[name=customers]').val() ? $('input[name=customers]').val() : '',
-            //     customer_changed: customerChanged, // ← this is the important flag
-            // };
 
             var bookingData = {
                 booking: updateBookingData,
@@ -5093,54 +5284,45 @@ var bookingModalInvoker = function ($) {
                 isGroupBooking: isGroupBooking,
                 groupName: groupName,
                 guests: $('input[name=customers]').val() ? $('input[name=customers]').val() : '',
-                customer_changed: customerChanged, // important flag
-                customers: {} // start empty
+                customer_changed: customerChanged,
+                customers: {}
             };
 
-            // only send paying_customer if changed
+            // ---------------------------
+            // Customers block
+            // ---------------------------
             // if (customerChanged) {
             //     if (payingCustomer) {
             //         if (payingCustomer.customer_id) {
-            //             bookingData.customers.paying_customer = {
-            //                 customer_id: payingCustomer.customer_id
-            //             };
+            //             bookingData.customers.paying_customer = { customer_id: payingCustomer.customer_id };
             //         } else if (payingCustomer.customer_name) {
-            //             bookingData.customers.paying_customer = {
-            //                 customer_name: payingCustomer.customer_name
-            //             };
+            //             bookingData.customers.paying_customer = { customer_name: payingCustomer.customer_name };
             //         }
             //     } else {
-            //         // explicitly send null when removed
-            //         bookingData.customers.paying_customer = null;
+            //         bookingData.customers.paying_customer = null; // explicitly removed
             //     }
             // }
 
-
             if (customerChanged) {
-                if (payingCustomer && (payingCustomer.customer_id || payingCustomer.customer_name)) {
-                    bookingData.customers.paying_customer = {};
-                    if (payingCustomer.customer_id) {
-                        bookingData.customers.paying_customer.customer_id = payingCustomer.customer_id;
-                    }
-                    if (payingCustomer.customer_name) {
-                        bookingData.customers.paying_customer.customer_name = payingCustomer.customer_name;
-                    }
+                if (payingCustomer) {
+                    bookingData.customers.paying_customer = {
+                        customer_id: payingCustomer.customer_id || null,
+                        customer_name: payingCustomer.customer_name || null
+                    };
                 } else {
-                    // explicitly mark removed
-                    bookingData.customers.paying_customer = null;
+                    bookingData.customers.paying_customer = null; // explicitly removed
                 }
             }
 
 
-
-
-            // only send staying_customers if changed
             if (stayingCustomers.length > 0) {
                 bookingData.customers.staying_customers = stayingCustomers;
             }
 
+            // ---------------------------
+            // Custom booking fields
+            // ---------------------------
             var booking_fields = [];
-
             $('input[name="custom_booking_field[]"]').each(function (i, v) {
                 booking_fields.push({
                     id: $(this).attr('id'),
@@ -5151,6 +5333,7 @@ var bookingModalInvoker = function ($) {
 
             return bookingData;
         },
+
         convertTimeFormat (time) {
             // console.log('time', time);
             time = time ? String(time) : "12:00 AM";
