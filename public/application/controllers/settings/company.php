@@ -28,6 +28,8 @@ class Company extends MY_Controller
         $this->load->model('Tax_price_bracket_model');
         $this->load->model('Room_location_model');
         $this->load->model('Statement_model');
+        $this->load->model('Minical_export_model');
+        $this->load->model('Post_model');
 
         $this->load->library('email');
         $this->load->library('form_validation');
@@ -601,7 +603,6 @@ class Company extends MY_Controller
                 'allow_change_previous_booking_status' => $this->input->post('allow_change_previous_booking_status'),
                 'auto_add_custom_charges_on_booking' => $this->input->post('auto_add_custom_charges_on_booking')
             );
-
             $this->Company_model->update_company($this->company_id, $company_data);
             $this->_create_employee_log("Feature settings updated");
             echo json_encode(array('status' => true));
@@ -681,6 +682,8 @@ class Company extends MY_Controller
     }
 
     function import_company_data(){
+
+        $this->_create_employee_log("Import started for company (".$this->company_id.")");
 
         if($this->input->post('removd_old_data') == 1){
 
@@ -827,6 +830,15 @@ class Company extends MY_Controller
                     }
                     if (isset($csv_data['payments'])) {
                         $this->import_payments_csv($csv_data['payments']);
+                    }
+                    if (isset($csv_data['options'])) {
+                        $this->import_options_csv($csv_data['options']);
+                    }
+                    if (isset($csv_data['posts'])) {
+                        $this->import_posts_csv($csv_data['posts']);
+                    }
+                    if (isset($csv_data['postmeta'])) {
+                        $this->import_post_meta_csv($csv_data['postmeta']);
                     }
                     if (isset($csv_data['statements'])) {
                         $this->import_statements_csv($csv_data['statements']);
@@ -1191,6 +1203,7 @@ class Company extends MY_Controller
                 );
                 $this->import_insert_batch[] = $data_import_mapping;
                 $this->cache_values['Charge'][$old_charge_ids[$j]] = $data_import_mapping;
+                $this->cache_values['Charge Old New Ids'][$old_charge_ids[$j].'-'.$all_charge_ids[$j]] = $data_import_mapping;
             }
         }
     }
@@ -1245,7 +1258,8 @@ class Company extends MY_Controller
                     "is_selectable" => $rate['Read Only'] == 'true' ? 1 : 0,
                     "charge_type_id" => isset($charge_type_id['new_id']) && $charge_type_id['new_id'] ? $charge_type_id['new_id'] : null,
                     "description" => $rate['Description']? $rate['Description'] : "",
-                    "currency_id" => $rate['Currency'] ? $rate['Currency'] : null
+                    "currency_id" => $rate['Currency'] ? $rate['Currency'] : null,
+                    "policy_code" => isset($rate['Policy code']) && $rate['Policy code'] ? $rate['Policy code'] : null
                 );
 
                 $cache_rate_plan_data[] = array(
@@ -1256,7 +1270,8 @@ class Company extends MY_Controller
                     "is_selectable" => $rate['Read Only'] == 'true' ? 1 : 0,
                     "charge_type_id" => isset($charge_type_id['new_id']) && $charge_type_id['new_id'] ? $charge_type_id['new_id'] : null,
                     "description" => $rate['Description']? $rate['Description'] : "",
-                    "currency_id" => $rate['Currency'] ? $rate['Currency'] : null
+                    "currency_id" => $rate['Currency'] ? $rate['Currency'] : null,
+                    "policy_code" => isset($rate['Policy code']) && $rate['Policy code'] ? $rate['Policy code'] : null
                 );
 
                 $old_rate_plan_ids[] = $rate['Rate Plan Id'];
@@ -1464,9 +1479,9 @@ class Company extends MY_Controller
         foreach($first_rate_plan_ids as $k => $val) {
             
             if($count > 100) {
-            for($a = 0; $a < 100; $a++) {
-                $all_rate_plan_ids[] = $val++;
-            }
+                for($a = 0; $a < 100; $a++) {
+                    $all_rate_plan_ids[] = $val++;
+                }
             } else if($count > 0 && $count < 100) {
                 for($a = 0; $a < $count; $a++) {
                     $all_rate_plan_ids[] = $val++;
@@ -1523,11 +1538,11 @@ class Company extends MY_Controller
 
             $get_customer_type = null;
 
-            if($customer['Customer Type'] == '-1') {
-                $customer_type_id = '-1';
-            } else if($customer['Customer Type'] == '-2') {
-                $customer_type_id = '-2';
-            } else {
+            // if($customer['Customer Type'] == '-1') {
+            //     $customer_type_id = '-1';
+            // } else if($customer['Customer Type'] == '-2') {
+            //     $customer_type_id = '-2';
+            // } else {
 
                 if(
                     isset($cache_customer_type[$customer['Customer Type']]) && 
@@ -1539,15 +1554,15 @@ class Company extends MY_Controller
                     $cache_customer_type[$customer['Customer Type']] = $get_customer_type;
                 }
                 $customer_type_id = 0;
-            if(empty($get_customer_type) && !in_array($customer['Customer Type'], $customer_types) && $customer['Customer Type'] != ''){
-                $customer_type_id = $this->Customer_type_model->create_customer_type($this->company_id, $customer['Customer Type']);
+                if(empty($get_customer_type) && !in_array($customer['Customer Type'], $customer_types) && $customer['Customer Type'] != ''){
+                    $customer_type_id = $this->Customer_type_model->create_customer_type($this->company_id, $customer['Customer Type']);
 
-                $customer_types[] = $customer['Customer Type'];
-            } 
+                    $customer_types[] = $customer['Customer Type'];
+                } 
                 else {
                     $customer_type_id = isset($get_customer_type[0]['id']) ? $get_customer_type[0]['id'] : ' ' ;
                 }
-            }
+            // }
 
             $cache_customer_data[] = Array(
                 "customer_name" => $customer['Customer Name'] == ''? null : $customer['Customer Name'],
@@ -1846,17 +1861,6 @@ class Company extends MY_Controller
         $id = 0;
         foreach ($value as $booking) {
 
-            // if(
-            //     isset($booking['Booking Id']) && 
-            //     $booking['Booking Id']
-            // ) {
-            //     $charge_update = $this->Charge_model->update_charge_booking(
-            //         $booking['Booking Id'],
-            //         $new_booking_ids[$id],
-            //         null
-            //     );
-            // }
-
             $stay_in_customers = $booking['Staying Customers'];
 
             if(isset($stay_in_customers) && $stay_in_customers != '' && $stay_in_customers != null){
@@ -1878,12 +1882,6 @@ class Company extends MY_Controller
 
                         $existing_customer = null;
 
-                        // $existing_customer = $this->Booking_model->get_booking_staying_customer_by_id(
-                        //     $staying_customer_id['new_id'],
-                        //     $this->company_id,
-                        //     $new_booking_ids[$id]
-                        // );
-
                         if(!$existing_customer){
 
                             $staying_customer_data[] = array(
@@ -1891,14 +1889,6 @@ class Company extends MY_Controller
                                 'company_id' => $this->company_id,
                                 'customer_id' => $staying_customer_id['new_id']
                             );
-
-                            // $data = array(
-                            //     'booking_id' => $new_booking_ids[$id],
-                            //     'company_id' => $this->company_id,
-                            //     'customer_id' => $staying_customer_id['new_id']
-                            // );
-
-                            // $this->Booking_model->create_booking_staying_customer($data);
                         }
                     }
                 }
@@ -1920,21 +1910,10 @@ class Company extends MY_Controller
                         $existing_booking_field = $cache_existing_booking_field[$key];
                     } 
 
-                    // else {
-                    //     $existing_booking_field = $this->Booking_field_model->get_the_booking_fields_by_name($key , $this->company_id);
-                    //     $cache_existing_booking_field[$key] = $existing_booking_field;
-                    // }
-
                     if(!$existing_booking_field){
                         $booking_fields = $this->Booking_field_model->create_booking_field($this->company_id, $key);
                         $cache_existing_booking_field[$key] = $booking_fields;
                     } 
-                    // else {
-                    //     echo '<br/>';echo ' out ';
-                    //     $booking_fields = isset($existing_booking_field[0]['id']) && $existing_booking_field[0]['id'] ? $existing_booking_field[0]['id'] : null;
-                    // }
-
-                    
 
                     if($booking_data){
 
@@ -1982,19 +1961,10 @@ class Company extends MY_Controller
                     "booking_id " => $new_booking_ids[$id],
                     "booking_group_id" => $new_group_id
                 );
-
-                // $data = array(
-                //     "booking_id " => $new_booking_ids[$id],
-                //     "booking_group_id" => $new_group_id
-                // );
-
-                // $booking_linke_group = $this->Booking_linked_group_model->insert_booking_x_booking_linked_group($data);
             }
 
             $id++;
         }
-
-        // $this->Booking_linked_group_model->insert_booking_x_booking_linked_group_batch($data);
 
         for ($i = 0, $total = count($staying_customer_data); $i < $total; $i = $i + 100)
         {
@@ -2021,8 +1991,6 @@ class Company extends MY_Controller
         }
     }
 
-
-
     function _create_booking($booking_data, $old_booking_ids, $booking_blocks_data, $old_booking_block_ids) {
 
         $first_booking_ids = $first_booking_block_ids = $all_booking_ids = $all_booking_block_ids = $new_booking_ids = array();
@@ -2046,12 +2014,29 @@ class Company extends MY_Controller
             }
         }
 
+        $valueMap = array(); // For split bookings
+
+        for($j = 0; $j < count($booking_data); $j++){
+            $new_book_ids[] = $all_booking_ids[$j];
+        }
+
+        foreach ($old_booking_ids as $key => $value) {
+            if (!isset($valueMap[$value])) {
+                $valueMap[$value] = $new_book_ids[$key];
+            } else {
+                // If this value already exists in the map, ensure consistency
+                $new_book_ids[$key] = $valueMap[$value];
+            }
+        }
+
+        // echo "new_book_ids = ";prx($new_book_ids);
+
         for($j = 0; $j < count($booking_data); $j++){
 
             if(isset($old_booking_ids[$j]) && $old_booking_ids[$j]) {
 
                 $data_import_mapping = Array(
-                    "new_id" => $all_booking_ids[$j],
+                    "new_id" => $new_book_ids[$j],
                     "old_id" => $old_booking_ids[$j],
                     "company_id" => $this->company_id,
                     "type" => "booking"
@@ -2060,8 +2045,8 @@ class Company extends MY_Controller
                 $this->cache_values['Booking'][$old_booking_ids[$j]] = $data_import_mapping;
             }
 
-            $new_booking_ids[] = $all_booking_ids[$j];
-            $booking_blocks_data[$j]['booking_id'] = $all_booking_ids[$j];
+            $new_booking_ids[] = $new_book_ids[$j];
+            $booking_blocks_data[$j]['booking_id'] = $new_book_ids[$j];
         }
 
         for ($i = 0, $total = count($booking_blocks_data); $i < $total; $i = $i + 100)
@@ -2261,6 +2246,8 @@ class Company extends MY_Controller
                         "selling_date" => $payment['Selling Date'] == '' ? null : $payment['Selling Date'],
                         "customer_id" => isset($customer_id['new_id']) && $customer_id['new_id'] ? $customer_id['new_id'] : null,
                         "payment_status" => $payment['Payment Status'] == '' ? null : $payment['Payment Status'],
+                        "payment_gateway_used" => $payment['Payment Gateway Used'] == '' ? null : $payment['Payment Gateway Used'],
+                        "gateway_charge_id" => $payment['Gateway Charge Id'] == '' ? null : $payment['Gateway Charge Id'],
                         "is_captured" => $payment['Payment Capture'] == 'true' ? 1 : 0,
                         "read_only" => $payment['Payment Read Only'] == 'true' ? 1 : 0
                     );
@@ -2445,28 +2432,50 @@ class Company extends MY_Controller
             'night_audit_force_check_out'=> isset($value['Night Audits']['Night audit force check out']) ? $value['Night Audits']['Night audit force check out'] : ""
 
         );
+
+        // company details
+        $company_data['bussiness_name'] = isset($value['Company Details']['Bussiness name']) ? $value['Company Details']['Bussiness name'] : "";
+
+        $company_data['bussiness_number'] = isset($value['Company Details']['Bussiness number']) ? $value['Company Details']['Bussiness number'] : "";
+
+        $company_data['bussiness_fiscal_number'] = isset($value['Company Details']['Bussiness fiscal number']) ? $value['Company Details']['Bussiness fiscal number'] : "";
+
+
+        // feature settings
+        $company_data['restrict_cvc_not_mandatory'] = isset($value['Feature settings']['Restrict Cvc Not Mandatory']) ? $value['Feature settings']['Restrict Cvc Not Mandatory'] : "";
+
+        $company_data['calendar_days'] = isset($value['Feature settings']['Calendar Days']) ? $value['Feature settings']['Calendar Days'] : 24;
+
+        $company_data['restrict_edit_after_checkout'] = isset($value['Feature settings']['Restrict Edit After Checkout']) ? $value['Feature settings']['Restrict Edit After Checkout'] : "";
+
+        $company_data['allow_change_previous_booking_status'] = isset($value['Feature settings']['Allow Change Previous Booking Status']) ? $value['Feature settings']['Allow Change Previous Booking Status'] : "";
+
         $this->Company_model->update_company($this->company_id, $company_data);
 
-        // $teams = $value['Teams'];
+        $teams = $value['Teams'];
 
-        // foreach ($teams as $key => $team) {
-        //     $data = array(
-        //         'email'              => $team['Email'],
-        //         'current_company_id' => $this->company_id,
-        //         'first_name'         => $team['First Name'],
-        //         'last_name'          => $team['Last Name'],
-        //         'password'           => $team['Password']
-        //     );
+        foreach ($teams as $key => $team) {
+            $data = array(
+                'email'              => $team['Email'],
+                'current_company_id' => $this->company_id,
+                'first_name'         => $team['First Name'],
+                'last_name'          => $team['Last Name'],
+                'password'           => $team['Password']
+            );
 
-        //     $get_user = $this->User_model->get_user_by_email($team['Email']);
+            $get_user = $this->User_model->get_user_by_email($team['Email']);
 
-        //     if(!$get_user){
+            if(!$get_user){
 
-        //         $user =  $this->users->create_user($data, true);
+                $user =  $this->users->create_user($data, true);
 
-        //         $this->User_model->add_teams($this->company_id, $user['user_id'],$team['permission']);
-        //     }
-        // }
+                $this->User_model->add_teams($this->company_id, $user['user_id'],$team['permission']);
+            }
+        }
+
+        // update employee id in posts
+
+        // update employee id in posts
 
         $booking_fields = $value['Booking Fields'];
 
@@ -2663,6 +2672,1746 @@ class Company extends MY_Controller
             {
                 show_error($this->db->_error_message());
             }
+        }
+
+
+        // update category id in postmeta table
+        // prx($this->cache_values['Post'], 1);
+        // prx($this->cache_values['Post Meta Category']);
+
+        $post_meta_cat = isset($this->cache_values['Post Meta Category']) && $this->cache_values['Post Meta Category'] ? $this->cache_values['Post Meta Category'] : null;
+        $post_data = isset($this->cache_values['Post']) && $this->cache_values['Post'] ? $this->cache_values['Post'] : null;
+
+        $old_cat_ids = $new_cat_ids = array();
+
+        if(!empty($post_meta_cat)){
+            foreach($post_meta_cat as $cat){
+                $old_cat_ids[] = $cat;
+                $new_cat_ids[] = $post_data[$cat]['new_id'];
+            }
+
+            $this->Post_model->update_post_meta_category_ids($old_cat_ids, $new_cat_ids);
+        }
+    }
+
+    // minical expoert functions
+
+    function export()
+    {
+        $data['company_ID'] = $this->company_id;
+
+        $data['selected_sidebar_link'] = 'Export';
+        $data['main_content']          = 'hotel_settings/company/export';
+
+        //No Post Redirect Get here, because the validation error message must be shown
+        $this->load->view('includes/bootstrapped_template', $data);
+    }
+
+    function company_setting_csv(){
+
+        $settings = $this->Minical_export_model->get_company($this->company_id);
+        $general_settings = "";
+
+        $feature_settings = array(
+            'Total Balance Include Forecast' => $settings['is_total_balance_include_forecast'],
+            'Auto No Show' => $settings['auto_no_show'],
+            'Book Over Unconfirmed Reservations' => $settings['book_over_unconfirmed_reservations'],
+            'Send Invoice Email Automatically' => $settings['send_invoice_email_automatically'],
+            'Hide Decimal Places' => $settings['hide_decimal_places'],
+            'Automatic Email Confirmation' => $settings['automatic_email_confirmation'],
+            'Automatic Email Cancellation' => $settings['automatic_email_cancellation'],
+            'Send Booking Notes' => $settings['send_booking_notes'],
+            'Make Guest Field Mandatory' => $settings['make_guest_field_mandatory'],
+            'Include Cancelled Noshow Bookings' => $settings['include_cancelled_noshow_bookings'],
+            'Hide Forecast Charges' => $settings['hide_forecast_charges'],
+            'Send Copy To Additional Emails' => $settings['send_copy_to_additional_emails'],
+            'Additional Company Emails' => $settings['additional_company_emails'],
+            'Default Charge Name' => $settings['default_charge_name'],
+            'Default Room Singular' => $settings['default_room_singular'],
+            'Default Room Plural' => $settings['default_room_plural'],
+            'Default Room Type' => $settings['default_room_type'],
+            'Date Format' => $settings['date_format'],
+            'Default Checkin Time' => $settings['default_checkin_time'],
+            'Default Checkout Time' => $settings['default_checkout_time'],
+            'Enable Hourly Booking' => $settings['enable_hourly_booking'],
+            'Enable Api Access' => $settings['enable_api_access'],
+            'Booking Cancelled With Balance' => $settings['booking_cancelled_with_balance'],
+            'Enable New Calendar' => $settings['enable_new_calendar'],
+            'Hide Room Name' => $settings['hide_room_name'],
+            'Restrict Booking Dates Modification' => $settings['restrict_booking_dates_modification'],
+            'Restrict Checkout With Balance' => $settings['restrict_checkout_with_balance'],
+            'Show Guest Group Invoice' => $settings['show_guest_group_invoice'],
+            'Ui Theme' => $settings['ui_theme'],
+            'Display Tooltip' => $settings['is_display_tooltip'],
+            'Ask For Review In Invoice Email' => $settings['ask_for_review_in_invoice_email'],
+            'Redirect To Trip Advisor' => $settings['redirect_to_trip_advisor'],
+            'Email Confirmation For Ota Reservations' => $settings['email_confirmation_for_ota_reservations'],
+            'Email Cancellation For Ota Reservations' => $settings['email_cancellation_for_ota_reservations'],
+            'Allow Non Continuous Bookings' => $settings['allow_non_continuous_bookings'],
+            'Maximum No Of Blocks' => $settings['maximum_no_of_blocks'],
+            'Force Room Selection' => $settings['force_room_selection'],
+            'Automatic Feedback Email' => $settings['automatic_feedback_email'],
+            'Avoid Dmarc Blocking' => $settings['avoid_dmarc_blocking'],
+            'Allow Free Bookings' => $settings['allow_free_bookings'],
+            'Customer Modify Booking' => $settings['customer_modify_booking'],
+            'Restrict Cvc Not Mandatory' => $settings['restrict_cvc_not_mandatory'],
+            'Calendar Days' => $settings['calendar_days'],
+            'Restrict Edit After Checkout' => $settings['restrict_edit_after_checkout'],
+            'Allow Change Previous Booking Status' => $settings['allow_change_previous_booking_status']
+        );
+
+        $housekeeping = array(
+            'Housekeeping Auto Clean is Enabled' => $settings['housekeeping_auto_clean_is_enabled'],
+            'Housekeeping Auto Clean Time' => $settings['housekeeping_auto_clean_time'],
+            'Housekeeping Day Interval For Full Cleaning' => $settings['housekeeping_day_interval_for_full_cleaning'],
+            'Housekeeping Auto Dirty is Enabled' => $settings['housekeeping_auto_dirty_is_enabled'],
+            'Housekeeping Auto Dirty Time' => $settings['housekeeping_auto_dirty_time']
+        );
+
+        $night_audit = array(
+            "Selling date" => $settings['selling_date'],
+            "Night audit auto run is enabled" => $settings['night_audit_auto_run_is_enabled'],
+            "Night audit auto run time" => $settings['night_audit_auto_run_time'],
+            "Night audit ignore check out date" => $settings['night_audit_ignore_check_out_date'],
+            "Night audit charge in house only" => $settings['night_audit_charge_in_house_only'],
+            // "default_room_charge_type_id" => $settings['default_room_charge_type_id'],
+            "Night audit force check out" => $settings['night_audit_force_check_out'],
+            "room_charge_type_id" => $settings['default_charge_name']
+        );
+
+        $booking_engine = $this->Minical_export_model->get_common_booking_engine_fields($this->company_id);
+
+        $online_booking = array(
+            'Allow same day check in' => $settings['allow_same_day_check_in'],
+            'Require paypal payment' => $settings['require_paypal_payment'],
+            'Paypal account' => $settings['paypal_account'],
+            'Percentage of required paypal payment' => $settings['percentage_of_required_paypal_payment'],
+            'Booking engine booking status' => $settings['booking_engine_booking_status'],
+            'Email confirmation for booking engine' => $settings['email_confirmation_for_booking_engine'],
+            'Booking engine tracking code' => $settings['booking_engine_tracking_code'],
+        );
+
+        $email_templates = array(
+            "Invoice Email Header" => $settings['invoice_email_header'],
+            "Booking Confirmation Email Header" => $settings['booking_confirmation_email_header']
+        );
+
+        $invoice_header = array(
+            'Invoice Header' => $settings['invoice_header'],
+            'Statement Number' => $settings['statement_number']
+        );
+
+        $policies = array(
+            "Reservation Policies" => $settings['reservation_policies'],
+            "Check In Policies" => $settings['check_in_policies']
+        );
+
+        $registration_card = array(
+            "Show logo on registration card" => $settings['show_logo_on_registration_card'],
+            "Show rate on registration card" => $settings['show_rate_on_registration_card']
+        );
+
+        $company_detail = array(
+            "Default Currency"=>$settings['default_currency_id'],
+            "Default language"=>$settings['default_language'],
+            "Address"=>$settings['address'],
+            "City"=>$settings['city'],
+            "Region"=>$settings['region'],
+            "Country"=>$settings['country'],
+            "Postal code"=>$settings['postal_code'],
+            "Phone"=>$settings['phone'],
+            "Fax"=>$settings['fax'],
+            "Email"=>$settings['email'],
+            "Time zone" => $settings['time_zone'],
+            "Rooms" => $settings['number_of_rooms'],
+            "Website" => $settings['website'],
+            "Bussiness name" => isset($settings['bussiness_name']) ? $settings['bussiness_name'] : '',
+            "Bussiness number" =>isset($settings['bussiness_number']) ? $settings['bussiness_number'] : '',
+            "Bussiness fiscal number" =>isset($settings['bussiness_fiscal_number']) ? $settings['bussiness_fiscal_number'] : ''
+        );
+
+        $teams = $this->Minical_export_model->get_user_list($this->company_id,true);
+        $permissions = $this->Minical_export_model->get_all_user_permissions($this->company_id, false);
+        
+        $new_team = array();
+        foreach ($teams as $key => $team) {
+            $permission_array = array();
+            if(isset($permissions) && $permissions !=''){
+                foreach ($permissions as $key1 => $permission) {
+                    if(($team['user_id'] == $permission['user_id'])){
+                        if($team['permission'] == 'is_employee'){
+                            $permission_array[] = $permission['permission'];
+                            // $teams[$key]['permission'] = $permission_array;
+                            $new_team[$key]['permission'] = $permission_array;
+                        } else {
+                            $new_team[$key]['permission'] = $team['permission'];
+                        }
+                        $new_team[$key]['First Name'] = $team['first_name'];
+                        $new_team[$key]['User Id'] = $team['user_id'];
+                        $new_team[$key]['Last Name'] = $team['last_name'];
+                        $new_team[$key]['Email'] = $team['email'];
+                        $new_team[$key]['Password'] = $team['password'];
+
+                    }
+                }
+            }   
+        }
+
+        $booking_fields = $this->Minical_export_model->get_booking_fields($this->company_id);
+        $booking_field = "";
+        if($booking_fields){
+
+            foreach ($booking_fields as $key => $value) {
+                $booking_data = array(
+                    'show_on_booking_form' => $value['show_on_booking_form'] ?? null,
+                    'show_on_registration_card' => $value['show_on_registration_card'] ?? null,
+                    'show_on_in_house_report' => $value['show_on_in_house_report'] ?? null,
+                    'show_on_invoice' => $value['show_on_invoice'] ?? null,
+                    'is_required' => $value['is_required'] ?? null
+                );
+
+                $booking_field[$value['name']] = $booking_data ?? null;
+            }
+        }
+
+
+
+        $customer_fields = $this->Minical_export_model->get_customer_fields($this->company_id);
+        $customer_field = "";
+        if($customer_fields){
+            foreach ($customer_fields as $key => $value) {
+                $customer_data = array(
+                    'show_on_customer_form' => $value['show_on_customer_form'] ?? null,
+                    'show_on_registration_card' => $value['show_on_registration_card'] ?? null,
+                    'show_on_in_house_report' => $value['show_on_in_house_report'] ?? null,
+                    'show_on_invoice' => $value['show_on_invoice'] ?? null,
+                    'is_required' => $value['is_required'] ?? null
+                );
+
+                $customer_field[$value['name']] = $customer_data ?? null;
+            }
+        }
+
+        $payment_types = $this->Minical_export_model->get_payment_types($this->company_id);
+
+        $charge_types = $this->Minical_export_model->get_charge_types($this->company_id);
+
+        foreach ($charge_types as $key => $value) {
+
+            $taxes = $this->Minical_export_model->get_taxes($value['id']);
+            $taxes_value = array();
+            $tax_string = "";
+            if($taxes){
+
+                foreach ($taxes as $key1 => $value) {
+                    if(isset($value['tax_type'])){
+                        $taxes_value[]= $value['tax_type'];
+                    }
+                }
+                $tax_string = implode(",", $taxes_value);
+            }
+            $charge_types[$key]['taxes'] = $tax_string ;
+        }
+
+        $room_types = $this->Minical_export_model->get_room_types($this->company_id);
+
+        $customer_types = $this->Minical_export_model->get_customer_types($this->company_id);
+
+        $booking_sources = $this->Minical_export_model->get_booking_source($this->company_id,false, true);
+
+        $rate_plans = $this->Minical_export_model->get_rate_plans($this->company_id);
+
+        $room_types = $this->Minical_export_model->get_room_types($this->company_id);
+
+       // prx($feature_settings,1);
+       // prx($housekeeping);
+        if (!is_array($general_settings)) {
+            $general_settings = [];
+        }
+        $general_settings["Feature settings"] = $feature_settings;
+        $general_settings['Housekeepings'] = $housekeeping;
+        $general_settings['Email Templates'] = $email_templates;
+        $general_settings['Policies'] = $policies;
+        $general_settings['Registration cards'] = $registration_card;
+        $general_settings['Company Details'] = $company_detail;
+        $general_settings['Night Audits'] = $night_audit;
+        $general_settings['Online Bookings'] = $online_booking;
+        $general_settings['Teams'] = $new_team;
+        $general_settings['Invoice headers'] = $invoice_header;
+        $general_settings['Booking Fields'] = $booking_field;
+        $general_settings['Customer Fields'] = $customer_field;
+        $general_settings['Payment Types'] = $payment_types;
+        $general_settings['Charge Types'] = $charge_types;
+        $general_settings['Room Types'] = $room_types;
+        $general_settings['Customer Types'] = $customer_types;
+        $general_settings['Booking Source'] = $booking_sources;
+        $general_settings['Rate Plan'] = $rate_plans;
+        $general_settings['Room Types'] = $room_types;
+
+        return $general_settings;
+
+    }
+
+    function room_csv_data(){
+
+        $rooms = $this->Minical_export_model->get_export_room_types($this->company_id);
+        $csv_keys = array('Room Type Name','Room Type Id','Room Id','Room Name','Acronym','Max Occupancy','Min Occupancy','Max Adults','Max Children','Room Type Can be Sold online','Room Can be Sold online','Sort Order','Floor','Location','Room Charge','Description', 'Status');
+        $rooms_csv= array();
+        $rooms_csv[] = $csv_keys;
+
+
+        foreach($rooms as $key => $data)
+        {
+            $rooms_row = array();
+            $rooms_row[] = $data['name'];
+            $rooms_row[] = $data['room_type_id'];
+            $rooms_row[] = $data['room_id'];
+            $rooms_row[] = $data['room_name'];
+            $rooms_row[] = $data['acronym'];
+            $rooms_row[] = $data['max_occupancy'];
+            $rooms_row[] = $data['min_occupancy'];
+            $rooms_row[] = $data['max_adults'];
+            $rooms_row[] = $data['max_children'];
+            $rooms_row[] = $data['room_type_sold_online'] == 1 ?'true':'false';
+            $rooms_row[] = $data['room_sold_online'] == 1 ?'true':'false';
+            $rooms_row[] = $data['sort_order'];
+            $rooms_row[] = $data['floor_name'];
+            $rooms_row[] = $data['location_name'];
+            $rooms_row[] = $data['default_room_charge'];
+            $rooms_row[] = "";
+            $rooms_row[] = $data['status'];
+            $rooms_csv[] = $rooms_row;
+        }
+        return $rooms_csv;
+
+    }
+
+    function rate_csv_data_custom()
+    {
+
+        $rates = $this->Minical_export_model->get_all_rate_plans_custom($this->company_id);
+
+        $csv_rate_keys = array('Name', 'Rate Plan Id', 'Charge Type', 'Room type Id', 'Room Type Name', 'Rate Id', 'Base Rate', 'From Date', 'To Date', 'Description', 'Currency', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday', 'Adult Rate 1', 'Adult Rate 2', 'Adult Rate 3', 'Adult Rate 4', 'Additional Adult Rate', 'Aditional Child Rate', 'Min Length of Stay', 'Max Length of Stay', 'Close to Departure', 'Close to Arrival', 'Can be sold online', 'Read Only', 'Rate Extras');
+
+        array_unshift($rates, $csv_rate_keys);
+
+        return $rates;
+    }
+
+    function rate_csv_data(){
+
+        $rates = $this->Minical_export_model->get_all_rate_plans($this->company_id);
+
+        $csv_rate_keys = array('Name','Rate Plan Id','Charge Type','Room type Id','Room Type Name','Rate Id','Base Rate','From Date','To Date','Description','Currency','Policy code','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday','Adult Rate 1','Adult Rate 2' ,'Adult Rate 3' ,'Adult Rate 4','Additional Adult Rate' ,'Aditional Child Rate','Min Length of Stay','Max Length of Stay','Close to Departure','Close to Arrival','Can be sold online','Read Only','Rate Extras');
+
+        array_unshift($rates , $csv_rate_keys);
+
+        return $rates;
+    }
+
+    function customer_csv_data(){
+
+        $customer = $this->Minical_export_model->get_customer_card_details($this->company_id);
+
+        // $customer_type_ids = array();
+
+        // foreach ($customer as $key => $value) {
+        //     if(isset($value['customer_type_id']) && $value['customer_type_id']) {
+        //         $customer_type_ids[] = $value['customer_type_id'];
+        //     }
+        // }
+
+        // $customer_types = $this->Minical_export_model->get_customer_type_details($this->company_id, $customer_type_ids);
+
+
+        // foreach ($customer as $key => $value) {
+        //     foreach ($customer_types as $key1 => $value1) {
+        //         if($value1['customer_id'] == $value['customers_id']){
+        //             $customer[$key]['customer_type_name'] = $value1['customer_type_name'];
+        //         } else {
+        //             $customer[$key]['customer_type_id'] = null;
+        //             $customer[$key]['customer_type_name'] = null;
+        //         }
+        //     }
+        // }
+
+        $first_customer = $customer[0];
+
+        if($first_customer['custom_fields_name']){
+            $custom_fields_name = explode(',',$first_customer['custom_fields_name']);
+        }
+
+
+        $csv_customer_keys = array('Customer Id','Customer Name','Customer Type','Address','City','Region' ,'Country','Postal Code','Phone','Fax' ,'Email','Customer Notes','Address2','Phone2');
+
+        if(isset($custom_fields_name) && $custom_fields_name){
+            foreach($custom_fields_name as $custom_fields) {
+                $csv_customer_keys[] = $custom_fields;
+            }
+        }
+
+
+
+        $customer_keys[] = $csv_customer_keys;
+
+
+        foreach($customer as $data)
+        {
+
+            if($data['custom_fields_value']){
+                $custom_fields_values = explode(',',$data['custom_fields_value']);
+            }else{
+                $custom_fields_values = null;
+            }
+
+
+            $customer_row = array();
+            $customer_row[] = $data['customers_id'];
+            $customer_row[] = $data['name_customer'];
+            $customer_row[] = $data['customer_type_name'] ?? null;
+            $customer_row[] = $data['address'];
+            $customer_row[] = $data['city'];
+            $customer_row[] = $data['region'];
+            $customer_row[] = $data['country'];
+            $customer_row[] = $data['postal_code'];
+            $customer_row[] = $data['phone'];
+            $customer_row[] = $data['fax'];
+            $customer_row[] = $data['email'];
+            $customer_row[] = $data['customer_notes'];
+            $customer_row[] = $data['address2'];
+            $customer_row[] = $data['phone2'];
+            // $customer_keys[] = $customer_row;
+
+            if($custom_fields_values){
+                foreach($custom_fields_values as $custom_fields_value) {
+                    if(!empty($custom_fields_value)){
+                        $customer_row[] = $custom_fields_value;
+                    }else{
+                        $customer_row[] = "";
+                    }
+
+                }
+            }else{
+                if(isset($custom_fields_name) && $custom_fields_name){
+                    foreach ($custom_fields_name as $key => $value) {
+                        $customer_row[] = "";
+                    }
+                }
+            }
+
+            $customer_keys[] = $customer_row;
+        }
+
+        return $customer_keys;
+    }
+
+    function booking_csv_data(){
+
+        $booking = $this->Minical_export_model->get_booking_details($this->company_id);
+
+        $first_booking = $booking[0];
+
+        if($first_booking['custom_fields_name']){
+            $custom_fields_name = explode(',',$first_booking['custom_fields_name']);
+        }
+
+        $csv_booking_keys = array('Booking Id','Rate','Adult Count','Children Count','State' ,'Booking Customer Id','Booked By' ,'Balance','Balance Without Forecast','Use Rate Plan','Rate Plan Id','Color','Charge Type','Check In Date','Check Out Date','Room','Room Type','Group Id','Group Name','Daily Charges','Pay Period','Source','Custom Booking Source','Booking Note','Booking Room History');
+
+        if(isset($custom_fields_name) && $custom_fields_name){
+            foreach($custom_fields_name as $custom_fields) {
+                $csv_booking_keys[] = $custom_fields;
+            }
+        }
+
+        $booking_data[] = $csv_booking_keys;
+
+        $bookingids = array();
+
+        foreach($booking as $key => $data)
+        {
+            $bookingids[] = $data['bookingid'];
+
+            // $staying_customer = array();
+            // $staying_booking_customer = "";
+            // $staying_booking = $this->Booking_model->get_booking_staying_customers($data['bookingid'],$this->company_id);
+            // if(!empty($staying_booking)){
+            //     foreach ($staying_booking as $customer) {
+            //         $staying_customer[] = $customer['customer_id'];
+            //     }
+            //     $staying_booking_customer = implode(",", $staying_customer);
+            // }
+
+
+            switch ($data['state']) {
+                case "0" : $state = 'Reservation'; break;
+                case "1" : $state = 'Checked-in'; break;
+                case "2" : $state = 'Checked-out'; break;
+                case "3" : $state = 'Out-of-Order'; break;
+                case "4" : $state = 'Cancelled'; break;
+                case "5" : $state = 'No-show'; break;
+                case "6" : $state = 'Delete'; break;
+                case "7" : $state = 'Unconfirmed'; break;
+                default: $state = 'All'; break;
+            }
+
+            switch ($data['pay_period']) {
+                case "0" : $pay_period = 'Daily'; break;
+                case "1" : $pay_period = 'Weekly'; break;
+                case "2" : $pay_period = 'Monthly'; break;
+                case "3" : $pay_period = 'One time'; break;
+            }
+
+            switch ($data['source']) {
+                case "0" : $source = 'Walk-in / Telephone'; break;
+                case "1" : $source = 'Online Widget'; break;
+                case "2" : $source = 'Booking Dot Com'; break;
+                case "3" : $source = 'Expedia'; break;
+                case "4" : $source = 'Agoda'; break;
+                case "5" : $source = 'Trip Connect'; break;
+                case "6" : $source = 'Air BNB'; break;
+                case "7" : $source = 'Hotel World'; break;
+                case "8" : $source = 'Myallocator'; break;
+                case "9" : $source = 'Company'; break;
+                case "10" : $source = 'Guest Member'; break;
+                case "11" : $source = 'Owner'; break;
+                case "12" : $source = 'Returning Guest'; break;
+                case "13" : $source = 'Apartment'; break;
+                case "14" : $source = 'sitminder'; break;
+                case "15" : $source = 'Seasonal'; break;
+                case "20" : $source = 'Other taravel agency'; break;
+            }
+
+            if($data['custom_fields_value']){
+                $custom_fields_values = explode(',',$data['custom_fields_value']);
+            }else{
+                $custom_fields_values = null;
+            }
+
+            $booking_row = array();
+            $booking_row[] = $data['booking_id'];
+            $booking_row[] = $data['rate'];
+            $booking_row[] = $data['adult_count'];
+            $booking_row[] = $data['children_count'];
+            $booking_row[] = $state;
+            $booking_row[] = $data['booking_customer_id'];
+            $booking_row[] = $data['booked_by'];
+            $booking_row[] = $data['balance'];
+            $booking_row[] = $data['balance_without_forecast'];
+            $booking_row[] = $data['use_rate_plan'] == 1 ? 'true' :'false';
+            $booking_row[] = $data['rate_plan_id'];
+            $booking_row[] = $data['color'];
+            $booking_row[] = $data['charge_type_id'];
+            $booking_row[] = $data['check_in_date'];
+            $booking_row[] = $data['check_out_date'];
+            $booking_row[] = $data['room_id'];
+            $booking_row[] = $data['room_type_id'];
+            $booking_row[] = $data['booking_group_id'];
+            $booking_row[] = $data['name'];
+            $booking_row[] = $data['add_daily_charge'] == 1 ? 'true':'false';
+            $booking_row[] = $pay_period;
+            $booking_row[] = $source;
+            $booking_row[] = $data['booking_source_name'];
+            $booking_row[] = $data['booking_notes'];
+            $booking_row[] = $data['booking_room_history_id'];
+            // $booking_row[] = isset($staying_booking_customer) && $staying_booking_customer ? $staying_booking_customer : "";
+
+
+            if($custom_fields_values){
+                foreach($custom_fields_values as $custom_fields_value) {
+                    if(!empty($custom_fields_value)){
+                        $booking_row[] = $custom_fields_value;
+                    }else{
+                        $booking_row[] = "";
+                    }
+
+                }
+            }else{
+                if(isset($custom_fields_name) && $custom_fields_name){
+                    foreach ($custom_fields_name as $key => $value) {
+                        $booking_row[] = "";
+                    }
+                }
+            }
+
+            $booking_data[] = $booking_row;
+        }
+
+        $booking_data[0][] = 'Staying Customers';
+
+        $staying_customer = array();
+        $staying_booking_customer = "";
+        $staying_booking = $this->Minical_export_model->get_booking_staying_customers_list($bookingids,$this->company_id);
+
+        if(!empty($staying_booking)){
+            foreach ($staying_booking as $customer) {
+                $staying_customer[$customer['booking_id']][] = $customer['customer_id'];
+            } 
+        }
+        foreach($booking as $key => $data){
+            $booking_row = array();
+            $booking_row = isset($staying_customer[$data['bookingid']]) && $staying_customer[$data['bookingid']] ? implode(",", $staying_customer[$data['bookingid']]) : "";
+            $booking_staying_data[] = $booking_row;
+        }
+
+        foreach ($booking_staying_data as $key => $value) {
+            if($key != 0) {
+                $k = $key + 1;
+                $booking_data[$k][] = $value;
+            }
+        }
+
+        $booking_keys = $booking_data;
+
+        return $booking_keys;
+    }
+
+    function taxes_csv_data(){
+
+        $taxes = $this->Minical_export_model->get_all_tax_types($this->company_id);
+        $csv_tax_keys = array('Tax Type','Tax Rate','Tax Type Id','Is Percentage' ,'Bracket Active','Is Tax Inclusive','Price Bracket');
+        $tax_keys[] = $csv_tax_keys;
+
+        $results = array();
+
+        foreach($taxes as $row => $field) {
+
+            //check if "id" is already set and store the index value it exist within
+            $existing_index = NULL;
+            if($field['is_brackets_active'] == true){
+                foreach($results as $result_row => $result_field) {
+
+
+                    if ($result_field['tax_type_id'] == $field['tax_type_id']) {
+                        $existing_index = $result_row;
+                        break;
+                    }
+                }
+
+                if (isset($existing_index)) {
+                    //the "id" already exist, so add to the existing id
+                    $dataArrayIndex = count($results[$existing_index]['price_bracket']);
+                    $results[$existing_index]['price_bracket'][$dataArrayIndex]['start'] = $field['start_range'];
+                    $results[$existing_index]['price_bracket'][$dataArrayIndex]['end'] = $field['end_range'];
+                    $results[$existing_index]['price_bracket'][$dataArrayIndex]['rate'] = $field['price_bracket_rate'];
+                    $results[$existing_index]['price_bracket'][$dataArrayIndex]['is_percentage'] = $field['is_price_bracket_percentage'];
+                }
+                else {
+                    //the "id" does not exist, create it
+                    $key = count($results);
+                    $results[$key]['id'] = $field['id'];
+                    $results[$key]['tax_type'] = $field['tax_type'];
+                    $results[$key]['tax_rate'] = $field['taxrate'] ;
+                    $results[$key]['is_percentage'] = $field['tax_percentage'] == 1 ? 'true' : 'false';;
+                    $results[$key]['is_brackets_active'] = $field['is_brackets_active'];
+                    $results[$key]['is_tax_inclusive'] = $field['is_tax_inclusive'];
+                    $results[$key]['tax_type_id'] = $field['taxtype_id'];
+                    $results[$key]['price_bracket'][0]['start'] = $field['start_range'];
+                    $results[$key]['price_bracket'][0]['end'] = $field['end_range'];
+                    $results[$key]['price_bracket'][0]['rate'] = $field['price_bracket_rate'];
+                    $results[$key]['price_bracket'][0]['is_percentage'] = $field['is_price_bracket_percentage'];
+                }
+            }
+            else {
+
+                $key = count($results);
+                $results[$key]['id'] = $field['id'];
+                $results[$key]['tax_type'] = $field['tax_type'];
+                $results[$key]['tax_rate'] = $field['taxrate'];
+                $results[$key]['is_percentage'] = $field['tax_percentage'] == 1 ? 'true' : 'false';;
+                $results[$key]['is_brackets_active'] = $field['is_brackets_active'];
+                $results[$key]['is_tax_inclusive'] = $field['is_tax_inclusive'];
+                $results[$key]['tax_type_id'] = $field['taxtype_id'];
+
+            }
+
+        }
+
+        foreach ($results as $result) {
+            $start = array();
+            $end = array();
+            $price_brackets = array();
+
+            if(isset($result['price_bracket']) && $result['price_bracket']){
+                foreach ($result['price_bracket'] as $key1 => $value) {
+                    $price_brackets[] = array(
+                        'start' => $value['start'],
+                        'end' => $value['end'],
+                        'rate' => $value['rate'],
+                        'is_percentage' => $value['is_percentage']
+                    );
+                }
+            }
+
+
+            $taxes_row = array();
+            $taxes_row[] = $result['tax_type'];
+            $taxes_row[] = $result['tax_rate'];
+            $taxes_row[] = $result['tax_type_id'];
+            $taxes_row[] = $result['is_percentage'];
+            $taxes_row[] = $result['is_brackets_active'] == 1 ? 'true' : 'false';
+            $taxes_row[] = $result['is_tax_inclusive'] == 1 ? 'true' : 'false';
+            $taxes_row[] = json_encode($price_brackets);
+            $tax_keys[] = $taxes_row;
+
+        }
+
+
+        return $tax_keys;
+
+    }
+
+    function charge_csv_data(){
+
+        $charge_type_id_data = array();
+        $charges = $this->Minical_export_model->get_all_the_charge_types($this->company_id);
+        foreach ($charges as $key => $value) {
+            if(!in_array($value['id'], $charge_type_id_data)) {
+                $taxes_data = $this->Minical_export_model->get_taxes($value['id']);
+                $charge_type_id_data[] = $value['id'];
+            }
+            $charges[$key]['taxes'] = $taxes_data;
+        }
+
+        $csv_charge_keys = array('Charge Type','Charge Type Id','Room Charge Type','Tax Exempt','Default Room Charge','Charge Id' ,'Tax Type','Description','Date Time','Booking Id','Amount','Selling Date','Customer Id','Pay Period','Night Audit Charge');
+        $charge_keys[] = $csv_charge_keys;
+
+        foreach($charges as $key => $data)
+        {
+            switch ($data['pay_period']) {
+                case "0" : $pay_period = 'Daily'; break;
+                case "1" : $pay_period = 'Weekly'; break;
+                case "2" : $pay_period = 'Monthly'; break;
+                case "3" : $pay_period = 'One time'; break;
+            }
+
+            $taxes_value = array();
+            $tax_string = "";
+            if($data['taxes']){
+
+                foreach ($data['taxes'] as $key1 => $value) {
+                    if(isset($value['tax_type'])){
+                        $taxes_value[]= $value['tax_type'];
+                    }
+                }
+                $tax_string = implode(",", $taxes_value);
+            }
+
+            $charge_row = array();
+            $charge_row[] = $data['name'];
+            $charge_row[] = $data['id'];
+            $charge_row[] =  $data['is_room_charge_type'] == 1 ? "true":"false";
+            $charge_row[] = $data['is_tax_exempt'] == 1 ? "true":"false";
+            $charge_row[] = $data['is_default_room_charge_type'] == 1 ? "true":"false";
+            $charge_row[] = $data['charge_id'];
+            $charge_row[] = $tax_string;
+            $charge_row[] = $data['description'];
+            $charge_row[] = $data['date_time'];
+            $charge_row[] = $data['booking_id'];
+            $charge_row[] = $data['amount'];
+            $charge_row[] = $data['selling_date'];
+            $charge_row[] = $data['customer_id'];
+            $charge_row[] = $pay_period;
+            $charge_row[] = $data['is_night_audit_charge'] == 1 ? "true":"false";
+            $charge_keys[] = $charge_row;
+        }
+        return $charge_keys;
+    }
+
+    function extras_csv_data(){
+
+        $extras = $this->Minical_export_model->get_all_extras($this->company_id);
+
+        $csv_extra_keys = array('Booking Id','Start Date','End Date','Quantity','Default Rate','Booking Extra Id','Extra Id','Extra Type','Extra Name','Charge Type','Charging Scheme','Show on POS','Extra Rate Id','Rate','Curreny');
+        $extra_keys[] = $csv_extra_keys;
+
+        foreach($extras as $key => $data)
+        {
+            $extra_row = array();
+            $extra_row[] = $data['booking_id'];
+            $extra_row[] = $data['start_date'];
+            $extra_row[] = $data['end_date'];
+            $extra_row[] = $data['quantity'];
+            $extra_row[] = $data['defaultrate'];
+            $extra_row[] = $data['booking_extra_id'];
+            $extra_row[] = $data['extraid'];
+            $extra_row[] = $data['extra_type'];
+            $extra_row[] = $data['extra_name'];
+            $extra_row[] = $data['charge_type_id'];
+            $extra_row[] = $data['charging_scheme'];
+            $extra_row[] = $data['show_on_pos'];
+            $extra_row[] = $data['extra_rate_id'];
+            $extra_row[] = $data['rate'];
+            $extra_row[] = $data['currency_id'];
+            $extra_keys[] = $extra_row;
+        }
+        return $extra_keys;
+    }
+
+    function payment_csv_data(){
+
+        $payment = $this->Minical_export_model->get_payment_details($this->company_id);
+        $csv_payment_keys = array('Payment Type','Deleted','Read Only','Payment Read Only','Payment Id' ,'Description','Date Time','Booking Id','Amount','Credit Card Id','Selling Date','Customer Id','Payment Status','Payment Capture');
+        $payment_keys[] = $csv_payment_keys;
+
+
+        foreach($payment as $key => $data)
+        {
+            $payment_row = array();
+            $payment_row[] = $data['payment_type'];
+            $payment_row[] = $data['is_deleted'] == 1 ?"true":"false";
+            $payment_row[] = $data['is_read_only']== 1 ?"true":"false";
+            $payment_row[] = $data['read_only']== 1 ?"true":"false";
+            $payment_row[] = $data['payment_id'];
+            $payment_row[] = $data['description'];
+            $payment_row[] = $data['date_time'];
+            $payment_row[] = $data['booking_id'];
+            $payment_row[] = $data['amount'];
+            $payment_row[] = $data['credit_card_id'];
+            $payment_row[] = $data['selling_date'];
+            $payment_row[] = $data['customer_id'];
+            $payment_row[] = $data['payment_status'];
+            $payment_row[] = $data['is_captured']== 1 ?"true":"false";
+            $payment_row[] = $data['payment_gateway_used'];
+            $payment_row[] = $data['gateway_charge_id'];
+            $payment_keys[] = $payment_row;
+        }
+        return $payment_keys;
+    }
+
+    function statment_csv_data(){
+
+        $statment = $this->Minical_export_model->get_statement($this->company_id);
+        $csv_statement_keys = array('Booking Id','Statment Id','Statement Number','Creation Date','Statement Name');
+        $statment_keys[] = $csv_statement_keys;
+
+        foreach($statment as $key => $data)
+        {
+            $statment_row = array();
+            $statment_row[] = $data['booking_id'];
+            $statment_row[] = $data['statement_id'];
+            $statment_row[] = $data['statement_number'];
+            $statment_row[] = $data['creation_date'];
+            $statment_row[] = $data['statement_name'];
+            $statment_keys[] = $statment_row;
+        }
+        return $statment_keys;
+
+    }
+    
+    function options_csv_data(){
+
+        $option = $this->Minical_export_model->get_options_data($this->company_id);
+
+        $csv_option_keys = array('Option Id','Company Id','Option Name','Option Value','Autoload');
+        $option_keys[] = $csv_option_keys;
+
+        foreach($option as $key => $data)
+        {
+            $option_row = array();
+            $option_row[] = $data['option_id'];
+            $option_row[] = $data['company_id'];
+            $option_row[] = $data['option_name'];
+            $option_row[] = $data['option_value'];
+            $option_row[] = $data['autoload'];
+            $option_keys[] = $option_row;
+        }
+        return $option_keys;
+
+    }
+    
+    function posts_csv_data(){
+
+        $posts = $this->Minical_export_model->get_posts_data($this->company_id);
+
+        $csv_post_keys = array('Post Id','Company Id','User Id','Post Date','Post Content','Post Title','Post Status','Post Modified','Post Parent','Guid','Sort Order','Post Type','Post mime type','Deleted');
+        $post_keys[] = $csv_post_keys;
+
+        foreach($posts as $key => $data)
+        {
+            $post_row = array();
+            $post_row[] = $data['post_id'];
+            $post_row[] = $data['company_id'];
+            $post_row[] = $data['user_id'];
+            $post_row[] = $data['post_date'];
+            $post_row[] = $data['post_content'];
+            $post_row[] = $data['post_title'];
+            $post_row[] = $data['post_status'];
+            $post_row[] = $data['post_modified'];
+            $post_row[] = $data['post_parent'];
+            $post_row[] = $data['guid'];
+            $post_row[] = $data['sort_order'];
+            $post_row[] = $data['post_type'];
+            $post_row[] = $data['post_mime_type'];
+            $post_row[] = $data['is_deleted'];
+            $post_keys[] = $post_row;
+        }
+        return $post_keys;
+
+    }
+
+    function postmeta_csv_data(){
+
+        $postmeta = $this->Minical_export_model->get_postmeta_data($this->company_id);
+        $csv_postmeta_keys = array('Meta Id','Post Id','Meta Key','Meta Value');
+        $postmeta_keys[] = $csv_postmeta_keys;
+
+        foreach($postmeta as $key => $data)
+        {
+            $postmeta_row = array();
+            $postmeta_row[] = $data['meta_id'];
+            $postmeta_row[] = $data['post_id'];
+            $postmeta_row[] = $data['meta_key'];
+            $postmeta_row[] = $data['meta_value'];
+            $postmeta_keys[] = $postmeta_row;
+        }
+        return $postmeta_keys;
+
+    }
+
+    function download_company_csv_export(){
+
+        $this->_create_employee_log("Export started for company (".$this->company_id.")");
+
+        $company_data = $this->company_setting_csv();
+        $rooms_csv = $this->room_csv_data();
+        $rates_keys = $this->rate_csv_data();
+        $customer_keys = $this->customer_csv_data();
+        $booking_keys = $this->booking_csv_data();
+        $taxes_keys = $this->taxes_csv_data();
+        $charge_keys = $this->charge_csv_data();
+        $payment_keys = $this->payment_csv_data();
+        $extra_keys = $this->extras_csv_data();
+        $statement_keys = $this->statment_csv_data();
+        $options_keys = $this->options_csv_data();
+        $posts_keys = $this->posts_csv_data();
+        $postmeta_keys = $this->postmeta_csv_data();
+
+        $files_name= array($rooms_csv,$rates_keys,$customer_keys,$booking_keys,$taxes_keys,$charge_keys,$payment_keys,$extra_keys,$statement_keys,$options_keys,$posts_keys,$postmeta_keys);
+        $files= array('rooms','rates','customers','bookings','taxes','charges','payments','extras','statements','options','posts','postmeta');
+        $this->createZipArchive($files_name,$files,$company_data);
+
+    }
+
+    function download_company_csv_export_without_rates(){
+
+        $this->_create_employee_log("Export started for company (".$this->company_id.")");
+
+        $company_data = $this->company_setting_csv();
+        $rooms_csv = $this->room_csv_data();
+        // $rates_keys = $this->rate_csv_data();
+        $customer_keys = $this->customer_csv_data();
+        $booking_keys = $this->booking_csv_data();
+        $taxes_keys = $this->taxes_csv_data();
+        $charge_keys = $this->charge_csv_data();
+        $payment_keys = $this->payment_csv_data();
+        $extra_keys = $this->extras_csv_data();
+        $statement_keys = $this->statment_csv_data();
+        $options_keys = $this->options_csv_data();
+        $posts_keys = $this->posts_csv_data();
+        $postmeta_keys = $this->postmeta_csv_data();
+
+        $files_name= array($rooms_csv,$customer_keys,$booking_keys,$taxes_keys,$charge_keys,$payment_keys,$extra_keys,$statement_keys,$options_keys,$posts_keys,$postmeta_keys);
+        $files= array('rooms','customers','bookings','taxes','charges','payments','extras','statements','options','posts','postmeta');
+        $this->createZipArchive($files_name,$files,$company_data);
+
+    }
+
+    function download_company_csv_export_custom($file){
+
+        if ($file === 'rooms') {
+            $rooms_csv = $this->room_csv_data();
+
+            $files_name= array($rooms_csv);
+            $files= array('rooms');
+            $this->createZipArchive($files_name, $files);
+
+        } elseif ($file === 'rates') {
+            $rates_keys = $this->rate_csv_data();
+
+            $files_name= array($rates_keys);
+            $files= array('rates');
+            $this->createZipArchive($files_name, $files);
+
+        } elseif ($file === 'rates_csv') {
+            $rates_keys = $this->rate_csv_data_custom();
+
+            $this->downloadCSVFile($rates_keys, 'rates');
+
+        } elseif ($file === 'customers') {
+            $customer_keys = $this->customer_csv_data();
+
+            $files_name= array($customer_keys);
+            $files= array('customers');
+            $this->createZipArchive($files_name, $files);
+
+        } elseif ($file === 'bookings') {
+            $booking_keys = $this->booking_csv_data();
+
+            $files_name= array($booking_keys);
+            $files= array('bookings');
+            $this->createZipArchive($files_name, $files);
+
+        } elseif ($file === 'taxes') {
+            $taxes_keys = $this->taxes_csv_data();
+
+            $files_name= array($taxes_keys);
+            $files= array('taxes');
+            $this->createZipArchive($files_name, $files);
+
+        } elseif ($file === 'charges') {
+            $charge_keys = $this->charge_csv_data();
+
+            $files_name= array($charge_keys);
+            $files= array('charges');
+            $this->createZipArchive($files_name, $files);
+
+        } elseif ($file === 'payments') {
+            $payment_keys = $this->payment_csv_data();
+
+            $files_name= array($payment_keys);
+            $files= array('payments');
+            $this->createZipArchive($files_name, $files);
+
+        } elseif ($file === 'extras') {
+            $extra_keys = $this->extras_csv_data();
+
+            $files_name= array($extra_keys);
+            $files= array('extras');
+            $this->createZipArchive($files_name, $files);
+
+        } elseif ($file === 'statements') {
+            $company_data = $this->company_setting_csv();
+            $statement_keys = $this->statment_csv_data();
+
+            $files_name= array($statement_keys);
+            $files= array('statements');
+            $this->createZipArchive($files_name, $files, $company_data);
+        }
+    }
+
+    function createZipArchive($files_name, $files, $company_data = null) {
+
+        ob_clean();
+        ob_end_flush();
+        clearstatcache();
+        // create your zip file
+        $zipname = 'Minical_data.zip';
+        $zip = new ZipArchive;
+        $zip->open($zipname, ZipArchive::CREATE);
+
+        // loop to create csv files
+
+        for ($i = 0; $i < count($files_name); $i++) {
+            // create a temporary file
+            $fd = fopen('php://temp/maxmemory:1048576000', 'w');
+            if (false === $fd) {
+                die('Failed to create temporary file');
+            }
+
+            // write the data to csv
+            foreach ($files_name[$i] as  $value) {
+                fputcsv($fd, $value);
+            }
+
+            rewind($fd);
+            $zip->addFromString($files[$i].'.csv', stream_get_contents($fd) );
+
+            //close the file
+            fclose($fd);
+        }
+
+        if ($company_data) {
+            $fs = fopen('php://temp/maxmemory:1048576000', 'w');
+            if (false === $fs) {
+                die('Failed to create temporary file');
+            }
+            fputs($fs, json_encode($company_data));
+            rewind($fs);
+            $zip->addFromString('settings.json', stream_get_contents($fs));
+            fclose($fs);
+        }
+
+        $zip->close();
+        header('Content-Type: application/zip');
+        header('Content-disposition: attachment; filename='.$zipname);
+        header('Content-Length: ' . filesize($zipname));
+        header("Expires: Tue, 01 Jan 2000 00:00:00 GMT");
+        header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+        header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+        header("Cache-Control: post-check=0, pre-check=0", false);
+        header("Pragma: no-cache");
+        readfile($zipname);
+        unlink($zipname);
+
+    }
+
+    function downloadCSVFile($file_name, $file) {
+
+        ob_clean();
+        ob_end_flush();
+        clearstatcache();
+        // loop to create csv files
+
+        // create a temporary file
+        $fd = fopen('php://temp', 'w');
+        if (false === $fd) {
+            die('Failed to create temporary file');
+        }
+
+        // write the data to csv
+        foreach ($file_name as  $value) {
+            fputcsv($fd, $value);
+        }
+
+        rewind($fd);
+
+        // reset the file pointer to the start of the file
+        fseek($fd, 0);
+        // tell the browser it's going to be a csv file
+        header('Content-Type: text/csv');
+        // tell the browser we want to save it instead of displaying it
+        header('Content-Disposition: attachment; filename="'.$file.'";');
+        header("Expires: Tue, 01 Jan 2000 00:00:00 GMT");
+        header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+        header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+        header("Cache-Control: post-check=0, pre-check=0", false);
+        header("Pragma: no-cache");
+
+        // make php send the generated csv lines to the browser
+        fpassthru($fd);
+
+
+        //close the file
+        fclose($fd);
+    }
+
+    function import_options_csv($value){
+        $cache_booking_id = array();
+        $cache_payment_data = array();
+        $old_option_ids = $new_option_ids = $cache_option_derived_rate_data = array();
+
+        foreach ($value as $option) {
+
+            if(!empty($option['Option Id'])){
+
+                $get_import_option = null;
+                if(
+                    isset($this->cache_values['Option'][$option['Option Id']]) && 
+                        $this->cache_values['Option'][$option['Option Id']]
+                ){
+                    $get_import_option = $this->cache_values['Option'][$option['Option Id']];
+                } 
+                
+                if(empty($get_import_option)){
+
+                    $cache_option_data[] = Array(
+                        "company_id" => $this->company_id,
+                        "option_name" => $option['Option Name'] ?? null,
+                        "option_value" => $option['Option Value'] ?? null,
+                        "autoload" => 0
+                    );
+
+                    $old_company_id = $option['Company Id'];
+
+                    if (
+                        isset($option['Option Name']) && 
+                        $option['Option Name'] &&
+                        strpos($option['Option Name'], "group_booking_total_counts") !== false
+                    ) {
+                        $cache_option_group_booking_data[] = $option['Option Name'];
+                        $cache_option_room_type_data[] = $option['Option Value'];
+                    }
+
+                    if (
+                        isset($option['Option Name']) && 
+                        $option['Option Name'] &&
+                        strpos($option['Option Name'], "custom_currency") !== false
+                    ) {
+                        $cache_option_custom_currency_data[] = $option['Option Name'];
+                        $cache_option_currency_booking_data[] = $option['Option Value'];
+                    }
+
+                    if (
+                        isset($option['Option Name']) && 
+                        $option['Option Name'] &&
+                        strpos($option['Option Name'], "derived_rate") !== false
+                    ) {
+
+                        $cache_option_derived_rate_data[] = $option['Option Name'];
+                        $cache_option_derived_rate_option_value_data[] = $option['Option Value'];
+                    }
+                }
+
+                $old_option_ids[] = $option['Option Id'];
+            }
+        }
+
+        $first_option_ids = array();
+        $new_option_ids = array();
+
+        for ($i = 0, $total = count($cache_option_data); $i < $total; $i = $i + 100)
+        {
+            $import_option_batch = array_slice($cache_option_data, $i, 100);
+
+            $this->db->insert_batch("options", $import_option_batch);
+            $first_option_ids[] = $this->db->insert_id();
+
+            if ($this->db->_error_message())
+            {
+                show_error($this->db->_error_message());
+            }
+        }
+
+        foreach($first_option_ids as $k => $val) {
+            for($a = 0; $a < 100; $a++) {
+                $new_option_ids[] = $val++;
+            }
+        }
+
+        // update policy_code(new option_id) in rate plan table
+        $this->Option_model->update_rateplan_policy_codes($old_option_ids, $new_option_ids);
+        
+        // update company in payment policy
+        $this->Option_model->update_payment_policy_company_id($old_company_id);
+
+        for($j = 0; $j < count($cache_option_data); $j++){
+            if(isset($old_option_ids[$j]) && $old_option_ids[$j]) {
+                $data_import_mapping = Array(
+                    "new_id" => $new_option_ids[$j],
+                    "old_id" => $old_option_ids[$j],
+                    "company_id" => $this->company_id,
+                    "type" => "option"
+                );
+                $this->import_insert_batch[] = $data_import_mapping;
+                $this->cache_values['Option'][$old_option_ids[$j]] = $data_import_mapping;
+            }
+        }
+
+        // update group booking ids
+        $this->_update_option_group_ids($cache_option_group_booking_data);
+
+        // update room type ids
+        $this->_update_option_room_type_ids($cache_option_room_type_data);
+
+        // update custom currency booking ids
+        $this->_update_custom_currency_booking_ids($cache_option_custom_currency_data);
+
+        // update custom currency booking ids
+        $this->_update_currency_booking_ids($cache_option_currency_booking_data);
+
+        // update derived rate plan ids
+        $this->_update_derived_rate_plan_ids($cache_option_derived_rate_data);
+
+        // update derived rate plan option values
+        $this->_update_derived_rate_plan_option_values($cache_option_derived_rate_option_value_data);
+    }
+
+    function _update_option_group_ids($cache_option_group_booking_data){
+        if(!empty($cache_option_group_booking_data)){
+            foreach ($cache_option_group_booking_data as $key => $value) {
+                $option_group_id = explode('_', $value);
+
+                if(
+                    isset($this->cache_values['Group Booking'][$option_group_id[4]]) && 
+                        $this->cache_values['Group Booking'][$option_group_id[4]]
+                ){
+                    $option_new_group_booking_data[$option_group_id[4]] = $this->cache_values['Group Booking'][$option_group_id[4]];
+                    $option_group_ids[] = $option_group_id[4];
+                }
+            }
+
+            $this->cache_values['Option Old Group Ids'] = $option_group_ids;
+            $this->cache_values['Option New Group Booking Data'] = $option_new_group_booking_data;
+
+            $option_group_old_ids_data = $this->cache_values['Option Old Group Ids'];
+            $option_group_new_ids_data = $this->cache_values['Option New Group Booking Data'];
+
+            $old_group_booking_ids = $new_group_booking_ids = array();
+
+            if(!empty($option_group_old_ids_data)){
+                foreach($option_group_old_ids_data as $inv){
+                    $old_group_booking_ids[] = $inv;
+                    $new_group_booking_ids[] = $option_group_new_ids_data[$inv]['new_id'];
+                }
+
+                $this->Option_model->update_option_group_ids($old_group_booking_ids, $new_group_booking_ids);
+            }
+        }
+    }
+
+    function _update_option_room_type_ids($cache_option_room_type_data){
+        if(!empty($cache_option_room_type_data)){
+            foreach ($cache_option_room_type_data as $key => $value) {
+
+                $option_room_type_data = json_decode($value, true);
+                $option_grp_room_type_id = $option_room_type_data['room_type_id'];
+
+                if(
+                    isset($this->cache_values['Room Type'][$option_grp_room_type_id]) && 
+                        $this->cache_values['Room Type'][$option_grp_room_type_id]
+                ){
+                    $option_new_grp_room_type_data[$option_grp_room_type_id] = $this->cache_values['Room Type'][$option_grp_room_type_id];
+                    $option_room_type_ids[] = $option_grp_room_type_id;
+                }
+            }
+
+            $this->cache_values['Option Old Room Type Ids'] = $option_room_type_ids;
+            $this->cache_values['Option New Room Type Data'] = $option_new_grp_room_type_data;
+
+            $option_room_type_old_ids_data = $this->cache_values['Option Old Room Type Ids'];
+            $option_room_type_new_ids_data = $this->cache_values['Option New Room Type Data'];
+
+            $old_room_type_booking_ids = $new_room_type_booking_ids = array();
+
+            if(!empty($option_room_type_old_ids_data)){
+                foreach($option_room_type_old_ids_data as $inv){
+                    $old_room_type_booking_ids[] = $inv;
+                    $new_room_type_booking_ids[] = $option_room_type_new_ids_data[$inv]['new_id'];
+                }
+
+                $this->Option_model->update_option_room_type_ids($old_room_type_booking_ids, $new_room_type_booking_ids);
+            }
+        }
+    }
+
+    function _update_custom_currency_booking_ids($cache_option_custom_currency_data){
+        if(!empty($cache_option_custom_currency_data)){
+            foreach ($cache_option_custom_currency_data as $key => $value) {
+                $custom_currency_booking_id = explode('_', $value);
+
+                if(
+                    isset($this->cache_values['Booking'][$custom_currency_booking_id[2]]) &&
+                    $this->cache_values['Booking'][$custom_currency_booking_id[2]]
+                ){
+                    $custom_cur_id_new_booking_data[$custom_currency_booking_id[2]] = $this->cache_values['Booking'][$custom_currency_booking_id[2]];
+                    $custom_currency_booking_ids[] = $custom_currency_booking_id[2];
+                }
+            }
+
+            $this->cache_values['Option Old Custom Cur Booking Ids'] = $custom_currency_booking_ids;
+            $this->cache_values['Option New Custom Cur Booking Data'] = $custom_cur_id_new_booking_data;
+
+            $option_custom_cur_old_ids_data = $this->cache_values['Option Old Custom Cur Booking Ids'];
+            $option_custom_cur_new_ids_data = $this->cache_values['Option New Custom Cur Booking Data'];
+
+            $old_custom_cur_booking_ids = $new_custom_cur_booking_ids = array();
+
+            if(!empty($option_custom_cur_old_ids_data)){
+                foreach($option_custom_cur_old_ids_data as $inv){
+                    $old_custom_cur_booking_ids[] = $inv;
+                    $new_custom_cur_booking_ids[] = $option_custom_cur_new_ids_data[$inv]['new_id'];
+                }
+
+                $this->Option_model->update_custom_currency_booking_ids($old_custom_cur_booking_ids, $new_custom_cur_booking_ids);
+            }
+        }
+    }
+
+    function _update_currency_booking_ids($cache_option_currency_booking_data){
+        if(!empty($cache_option_currency_booking_data)){
+            foreach ($cache_option_currency_booking_data as $key => $value) {
+
+                $option_currency_booking_data = json_decode($value, true);
+                $option_currency_booking_id = $option_currency_booking_data['currency_booking'];
+
+                if(
+                    isset($this->cache_values['Booking'][$option_currency_booking_id]) && 
+                        $this->cache_values['Booking'][$option_currency_booking_id]
+                ){
+                    $option_new_currency_booking_data[$option_currency_booking_id] = $this->cache_values['Booking'][$option_currency_booking_id];
+                    $option_currency_booking_ids[] = $option_currency_booking_id;
+                }
+            }
+
+            $this->cache_values['Option Old Currency Booking Ids'] = $option_currency_booking_ids;
+            $this->cache_values['Option New Currency Booking Data'] = $option_new_currency_booking_data;
+
+            $option_currency_booking_old_ids_data = $this->cache_values['Option Old Currency Booking Ids'];
+            $option_currency_booking_new_ids_data = $this->cache_values['Option New Currency Booking Data'];
+
+            $old_currency_booking_ids = $new_currency_booking_ids = array();
+
+            if(!empty($option_currency_booking_old_ids_data)){
+                foreach($option_currency_booking_old_ids_data as $inv){
+                    $old_currency_booking_ids[] = $inv;
+                    $new_currency_booking_ids[] = $option_currency_booking_new_ids_data[$inv]['new_id'];
+                }
+
+                $this->Option_model->update_option_currency_booking_ids($old_currency_booking_ids, $new_currency_booking_ids);
+            }
+        }
+    }
+
+    function _update_derived_rate_plan_ids($cache_option_derived_rate_data){
+        if(!empty($cache_option_derived_rate_data)){
+            foreach ($cache_option_derived_rate_data as $key => $value) {
+                $derived_rate_plan_id = explode('_', $value);
+
+                if(
+                    isset($this->cache_values['Rate Plan'][$derived_rate_plan_id[2]]) && 
+                        $this->cache_values['Rate Plan'][$derived_rate_plan_id[2]]
+                ){
+                    $derived_new_rate_plan_data[$derived_rate_plan_id[2]] = $this->cache_values['Rate Plan'][$derived_rate_plan_id[2]];
+                    $derived_rate_plan_ids[] = $derived_rate_plan_id[2];
+                }
+            }
+
+            $this->cache_values['Derived Old Rate Plan Ids'] = $derived_rate_plan_ids;
+            $this->cache_values['Derived New Rate Plan Data'] = $derived_new_rate_plan_data;
+
+            $derived_rate_plan_old_ids_data = $this->cache_values['Derived Old Rate Plan Ids'];
+            $derived_rate_plan_new_ids_data = $this->cache_values['Derived New Rate Plan Data'];
+
+            $old_derived_rate_plan_ids = $new_derived_rate_plan_ids = array();
+
+            if(!empty($derived_rate_plan_old_ids_data)){
+                foreach($derived_rate_plan_old_ids_data as $inv){
+                    $old_derived_rate_plan_ids[] = $inv;
+                    $new_derived_rate_plan_ids[] = $derived_rate_plan_new_ids_data[$inv]['new_id'];
+                }
+
+                $this->Option_model->update_derived_rate_plan_ids($old_derived_rate_plan_ids, $new_derived_rate_plan_ids);
+            }
+        }
+
+        // prx($old_derived_rate_plan_ids, 1);
+        // prx($new_derived_rate_plan_ids);
+    }
+
+    function _update_derived_rate_plan_option_values($cache_option_derived_rate_option_value_data){
+        if(!empty($cache_option_derived_rate_option_value_data)){
+            foreach ($cache_option_derived_rate_option_value_data as $key => $value) {
+
+                $derived_rate_option_value_data = json_decode($value, true);
+                $derived_rate_plan_id = $derived_rate_option_value_data['rate_plan_id'];
+                
+                $derived_parent_rate_plan_id = $derived_rate_option_value_data['parent_rate_plan'];
+
+                if(
+                    isset($this->cache_values['Rate Plan'][$derived_rate_plan_id]) && 
+                        $this->cache_values['Rate Plan'][$derived_rate_plan_id]
+                ){
+                    $derived_new_rate_plan_data[$derived_rate_plan_id] = $this->cache_values['Rate Plan'][$derived_rate_plan_id];
+                    $derived_rate_plan_ids[] = $derived_rate_plan_id;
+                }
+
+                // update parent rate plan ids
+                if(
+                    isset($this->cache_values['Rate Plan'][$derived_parent_rate_plan_id]) && 
+                        $this->cache_values['Rate Plan'][$derived_parent_rate_plan_id]
+                ){
+                    $derived_new_parent_rate_plan_data[$derived_parent_rate_plan_id] = $this->cache_values['Rate Plan'][$derived_parent_rate_plan_id];
+                    $derived_parent_rate_plan_ids[] = $derived_parent_rate_plan_id;
+                }
+
+                // update parent room type ids
+
+                $derived_parent_room_type_id = $derived_rate_option_value_data['parent_room_type'];
+                if(
+                    isset($this->cache_values['Room Type'][$derived_parent_room_type_id]) && 
+                        $this->cache_values['Room Type'][$derived_parent_room_type_id]
+                ){
+                    $derived_new_parent_room_type_data[$derived_parent_room_type_id] = $this->cache_values['Room Type'][$derived_parent_room_type_id];
+                    $derived_parent_room_type_ids[] = $derived_parent_room_type_id;
+                }
+            }
+
+            $derived_rate_plan_old_ids_data = $derived_rate_plan_ids;
+            $derived_rate_plan_new_ids_data = $derived_new_rate_plan_data;
+
+            $old_derived_rate_plan_ids = $new_derived_rate_plan_ids = array();
+
+            if(!empty($derived_rate_plan_old_ids_data)){
+                foreach($derived_rate_plan_old_ids_data as $inv){
+                    $old_derived_rate_plan_ids[] = $inv;
+                    $new_derived_rate_plan_ids[] = $derived_rate_plan_new_ids_data[$inv]['new_id'];
+                }
+
+                $this->Option_model->update_derived_rate_option_value_data($old_derived_rate_plan_ids, $new_derived_rate_plan_ids);
+            }
+
+            // update parent rate plan ids
+
+            $derived_parent_rate_plan_old_ids_data = $derived_parent_rate_plan_ids;
+            $derived_parent_rate_plan_new_ids_data = $derived_new_parent_rate_plan_data;
+
+            $old_derived_parent_rate_plan_ids = $new_derived_parent_rate_plan_ids = array();
+
+            if(!empty($derived_parent_rate_plan_old_ids_data)){
+                foreach($derived_parent_rate_plan_old_ids_data as $inv){
+                    $old_derived_parent_rate_plan_ids[] = $inv;
+                    $new_derived_parent_rate_plan_ids[] = $derived_parent_rate_plan_new_ids_data[$inv]['new_id'];
+                }
+
+                $this->Option_model->update_derived_parent_rate_option_value_data($old_derived_parent_rate_plan_ids, $new_derived_parent_rate_plan_ids);
+            }
+
+            // update parent room type ids
+
+            $derived_parent_room_type_old_ids_data = $derived_parent_room_type_ids;
+            $derived_parent_room_type_new_ids_data = $derived_new_parent_room_type_data;
+
+            $old_derived_parent_room_type_ids = $new_derived_parent_room_type_ids = array();
+
+            if(!empty($derived_parent_room_type_old_ids_data)){
+                foreach($derived_parent_room_type_old_ids_data as $inv){
+                    $old_derived_parent_room_type_ids[] = $inv;
+                    $new_derived_parent_room_type_ids[] = $derived_parent_room_type_new_ids_data[$inv]['new_id'];
+                }
+
+                $this->Option_model->update_derived_parent_room_type_option_value_data($old_derived_parent_room_type_ids, $new_derived_parent_room_type_ids);
+            }
+        }
+    }
+
+    function import_posts_csv($value){
+        $cache_booking_id = array();
+        $cache_payment_data = array();
+        $old_post_ids = $new_post_ids = array();
+
+        foreach ($value as $post) {
+
+            if(!empty($post['Post Id'])){
+
+                $get_import_post = null;
+                if(
+                    isset($this->cache_values['Post'][$post['Post Id']]) && 
+                        $this->cache_values['Post'][$post['Post Id']]
+                ){
+                    $get_import_post = $this->cache_values['Post'][$post['Post Id']];
+                } 
+                
+                if(empty($get_import_post)){
+
+                    $cache_post_data[] = Array(
+                        "company_id" => $this->company_id,
+                        "user_id" => $post['User Id'] ?? null,
+                        "post_date" => $post['Post Date'] ?? null,
+                        "post_content" => $post['Post Content'] ?? null,
+                        "post_title" => $post['Post Title'] ?? null,
+                        "post_status" => $post['Post Status'] ?? null,
+                        "post_modified" => $post['Post Modified'] ?? null,
+                        "post_parent" => $post['Post Parent'] ?? null,
+                        "guid" => $post['Guid'] ?? null,
+                        "sort_order" => $post['Sort Order'] ?? null,
+                        "post_type" => $post['Post Type'] ?? null,
+                        "post_mime_type" => $post['Post mime type'] ?? null,
+                        "is_deleted" => $post['Deleted'] ?? null
+                    );
+
+                    if(
+                        isset($post['Post Type']) && 
+                        $post['Post Type'] &&
+                        $post['Post Type'] == 'custom_invoice'
+                    ){
+                        if(
+                            isset($post['Post Content']) && 
+                            $post['Post Content']
+                        ){
+                            $cache_post_custom_inv_data[] = $post['Post Content'];
+                        }
+                    }
+                }
+
+                $old_post_ids[] = $post['Post Id'];
+            }
+        }
+
+        $first_post_ids = array();
+        $all_post_ids = array();
+
+        for ($i = 0, $total = count($cache_post_data); $i < $total; $i = $i + 100)
+        {
+            $import_post_batch = array_slice($cache_post_data, $i, 100);
+
+            $this->db->insert_batch("posts", $import_post_batch);
+            $first_post_ids[] = $this->db->insert_id();
+
+            if ($this->db->_error_message())
+            {
+                show_error($this->db->_error_message());
+            }
+        }
+
+        foreach($first_post_ids as $k => $val) {
+            for($a = 0; $a < 100; $a++) {
+                $all_post_ids[] = $val++;
+            }
+        }
+
+        for($j = 0; $j < count($cache_post_data); $j++){
+            if(isset($old_post_ids[$j]) && $old_post_ids[$j]) {
+                $data_import_mapping = Array(
+                    "new_id" => $all_post_ids[$j],
+                    "old_id" => $old_post_ids[$j],
+                    "company_id" => $this->company_id,
+                    "type" => "post"
+                );
+                $this->import_insert_batch[] = $data_import_mapping;
+                $this->cache_values['Post'][$old_post_ids[$j]] = $data_import_mapping;
+            }
+        }
+
+        // update custom invoice booking ids
+        if(!empty($cache_post_custom_inv_data)){
+            foreach ($cache_post_custom_inv_data as $key => $value) {
+                $custom_inv_id = explode('_', $value);
+
+                if(
+                    isset($this->cache_values['Booking'][$custom_inv_id[3]]) &&
+                    $this->cache_values['Booking'][$custom_inv_id[3]]
+                ){
+                    $custom_inv_id_new_booking_data[$custom_inv_id[3]] = $this->cache_values['Booking'][$custom_inv_id[3]];
+                    $custom_inv_ids[] = $custom_inv_id[3];
+                }
+            }
+
+            $this->cache_values['Post Custom Inv Ids'] = $custom_inv_ids;
+            $this->cache_values['Post Custom Inv Id New Booking Data'] = $custom_inv_id_new_booking_data;
+
+            $post_custom_inv_old_ids_data = $this->cache_values['Post Custom Inv Ids'];
+            $post_custom_inv_new_ids_data = $this->cache_values['Post Custom Inv Id New Booking Data'];
+
+            $old_custom_inv_booking_ids = $new_custom_inv_booking_ids = array();
+
+            if(!empty($post_custom_inv_old_ids_data)){
+                foreach($post_custom_inv_old_ids_data as $inv){
+                    $old_custom_inv_booking_ids[] = $inv;
+                    $new_custom_inv_booking_ids[] = $post_custom_inv_new_ids_data[$inv]['new_id'];
+                }
+
+                $this->Post_model->update_post_custom_invoice_ids($old_custom_inv_booking_ids, $new_custom_inv_booking_ids);
+            }
+
+        }
+    }
+
+    function import_post_meta_csv($value){
+        $cache_booking_id = array();
+        $old_post_meta_ids = $new_post_meta_ids = array();
+        $cache_post_meta_data = $cache_post_meta_category_data = array();
+
+        $old_charge_ids = $new_charge_ids = array();
+
+        foreach ($value as $key => $post_meta) {
+
+            // for get post id
+            $post_id = null;
+            if(
+                isset($this->cache_values['Post'][$post_meta['Post Id']]) && 
+                $this->cache_values['Post'][$post_meta['Post Id']]
+            ){
+                $post_id = $this->cache_values['Post'][$post_meta['Post Id']];
+            }
+
+            // for get charge id
+            $charges = null;
+
+            if(
+                $post_meta['Meta Key'] == 'charge_id' &&
+                isset($post_meta['Meta Value']) &&
+                isset($this->cache_values['Charge'][$post_meta['Meta Value']]) && 
+                    $this->cache_values['Charge'][$post_meta['Meta Value']]
+            ){
+                $charges = $this->cache_values['Charge'][$post_meta['Meta Value']];
+                $old_charge_ids[] = $post_meta['Meta Value'];
+            } else if(
+                $post_meta['Meta Key'] == 'charge_id' &&
+                isset($post_meta['Meta Value']) &&
+                !isset($this->cache_values['Charge'][$post_meta['Meta Value']])
+            ) {
+                unset($value[$key]['Meta Id']);
+            }
+
+            if(isset($charges['new_id']) && $charges['new_id'])
+                $new_charge_ids[] = $charges['new_id'];
+
+            if(!empty($post_meta['Meta Id'])){
+
+                $get_import_post_meta = null;
+                if(
+                    isset($this->cache_values['Post Meta'][$post_meta['Meta Id']]) && 
+                        $this->cache_values['Post Meta'][$post_meta['Meta Id']]
+                ){
+                    $get_import_post_meta = $this->cache_values['Post Meta'][$post_meta['Meta Id']];
+                } 
+                
+                if(empty($get_import_post_meta)){
+
+                    $cache_post_meta_data[] = Array(
+                        "post_id" => isset($post_id['new_id']) && $post_id['new_id'] ? $post_id['new_id'] : null,
+                        "meta_key" => $post_meta['Meta Key'] ?? null,
+                        "meta_value" => $post_meta['Meta Value'] ?? null
+                    );
+
+                    $meta_key   = $post_meta['Meta Key']   ?? null;
+                    $meta_value = $post_meta['Meta Value'] ?? null;
+
+                    if (
+                        $meta_key === 'category' &&
+                        ctype_digit((string)$meta_value) &&
+                        !isset($cache_post_meta_category_data[$meta_value])
+                    ) {
+                        $cache_post_meta_category_data[$meta_value] = $meta_value;
+                    }
+                }
+
+                $old_post_meta_ids[] = $post_meta['Meta Id'];
+            }
+        }
+
+        $first_post_meta_ids = array();
+        $all_post_meta_ids = array();
+
+        for ($i = 0, $total = count($cache_post_meta_data); $i < $total; $i = $i + 100)
+        {
+            $import_post_meta_batch = array_slice($cache_post_meta_data, $i, 100);
+
+            $this->db->insert_batch("postmeta", $import_post_meta_batch);
+            $first_post_meta_ids[] = $this->db->insert_id();
+
+            if ($this->db->_error_message())
+            {
+                show_error($this->db->_error_message());
+            }
+        }
+
+        foreach($first_post_meta_ids as $k => $val) {
+            for($a = 0; $a < 100; $a++) {
+                $all_post_meta_ids[] = $val++;
+            }
+        }
+
+        $this->Post_model->update_post_meta_charge_ids($old_charge_ids, $new_charge_ids);
+
+        for($j = 0; $j < count($cache_post_meta_data); $j++){
+            if(isset($old_post_meta_ids[$j]) && $old_post_meta_ids[$j]) {
+                $data_import_mapping = Array(
+                    "new_id" => $all_post_meta_ids[$j],
+                    "old_id" => $old_post_meta_ids[$j],
+                    "company_id" => $this->company_id,
+                    "type" => "post_meta"
+                );
+                $this->import_insert_batch[] = $data_import_mapping;
+                $this->cache_values['Post Meta'][$old_post_meta_ids[$j]] = $data_import_mapping;
+            }
+        }
+
+        $this->cache_values['Post Meta Category'] = $cache_post_meta_category_data;
+
+        // update custom invoice ids in postmeta table
+        $post_custom_inv_old_ids_data = $this->cache_values['Post Custom Inv Ids'];
+        $post_custom_inv_new_ids_data = $this->cache_values['Post Custom Inv Id New Booking Data'];
+
+        $old_custom_inv_booking_ids = $new_custom_inv_booking_ids = array();
+
+        if(!empty($post_custom_inv_old_ids_data)){
+            foreach($post_custom_inv_old_ids_data as $inv){
+                $old_custom_inv_booking_ids[] = $inv;
+                $new_custom_inv_booking_ids[] = $post_custom_inv_new_ids_data[$inv]['new_id'];
+            }
+
+            $this->Post_model->update_meta_key_ids($old_custom_inv_booking_ids, $new_custom_inv_booking_ids);
         }
     }
 }
