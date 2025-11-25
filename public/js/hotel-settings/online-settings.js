@@ -169,6 +169,7 @@ $(function (){
             'restrict_edit_after_checkout' : $('input[name="restrict_edit_after_checkout"]').prop('checked') ? 1 : 0,
             'calendar_days' :  $('input[name="calendar_days"]').val() == calendarDays ? calendarDays : $('input[name="calendar_days"]').val(),
             'allow_change_previous_booking_status' : $('input[name="allow_change_previous_booking_status"]').prop('checked') ? 1 : 0,
+            'auto_add_custom_charges_on_booking' : $('input[name="auto_add_custom_charges_on_booking"]').prop('checked') ? 1 : 0,
         };
         $.ajax({
             type   : "POST",
@@ -212,6 +213,32 @@ $(function (){
     $("input[name=allow_non_continuous_bookings]").on("click", function() {
         innGrid.toggleMaximumNumberBlocks();
     });
+
+    $("input[name='auto_add_custom_charges_on_booking']").on("change", function() {
+
+        // Run toggle UI logic
+        innGrid.toggleAutoAddCustomCharges();
+
+        // Run AJAX ONLY when user manually toggles to ON
+        if ($(this).is(":checked")) {
+
+            $.ajax({
+                type   : "POST",
+                url    : getBaseURL() + 'settings/company/update_auto_add_enabled_at_AJAX',
+                data   : {auto_add_custom_charges_on_booking : 1},
+                dataType: "json",
+                success: function (data) {
+                    if(data.status){
+                        console.log('Auto add enable time updated successfully!');
+                    } else {
+                        console.log('Some error occured! Please try again.');
+                    }
+                }
+            });
+        }
+
+    });
+
 
     innGrid.toggleHideForecastCharges();
     $("input[name=hide_forecast_charges]").on("click", function() {
@@ -263,6 +290,41 @@ innGrid.toggleMaximumNumberBlocks = function() {
         $(".max-number-blocks").hide();
     }
 }
+
+innGrid.toggleAutoAddCustomCharges = function() {
+
+    let includeForecastInput = $("input[name='is_total_balance_include_forecast']");
+    let hideForecastInput    = $("input[name='hide_forecast_charges']");
+
+    if ($("input[name='auto_add_custom_charges_on_booking']").is(":checked"))
+    {
+        // ON
+        hideForecastInput.prop("checked", true);
+        includeForecastInput.prop("checked", false);
+    }
+    else
+    {
+        // OFF
+        hideForecastInput.prop("checked", false);
+
+        if (includeForecastInput.data("was-false") === true) {
+            includeForecastInput.prop("checked", false);
+        } else {
+            includeForecastInput.prop("checked", true);
+        }
+    }
+};
+
+
+$("input[name='is_total_balance_include_forecast']").on("change", function() {
+    if (!$(this).is(":checked")) {
+        $(this).data("was-false", true);   // remember that user wants it FALSE
+    } else {
+        $(this).data("was-false", false);
+    }
+});
+
+
 
 innGrid.toggleHideForecastCharges = function() {
     if($("input[name='hide_forecast_charges']:checked").length > 0)

@@ -1578,8 +1578,17 @@ class Booking extends MY_Controller
                 }
 
                 $balance = $this->Booking_model->update_booking_balance($booking_id);
-                if(!$this->is_total_balance_include_forecast)
-                {
+                // if(!$this->is_total_balance_include_forecast)
+                // {
+                //     $balance = 0;
+                // }
+
+                // If auto-add custom charges is ON → KEEP actual balance (do not zero out)
+                if ($this->auto_add_custom_charges_on_booking == 1) {
+                    // do nothing, balance stays updated
+                }
+                // ELSE apply the old rule
+                else if (!$this->is_total_balance_include_forecast) {
                     $balance = 0;
                 }
 
@@ -1778,8 +1787,28 @@ class Booking extends MY_Controller
         if(isset($booking_data['state']) && $booking_data['state'] == INHOUSE){
             $this->_create_booking_log($booking_id, 1, 5);
         }
-                
+
         $response['booking_id'] = $booking_id;
+
+        // If feature is enabled, call helper
+        if (
+            isset($this->auto_add_custom_charges_on_booking) &&
+            $this->auto_add_custom_charges_on_booking
+        ) {
+
+            $single_booking_details = $booking_data;
+            $single_booking_details['check_in_date'] = $post_booking_data['check_in_date'];
+            $single_booking_details['check_out_date'] = $post_booking_data['check_out_date'];
+
+            auto_add_custom_charges_on_booking_creation(
+                $single_booking_details,
+                $this->company_data,
+                $booking_id,
+                $this->user_id,
+                $this->selling_date,
+            );
+        }
+                
         return $response;
     }
 
@@ -1793,11 +1822,16 @@ class Booking extends MY_Controller
 
         $booking_batch = array();
 
+        $check_in_date = $check_out_date = "";
+
         for ($i = 0; $i < $room['room_count']; $i++) {
             $room['room_id'] = $available_rooms[$i]['room_id'];
 
             $booking_batch[$i] = $booking_data;
             $booking_batch[$i]['adult_count'] = $room['adult_count'];
+
+            $check_in_date = $room['check_in_date'];
+            $check_out_date = $room['check_out_date'];
         }
         $booking_ids = $this->Booking_model->insert_booking_batch($booking_batch);
 
@@ -2045,6 +2079,31 @@ class Booking extends MY_Controller
 
             $this->Option_model->add_option($option_data);
         }
+
+
+
+        // If feature is enabled, call helper
+        if (
+            isset($this->auto_add_custom_charges_on_booking) &&
+            $this->auto_add_custom_charges_on_booking
+        ) {
+
+            foreach ($booking_ids as $booking_id) {
+                $single_booking_details = $booking_data;
+                $single_booking_details['check_in_date'] = $check_in_date;
+                $single_booking_details['check_out_date'] = $check_out_date;
+
+                auto_add_custom_charges_on_booking_creation(
+                    $single_booking_details,
+                    $this->company_data,
+                    $booking_id,
+                    $this->user_id,
+                    $this->selling_date,
+                );
+            }
+        }
+
+
 
         return $response;
     }

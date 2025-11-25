@@ -778,6 +778,18 @@
             </div> -->
 
            
+            <?php if($company_data['company_id'] == 675): ?>
+                <div class="form-group features-div-padding ">
+                    <div class="checkbox checbox-switch switch-primary">
+                        <label>
+                            <input type="checkbox" name="auto_add_custom_charges_on_booking" class="auto_add_custom_charges_on_booking"
+                                   <?= $company_data['auto_add_custom_charges_on_booking'] == 1 ? 'checked=checked' : ''; ?>/>
+                            <span></span>
+                        </label>
+                        <label for="auto_add_custom_charges_on_booking"><b><?= l("Auto-Add Custom Charges on Booking Creation", true); ?></b></label>
+                    </div>
+                </div>
+            <?php endif; ?>
 
             <div class="form-group features-div-padding ">
                 <div class="checkbox checbox-switch switch-primary">

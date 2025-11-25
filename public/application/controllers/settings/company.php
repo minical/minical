@@ -598,12 +598,31 @@ class Company extends MY_Controller
                 'restrict_cvc_not_mandatory' => $this->input->post('restrict_cvc_not_mandatory'),
                 'calendar_days' => $this->input->post('calendar_days'),
                 'restrict_edit_after_checkout' => $this->input->post('restrict_edit_after_checkout'),
-                'allow_change_previous_booking_status' => $this->input->post('allow_change_previous_booking_status')
+                'allow_change_previous_booking_status' => $this->input->post('allow_change_previous_booking_status'),
+                'auto_add_custom_charges_on_booking' => $this->input->post('auto_add_custom_charges_on_booking')
             );
+
             $this->Company_model->update_company($this->company_id, $company_data);
             $this->_create_employee_log("Feature settings updated");
             echo json_encode(array('status' => true));
             return;
+        }
+        echo json_encode(array('status' => false));
+    }
+
+    function update_auto_add_enabled_at_AJAX()
+    {
+        if ($this->input->post()) {
+            if ($this->input->post('auto_add_custom_charges_on_booking') == 1) {
+                $company_data = array(
+                    'auto_add_enabled_at' => gmdate('Y-m-d H:i:s')
+                );
+                $this->Company_model->update_company($this->company_id, $company_data);
+                $this->_create_employee_log("Auto add enabled time updated");
+                echo json_encode(array('status' => true));
+                return;
+            }
+            
         }
         echo json_encode(array('status' => false));
     }

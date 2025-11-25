@@ -377,4 +377,320 @@ function update_customer_field($company_id)
     }
 }
 
+
+if (!function_exists('auto_add_custom_charges_on_booking_creation')) {
+
+    /**
+     * Auto-add custom charges when booking is created
+     * This function follows the exact PMS room-charge logic you provided.
+     *
+     * @param array $booking
+     * @param array $company
+     * @param int   $booking_id
+     * @param int   $user_id
+     * @param string $selling_date  Y-m-d
+     * @param int $folio_id
+     * @param int $default_room_charge_type_id
+     *
+     * @return void (inserts charges internally)
+     */
+    function auto_add_custom_charges_on_booking_creation($booking, $company, $booking_id, $user_id, $selling_date)
+    {
+        $ci =& get_instance();
+        $ci->load->model('Charge_model');
+        $ci->load->model('Charge_type_model');
+        $ci->load->model('Channex_model');
+        $ci->load->model('Booking_model');
+
+        $folio_id = 0;
+        $charge_data = [];
+        $company_id = $company['company_id'];
+
+        /****************************************
+         *  RATE-PLAN BASED BOOKING
+         ****************************************/
+        if ($booking['use_rate_plan'] && $booking['rate_plan_id'] != '0') {
+
+            $ci->load->library('rate');
+
+            $end_date = date('Y-m-d', strtotime($booking['check_out_date']));
+            $start_date = date('Y-m-d', strtotime($booking['check_in_date']));
+
+            // FETCH full date-range rates (important)
+            $rate_array = $ci->rate->get_rate_array(
+                $booking['rate_plan_id'], 
+                $start_date, 
+                $end_date, 
+                $booking['adult_count'], 
+                $booking['children_count'], 
+                array(), 
+                false, 
+                true
+            );
+
+            if (!empty($rate_array)) {
+
+                foreach ($rate_array as $rate) {
+
+                    // skip FREE bookings
+                    if ($company['allow_free_bookings'] == '1'
+                        && (!$rate['charge_type_id'] || $rate['charge_type_id'] == '0')) {
+                        continue;
+                    }
+
+                    // OTA mapped override
+                    if (!empty($booking['is_ota_booking'])) {
+                        $oxc_data = $ci->Channex_model->get_channex_extra_charges($booking['company_id']);
+
+                        if (!empty($oxc_data['is_extra_charge'])) {
+                            $rate['charge_type_id'] = SYSTEM_ROOM_NO_TAX;
+                        }
+                    }
+
+                    // add 1 charge per day
+                    $charge_data[] = [
+                        'description'    => $rate['rate_plan_name']." #".$booking_id,
+                        'charge_type_id' => $rate['charge_type_id'],
+                        'amount'         => $rate['rate'],
+                        'booking_id'     => $booking_id,
+                        'user_id'        => $user_id,
+                        'pay_period'     => DAILY,
+                        'selling_date'   => $rate['date'],   // ← important
+                    ];
+                }
+            }
+        }
+
+
+        /****************************************
+         *  NON-RATE-PLAN (MANUAL RATE)
+         ****************************************/
+        else {
+
+            // Fetch room charge type
+            $charge_type_id = $ci->Charge_type_model->get_room_charge_type_id($booking_id);
+            $default_room_charge_type_id = $ci->Charge_type_model->get_default_room_charge_type($company_id);
+
+            // FREE booking
+            if ($company['allow_free_bookings'] == '1'
+                && (!$charge_type_id || $charge_type_id == '0')) {
+                // do nothing
+            } else {
+
+                // fallback
+                if (empty($charge_type_id) || $charge_type_id == '0') {
+                    $charge_type_id = $default_room_charge_type_id;
+                }
+
+                $amount = $booking['rate'];
+
+                $check_in  = $booking['check_in_date'];
+                $check_out = $booking['check_out_date'];
+
+                /****************************************
+                 *  DAILY (ALL DAYS — EXCEPT CHECKOUT)
+                 ****************************************/
+                if ($booking['pay_period'] == DAILY) {
+
+                    $current = $check_in;
+                    $end     = date('Y-m-d', strtotime('-1 day', strtotime($check_out)));
+
+                    while ($current <= $end) {
+
+                        $charge_data[] = [
+                            'description'          => "Daily " . $company['default_charge_name'],
+                            'charge_type_id'       => $charge_type_id,
+                            'amount'               => $amount,
+                            'booking_id'           => $booking_id,
+                            'user_id'              => $user_id,
+                            'pay_period'           => DAILY,
+                            'selling_date'         => $current,
+                        ];
+
+                        $current = date('Y-m-d', strtotime($current . ' +1 day'));
+                    }
+                }
+
+                /****************************************
+                 *  WEEKLY (FULL WEEKS + LEFTOVER DAILY)
+                 ****************************************/
+                elseif ($booking['pay_period'] == WEEKLY) {
+
+                    $current = $check_in;
+                    $end     = date('Y-m-d', strtotime('-1 day', strtotime($check_out)));
+
+                    // FULL WEEKS
+                    while (true) {
+
+                        $week_end = date('Y-m-d', strtotime($current . ' +6 days'));
+
+                        if ($week_end > $end) break;
+
+                        $charge_data[] = [
+                            'description'          => "Weekly " . $company['default_charge_name'],
+                            'charge_type_id'       => $charge_type_id,
+                            'amount'               => $amount,
+                            'booking_id'           => $booking_id,
+                            'user_id'              => $user_id,
+                            'pay_period'           => WEEKLY,
+                            'selling_date'         => $current,
+                        ];
+
+                        $current = date('Y-m-d', strtotime($current . ' +7 days'));
+                    }
+
+
+                    /** -------------------------------
+                     * LEFTOVER → DAILY (ONLY IF ENABLED)
+                     * ------------------------------- */
+                    if ($booking['add_daily_charge'] == 1) {
+
+                        $daily_rate = $booking['residual_rate'];
+
+                        while ($current <= $end) {
+
+                            $charge_data[] = [
+                                'description'          => "Daily " . $company['default_charge_name'],
+                                'charge_type_id'       => $charge_type_id,
+                                'amount'               => $daily_rate,
+                                'booking_id'           => $booking_id,
+                                'user_id'              => $user_id,
+                                'pay_period'           => DAILY,
+                                'selling_date'         => $current,
+                            ];
+
+                            $current = date('Y-m-d', strtotime($current . ' +1 day'));
+                        }
+                    }
+                }
+
+
+                /****************************************
+                 *  MONTHLY (FULL MONTHS + LEFTOVER DAILY)
+                 ****************************************/
+                elseif ($booking['pay_period'] == MONTHLY) {
+
+                    $current = $check_in;
+                    $end     = date('Y-m-d', strtotime('-1 day', strtotime($check_out)));
+
+                    // FULL MONTHS
+                    while (true) {
+
+                        $month_end = date('Y-m-d', strtotime($current . ' +1 month'));
+
+                        if ($month_end > $end) break;
+
+                        $charge_data[] = [
+                            'description'          => "Monthly " . $company['default_charge_name'],
+                            'charge_type_id'       => $charge_type_id,
+                            'amount'               => $amount,
+                            'booking_id'           => $booking_id,
+                            'user_id'              => $user_id,
+                            'pay_period'           => MONTHLY,
+                            'selling_date'         => $current,
+                        ];
+
+                        $current = $month_end;
+                    }
+
+
+                    /** -------------------------------
+                     * LEFTOVER → DAILY (ONLY IF ENABLED)
+                     * ------------------------------- */
+                    if ($booking['add_daily_charge'] == 1) {
+
+                        $daily_rate = $booking['residual_rate'];
+
+                        while ($current <= $end) {
+
+                            $charge_data[] = [
+                                'description'          => "Daily " . $company['default_charge_name'],
+                                'charge_type_id'       => $charge_type_id,
+                                'amount'               => $daily_rate,
+                                'booking_id'           => $booking_id,
+                                'user_id'              => $user_id,
+                                'pay_period'           => DAILY,
+                                'selling_date'         => $current,
+                            ];
+
+                            $current = date('Y-m-d', strtotime($current . ' +1 day'));
+                        }
+                    }
+                }
+
+
+                /****************************************
+                 *  ONE TIME
+                 ****************************************/
+                elseif ($booking['pay_period'] == ONE_TIME) {
+
+                    $charge_data[] = [
+                        'description'          => "One Time Charge",
+                        'charge_type_id'       => $charge_type_id,
+                        'amount'               => $amount,
+                        'booking_id'           => $booking_id,
+                        'user_id'              => $user_id,
+                        'pay_period'           => ONE_TIME,
+                        'selling_date'         => $check_in,
+                    ];
+                }
+            }
+        }
+
+
+
+        /****************************************
+         *  INSERT CHARGES (LAST STEP)
+         ****************************************/
+        if (!empty($charge_data)) {
+            foreach ($charge_data as $c) {
+                $charge_id = $ci->Charge_model->insert_charge($c);
+                $ci->Charge_model->insert_charge_folio($charge_id, $folio_id);
+            }
+        }
+    }
+}
+
+/**
+ * Return first booking_log.created_at for a booking_id (or null)
+ */
+function get_booking_created_at($booking_id)
+{
+    $ci =& get_instance();
+
+    // build query
+    $ci->db->select('date_time');
+    $ci->db->from('booking_log');
+    $ci->db->where('booking_id', $booking_id);
+    // adjust this order_by column if your PK is different (id / log_id / booking_log_id)
+    $ci->db->order_by('booking_id', 'ASC'); 
+    $ci->db->limit(1);
+
+    // run query
+    $q = $ci->db->get();
+
+    // if DB returned false, there's a SQL error — log it and return null
+    if ($q === FALSE) {
+        // log_message('error', 'get_booking_date_time query failed: ' . $ci->db->last_query() . ' -- ' . json_encode($ci->db->error()));
+        return null;
+    }
+
+    // no rows
+    if ($q->num_rows() === 0) {
+        return null;
+    }
+
+    $row = $q->row();
+
+    // defensive: ensure property exists
+    if (isset($row->date_time)) {
+        return $row->date_time;
+    }
+
+    return null;
+}
+
+
+
+
 ?>

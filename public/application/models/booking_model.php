@@ -1057,82 +1057,167 @@ class Booking_model extends CI_Model {
     }
     
     // function update_booking_balance($booking_id, $return_type = 'balance', $booking_details = null, $booking_extras = null) 
-    function update_booking_balance($booking_id, $return_type = 'balance') 
-    {       
-        if (!$booking_id) {
-            return null;
-        }
+    // function update_booking_balance($booking_id, $return_type = 'balance') 
+    // {       
+    //     if (!$booking_id) {
+    //         return null;
+    //     }
+
+    //     $sql = "SELECT *,
+    //                 IFNULL(
+    //                 (
+    //                     SELECT 
+    //                         SUM(charge_amount) as charge_total
+    //                     FROM (
+    //                         SELECT
+    //                            (
+    //                                ch.amount +
+    //                                SUM(
+    //                                     IF(tt.is_tax_inclusive = 1,
+    //                                         0,
+    //                                         (ch.amount * IF(tt.is_percentage = 1, IF(tt.is_brackets_active, tpb.tax_rate, tt.tax_rate), 0) * 0.01) +
+    //                                         IF(tt.is_percentage = 0, IF(tt.is_brackets_active, tpb.tax_rate, tt.tax_rate), 0)
+    //                                     )
+    //                                 )
+    //                            ) as charge_amount                     
+    //                         FROM charge as ch
+    //                         LEFT JOIN charge_type as ct ON ch.charge_type_id = ct.id AND ct.is_deleted = '0'
+    //                         LEFT JOIN charge_type_tax_list AS cttl ON ct.id = cttl.charge_type_id 
+    //                         LEFT JOIN tax_type AS tt ON tt.tax_type_id = cttl.tax_type_id AND tt.is_deleted = '0'
+    //                         LEFT JOIN tax_price_bracket as tpb 
+    //                             ON tpb.tax_type_id = tt.tax_type_id AND ch.amount BETWEEN tpb.start_range AND tpb.end_range
+    //                         WHERE
+    //                             ch.is_deleted = '0' AND
+    //                             ch.booking_id = '$booking_id'  
+    //                         GROUP BY ch.charge_id
+    //                     ) as total
+    //                 ), 0    
+    //             ) as charge_total,
+    //             IFNULL(
+    //                 (
+    //                     SELECT SUM(p.amount) as payment_total
+    //                     FROM payment as p, payment_type as pt
+    //                     WHERE
+    //                         p.is_deleted = '0' AND
+    //                         #pt.is_deleted = '0' AND
+    //                         p.payment_type_id = pt.payment_type_id AND
+    //                         p.booking_id = b.booking_id
+
+    //                     GROUP BY p.booking_id
+    //                 ), 0
+    //             ) as payment_total
+    //         FROM booking as b
+    //         LEFT JOIN booking_block as brh ON b.booking_id = brh.booking_id
+    //         WHERE b.booking_id = '$booking_id'
+    //     ";
+        
+    //     $query = $this->db->query($sql);
+    //     $result = $query->result_array();
+    //     $booking = null;
+    //     if ($query->num_rows >= 1 && isset($result[0]))
+    //     {
+    //         $booking =  $result[0];
+    //     }
+        
+    //     if($booking)
+    //     {
+    //         $forecast = $this->forecast_charges->_get_forecast_charges($booking_id, true);
+    //         $forecast_extra = $this->forecast_charges->_get_forecast_extra_charges($booking_id, true);
+    //         $booking_charge_total_with_forecast = (floatval($booking['charge_total']) + floatval($forecast['total_charges']) + floatval($forecast_extra));
+    //         $data = array(
+    //             'booking_id' => $booking_id,
+    //             'balance' => $this->jsround(floatval($booking_charge_total_with_forecast) - floatval($booking['payment_total']), 2),
+    //             'balance_without_forecast' => $this->jsround(floatval($booking['charge_total']) - floatval($booking['payment_total']), 2)
+    //         );
+    //         $this->update_booking($booking_id, $data);
+    //         return $data[$return_type];
+    //     }
+    //     return null;
+    // }
+
+    function update_booking_balance($booking_id, $return_type = 'balance')
+    {
+        if (!$booking_id) return null;
 
         $sql = "SELECT *,
-                    IFNULL(
-                    (
-                        SELECT 
-                            SUM(charge_amount) as charge_total
-                        FROM (
-                            SELECT
-                               (
-                                   ch.amount +
-                                   SUM(
-                                        IF(tt.is_tax_inclusive = 1,
-                                            0,
-                                            (ch.amount * IF(tt.is_percentage = 1, IF(tt.is_brackets_active, tpb.tax_rate, tt.tax_rate), 0) * 0.01) +
-                                            IF(tt.is_percentage = 0, IF(tt.is_brackets_active, tpb.tax_rate, tt.tax_rate), 0)
-                                        )
-                                    )
-                               ) as charge_amount                     
-                            FROM charge as ch
-                            LEFT JOIN charge_type as ct ON ch.charge_type_id = ct.id AND ct.is_deleted = '0'
-                            LEFT JOIN charge_type_tax_list AS cttl ON ct.id = cttl.charge_type_id 
-                            LEFT JOIN tax_type AS tt ON tt.tax_type_id = cttl.tax_type_id AND tt.is_deleted = '0'
-                            LEFT JOIN tax_price_bracket as tpb 
-                                ON tpb.tax_type_id = tt.tax_type_id AND ch.amount BETWEEN tpb.start_range AND tpb.end_range
-                            WHERE
-                                ch.is_deleted = '0' AND
-                                ch.booking_id = '$booking_id'  
-                            GROUP BY ch.charge_id
-                        ) as total
-                    ), 0    
-                ) as charge_total,
-                IFNULL(
-                    (
-                        SELECT SUM(p.amount) as payment_total
-                        FROM payment as p, payment_type as pt
-                        WHERE
-                            p.is_deleted = '0' AND
-                            #pt.is_deleted = '0' AND
-                            p.payment_type_id = pt.payment_type_id AND
-                            p.booking_id = b.booking_id
+                IFNULL((
+                    SELECT SUM(charge_amount)
+                    FROM (
+                        SELECT (
+                            ch.amount +
+                            SUM(
+                                IF(tt.is_tax_inclusive = 1, 0,
+                                    (ch.amount * IF(tt.is_percentage = 1, IF(tt.is_brackets_active, tpb.tax_rate, tt.tax_rate), 0) * 0.01) +
+                                    IF(tt.is_percentage = 0, IF(tt.is_brackets_active, tpb.tax_rate, tt.tax_rate), 0)
+                                )
+                            )
+                        ) AS charge_amount
+                        FROM charge AS ch
+                        LEFT JOIN charge_type AS ct ON ch.charge_type_id = ct.id AND ct.is_deleted = '0'
+                        LEFT JOIN charge_type_tax_list AS cttl ON ct.id = cttl.charge_type_id
+                        LEFT JOIN tax_type AS tt ON tt.tax_type_id = cttl.tax_type_id AND tt.is_deleted = '0'
+                        LEFT JOIN tax_price_bracket AS tpb ON tpb.tax_type_id = tt.tax_type_id 
+                             AND ch.amount BETWEEN tpb.start_range AND tpb.end_range
+                        WHERE ch.is_deleted = '0' AND ch.booking_id = '$booking_id'
+                        GROUP BY ch.charge_id
+                    ) AS total
+                ), 0) AS charge_total,
 
-                        GROUP BY p.booking_id
-                    ), 0
-                ) as payment_total
-            FROM booking as b
-            LEFT JOIN booking_block as brh ON b.booking_id = brh.booking_id
-            WHERE b.booking_id = '$booking_id'
-        ";
-        
+                IFNULL(
+                    (SELECT SUM(p.amount)
+                     FROM payment AS p, payment_type AS pt
+                     WHERE p.is_deleted = '0'
+                       AND p.payment_type_id = pt.payment_type_id
+                       AND p.booking_id = b.booking_id
+                     GROUP BY p.booking_id),
+                 0
+                ) AS payment_total
+
+            FROM booking AS b
+            LEFT JOIN booking_block AS brh ON b.booking_id = brh.booking_id
+            WHERE b.booking_id = '$booking_id'";
+
         $query = $this->db->query($sql);
         $result = $query->result_array();
-        $booking = null;
-        if ($query->num_rows >= 1 && isset($result[0]))
+        $booking = $result[0] ?? null;
+
+        if (!$booking) return null;
+
+        // --- NEW FIX -------------------------------
+        // fetch company flags
+        $company = $this->company_data;
+
+        $include_forecast = true;
+
+        if (!empty($company['auto_add_custom_charges_on_booking'])
+            && $company['auto_add_custom_charges_on_booking'] == 1) 
         {
-            $booking =  $result[0];
+            // Auto custom charges ON → skip forecast
+            $include_forecast = false;
         }
-        
-        if($booking)
-        {
+
+        // calculate totals
+        if ($include_forecast) {
             $forecast = $this->forecast_charges->_get_forecast_charges($booking_id, true);
             $forecast_extra = $this->forecast_charges->_get_forecast_extra_charges($booking_id, true);
-            $booking_charge_total_with_forecast = (floatval($booking['charge_total']) + floatval($forecast['total_charges']) + floatval($forecast_extra));
-            $data = array(
-                'booking_id' => $booking_id,
-                'balance' => $this->jsround(floatval($booking_charge_total_with_forecast) - floatval($booking['payment_total']), 2),
-                'balance_without_forecast' => $this->jsround(floatval($booking['charge_total']) - floatval($booking['payment_total']), 2)
-            );
-            $this->update_booking($booking_id, $data);
-            return $data[$return_type];
+
+            $booking_total = floatval($booking['charge_total'])
+                           + floatval($forecast['total_charges'])
+                           + floatval($forecast_extra);
+        } else {
+            // ONLY real charges (custom charges inserted)
+            $booking_total = floatval($booking['charge_total']);
         }
-        return null;
+
+        $data = [
+            'booking_id' => $booking_id,
+            'balance' => $this->jsround($booking_total - floatval($booking['payment_total']), 2),
+            'balance_without_forecast' => $this->jsround(floatval($booking['charge_total']) - floatval($booking['payment_total']), 2)
+        ];
+
+        $this->update_booking($booking_id, $data);
+
+        return $data[$return_type];
     }
     
     function jsround($float, $precision = 0){

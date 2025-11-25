@@ -188,59 +188,44 @@ class Night_audit {
             $customer_id = $booking['booking_customer_id'];
             $folio_id = 0;
 
-            /*
-             * No longer active - new folio for evc_card
-             *
-            $card_data = isset($customer_id) ? $this->ci->Card_model->get_active_card($customer_id, $company_id) : null;
-            if(isset($card_data['evc_card_status']) && $card_data['evc_card_status'])
-            {
-                $folios = $this->ci->Folio_model->folios('Expedia EVC', $booking_id, $customer_id);
-                if(isset($folios) && $folios)
-                {
-                    $folio_id = $folios[0]['id'];
-                }
-                else
-                {
-                    $first_folio_id = $folio_id = null;
 
-                    $first_folio['booking_id'] = $booking_id;
-                    $first_folio['customer_id'] = $customer_id;
-                    $first_folio['folio_name'] = 'Folio #1';
 
-                    $folio['booking_id'] = $booking_id;
-                    $folio['customer_id'] = $customer_id;
-                    $folio['folio_name'] = 'Expedia EVC';
-                    $existing_folios = $this->ci->Folio_model->get_folios($booking_id, $customer_id);
 
-                    if(!empty($existing_folios))
-                    {
-                        $folio_id = $this->ci->Folio_model->add_folio($folio);  
-                    }
-                    else
-                    {
-                        $first_folio_id = $this->ci->Folio_model->add_folio($first_folio);
-                        $folio_id = $this->ci->Folio_model->add_folio($folio);
-                    }
-                    $invoice_log_data = array();
-                    $invoice_log_data['date_time'] = gmdate('Y-m-d h:i:s');
-                    $invoice_log_data['booking_id'] = $booking_id;
-                    $invoice_log_data['user_id'] = $user_id;
-                    $invoice_log_data['action_id'] = ADD_FOLIO;
-                    if (isset($first_folio_id) && $first_folio_id) {
-                        $invoice_log_data['log'] = $first_folio['folio_name'].' Folio Added';
-                        $this->ci->Invoice_log_model->insert_log($invoice_log_data);
-                    }
-                    if ($folio_id) {
-                        $invoice_log_data['log'] = $folio['folio_name'].' Folio Added';
-                        $this->ci->Invoice_log_model->insert_log($invoice_log_data);
-                    }
-                }
-            }
-            else
-            {
-                $folio_id = 0;
-            }
-            */
+            // ----------------------------------------------------------
+	        // NEW LOGIC: detect if the booking was created today
+	        // ----------------------------------------------------------
+
+	        if(
+	        	$company_id == 675 && // Trail West Motel (675) 
+	        	$company['auto_add_custom_charges_on_booking'] == 1
+	        ) {
+	        	// continue;
+	        // }
+		        $booking_created_at = get_booking_created_at($booking_id);
+
+		        $auto_enabled_at = $company['auto_add_enabled_at'] ?? null;
+
+				$is_new_booking = false;
+
+				if (!empty($company['auto_add_custom_charges_on_booking']) 
+				    && $company['auto_add_custom_charges_on_booking'] == 1
+				    && !empty($auto_enabled_at)
+				    && strtotime($booking_created_at) >= strtotime($auto_enabled_at)
+				) {
+				    $is_new_booking = true;
+				}
+
+				if ($is_new_booking) {
+				    // booking created AFTER feature enabled
+				    // → skip night audit conversion
+				    continue;
+				}
+			}
+
+
+
+
+
 
 			// if the booking is using rate plan
 			if ($booking['use_rate_plan'] && $booking['rate_plan_id'] != '0')

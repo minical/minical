@@ -476,6 +476,8 @@ class MY_Controller extends CI_Controller {
 
             $this->automatic_email_confirmation = $company['automatic_email_confirmation'];
             $this->automatic_email_cancellation = $company['automatic_email_cancellation'];
+
+            $this->auto_add_custom_charges_on_booking = $company['auto_add_custom_charges_on_booking'];
             
             $this->company_partner_type_id = 1;
             
