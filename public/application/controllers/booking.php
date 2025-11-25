@@ -334,53 +334,93 @@ class Booking extends MY_Controller
 
     function _generate_logs($new_data, $old_data)
     {
-        $new_array = isset($new_data['customers']) && isset($new_data['customers']['staying_customers']) ? $new_data['customers']['staying_customers'] : array();
-        $old_array = isset($old_data['customers']) && isset($old_data['customers']['staying_customers']) ?$old_data['customers']['staying_customers'] : array();
+        // Helper: resolve customer name if only ID is present
+        $resolve_customer_name = function($customer) {
+            if (!empty($customer['customer_name'])) {
+                return $customer['customer_name'];
+            }
+            if (!empty($customer['customer_id'])) {
+                
+                return $this->Customer_model->get_customer($customer['customer_id']);
+            }
+            return null;
+        };
+
+        $new_array = isset($new_data['customers']['staying_customers'])
+            ? $new_data['customers']['staying_customers']
+            : array();
+
+        $old_array = isset($old_data['customers']['staying_customers'])
+            ? $old_data['customers']['staying_customers']
+            : array();
+
         $flag = 2;
         $added_arr = $delete_arr = array();
-        foreach($new_array as $value){
 
+        // detect added guests
+        foreach($new_array as $value){
             $flag = 2;
             foreach($old_array as $v2){
-
                 if($value['customer_name'] == $v2['customer_name'] && !empty($value['customer_name'])){
                     $flag = 1;
-
                 }
-
             }
-            if($flag != 1)
-            {
-                $added_arr[] = $value['customer_name'];  // added guest
+            if($flag != 1){
+                $added_arr[] = $value['customer_name'];
             }
-
-
         }
 
+        // detect deleted guests
         foreach($old_array as $value){
-
             $deleteflag = 2;
             foreach($new_array as $v2){
-
                 if($value['customer_id'] == $v2['customer_id']){
                     $deleteflag = 1;
                 }
-
             }
-
-            if($deleteflag != 1)
-            {
-                if(in_array($value['customer_name'], $added_arr)){
-
-                }else{
-                    $delete_arr[] = $value['customer_name'];  // deleted guest
+            if($deleteflag != 1){
+                if(!in_array($value['customer_name'], $added_arr)){
+                    $delete_arr[] = $value['customer_name'];
                 }
-
             }
-
         }
 
-        // Load existing_data from database
+        // ---------------------------------
+        // Normalize new_data for log checks
+        // ---------------------------------
+        $new_data = array(
+            'booking' => Array(
+                'state' => $new_data['booking']['state'] ?? null,
+                'charge_type_id' => $new_data['rooms'][0]['charge_type_id'] ?? null,
+                'adult_count' => $new_data['booking']['adult_count'] ?? null,
+                'children_count' => $new_data['booking']['children_count'] ?? null,
+                'rate' => $new_data['rooms'][0]['rate'] ?? null,
+                'use_rate_plan' => $new_data['rooms'][0]['use_rate_plan'] ?? null,
+                'rate_plan_id' => null,
+                'booking_notes' => $new_data['booking']['booking_notes'] ?? null,
+                'color' => $new_data['booking']['color'] ?? null,
+                'is_deleted' => null,
+                'pay_period' => $new_data['rooms'][0]['pay_period'] ?? null,
+                'booking_customer_name' =>
+                    isset($new_data['customers']['paying_customer'])
+                        ? $resolve_customer_name($new_data['customers']['paying_customer'])
+                        : null,
+                'source'=> $new_data['booking']['source'] ?? null
+            ),
+            'booking_block' => Array(
+                'check_in_date' => $new_data['rooms'][0]['check_in_date'] ?? null,
+                'check_out_date' => $new_data['rooms'][0]['check_out_date'] ?? null,
+                // 'room_id' => !empty($new_data['rooms'][0]['room_id']) ? $new_data['rooms'][0]['room_id'] : 0,
+                
+                // ✅ FIX: don't force to 0, preserve old value if missing
+                'room_id' => $new_data['rooms'][0]['room_id']
+                    ?? ($old_data['booking_block']['room_id'] ?? null),
+            ),
+            'customers' => Array(
+                'staying_customers' => $new_data['customers']['staying_customers'] ?? array()
+            )
+        );
+
         $fields = array(
             'booking' => Array(
                 'state' => 5,
@@ -403,77 +443,48 @@ class Booking extends MY_Controller
                 'room_id' => 17,
             ),
             'customers' => Array(
-                //'paying_customer' => 18,
                 'staying_customers' => 19
-            )
-        );
-        $new_data = array(
-            'booking' => Array(
-                'state' => isset($new_data['booking']['state']) ? $new_data['booking']['state'] : null,
-                'charge_type_id' => isset($new_data['rooms'][0]['charge_type_id']) ? $new_data['rooms'][0]['charge_type_id'] : null,
-                'adult_count' => isset($new_data['booking']['adult_count']) ? $new_data['booking']['adult_count'] : null,
-                'children_count' => isset($new_data['booking']['children_count']) ? $new_data['booking']['children_count'] : null,
-                'rate' => isset($new_data['rooms'][0]['rate']) ? $new_data['rooms'][0]['rate'] : null,
-                'use_rate_plan' => isset($new_data['rooms'][0]['use_rate_plan']) ? $new_data['rooms'][0]['use_rate_plan'] : null,
-                'rate_plan_id' => null,
-                'booking_notes' => isset($new_data['booking']['booking_notes']) ? $new_data['booking']['booking_notes'] : null,
-                'color' => isset($new_data['booking']['color']) ? $new_data['booking']['color'] : null,
-                'is_deleted' => null,
-                'pay_period' => isset($new_data['rooms'][0]['pay_period']) ? $new_data['rooms'][0]['pay_period'] : null,
-                'booking_customer_name' => isset($new_data['customers']['paying_customer']['customer_name']) ? $new_data['customers']['paying_customer']['customer_name'] : null,
-                'source'=> isset($new_data['booking']['source']) ? $new_data['booking']['source'] : null
-            ),
-            'booking_block' => Array(
-                'check_in_date' => $new_data['rooms'][0]['check_in_date'] ?? null,
-                'check_out_date' => $new_data['rooms'][0]['check_out_date'] ?? null,
-                // 'room_id' => !empty($new_data['rooms'][0]['room_id']) ? $new_data['rooms'][0]['room_id'] : 0,
-                
-                // ✅ FIX: don't force to 0, preserve old value if missing
-                'room_id' => $new_data['rooms'][0]['room_id']
-                    ?? ($old_data['booking_block']['room_id'] ?? null),
-                ),
-            'customers' => Array(
-                //'paying_customer' => $new_data['customers']['paying_customer']['customer_name'],
-                'staying_customers' => isset($new_data['customers']['staying_customers']) ? $new_data['customers']['staying_customers'] : array()
             )
         );
 
         $logs = array();
-
         $date_time = gmdate('Y-m-d H:i:s');
 
-        // Find the differences between existing data and new data.
-        foreach ($fields as $category => $sub_fields)
-        {
-            foreach ($sub_fields as $index => $log_type){
-                if (isset($old_data[$category]) && isset($new_data[$category]) && isset($old_data[$category][$index]) && isset($new_data[$category][$index]) && $old_data[$category][$index] != $new_data[$category][$index])
-                {
-                    if($log_type == '19'){
-
-                        if (!empty($added_arr)) { // guest added
-                            $added_guest_string = implode(',', $added_arr);
-                            $added_guest = "A guest named " . $added_guest_string ." was added";
+        foreach ($fields as $category => $sub_fields) {
+            foreach ($sub_fields as $index => $log_type) {
+                if (
+                    isset($old_data[$category][$index]) &&
+                    isset($new_data[$category][$index]) &&
+                    $old_data[$category][$index] != $new_data[$category][$index]
+                ) {
+                    if ($log_type == 19) {
+                        // guest changes
+                        $added_guest = $deleted_guest = '';
+                        if (!empty($added_arr)) {
+                            $added_guest = "A guest named " . implode(',', $added_arr) ." was added";
                         }
-                        if (!empty($delete_arr)) { // guest deleted
-                            if((!empty($new_data['booking']['booking_customer_name']) && !empty($old_data['booking']['booking_customer_name'])) && ($new_data['booking']['booking_customer_name'] != $old_data['booking']['booking_customer_name'])){
-
-                            }else{
-                                $deleted_guest_string = implode(',', $delete_arr);
-                                $deleted_guest = "A guest named " . $deleted_guest_string ." was deleted";
+                        if (!empty($delete_arr)) {
+                            if (
+                                !empty($new_data['booking']['booking_customer_name']) &&
+                                !empty($old_data['booking']['booking_customer_name']) &&
+                                ($new_data['booking']['booking_customer_name'] != $old_data['booking']['booking_customer_name'])
+                            ) {
+                                // skip, handled in paying_customer logs
+                            } else {
+                                $deleted_guest = "A guest named " . implode(',', $delete_arr) ." was deleted";
                             }
-
                         }
-                        if(!empty($added_guest) && !empty($deleted_guest)){
-                            $guest_log = $added_guest." and ".$deleted_guest;
-                        }elseif (!empty($added_guest)) {
+                        $guest_log = '';
+                        if ($added_guest && $deleted_guest) {
+                            $guest_log = $added_guest . " and " . $deleted_guest;
+                        } elseif ($added_guest) {
                             $guest_log = $added_guest;
-                        }elseif (!empty($deleted_guest)) {
+                        } elseif ($deleted_guest) {
                             $guest_log = $deleted_guest;
                         }
 
-                        if(!empty($guest_log)){
-                            $log_type = 19;
-                            $logs[] = Array(
+                        if ($guest_log) {
+                            $logs[] = array(
                                 "booking_id" => $old_data['booking']['booking_id'],
                                 "date_time" => $date_time,
                                 "log_type" => $log_type,
@@ -482,24 +493,23 @@ class Booking extends MY_Controller
                                 "selling_date" => $this->selling_date
                             );
                         }
-                    }else{
-
+                    } else {
                         $log_data = $new_data[$category][$index];
-                        if($log_type == 18){
-                            if(!empty($new_data[$category][$index]) && empty($old_data[$category][$index])){
+                        if ($log_type == 18) { // paying customer change
+                            if (!empty($new_data[$category][$index]) && empty($old_data[$category][$index])) {
                                 $log_data = 'A paying customer named '.$new_data[$category][$index].' was added';
-                            }elseif(!empty($new_data[$category][$index]) && !empty($old_data[$category][$index])){
+                            } elseif (!empty($new_data[$category][$index]) && !empty($old_data[$category][$index])) {
                                 $log_data = 'A paying customer named '.$old_data[$category][$index].' was deleted and a paying customer named '.$new_data[$category][$index].' (who was a guest) updated';
-                            }else{
+                            } else {
                                 $log_data = 'A paying customer named '.$old_data[$category][$index].' was deleted';
                             }
                         }
-                        if($log_type == 12){
-                            if(!empty($new_data[$category][$index]) && empty($old_data[$category][$index])){
+                        if ($log_type == 12) { // booking notes
+                            if (!empty($new_data[$category][$index]) && empty($old_data[$category][$index])) {
                                 $log_data = 'Added booking notes is '.$new_data[$category][$index];
-                            }elseif(!empty($new_data[$category][$index]) && !empty($old_data[$category][$index])){
+                            } elseif (!empty($new_data[$category][$index]) && !empty($old_data[$category][$index])) {
                                 $log_data = 'Changed booking notes to '.$new_data[$category][$index];
-                            }elseif(empty($new_data[$category][$index]) && !empty($old_data[$category][$index])){
+                            } elseif (empty($new_data[$category][$index]) && !empty($old_data[$category][$index])) {
                                 $log_data = 'Deleted booking notes is '.$old_data[$category][$index];
                             }
                         }
@@ -520,8 +530,8 @@ class Booking extends MY_Controller
                             }
                         }
 
-                        if(isset($log_data)){
-                            $logs[] = Array(
+                        if (isset($log_data)) {
+                            $logs[] = array(
                                 "booking_id" => $old_data['booking']['booking_id'],
                                 "date_time" => $date_time,
                                 "log_type" => $log_type,
@@ -535,10 +545,9 @@ class Booking extends MY_Controller
             }
         }
 
-        if (empty($logs))
-            return;
-
-        $this->Booking_log_model->insert_logs($logs);
+        if (!empty($logs)) {
+            $this->Booking_log_model->insert_logs($logs);
+        }
     }
 
     function get_available_room_types_in_JSON($check_in_date = null, $check_out_date = null, $isAJAX = true)
@@ -1787,7 +1796,7 @@ class Booking extends MY_Controller
         if(isset($booking_data['state']) && $booking_data['state'] == INHOUSE){
             $this->_create_booking_log($booking_id, 1, 5);
         }
-
+                
         $response['booking_id'] = $booking_id;
 
         // If feature is enabled, call helper
@@ -1808,7 +1817,7 @@ class Booking extends MY_Controller
                 $this->selling_date,
             );
         }
-                
+
         return $response;
     }
 
@@ -2080,8 +2089,6 @@ class Booking extends MY_Controller
             $this->Option_model->add_option($option_data);
         }
 
-
-
         // If feature is enabled, call helper
         if (
             isset($this->auto_add_custom_charges_on_booking) &&
@@ -2102,8 +2109,6 @@ class Booking extends MY_Controller
                 );
             }
         }
-
-
 
         return $response;
     }
@@ -2815,7 +2820,7 @@ class Booking extends MY_Controller
                         $old_data['booking']['state'] == RESERVATION
                     ) {
                         // only change check-in-date if there's single booking block for this booking
-                        if ($this->Booking_room_history_model->get_booking_block_count($booking_id) < 2) {
+                        if ( (int) $this->Booking_room_history_model->get_booking_block_count($booking_id) < 2) {
                             $new_check_in_date = $block['check_in_date'];
                             $this->Booking_room_history_model->update_check_in_date($latest_block, $new_check_in_date); // used for changing reservation's check in date. Irrelevant for inhouse guests
                             $latest_block['check_in_date'] = $new_check_in_date; // because check_in_date's been modified                           
@@ -3025,11 +3030,13 @@ class Booking extends MY_Controller
                     }
                 } elseif ($log_type == 6) { // charge_type
                     $charge_types = $this->Charge_type_model->get_charge_types($this->company_id);
+                    if($charge_types){
                         foreach ($charge_types as $charge_type) {
                             if ($charge_type['id'] == $log['log'])
                                 $log['log'] = $charge_type['name'];
                         }
                     }
+                }
                 elseif ($log_type == 10) { // use_rate_plan
                     switch ($log['log']) {
                         case '0': $log['log'] = 'disabled';
