@@ -2049,12 +2049,45 @@ class Booking extends MY_Controller
         }
 
         $response = array();
+
+        // If feature is enabled, call helper
+        if (
+            isset($this->auto_add_custom_charges_on_booking) &&
+            $this->auto_add_custom_charges_on_booking
+        ) {
+
+            foreach ($booking_ids as $booking_id) {
+                $single_booking_details = $booking_data;
+                $single_booking_details['check_in_date'] = $check_in_date;
+                $single_booking_details['check_out_date'] = $check_out_date;
+
+                auto_add_custom_charges_on_booking_creation(
+                    $single_booking_details,
+                    $this->company_data,
+                    $booking_id,
+                    $this->user_id,
+                    $this->selling_date,
+                );
+            }
+        }
+        
         foreach ($booking_ids as $booking_id) {
             $balance = $this->Booking_model->update_booking_balance($booking_id);
-            if(!$this->is_total_balance_include_forecast)
-            {
+            // if(!$this->is_total_balance_include_forecast)
+            // {
+            //     $balance = 0;
+            // }
+
+
+            // If auto-add custom charges is ON → KEEP actual balance (do not zero out)
+            if ($this->auto_add_custom_charges_on_booking == 1) {
+                // do nothing, balance stays updated
+            }
+            // ELSE apply the old rule
+            else if (!$this->is_total_balance_include_forecast) {
                 $balance = 0;
             }
+
 
             $room_type_id = $room['room_type_id'];
             $response[] = array(
@@ -2087,27 +2120,6 @@ class Booking extends MY_Controller
             );
 
             $this->Option_model->add_option($option_data);
-        }
-
-        // If feature is enabled, call helper
-        if (
-            isset($this->auto_add_custom_charges_on_booking) &&
-            $this->auto_add_custom_charges_on_booking
-        ) {
-
-            foreach ($booking_ids as $booking_id) {
-                $single_booking_details = $booking_data;
-                $single_booking_details['check_in_date'] = $check_in_date;
-                $single_booking_details['check_out_date'] = $check_out_date;
-
-                auto_add_custom_charges_on_booking_creation(
-                    $single_booking_details,
-                    $this->company_data,
-                    $booking_id,
-                    $this->user_id,
-                    $this->selling_date,
-                );
-            }
         }
 
         return $response;
