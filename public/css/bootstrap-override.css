@@ -4706,3 +4706,13 @@
 .cke_notifications_area{
     display: none;
 }
+.grid-container {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  padding: 10px;
+}
+.grid-item {
+  
+  font-size: 15px;
+  text-align: left;
+}
