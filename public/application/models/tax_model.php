@@ -437,7 +437,38 @@ class Tax_model extends CI_Model {
 			unset($row['date']);
 			$result[$date] = $row;
 		}
-		return $result;
+        
+        // Get all dates of the month
+        $num_days = cal_days_in_month(CAL_GREGORIAN, (int)$month, (int)$year);
+        $all_dates = array();
+        for ($d = 1; $d <= $num_days; $d++) {
+            $dt = sprintf('%04d-%02d-%02d', $year, $month, $d);
+            $all_dates[$dt] = true;
+        }
+
+        // Identify all tax columns
+        $tax_columns = array();
+        if (!empty($rows[0])) {
+            foreach ($rows[0] as $col => $val) {
+                if ($col !== 'date') {
+                    $tax_columns[] = $col;
+                }
+            }
+        }
+
+        // Ensure every date in the month is present in the result, using 0 if missing
+        foreach ($all_dates as $dt => $v) {
+            if (!isset($result[$dt])) {
+                $result[$dt] = array();
+                foreach ($tax_columns as $tax_col) {
+                    $result[$dt][$tax_col] = 0;
+                }
+            }
+        }
+        // Optional: sort by date
+        ksort($result);
+
+        return $result;
 	}
 
     function create_new_tax_type($data){
