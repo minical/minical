@@ -417,6 +417,13 @@ innGrid.renderChargeGroups = function (chargeGroups) {
 			    chargeGroupID++;
 			}
 		} else {
+
+			if(innGrid.companyID == 5065){
+				var taxHtml = "GST " + number_format(parseFloat(taxTotal), 2, ".", "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+			} else {
+				var taxHtml = number_format(parseFloat(taxTotal), 2, ".", "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+			}
+
 			var expandableTR = $('<tr />', {
 			        'class': 'expandable',
 			        'name': chargeGroupID,
@@ -444,7 +451,7 @@ innGrid.renderChargeGroups = function (chargeGroups) {
 			            html: amount + "/" + period + " " + l('for') + " " + chargeCount + " " + period + "s"
 			        }).add('<td />', {
 			            'class': 'text-right',
-			            html: number_format(parseFloat(taxTotal), 2, ".", "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+			            html: taxHtml
 			        }).add('<td />', {
 			            'class': 'text-right',
 			            html: number_format(parseFloat(totalCharge), 2, ".", "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")

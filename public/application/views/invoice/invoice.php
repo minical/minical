@@ -473,7 +473,12 @@ if((isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true ) ||
                     $company['postal_code']
                 );
 
-                echo "<strong>".$company['name']."</strong><br/>";
+                if($company['company_id'] == 5065): // Welcome Inn 277 Motel
+                    echo "<h4>". $company['name']. "</h4>";
+                else:
+                    echo "<strong>".$company['name']."</strong><br/>";
+                endif;
+
                 echo implode(", ", $company_address);
                 echo "<br/>";
                 echo ($company['phone'] != "")?"Phone: ".$company['phone']."<br/>":'';
@@ -585,8 +590,10 @@ if((isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true ) ||
                     echo($company['default_room_singular']); ?>: <?php echo (isset($room_detail['room_name'])) ? $room_detail['room_name']: l('Not Assigned', true) ; ?><br/>
                 <?php 
                 }
-                    echo($company['default_room_type']);?>: <?php echo (isset($room_detail['room_type_name']))?$room_detail['room_type_name']:''; ?><br/>
-                <?php echo l('check_in_date'); ?>: <span id="check-in-date">
+
+                if($company['company_id'] != 5065){ // Welcome Inn 277 Motel
+                    echo ($company['default_room_type']);?>: <?php echo (isset($room_detail['room_type_name'])) ? $room_detail['room_type_name'] : ''; ?><br/>
+                <?php } echo l('check_in_date'); ?>: <span id="check-in-date">
 
                 <?php echo isset($this->enable_hourly_booking) && $this->enable_hourly_booking ? get_local_formatted_date($booking_detail['check_in_date']).' '.date('h:i A', strtotime($booking_detail['check_in_date'])) : get_local_formatted_date($booking_detail['check_in_date']);
                 ?>
@@ -600,11 +607,10 @@ if((isset($this->is_nestpay_enabled) && $this->is_nestpay_enabled == true ) ||
 
                 </span><br/>
 
-                <?php echo l('Adult'); ?>: <span id="adult_count"><?php echo $booking_detail['adult_count']; ?></span>,
-                <?php echo l('Children'); ?>: <span id="child_count"><?php echo $booking_detail['children_count']; ?>
-                
-                </span><br/>
-
+                <?php if($company['company_id'] != 5065){ // Welcome Inn 277 Motel ?>
+                    <?php echo l('Adult'); ?>: <span id="adult_count"><?php echo $booking_detail['adult_count']; ?></span>,
+                    <?php echo l('Children'); ?>: <span id="child_count"><?php echo $booking_detail['children_count']; ?></span><br/>
+                <?php } ?>
                 <?php echo l('Booking Source', true); ?>: <?php echo get_booking_source($booking_detail['source']); ?>
 
                <span id="booking-field">
