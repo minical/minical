@@ -139,6 +139,7 @@
     innGrid.featureSettings.stripePublicKey = '<?=(isset($this->stripe_public_key) ? $this->stripe_public_key : '')?>';
 
     innGrid.isGuestSignEnabled = parseInt('<?=(($this->is_guest_sign_enabled) ? 1 : 0)?>');
+    innGrid.isDocumentDriveEnabled = parseInt('<?=(($this->is_document_drive_enabled) ? 1 : 0)?>');
     
     innGrid.userPermission = "<?= isset($this->user_permission) ? $this->user_permission : '' ?>";
 
