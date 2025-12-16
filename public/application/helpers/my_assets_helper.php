@@ -692,5 +692,46 @@ function get_booking_created_at($booking_id)
 
 
 
+function get_charge_type($charge_id)
+{
+    $CI = & get_instance();
+
+    $charge_type = $CI->Charge_type_model->get_charge_type_by_id($charge_id);
+
+    if($charge_type && count($charge_type) > 0) {
+        return $charge_type['name'];
+    } else {
+        return '';
+    }
+}
+
+function auto_add_service_fee_on_booking_creation($booking, $company, $booking_id, $selling_date, $is_exist = false)
+{
+    $ci =& get_instance();
+    $ci->load->model('Charge_model');
+    $ci->load->model('Booking_model');
+    $ci->load->model('Option_model');
+
+    $company_id = $company['company_id'];
+
+    $get_all_service_fees = $ci->Option_model->get_option_by_company('service_fee', $company_id);
+
+    // prx($get_all_service_fees);
+
+    if(!empty($get_all_service_fees)){
+        foreach ($get_all_service_fees as $key => $service) {
+
+            $sdetails =  json_decode($service['option_value'],true);
+
+            $charge['selling_date'] = $booking['check_in_date'];
+            $charge['booking_id'] = $booking_id;
+            $charge['charge_type_id'] = $sdetails['charge_type_id'];
+            $charge['amount'] = $sdetails['fee_amount'];
+            $charge['description'] = $sdetails['service_title'];
+
+            $ci->Charge_model->insert_charge($charge);
+        }
+    }
+}
 
 ?>

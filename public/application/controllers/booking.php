@@ -1818,6 +1818,26 @@ class Booking extends MY_Controller
             );
         }
 
+
+        // If extension is enabled, call helper
+        if (
+            isset($this->is_auto_service_fee_enabled) &&
+            $this->is_auto_service_fee_enabled
+        ) {
+
+            $single_booking_details = $booking_data;
+            $single_booking_details['check_in_date'] = $post_booking_data['check_in_date'];
+            $single_booking_details['check_out_date'] = $post_booking_data['check_out_date'];
+
+            auto_add_service_fee_on_booking_creation(
+                $single_booking_details,
+                $this->company_data,
+                $booking_id,
+                $this->selling_date,
+            );
+        }
+        
+
         return $response;
     }
 
