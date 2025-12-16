@@ -175,6 +175,35 @@ class Option_model extends CI_Model {
         return $result_array;
     }
 
+    function get_option_by_name_and_json($option_name, $json_key, $json_value, $company_id)
+    {
+        $this->db->select('*');
+        $this->db->from('options');
+        
+        // Match company_id
+        $this->db->where('company_id', $company_id);
+        
+        // Match option_name
+        if ($option_name) {
+            $this->db->where('option_name', $option_name);
+        }
+
+        // Match JSON key/value
+        if ($json_key && $json_value !== null) {
+            $where = "JSON_UNQUOTE(JSON_EXTRACT(option_value, '$." . $this->db->escape_str($json_key) . "')) = " . $this->db->escape($json_value);
+            $this->db->where($where, null, false); // false = don't escape again
+        }
+
+        $query = $this->db->get();
+        
+        if ($this->db->_error_message()) {
+            show_error($this->db->_error_message());
+        }
+
+        return $query->result_array();
+    }
+
+
     function get_reset_by_json_data($option,$getdata){
 
         $this->db->select('*');
