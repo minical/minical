@@ -125,6 +125,12 @@ class Permission_model extends CI_Model {
                 $function_name === 'save_guest_signature'
             )
             ||
+            $controller_name === "document_drive" && 
+            (
+                $function_name === 'show_upload_document_form' ||
+                $function_name === 'upload_guest_document'
+            )
+            ||
             $controller_name === "setting" && 
             (
                 $function_name === 'index' ||
