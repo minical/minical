@@ -2962,7 +2962,8 @@ class Booking extends MY_Controller
             do_action('update_availability', $update_availability_data);
         }
 
-        if($this->company_id != 4462){ // for pemberton hotel
+        // if($this->company_id != 4462){ // for pemberton hotel
+        if($is_update_availability){ 
             do_action('update_siteminder_availability', $update_availability_data);
         }
 
