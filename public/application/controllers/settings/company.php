@@ -1586,11 +1586,56 @@ class Company extends MY_Controller
 
         $new_customer_ids = $this->_create_customer($cache_customer_data, $old_customer_ids);
 
+
+
+        $card_details_batch = [];
+
+        foreach ($value as $index => $customer) {
+
+            // Skip if no card data at all
+            if (
+                empty($customer['cc_number']) &&
+                empty($customer['customer_meta_data'])
+            ) {
+                continue;
+            }
+
+            // Validate JSON if exists
+            $meta = $customer['customer_meta_data'] ?? null;
+            if ($meta) {
+                json_decode($meta, true);
+                if (json_last_error() !== JSON_ERROR_NONE) {
+                    $meta = null; // avoid breaking insert
+                }
+            }
+
+            $card_details_batch[] = [
+                'customer_id'        => $new_customer_ids[$index],
+                'customer_name'      => $customer['Customer Name'] ?? null,
+                'company_id'         => $this->company_id,
+
+                'cc_number'          => $customer['cc_number'] ?? null,
+                'cc_expiry_month'    => $customer['cc_expiry_month'] ?? null,
+                'cc_expiry_year'     => $customer['cc_expiry_year'] ?? null,
+
+                'customer_meta_data' => $meta,
+                'is_primary'         => 1,
+                'is_card_deleted'    => 0
+            ];
+        }
+
+
+        if (!empty($card_details_batch)) {
+            $this->db->insert_batch('customer_card_detail', $card_details_batch);
+        }
+
+
+
         foreach ($value as $customer) {
             foreach($customer as $key => $customer_data) {
 
                 $key_name =  array(
-                    'Customer Id','Customer Name','Customer Type','Address','City','Region' ,'Country','Postal Code','Phone','Fax' ,'Email','Customer Notes','Address2','Phone2'
+                    'Customer Id','Customer Name','Customer Type','Address','City','Region' ,'Country','Postal Code','Phone','Fax' ,'Email','Customer Notes','Address2','Phone2','cc_number','cc_expiry_month','cc_expiry_year','customer_meta_data'
                 );
 
                 if (!in_array($key, $key_name)) {
@@ -3043,7 +3088,7 @@ class Company extends MY_Controller
         }
 
 
-        $csv_customer_keys = array('Customer Id','Customer Name','Customer Type','Address','City','Region' ,'Country','Postal Code','Phone','Fax' ,'Email','Customer Notes','Address2','Phone2');
+        $csv_customer_keys = array('Customer Id','Customer Name','Customer Type','Address','City','Region' ,'Country','Postal Code','Phone','Fax' ,'Email','Customer Notes','Address2','Phone2','cc_number','cc_expiry_month','cc_expiry_year','customer_meta_data');
 
         if(isset($custom_fields_name) && $custom_fields_name){
             foreach($custom_fields_name as $custom_fields) {
@@ -3081,6 +3126,25 @@ class Company extends MY_Controller
             $customer_row[] = $data['customer_notes'];
             $customer_row[] = $data['address2'];
             $customer_row[] = $data['phone2'];
+            $customer_row[] = $data['cc_number'];
+            $customer_row[] = $data['cc_expiry_month'];
+            $customer_row[] = $data['cc_expiry_year'];
+
+
+
+            $meta = $data['customer_meta_data'];
+
+            if (is_array($meta) || is_object($meta)) {
+                $meta = json_encode($meta, JSON_UNESCAPED_UNICODE);
+            }
+
+            $customer_row[] = $meta;
+
+
+
+
+
+
             // $customer_keys[] = $customer_row;
 
             if($custom_fields_values){
@@ -3451,7 +3515,7 @@ class Company extends MY_Controller
     function payment_csv_data(){
 
         $payment = $this->Minical_export_model->get_payment_details($this->company_id);
-        $csv_payment_keys = array('Payment Type','Deleted','Read Only','Payment Read Only','Payment Id' ,'Description','Date Time','Booking Id','Amount','Credit Card Id','Selling Date','Customer Id','Payment Status','Payment Capture');
+        $csv_payment_keys = array('Payment Type','Deleted','Read Only','Payment Read Only','Payment Id' ,'Description','Date Time','Booking Id','Amount','Credit Card Id','Selling Date','Customer Id','Payment Status','Payment Capture', 'Payment Gateway Used', 'Gateway Charge Id');
         $payment_keys[] = $csv_payment_keys;
 
 

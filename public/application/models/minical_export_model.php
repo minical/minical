@@ -620,7 +620,7 @@ class Minical_export_model extends CI_Model {
     {
         $this->db->select('tt.*,tt.tax_rate as taxrate,tt.tax_type_id as taxtype_id,tpb.*,tpb.tax_rate as price_bracket_rate,tpb.is_percentage as is_price_bracket_percentage,tt.is_percentage as tax_percentage');
         $this->db->from('tax_type as tt');
-        $this->db->join('tax_price_brackets as tpb','tpb.tax_type_id = tt.tax_type_id', "left");
+        $this->db->join('tax_price_bracket as tpb','tpb.tax_type_id = tt.tax_type_id', "left");
         $this->db->where('tt.company_id',$company_id);
         $this->db->where('tt.is_deleted', 0);
         // $this->db->where('tpb.is_deleted', 0);
@@ -646,22 +646,17 @@ class Minical_export_model extends CI_Model {
     	$this->db->select('ct.*,c.*,c.charge_id as chargeid');
         $this->db->from('charge_type as ct');
         $this->db->join('charge as c', 'c.charge_type_id = ct.id', 'left');
-        // $this->db->join('charge_type_tax_list as cttl', 'cttl.charge_type_id = ct.id', 'left');
-        // $this->db->join('tax_type as tt', 'tt.tax_type_id = cttl.tax_type_id','left');
-        $this->db->where('ct.company_id', $company_id);
+
+	    // Manual parentheses since group_start() does not work
+	    $this->db->where("(ct.company_id = 0 OR ct.company_id = $company_id)", NULL, FALSE);
+
         $this->db->where('ct.is_deleted', 0);
         $this->db->where('c.is_deleted', 0);
-        // $this->db->group_by('ct.id');
 
         $query = $this->db->get();
 
-        if ($this->db->_error_message()) // error checking
-            show_error($this->db->_error_message());
-          // echo $this->db->last_query();die;
-        if ($query->num_rows >= 1)
-        {
-            $result =  $query->result_array();
-            return $result;
+	    if ($query->num_rows() >= 1) {
+	        return $query->result_array();
         }
         return NULL;
     }
